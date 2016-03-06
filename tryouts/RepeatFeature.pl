@@ -22,7 +22,7 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
 	-DB_CONNECTION => $dba->dbc(),
 );
 
-#see how long the query takes. might be useful later for query optimization? this is not very precise though
+#see how long the query takes.not very precise though
 my $start_query = time();
 
 #count no. start > end
@@ -45,7 +45,7 @@ if($bigger_start_ref->[0][0] == 0){
 	print "All repeat_feature rows have repeat_start < repeat__end \n";
 }
 else{
-	#later on also print this to a log file or somethin with more info
+	#later on also print this to a log file with more info
 	print $bigger_start_ref->[0][0] . " rows in repeat_feature have repeat_start > repeat_end \n";
 }
 
@@ -53,7 +53,7 @@ if($negative_location_ref->[0][0] == 0){
 	print "All repeat_feature rows have repeat_start and repeat_end > 1 \n";
 }
 else{
-	#later on also print this to a log file or somethin with more info
+	#later on also print this to a log file with more info
 	print $negative_location_ref->[0][0] . " rows in repeat_feature have repeat_start or repeat_end < 1 \n";
 }
 
