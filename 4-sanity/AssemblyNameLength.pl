@@ -4,17 +4,17 @@ AssemblyNameLength - A sanity test (type 4 in the healthcheck system)
 
 =head1 SYNOPSYS
 
-$ perl AssemblyNameLength.pl 'Homo sapiens'
+  $ perl AssemblyNameLength.pl 'Homo sapiens'
 
 =head1 DESCRIPTION
 
   ARG[Species Name]    : String - Name of the species to test on.
-  Returntype           : Currently none - will most likely be true/false in future.
+  Database type        : CORE (hardcoded).
 
 A healthcheck that checks that the meta_value for the key
 assembly.name in the meta table is not longer than 16 characters.
 
-Perl adaption of the AssemblyNameLength.java tests
+Perl adaptation of the AssemblyNameLength.java test.
 See: https://github.com/Ensembl/ensj-healthcheck/blob/release/83/src/org/ensembl/healthcheck/testcase/generic/AssemblyNameLength.java
 
 =cut
