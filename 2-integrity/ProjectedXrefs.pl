@@ -56,7 +56,6 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
 
 my $result = 1;
 
-#if(it's one of these species: need all the aliases! jesus christ)
 if($proper_species eq 'homo_sapiens' ||
    $proper_species eq 'caenorhabditis_elegans' ||
    $proper_species eq 'drosophila_melanogaster' ||
