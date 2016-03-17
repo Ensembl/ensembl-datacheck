@@ -11,6 +11,7 @@ sub check_sql_across_species{
     my $sql = $arg_for{sql};
     my $registry = $arg_for{registry};
     my $types = $arg_for{types};
+    my $meta = $arg_for{meta};
 
     my @database_types = @{ $types };
     
@@ -41,7 +42,7 @@ sub check_sql_across_species{
                                 sql => $sql,
                                 species => $species_name,
                                 types => $filtered_types_ref,
-                                meta => 0,
+                                meta => $meta,
                             );
         print "\n";
     }

@@ -29,6 +29,7 @@ my $same = DBUtils::MultiDatabase::check_sql_across_species(
     sql => $sql,    
     registry => $registry,
     types => $types,
+    meta => 1,
 );
 
 print "$same \n";

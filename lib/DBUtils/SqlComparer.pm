@@ -17,6 +17,8 @@ sub check_same_sql_result{
 
     my @sql_results;
 
+    my @meta_results;
+
     foreach $type (@types){
 
         my $dba = Bio::EnsEMBL::Registry->get_DBAdaptor($species, $type);
@@ -30,14 +32,30 @@ sub check_same_sql_result{
         );
 
         push @sql_results, $sql_result;
+
+        if($meta){
+
+            my $dbname = ($dba->dbc())->dbname();
+
+            if(lc($sql) =~ /from (\S+)/ ){
+                my $tablename = $1;
+                my $meta_sql = "SHOW COLUMNS FROM $tablename IN $dbname";
+
+                my $meta_result = $helper->execute(
+                    -SQL => $meta_sql
+                );
+
+                push @meta_results, $meta_result;
+            }
+            else{
+                print "Unable to do meta table comparison: can't extract table name \n";
+            }
+        }
+
     }
 
     for(my $i = 0; $i <= $#sql_results; $i++){
         for(my $j = $i+1; $j <= $#sql_results; $j++){
-            
-            if($meta){
-                #do the meta stuff
-            }
             
             $final_result &= compare_sql_results(
                 result1 => @sql_results[$i],
@@ -45,7 +63,19 @@ sub check_same_sql_result{
             );
         }
     }
-        
+
+    if($meta){
+        for(my $i = 0; $i <= $#$meta_results; $i++){
+            for(my $j = $j+1; $j <= $#$meta_results; $j++){
+
+                $final_result &= compare_sql_results(
+                    result1 => @meta_results[$i],
+                    result2 => @meta_results[$j],
+                );
+            }
+        }
+    }        
+
 
     return $final_result;
 
@@ -98,9 +128,10 @@ sub compare_sql_results{
             
         }        
     }
-    print "Tables match! \n";
+    #print "Tables match! \n";
     return 1;
 }
+
 
 
 1;
