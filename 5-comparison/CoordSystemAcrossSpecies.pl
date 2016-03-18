@@ -28,10 +28,8 @@ use warnings;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
-use Bio::EnsEMBL::DBSQL::DBAdaptor;
 
-use DBUtils::RowCounter;
-use DBUtils::MultiDatabase;
+use DBUtils::SqlComparer;
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
