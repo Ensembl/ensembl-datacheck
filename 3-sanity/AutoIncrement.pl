@@ -85,12 +85,15 @@ foreach my $part (@columns){
 
     foreach my $nested_array (@$query_result){
 	    my @auto_increment;
-            {
-                #stop perl from yelling at us just because there's a NULL in the return table.
-                no warnings 'uninitialized';
-                #there should be an 'auto_increment' somewhere in our result...
-                @auto_increment = grep { $_ eq 'auto_increment' } @$nested_array;
-            }
+
+                foreach my $cell (@$nested_array){
+                    if(defined $cell){
+                        if($cell eq 'auto_increment'){
+                            push @auto_increment, $cell;
+                        }
+                     }
+                }
+
             #... if there is not, autoincrement has not been declared for this column!
             if(!@auto_increment){
                 print "PROBLEM: " . $table . "." . $column . "  is not set to autoincrement! \n";
