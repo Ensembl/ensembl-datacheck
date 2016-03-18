@@ -4,7 +4,7 @@
 
 =head1 SYNOPSIS
 
-  perl LRG.pl 'homo sapiens'
+  $ perl LRG.pl 'homo sapiens'
 
 =head1 DESCRIPTION
 
@@ -15,6 +15,9 @@
 First checks if LRG coordinate system is present in the database for the given species. If it is, it
 checks if all the features with biotype 'LRG' are mapped to the lrg coordinate system. Then it checks
 if all the features mapped on the lrg coordinate system have the biotype 'LRG'.
+
+Perl implementation of LRG.java test.
+See: https://github.com/Ensembl/ensj-healthcheck/blob/26644ee7982be37aef610afc69fae52cc70f5b35/src/org/ensembl/healthcheck/testcase/generic/LRG.java
 
 =cut
 
