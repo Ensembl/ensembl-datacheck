@@ -12,6 +12,7 @@
 
   Database               : Core
 
+######NEEDS REVISION#####
 Checks if the assembly.mapping values in the meta table are the right format and if they refer to existing
 coordinate systems (name & version).
 
