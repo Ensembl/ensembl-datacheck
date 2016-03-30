@@ -1,3 +1,28 @@
+=head1 NAME
+
+  CoreForeignKeys - Checks referential integrity of foreign keys in the databases (type 1 in the healthcheck system)
+
+=head1 SYNPOPSIS
+
+  $ perl CoreforeignKeys.pl 'homo sapiens'  'core'
+
+=head1 DESCRIPTION
+
+  ARG[species]         : String - name of the species to check on.
+  ARG[database type]   : String - name of the database type to test on. Currenlty only core databases.
+
+Tests all foreign key references in the core databases with the use of the CheckForOrphans functions. 
+Also holds tests for compara and sangervega but currently these are never run as the database adaptor 
+of the core API cannot provide adaptors for them. This should be fixed in future versions.
+
+Perl adaptation of the CoreForeignKeys.java and AncestralSequencesExtraChecks.java healthchecks.
+See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/CoreForeignKeys.java
+and https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/AncestralSequencesExtraChecks.java
+
+NOTE: Currenly these tests take forever, because retrieving the data from the database takes a long time.
+
+=cut
+
 #!/usr/bin/env perl
 
 use warnings;
@@ -24,11 +49,14 @@ $registry->load_registry_from_db(
 
 my $dba = $registry->get_DBAdaptor($species, $database_type);
 
-    my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
+print "$dba \n";
+
+my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
     );
 
 my $test_result = 1;
+
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
@@ -142,7 +170,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
     table1 => 'misc_feature_misc_set',
     col1 => 'misc_set_id',
-    table2 => 'misc_feature',
+    table2 => 'misc_set',
     col2 => 'misc_set_id',
     both_ways => 0,
 );
@@ -160,6 +188,21 @@ if($database_type eq 'sangervega'){
                                             .  "AND ms.code = 'noAnnotation')",
                      );
 }
+
+
+#this snippet used to be the AncestralSequencesExtraChecks test.
+if($database_type eq 'compara'){
+    $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
+                        helper => $helper,
+                        table1 => 'seq_region',
+                        col1 => 'seq_region_id',
+                        table2 => 'dna',
+                        col2 => 'seq_region_id',
+                        constraint => "seq_region.coord_system_id = (SELECT coord_system_id FROM coord_system "
+                                                                    . " WHERE attrib LIKE '%sequence_level%')",
+                    );
+}
+
 else {
     $test_result &= DBUtils::CheckForOrphans::check_orphans(
         helper => $helper,
@@ -369,7 +412,6 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
     both_ways => 0,
 );
 
-#HERE SOME FUNCTIONS THAT STILL NEED PROGRAMMING
 
 my @types = ("Gene", "Transcript", "Translation");
 foreach my $type (@types){
@@ -515,13 +557,14 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
     constraint => "supporting_feature.feature_type = 'protein_align_feature'",
 );
 
+
 $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
     helper => $helper,
     table1 => 'transcript_supporting_feature',
     col1 => 'feature_id',
     table2 => 'dna_align_feature',
     col2 => 'dna_align_feature_id',
-    constraint => "transcript_supporting_feature.supporting_feature.feature_type = 'dna_align_feature'",
+    constraint => "transcript_supporting_feature.feature_type = 'dna_align_feature'",
 );
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
@@ -545,7 +588,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
     table1 => 'prediction_exon',
-    col1 => 'prediction_exon_id',
+    col1 => 'prediction_transcript_id',
     table2 => 'prediction_transcript',
     col2 => 'prediction_transcript_id',
     both_ways => 0,
@@ -569,20 +612,17 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
     both_ways => 0,
 );
 
-my @
-
-print "$test_result \n";
-
+=cut
 my @analysis_tables = @{ DBUtils::TableSets::get_tables_with_analysis_id() };
 
 foreach my $analysis_table (@analysis_tables){
 
 	if($analysis_table eq 'protein_align_feature' || $analysis_table eq 'dna_align_feature'
 	   || $analysis_table eq 'repeat_feature'){
-        continue;	   
+        next;	   
 	}
 	
-	my $constraint = "analysis_id IS NOT NULL";
+	my $constraint = "$analysis_table.analysis_id IS NOT NULL";
 	if($analysis_table eq 'object_xref'){
 		$constraint .= " and $analysis_table.analysis_id != 0";
 	}
@@ -598,18 +638,23 @@ foreach my $analysis_table (@analysis_tables){
 
 }
 
+
+
 $test_result &= check_display_marker_synonym_id($helper);
 
+print "$test_result \n";
+
 sub check_keys_by_ensembl_object_type{
-	my ($arg_for) = @_;
+	my (%arg_for) = @_;
 	
-	my $helper = $arg_for->{helper};
+	my $helper = $arg_for{helper};
 	my $object = $arg_for{object};
 	my $type = $arg_for{type};
 	
+    my $table = $type;
 	#find camelcase capital letters and separate them by _ instead and convert to lower case.
-	my $table =~ s/([a-z])([A-Z])/$1_$2/;
-	$table = lc($able);
+	$table =~ s/([a-z])([A-Z])/$1_$2/;
+	$table = lc($table);
 	
 	my $column;
 	if($object eq 'object_xref'){
@@ -646,7 +691,7 @@ sub check_display_marker_synonym_id{
     sql => $sql,
 	});
 	
-	if ($number_of_rows > 0)
+	if ($number_of_rows > 0){
 		$result = 0;
 		print "I need a better error message. Greetings from check_display_marker_synonym_id \n";
 	}

@@ -1,7 +1,8 @@
-package DBUtils::TableSets
+package DBUtils::TableSets;
 
-use strict;
 use warnings;
+use strict;
+
 
 my @feature_tables = ("assembly_exception", "gene", "exon",
 			"dna_align_feature", "protein_align_feature", "repeat_feature",
@@ -25,17 +26,17 @@ my @funcgen_tables_with_analysis_id = ("probe_feature",
 			
 
 sub get_feature_tables{
-    return @feature_tables;
+    return \@feature_tables;
 }
 
 sub get_tables_with_analysis_id{
-    return @tables_with_analysis_id;
+    return \@tables_with_analysis_id;
 }
 
 sub get_funcgen_feature_tables{
-    return @funcgen_feature_tables;
+    return \@funcgen_feature_tables;
 }
 
-sub get_tables_with_analysis_id{
-	return @funcgen_tables_with_analysis_id;
+sub get_funcgen_tables_with_analysis_id{
+	return \@funcgen_tables_with_analysis_id;
 }
