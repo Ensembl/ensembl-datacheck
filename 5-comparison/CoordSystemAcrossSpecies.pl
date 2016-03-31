@@ -25,19 +25,32 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
-
 
 use DBUtils::SqlComparer;
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-$registry->load_registry_from_db(
-       -host => 'ensembldb.ensembl.org',
-       -user => 'anonymous',
-       -port => 3306,    
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir. "/config";
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config;
+}
+else{
+    $registry->load_registry_from_db(
+           -host => $config->{'db_registry'}{'host'},
+           -user => $config->{'db_registry'}{'user'},
+           -port => $config->{'db_registry'}{'port'},
+    );
+}
 
 my $sql = "SELECT * FROM coord_system WHERE name != 'lrg'";
 

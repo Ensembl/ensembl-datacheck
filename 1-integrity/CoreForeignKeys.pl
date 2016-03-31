@@ -28,6 +28,9 @@ NOTE: Currenly these tests take forever, because retrieving the data from the da
 use warnings;
 use strict;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
@@ -35,21 +38,37 @@ use DBUtils::CheckForOrphans;
 use DBUtils::TableSets;
 use DBUtils::RowCounter;
 
-my $species = $ARGV[0];
-my $database_type = $ARGV[1];
-
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my ($species, $database_type);
+
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species, 'type:s' => \$database_type);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+    if(!defined $database_type){
+        $database_type = $config->{'database_type'};
+    }
+    print "$species $database_type \n";
+} 
 
 my $dba = $registry->get_DBAdaptor($species, $database_type);
-
-print "$dba \n";
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
@@ -422,6 +441,8 @@ foreach my $type (@types){
 	);
 }
 
+
+
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
     table1 => 'analysis_description',
@@ -612,7 +633,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
     both_ways => 0,
 );
 
-=cut
+
 my @analysis_tables = @{ DBUtils::TableSets::get_tables_with_analysis_id() };
 
 foreach my $analysis_table (@analysis_tables){

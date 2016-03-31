@@ -31,31 +31,44 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/83/src/org/ensembl
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
 use DBUtils::RowCounter;
 use DBUtils::MultiSpecies;
 
-#getting species and database type like this until infrastructure is made
-my $species = $ARGV[0];
-my $database_type = $ARGV[1];
-
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-#also getting the ensembl genomes registry seems to take a long time
-$registry->load_registry_from_multiple_dbs(
-      {-host => 'mysql-eg-publicsql.ebi.ac.uk',
-      -user => 'anonymous',
-      -port => 4157,
-      },
-      {
-       -host => 'ensembldb.ensembl.org',
-       -user => 'anonymous',
-       -port => 3306,
-      }     
-);
+my ($species, $database_type);
+
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species, 'type:s' => \$database_type);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+    if(!defined $database_type){
+        $database_type = $config->{'database_type'};
+    }
+    print "$species $database_type \n";
+} 
 
 my $dba = $registry->get_DBAdaptor($species, $database_type);
 

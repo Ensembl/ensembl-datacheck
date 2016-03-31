@@ -24,19 +24,37 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/26644ee7982be37aef610afc69
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
-my $species = $ARGV[0];
-
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $species;
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+} 
 
 #only applies to core databases
 my $dba = $registry->get_DBAdaptor($species, 'core');

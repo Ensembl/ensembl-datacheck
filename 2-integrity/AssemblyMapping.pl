@@ -26,24 +26,37 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/83/src/org/ensembl
 use strict;
 use warnings;
 
-use Data::Dumper;
+use File::Spec;
+use Getopt::Long;
 
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
 use DBUtils::MultiSpecies;
 
+#NEEDS REVISION ANYWAY SO LEAVE THIS FOR NOW
 #contigs come up as mistakes a lot, but they're probably not wrong at all. 
 my $ignore_contigs = $ARGV[0];
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir. "/config";
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config;
+}
+else{
+    $registry->load_registry_from_db(
+           -host => $config->{'db_registry'}{'host'},
+           -user => $config->{'db_registry'}{'user'},
+           -port => $config->{'db_registry'}{'port'},
+    );
+}
+
 my $result = 1;
 
 #finds a pattern with two strings seperated by :
