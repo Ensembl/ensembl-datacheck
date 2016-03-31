@@ -67,5 +67,23 @@ sub get_multi_species_ids{
     return $result;
 }
 
+=head2 get_all_species_in_registry
+
+    ARG[helper]       : Bio::EnsEMBL::Utils::SqlHelper instance
+
+    Returntype        : Arrayreference
+
+Returns an arrayref of all the species names that have databases in the given registry.
+
+=cut
+
+sub get_all_species_in_registry{
+    my ($registry) = @_;
+
+    my $species_names = $registry->get_all_species();
+
+    return $species_names;
+}
+
 1;
     
