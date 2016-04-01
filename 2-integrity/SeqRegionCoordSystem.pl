@@ -96,7 +96,7 @@ if(DBUtils::MultiSpecies::is_multi_species($dba)){
     }
 }
 else{
-    #if there is only one species in the database it's species_id is 1.
+    #IS THIS ASSUMPTION VALID? if there is only one species in the database it's species_id is 1.
     if(lc($database_type) eq 'core'){
         $result &= check_names(1);
     }
@@ -152,7 +152,7 @@ sub check_names{
                 $names_result = 0;
             }
             else{
-                print "OK: Coordinate systems $id_1 and $id_2 have no identically-named seq_regions. \n";
+                #print "OK: Coordinate systems $id_1 and $id_2 have no identically-named seq_regions. \n";
             }
     
         }       
@@ -200,7 +200,7 @@ sub check_lengths{
         $length_result = 0;
     }
     else{
-        print "OK: All seq_region lengths match for the species with id $species_id \n";
+        #print "OK: All seq_region lengths match for the species with id $species_id \n";
     }
 
     return $length_result;

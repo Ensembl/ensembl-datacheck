@@ -152,7 +152,7 @@ foreach my $species_name (@species_names){
                             $result = 0;
                         }
                         else{
-                            print "OK \n";
+                            #print "OK \n";
                         }
                     }
                 

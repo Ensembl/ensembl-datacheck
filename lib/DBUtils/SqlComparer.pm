@@ -98,7 +98,7 @@ sub check_same_sql_result{
                 push @meta_results, $meta_result;
             }
             else{
-                print "Unable to do meta table comparison: can't extract table name \n";
+                print "PROBLEM: Unable to do meta table comparison: can't extract table name \n";
             }
         }
 
@@ -127,7 +127,7 @@ sub check_same_sql_result{
     }        
 
     if($final_result){
-        print "OK: Tables for $species match \n";
+        #print "OK: Tables for $species match \n";
     }
     return $final_result;
 
@@ -151,7 +151,7 @@ sub compare_sql_results{
     my $result2 = $arg_for{result2};
 
     if($#$result1 != $#$result2){
-        print "Number of rows does not match \n";
+        print "PROBLEM: Number of rows does not match \n";
         return 0;
     }
 
@@ -161,7 +161,7 @@ sub compare_sql_results{
         my $column_no2 = $result2->[$i];
 
         if($#$column_no1 != $#$column_no2){
-            print "Number of columns does not match \n";
+            print "PROBLEM: Number of columns does not match \n";
             return 0;
         }
 
@@ -184,7 +184,7 @@ sub compare_sql_results{
             }
 
             if(!($value1 eq $value2)){
-                print "Values don't match \n";
+                print "PROBLEM: Values don't match \n";
                 return 0;
             }
 
@@ -236,7 +236,7 @@ sub check_sql_across_species{
         }
         
         my $filtered_types_ref = \@filtered_types;
-        print "Checking tables for $species_name: \n";
+        #print "Checking tables for $species_name: \n";
         $final_result &= check_same_sql_result(
                                 sql => $sql,
                                 species => $species_name,

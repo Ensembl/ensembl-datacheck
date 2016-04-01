@@ -77,10 +77,6 @@ my $query_result = $helper->execute(
     -SQL => $sql
 );
 
-#my @query_result = ( ['12600', 'Gene', '13054', 'WikiGene'], ['12700', 'Translation', '84411', 'goslim_goa'],
-#                  ['20005', 'Translation', '19774', 'UniParc'], ['20005', 'Gene', '289', 'UniParc'] );
-
-#my $query_result = \@query_result;
 
 my $previous_id = -1;
 my $external_db_id = 0;
@@ -93,25 +89,28 @@ foreach my $row (@$query_result){
         $external_db_id = $row->[0];
     }
     else{
+        $result &= 0;
         die "PROBLEM: external_db_id not defined! \n";
     }
     if(defined $row->[1]){
         $object_type = $row->[1];
     }
     else{
+        $result &= 0;
         die "PROBLEM: object_type not defined! \n";
     }
     if(defined $row->[3]){
         $external_db_name = $row->[3];
     }
     else{
+        $result &= 0;
         die "PROBLEM: external_db_name not defined! \n";
     }
 
     if($external_db_id == $previous_id){
-        print "External DB with Id $external_db_id $external_db_name "
+        print "PROBLEM: External DB with Id $external_db_id $external_db_name "
               . "is associated with $object_type as well as $previous_type \n";
-        $result = 0;
+        $result &= 0;
     }
 
     $previous_type = $object_type;

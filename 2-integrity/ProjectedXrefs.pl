@@ -79,7 +79,7 @@ if($proper_species eq 'homo_sapiens' ||
    $proper_species eq 'ciona_intestinalis' ||
    $proper_species eq 'ciona_savignyi'){
     #no testing for these species
-    print "Test is not needed for " . $species ."\n";
+    print "SKIPPING: Test is not needed for " . $species ."\n";
 }
 else{
     #find the number of genes with projected xrefs.
@@ -97,7 +97,7 @@ else{
         $result = 0;
     }
     else{
-        print "OK: " . $xref_rows . " genes in " . $species . " have projected display_xrefs. \n";
+        #print "OK: " . $xref_rows . " genes in " . $species . " have projected display_xrefs. \n";
     }
 
     #find the number of projected GO xrefs.
@@ -116,7 +116,7 @@ else{
         $result = 0;
     }
     else{
-        print "OK: " . $go_rows . " projected GO terms in " . $species ."\n";
+        #print "OK: " . $go_rows . " projected GO terms in " . $species ."\n";
    }
 }
 

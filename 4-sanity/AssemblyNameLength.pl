@@ -66,6 +66,8 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
 
+my $result = 1;
+
 #Check if the assembly name is declared
 my $sql = "SELECT COUNT(*) FROM meta WHERE meta_key = 'assembly.name'";
 
@@ -75,9 +77,8 @@ my $rowcount = DBUtils::RowCounter::get_row_count({
 });
 
 if($rowcount == 0){
-    #insert sensible error message
-    #return false (or whatever you're going to use to do results) 
-    croak "BAD TABLE!!!";   
+    print "PROBLEM: No assembly name declared in meta (core) for $species \n";
+    my $result &= 0;   
 }
 else{
     #assembly name is present. make sure it's length < 16
@@ -88,13 +89,10 @@ else{
     my $assembly_name_length = $query_result->[0][0];
 
     if($assembly_name_length > 16){
-        #insert sensible error message
-        #return false (or whatever you're going to use to do results)
-        croak "BAD ASSEMBLY NAME!!!";
+        my $result &= 0;
+        print "PROBLEM: assembly name in meta_key found with length > 16 \n";
     }
 }
 
-print "SUCCESS:D \n";
-#everything went well :)
-#return true (or whatever you're going to use to do results)
+print "$result \n";
         

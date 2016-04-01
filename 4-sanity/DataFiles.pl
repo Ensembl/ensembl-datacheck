@@ -81,13 +81,7 @@ foreach my $row (@$names_ref){
    }
 }
 
-if($result == 0){
-   #in lieu of a better return mechanism atm.
-   print "FAILURE: Some filenames were not in the required format. See report. \n";
-}
-else{
-   print "SUCCESS: All filenames were in the right format. \n";
-}
+print "$result \n";
 
 
 sub find_extensions{
@@ -95,7 +89,7 @@ sub find_extensions{
 
     #look if the name ends in .A-Za-z format
     if($name =~ /\.([A-Za-z]+)$/){
-        print $name . " might have a file extension as end. \n";
+        print "PROBLEM: $name might have a file extension as end. \n";
         return 0;
     }
     else{
@@ -108,7 +102,7 @@ sub find_spaces{
     
     #look for any spaces in the file name.
     if(index($name, " ") != -1){
-        print "There's a space in filename " . $name . "\n";
+        print "PROBLEM: There's a space in filename " . $name . "\n";
         return 0;
     }
     else{

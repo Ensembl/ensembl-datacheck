@@ -58,11 +58,13 @@ my @database_types = ('core', 'cdna', 'otherfeatures', 'rnaseq');
 
 my $types = \@database_types;
 
-my $same = DBUtils::SqlComparer::check_sql_across_species(
+my $result = 1;
+
+$result &= DBUtils::SqlComparer::check_sql_across_species(
     sql => $sql,    
     registry => $registry,
     types => $types,
     meta => 1,
 );
 
-print "$same \n";
+print "$result \n";

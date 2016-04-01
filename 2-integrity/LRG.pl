@@ -74,7 +74,7 @@ if(assert_lrgs($helper)){
     $result &= assert_lrg_annotations($helper, 'transcript');
 }
 else{
-    print "No LRG seq_regions found for $species; skipping the test \n";
+    print "SKIPPING: No LRG seq_regions found for $species; skipping the test \n";
 }
 
 print "$result \n";
@@ -146,7 +146,7 @@ sub assert_lrg_annotations{
         }   
     }
     if(!$lrg_present){
-        print "lrg coordinate system exists but no $feature(s) are attached \n";
+        print "PROBLEM: lrg coordinate system exists but no $feature(s) are attached \n";
         $result = 0;
     }
     
@@ -157,7 +157,7 @@ sub assert_lrg_annotations{
             my $coord_system = $lrg_coord_systems[$i][0];
             #if the coordinate system is not lrg it should not have features with biotype lrg attached!
             if ($coord_system ne 'lrg'){
-                print "LRG biotyped $feature(s) attached to the wrong coordinate system: " 
+                print "PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
                       . ($lrg_coord_systems[$i][0]) ."\n";
                 $result = 0;
             }
@@ -186,7 +186,7 @@ sub assert_lrg_annotations{
             my $biotype = $lrg_biotypes[$i][0];
             #if the biotype name isn't associated with LRG it shouldn't be on the lrg coordinate system!
             if(index($biotype, 'LRG') == -1){
-                print "lrg coordinate system has the following wrongly biotyped $feature(s) "
+                print "PROBLEM: lrg coordinate system has the following wrongly biotyped $feature(s) "
                       . "attached to it: $biotype \n";
                 $result = 0;
             }

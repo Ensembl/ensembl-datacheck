@@ -104,7 +104,8 @@ foreach my $part (@columns){
     );
 
     foreach my $nested_array (@$query_result){
-	    my @auto_increment;
+        #loook for 'aut_increment'  in results and push it in an array.	    
+        my @auto_increment;
 
                 foreach my $cell (@$nested_array){
                     if(defined $cell){
@@ -114,10 +115,10 @@ foreach my $part (@columns){
                      }
                 }
 
-            #... if there is not, autoincrement has not been declared for this column!
+            #... if the array is empty, autoincrement has not been declared for this column!
             if(!@auto_increment){
                 print "PROBLEM: " . $table . "." . $column . "  is not set to autoincrement! \n";
-                $result = 0;
+                $result &= 0;
             }
             
     }
