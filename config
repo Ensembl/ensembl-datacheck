@@ -2,7 +2,7 @@
 
 {
     #change these as desired
-    'species' => 'homo sapiens',
+    'species' => 'cavia porcellus',
     'database_type' => 'core',    
 
 

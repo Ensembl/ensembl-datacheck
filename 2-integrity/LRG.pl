@@ -32,6 +32,8 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
+
 my $registry = 'Bio::EnsEMBL::Registry';
 
 my $parent_dir = File::Spec->updir;
@@ -58,6 +60,11 @@ else {
     }
 } 
 
+my $log = Logger->new({
+    healthcheck => 'LRG',
+    type => 'core',
+    species => $species,
+});
 
 
 #only applies to core databases
@@ -74,10 +81,10 @@ if(assert_lrgs($helper)){
     $result &= assert_lrg_annotations($helper, 'transcript');
 }
 else{
-    print "SKIPPING: No LRG seq_regions found for $species; skipping the test \n";
+     $log->message("SKIPPING: No LRG seq_regions found for $species; skipping the test");
 }
 
-print "$result \n";
+$log->result($result);
 
 =head2 assert_lrgs
 
@@ -146,7 +153,7 @@ sub assert_lrg_annotations{
         }   
     }
     if(!$lrg_present){
-        print "PROBLEM: lrg coordinate system exists but no $feature(s) are attached \n";
+        log->message("PROBLEM: lrg coordinate system exists but no $feature(s) are attached");
         $result = 0;
     }
     
@@ -157,8 +164,8 @@ sub assert_lrg_annotations{
             my $coord_system = $lrg_coord_systems[$i][0];
             #if the coordinate system is not lrg it should not have features with biotype lrg attached!
             if ($coord_system ne 'lrg'){
-                print "PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
-                      . ($lrg_coord_systems[$i][0]) ."\n";
+                log->message("PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
+                      . ($lrg_coord_systems[$i][0]));
                 $result = 0;
             }
         }
@@ -186,8 +193,8 @@ sub assert_lrg_annotations{
             my $biotype = $lrg_biotypes[$i][0];
             #if the biotype name isn't associated with LRG it shouldn't be on the lrg coordinate system!
             if(index($biotype, 'LRG') == -1){
-                print "PROBLEM: lrg coordinate system has the following wrongly biotyped $feature(s) "
-                      . "attached to it: $biotype \n";
+                log->message("PROBLEM: lrg coordinate system has the following wrongly biotyped $feature(s) "
+                      . "attached to it: $biotype");
                 $result = 0;
             }
         }
