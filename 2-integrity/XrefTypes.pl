@@ -30,6 +30,8 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
+
 my $registry = 'Bio::EnsEMBL::Registry';
 
 my $parent_dir = File::Spec->updir;
@@ -63,6 +65,12 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
 
+my $log = Logger->new({
+    healthcheck => 'XrefTypes',
+    type => 'core',
+    species => $species,
+});
+
 my $result = 1;
 
 my $sql = "SELECT  x.external_db_id, ox.ensembl_object_type, COUNT(*), e.db_name 
@@ -90,26 +98,26 @@ foreach my $row (@$query_result){
     }
     else{
         $result &= 0;
-        die "PROBLEM: external_db_id not defined! \n";
+        $log->message("PROBLEM: external_db_id not defined!");
     }
     if(defined $row->[1]){
         $object_type = $row->[1];
     }
     else{
         $result &= 0;
-        die "PROBLEM: object_type not defined! \n";
+        $log->message("PROBLEM: object_type not defined!");
     }
     if(defined $row->[3]){
         $external_db_name = $row->[3];
     }
     else{
         $result &= 0;
-        die "PROBLEM: external_db_name not defined! \n";
+        $log->message("PROBLEM: external_db_name not defined!");
     }
 
     if($external_db_id == $previous_id){
-        print "PROBLEM: External DB with Id $external_db_id $external_db_name "
-              . "is associated with $object_type as well as $previous_type \n";
+        $log->message("PROBLEM: External DB with Id $external_db_id $external_db_name "
+              . "is associated with $object_type as well as $previous_type");
         $result &= 0;
     }
 
@@ -117,5 +125,5 @@ foreach my $row (@$query_result){
     $previous_id = $external_db_id;
 }
 
-print "$result \n";
+$log->result($result);
     

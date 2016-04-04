@@ -33,6 +33,7 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::RowCounter;
 
 my $registry = 'Bio::EnsEMBL::Registry';
@@ -70,6 +71,12 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
 
+my $log = Logger->new({
+    healthcheck => 'ProjectedXrefs',
+    type => 'core',
+    species => $species,
+});
+
 my $result = 1;
 
 if($proper_species eq 'homo_sapiens' ||
@@ -79,7 +86,7 @@ if($proper_species eq 'homo_sapiens' ||
    $proper_species eq 'ciona_intestinalis' ||
    $proper_species eq 'ciona_savignyi'){
     #no testing for these species
-    print "SKIPPING: Test is not needed for " . $species ."\n";
+    $log->message("SKIPPING: Test is not needed for " . $species);
 }
 else{
     #find the number of genes with projected xrefs.
@@ -93,11 +100,11 @@ else{
     });
 
     if($xref_rows == 0){
-        print "PROBLEM: No genes in " . $species . " have projected display_xrefs. \n";
+        $log->message("PROBLEM: No genes in " . $species . " have projected display_xrefs.");
         $result = 0;
     }
     else{
-        #print "OK: " . $xref_rows . " genes in " . $species . " have projected display_xrefs. \n";
+        $log->message("OK: " . $xref_rows . " genes in " . $species . " have projected display_xrefs.");
     }
 
     #find the number of projected GO xrefs.
@@ -112,12 +119,12 @@ else{
     });
 
     if($go_rows == 0){
-        print "PROBLEM: No projected GO terms in " . $species . "\n";
+        $log->message("PROBLEM: No projected GO terms in " . $species);
         $result = 0;
     }
     else{
-        #print "OK: " . $go_rows . " projected GO terms in " . $species ."\n";
+        $log->message("OK: " . $go_rows . " projected GO terms in " . $species);
    }
 }
 
-print $result . "\n"
+$log->result($result);

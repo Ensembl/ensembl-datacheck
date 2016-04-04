@@ -60,6 +60,7 @@ sub check_same_sql_result{
     my $species = $arg_for{species};
     my $types_ref = $arg_for{types};
     my $meta = $arg_for{meta};
+    my $log = $arg_for{logger};
     
     my @types = @{ $types_ref };
 
@@ -70,6 +71,8 @@ sub check_same_sql_result{
     my @meta_results;
 
     foreach $type (@types){
+	#set logger for the database type
+	$log->type($type);
 
         my $dba = Bio::EnsEMBL::Registry->get_DBAdaptor($species, $type);
 
@@ -98,11 +101,14 @@ sub check_same_sql_result{
                 push @meta_results, $meta_result;
             }
             else{
-                print "PROBLEM: Unable to do meta table comparison: can't extract table name \n";
+                $log->message("PROBLEM: Unable to do meta table comparison: can't extract table name");
             }
         }
 
     }
+    
+    #logger is general case for database types again
+    $log->type('undefined');
 
     for(my $i = 0; $i <= $#sql_results; $i++){
         for(my $j = $i+1; $j <= $#sql_results; $j++){
@@ -110,6 +116,7 @@ sub check_same_sql_result{
             $final_result &= compare_sql_results(
                 result1 => @sql_results[$i],
                 result2 => @sql_results[$j],
+                logger => $log,
             );
         }
     }
@@ -121,13 +128,14 @@ sub check_same_sql_result{
                 $final_result &= compare_sql_results(
                     result1 => @meta_results[$i],
                     result2 => @meta_results[$j],
+                    logger => $log,
                 );
             }
         }
     }        
 
     if($final_result){
-        #print "OK: Tables for $species match \n";
+        $log->message("OK: Tables for $species match");
     }
     return $final_result;
 
@@ -149,9 +157,10 @@ sub compare_sql_results{
     
     my $result1 = $arg_for{result1};
     my $result2 = $arg_for{result2};
+    my $log = $arg_for{logger};
 
     if($#$result1 != $#$result2){
-        print "PROBLEM: Number of rows does not match \n";
+        $log->message("PROBLEM: Number of rows does not match");
         return 0;
     }
 
@@ -161,7 +170,7 @@ sub compare_sql_results{
         my $column_no2 = $result2->[$i];
 
         if($#$column_no1 != $#$column_no2){
-            print "PROBLEM: Number of columns does not match \n";
+            $log->message("PROBLEM: Number of columns does not match");
             return 0;
         }
 
@@ -184,7 +193,7 @@ sub compare_sql_results{
             }
 
             if(!($value1 eq $value2)){
-                print "PROBLEM: Values don't match \n";
+                $log->message("PROBLEM: Values don't match: $value1 and $value2");
                 return 0;
             }
 
@@ -214,6 +223,7 @@ sub check_sql_across_species{
     my $registry = $arg_for{registry};
     my $types = $arg_for{types};
     my $meta = $arg_for{meta};
+    my $log = $arg_for{logger};
 
     my @database_types = @{ $types };
     
@@ -222,6 +232,9 @@ sub check_sql_across_species{
     my $final_result = 1;
 
     foreach my $species_name (@species_names){
+	#set the logger for the species
+	$log->species($species_name);
+    
         my @species_dbas = @{ $registry->get_all_DBAdaptors(
             -species => $species_name    
              ) };
@@ -242,6 +255,7 @@ sub check_sql_across_species{
                                 species => $species_name,
                                 types => $filtered_types_ref,
                                 meta => $meta,
+                                logger => $log,
                             );
     }
     return $final_result;

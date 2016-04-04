@@ -34,6 +34,7 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::CheckForOrphans;
 use DBUtils::TableSets;
 use DBUtils::RowCounter;
@@ -74,11 +75,18 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
     );
 
+my $log = Logger->new({
+    healthcheck => 'CoreForeignKeys',
+    type => $database_type,
+    species => $species,
+});
+    
 my $test_result = 1;
 
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'exon',
     col1   => 'exon_id',
     table2 => 'exon_transcript',
@@ -88,6 +96,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'transcript',
     col1   => 'transcript_id',
     table2 => 'exon_transcript',
@@ -97,6 +106,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'gene',
     col1   => 'gene_id',
     table2 => 'transcript',
@@ -106,6 +116,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'object_xref',
     col1 => 'xref_id',
     table2 => 'xref',
@@ -115,6 +126,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'xref',
     col1 => 'external_db_id',
     table2 => 'external_db',
@@ -124,6 +136,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'dna',
     col1 => 'seq_region_id',
     table2 => 'seq_region',
@@ -133,6 +146,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'seq_region',
     col1 => 'coord_system_id',
     table2 => 'coord_system',
@@ -142,6 +156,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'assembly',
     col1 => 'cmp_seq_region_id',
     table2 => 'seq_region',
@@ -151,6 +166,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'marker_feature',
     col1 => 'marker_id',
     table2 => 'marker',
@@ -160,6 +176,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'seq_region_attrib',
     col1 => 'seq_region_id',
     table2 => 'seq_region',
@@ -169,6 +186,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'seq_region_attrib',
     col1 => 'attrib_type_id',
     table2 => 'attrib_type',
@@ -178,6 +196,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'misc_feature_misc_set',
     col1 => 'misc_feature_id',
     table2 => 'misc_feature',
@@ -187,6 +206,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'misc_feature_misc_set',
     col1 => 'misc_set_id',
     table2 => 'misc_set',
@@ -197,6 +217,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 if($database_type eq 'sangervega'){
     $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
                         helper => $helper,
+                        logger => $log,
                         table1 => 'misc_feature',
                         col1 => 'misc_feature_id',
                         table2 => 'misc_attrib',
@@ -213,6 +234,7 @@ if($database_type eq 'sangervega'){
 if($database_type eq 'compara'){
     $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
                         helper => $helper,
+                        logger => $log,
                         table1 => 'seq_region',
                         col1 => 'seq_region_id',
                         table2 => 'dna',
@@ -225,6 +247,7 @@ if($database_type eq 'compara'){
 else {
     $test_result &= DBUtils::CheckForOrphans::check_orphans(
         helper => $helper,
+        logger => $log,
         table1 => 'misc_feature',
         col1 => 'misc_feature_id',
         table2 => 'misc_attrib',
@@ -235,6 +258,7 @@ else {
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'misc_attrib',
     col1 => 'attrib_type_id',
     table2 => 'attrib_type',
@@ -244,6 +268,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'assembly_exception',
     col1 => 'seq_region_id',
     table2 => 'seq_region',
@@ -253,6 +278,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'assembly_exception',
     col1 => 'exc_seq_region_id',
     table2 => 'seq_region',
@@ -262,6 +288,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'protein_feature',
     col1 => 'translation_id',
     table2 => 'translation',
@@ -271,6 +298,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'marker_synonym',
     col1 => 'marker_id',
     table2 => 'marker',
@@ -280,6 +308,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'translation_attrib',
     col1 => 'translation_id',
     table2 => 'translation',
@@ -289,6 +318,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'transcript_attrib',
     col1 => 'transcript_id',
     table2 => 'transcript',
@@ -298,6 +328,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
         
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'external_synonym',
     col1 => 'xref_id',
     table2 => 'xref',
@@ -307,6 +338,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'identity_xref',
     col1 => 'object_xref_id',
     table2 => 'object_xref',
@@ -316,6 +348,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'supporting_feature',
     col1 => 'exon_id',
     table2 => 'exon',
@@ -325,6 +358,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'translation',
     col1 => 'transcript_id',
     table2 => 'transcript',
@@ -334,6 +368,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'ontology_xref',
     col1 => 'object_xref_id',
     table2 => 'object_xref',
@@ -343,6 +378,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'associated_xref',
     col1 => 'object_xref_id',
     table2 => 'object_xref',
@@ -352,6 +388,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'associated_xref',
     col1 => 'xref_id',
     table2 => 'xref',
@@ -361,6 +398,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'associated_xref',
     col1 => 'source_xref_id',
     table2 => 'xref',
@@ -370,6 +408,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'dependent_xref',
     col1 => 'object_xref_id',
     table2 => 'object_xref',
@@ -379,6 +418,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'dependent_xref',
     col1 => 'master_xref_id',
     table2 => 'xref',
@@ -388,6 +428,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'dependent_xref',
     col1 => 'dependent_xref_id',
     table2 => 'xref',
@@ -397,6 +438,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
     helper => $helper,
+    logger => $log,
     table1 => 'gene_archive',
     col1 => 'peptide_archive_id',
     table2 => 'peptide_archive',
@@ -406,6 +448,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'peptide_archive',
     col1 => 'peptide_archive_id',
     table2 => 'gene_archive',
@@ -415,6 +458,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'stable_id_event',
     col1 => 'mapping_session_id',
     table2 => 'mapping_session',
@@ -424,6 +468,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'gene_archive',
     col1 => 'mapping_session_id',
     table2 => 'mapping_session',
@@ -436,15 +481,16 @@ my @types = ("Gene", "Transcript", "Translation");
 foreach my $type (@types){
     $test_result &= check_keys_by_ensembl_object_type(
 	    helper => $helper,
-		object => 'object_xref',
-		type => $type,
+	    logger => $log,
+	    object => 'object_xref',
+	    type => $type,
 	);
 }
 
 
-
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'analysis_description',
     col1 => 'analysis_id',
     table2 => 'analysis',
@@ -454,6 +500,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'gene_attrib',
     col1 => 'attrib_type_id',
     table2 => 'attrib_type',
@@ -463,6 +510,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'transcript_attrib',
     col1 => 'attrib_type_id',
     table2 => 'attrib_type',
@@ -472,6 +520,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'translation_attrib',
     col1 => 'attrib_type_id',
     table2 => 'attrib_type',
@@ -481,6 +530,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'translation',
     col1 => 'end_exon_id',
     table2 => 'exon',
@@ -490,6 +540,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'translation',
     col1 => 'start_exon_id',
     table2 => 'exon',
@@ -499,6 +550,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'alt_allele',
     col1 => 'gene_id',
     table2 => 'gene',
@@ -508,6 +560,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'marker_map_location',
     col1 => 'map_id',
     table2 => 'map',
@@ -517,6 +570,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'marker_map_location',
     col1 => 'marker_id',
     table2 => 'marker',
@@ -526,6 +580,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'marker_map_location',
     col1 => 'marker_synonym_id',
     table2 => 'marker_synonym',
@@ -535,6 +590,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'assembly',
     col1 => 'asm_seq_region_id',
     table2 => 'seq_region',
@@ -544,6 +600,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'unmapped_object',
     col1 => 'unmapped_reason_id',
     table2 => 'unmapped_reason',
@@ -553,6 +610,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'unmapped_object',
     col1 => 'analysis_id',
     table2 => 'analysis',
@@ -562,6 +620,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
     helper => $helper,
+    logger => $log,
     table1 => 'supporting_feature',
     col1 => 'feature_id',
     table2 => 'dna_align_feature',
@@ -571,6 +630,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
     helper => $helper,
+    logger => $log,
     table1 => 'supporting_feature',
     col1 => 'feature_id',
     table2 => 'protein_align_feature',
@@ -581,6 +641,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
     helper => $helper,
+    logger => $log,
     table1 => 'transcript_supporting_feature',
     col1 => 'feature_id',
     table2 => 'dna_align_feature',
@@ -590,6 +651,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
     helper => $helper,
+    logger => $log,
     table1 => 'transcript_supporting_feature',
     col1 => 'feature_id',
     table2 => 'protein_align_feature',
@@ -599,6 +661,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'density_feature',
     col1 => 'density_type_id',
     table2 => 'density_type',
@@ -608,6 +671,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'prediction_exon',
     col1 => 'prediction_transcript_id',
     table2 => 'prediction_transcript',
@@ -617,6 +681,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'marker',
     col1 => 'display_marker_synonym_id',
     table2 => 'marker_synonym',
@@ -626,6 +691,7 @@ $test_result &= DBUtils::CheckForOrphans::check_orphans(
 
 $test_result &= DBUtils::CheckForOrphans::check_orphans(
     helper => $helper,
+    logger => $log,
     table1 => 'unmapped_object',
     col1 => 'external_db_id',
     table2 => 'external_db',
@@ -648,31 +714,33 @@ foreach my $analysis_table (@analysis_tables){
 		$constraint .= " and $analysis_table.analysis_id != 0";
 	}
 	
-	$test_result &= $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
-    helper => $helper,
-    table1 => $analysis_table,
-    col1 => 'analysis_id',
-    table2 => 'analysis',
-    col2 => 'analysis_id',
-    constraint => $constraint,
-    );
+	$test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
+	    helper => $helper,
+	    logger => $log,
+	    table1 => $analysis_table,
+	    col1 => 'analysis_id',
+	    table2 => 'analysis',
+	    col2 => 'analysis_id',
+	    constraint => $constraint,
+	);
 
 }
 
 
 
-$test_result &= check_display_marker_synonym_id($helper);
+$test_result &= check_display_marker_synonym_id($helper, $log);
 
-print "$test_result \n";
+$log->result($test_result);
 
 sub check_keys_by_ensembl_object_type{
 	my (%arg_for) = @_;
 	
 	my $helper = $arg_for{helper};
+	my $log = $arg_for{logger};
 	my $object = $arg_for{object};
 	my $type = $arg_for{type};
 	
-    my $table = $type;
+	my $table = $type;
 	#find camelcase capital letters and separate them by _ instead and convert to lower case.
 	$table =~ s/([a-z])([A-Z])/$1_$2/;
 	$table = lc($table);
@@ -686,19 +754,20 @@ sub check_keys_by_ensembl_object_type{
 	}
 	
 	my $result = DBUtils::CheckForOrphans::check_orphans_with_constraint(
-    helper => $helper,
-    table1 => $object,
-    col1 => $column,
-    table2 => $table,
-    col2 => $table . "_id",
-    constraint => "$object.ensembl_object_type = \'$type\'",
-    );
+	    helper => $helper,
+	    logger => $log,
+	    table1 => $object,
+	    col1 => $column,
+	    table2 => $table,
+	    col2 => $table . "_id",
+	    constraint => "$object.ensembl_object_type = \'$type\'",
+	);
 	
 	return $result;
 }
 
 sub check_display_marker_synonym_id{
-	my ($helper) = @_;
+	my ($helper, $log) = @_;
 	
 	my $result = 1;
 	
@@ -708,13 +777,14 @@ sub check_display_marker_synonym_id{
 				         . "WHERE m.marker_id = ms.marker_id)";
 	
 	my $number_of_rows = DBUtils::RowCounter::get_row_count({
-    helper => $helper,
-    sql => $sql,
+	    helper => $helper,
+	    sql => $sql,
 	});
 	
 	if ($number_of_rows > 0){
 		$result = 0;
-		print "I need a better error message. Greetings from check_display_marker_synonym_id \n";
+		$log->message("PROBLEM: There are markers that have a display_marker_id "
+				. "that is not part of the synonyms for marker");
 	}
 	
 	return $result;

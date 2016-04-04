@@ -15,12 +15,13 @@ has 'healthcheck' => (
 has 'type' => (
     is => 'rw',
     isa => 'Str',
-    required => 1,
+    default => 'undefined',
 );
 
 has 'species' => (
     is => 'rw',
     isa => 'Str',
+    default => 'undefined',
 );
 
 sub message{
@@ -28,15 +29,9 @@ sub message{
     
     my $healthcheck = uc($self->healthcheck);
     my $type = uc($self->type);
-    my $species;
-    if(defined $self->species){
-        $species = uc($self->species);
-    }
-    else{
-        $species = 'NOT DEFINED';
-    }
-
-    print YELLOW "$healthcheck on $type database for species: $species \t $message \n";
+    my $species = uc($self->species);
+    
+    print BRIGHT_YELLOW "$healthcheck on $type database for species: $species \t $message \n";
 }
 
 sub result{
@@ -44,16 +39,10 @@ sub result{
     
     my $healthcheck = uc($self->healthcheck);
     my $type = uc($self->type);
-    my $species;
-    if(defined $self->species){
-        $species = uc($self->species);
-    }
-    else{
-        $species = 'NOT DEFINED';
-    }
+    my $species = uc($self->species);
     
-    if($result == 1){
-	print BRIGHT_GREEN "$result OK: $healthcheck on $type database for species $species passed succesfully \n";
+    if($result){
+	print BRIGHT_GREEN "$result SUCCESS: $healthcheck on $type database for species $species passed succesfully \n";
     }
     else{
 	print BRIGHT_RED "$result FAIL: $healthcheck on $type database for species $species failed: "

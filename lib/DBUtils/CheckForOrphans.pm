@@ -48,6 +48,7 @@ sub check_orphans {
     my (%arg_for) = @_;
 
     my $helper = $arg_for{helper};
+    my $log = $arg_for{logger};
 
     my $table1 = $arg_for{table1};
     my $col1   = $arg_for{col1};
@@ -89,23 +90,23 @@ sub check_orphans {
     if($orphan_count > 0){
         #in case you check both ways this will show you in which direction the orphans occur.
         if($result_left > 0){
-            print "PROBLEM: $result_left foreign key violations in "
-                  . "$table1.$col1 -> $table2.$col2 \n";
+            $log->message("PROBLEM: $result_left foreign key violations in "
+                  . "$table1.$col1 -> $table2.$col2");
         }
         if($both_ways){
             if($result_right > 0){
-            print "PROBLEM: $result_right foreign key violations in "
-                  . "$table2.$col2. -> $table1.$col1 \n";
+            $log->message("PROBLEM: $result_right foreign key violations in "
+                  . "$table2.$col2. -> $table1.$col1");
             }
         }
         return 0;
     }
     else{
-        print "OK: No foreign key violations in $table1.$col1 -> $table2.$col2";
+        my $message = "OK: No foreign key violations in $table1.$col1 -> $table2.$col2";
         if($both_ways){
-            print " or $table2.$col2 -> $table1.$col1";
+            $message .= " or $table2.$col2 -> $table1.$col1";
         }
-        print "\n";
+        $log->message($message);
         return 1;
     }
 }
@@ -114,6 +115,7 @@ sub check_orphans_with_constraint{
     my (%arg_for) = @_;
 
     my $helper = $arg_for{helper};
+    my $log = $arg_for{logger};
 
     my $table1 = $arg_for{table1};
     my $col1   = $arg_for{col1};
@@ -132,14 +134,14 @@ sub check_orphans_with_constraint{
                        );
 
     if($orphan_count > 0){
-        print "PROBLEM: $orphan_count foreign key violations in "
-              . "$table1.$col1 -> $table2.$col2 with constraint $constraint \n";
+        $log->message("PROBLEM: $orphan_count foreign key violations in "
+              . "$table1.$col1 -> $table2.$col2 with constraint $constraint");
 
         return 0;
     }
     else{
-        print "OK: No foreigh key violations in $table1.$col1 -> $table2.$col2 "
-              . "with constraint $constraint \n";
+        $log->message("OK: No foreigh key violations in $table1.$col1 -> $table2.$col2 "
+              . "with constraint $constraint");
         
         return 1;
     }

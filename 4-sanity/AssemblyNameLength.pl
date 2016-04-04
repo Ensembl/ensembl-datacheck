@@ -32,6 +32,7 @@ use Carp;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::RowCounter;
 
 my $registry = 'Bio::EnsEMBL::Registry';
@@ -66,6 +67,12 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
 
+my $log = Logger->new({
+    healthcheck => 'AssemblyNameLength',
+    type => 'core',
+    species => $species,
+});
+
 my $result = 1;
 
 #Check if the assembly name is declared
@@ -77,7 +84,7 @@ my $rowcount = DBUtils::RowCounter::get_row_count({
 });
 
 if($rowcount == 0){
-    print "PROBLEM: No assembly name declared in meta (core) for $species \n";
+    $log->message("PROBLEM: No assembly name declared in meta (core) for $species");
     my $result &= 0;   
 }
 else{
@@ -90,9 +97,9 @@ else{
 
     if($assembly_name_length > 16){
         my $result &= 0;
-        print "PROBLEM: assembly name in meta_key found with length > 16 \n";
+        $log->message("PROBLEM: assembly name in meta_key found with length > 16");
     }
 }
 
-print "$result \n";
+$log->result($result);
         

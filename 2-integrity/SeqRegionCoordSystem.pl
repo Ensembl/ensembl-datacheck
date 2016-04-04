@@ -37,6 +37,7 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::RowCounter;
 use DBUtils::MultiSpecies;
 
@@ -67,8 +68,13 @@ else {
     if(!defined $database_type){
         $database_type = $config->{'database_type'};
     }
-    print "$species $database_type \n";
-} 
+}
+
+my $log = Logger->new({
+    healthcheck => 'SeqRegionCoordSystem',
+    type => $database_type,
+    species => $species,
+});
 
 my $dba = $registry->get_DBAdaptor($species, $database_type);
 
@@ -78,32 +84,27 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
 
 my $result = 1;
 
-if(DBUtils::MultiSpecies::is_multi_species($dba)){
-    #if it is a multispecies database, get all the distinct species_ids...
-    my $species_ids = DBUtils::MultiSpecies::get_multi_species_ids($helper);
+#get all the distinct species_ids...for single species databases this is just one
+my $species_ids = DBUtils::MultiSpecies::get_multi_species_ids($helper);
+
+if((scalar @{ $species_ids }) > 1){
+    $log->message("Multispecies database detected");
+}
     
-    #...and iterate over them to run the test on each species.
-    foreach my $species_id (@$species_ids){
-        foreach my $id (@$species_id){
+#...and iterate over them to run the test on each species.
+foreach my $species_id (@$species_ids){
+    foreach my $id (@$species_id){
 
-            print "Checking species by ID $id: \n";
-            if(lc($database_type) eq 'core'){
-                $result &= check_names($id);
-            }
-            $result &= check_lengths($id);
-            print "\n";
+        $log->message("Checking species by ID: $id");
+        if(lc($database_type) eq 'core'){
+            $result &= check_names($id, $helper, $log);
         }
-    }
-}
-else{
-    #IS THIS ASSUMPTION VALID? if there is only one species in the database it's species_id is 1.
-    if(lc($database_type) eq 'core'){
-        $result &= check_names(1);
-    }
-    $result &= check_lengths(1);
+        $result &= check_lengths($id, $helper, $log);
+        }
 }
 
-print $result . "\n";
+
+$log->result($result);
 
 =head2 check_names
     
@@ -118,9 +119,11 @@ in core databases, so if any rows are returned it points to a mistake.
 =cut
 
 sub check_names{
-    my ($species_id) = @_;
+    my ($species_id, $helper, $log) = @_;
 
     my $names_result = 1;
+    
+    
 
     my $sql = "SELECT coord_system_id FROM coord_system
                   WHERE species_id = $species_id";
@@ -147,12 +150,12 @@ sub check_names{
             });
         
             if($count > 0){
-                print "PROBLEM: Coordinate systems $id_1 and $id_2 have $count identically-named seq_regions"
-                        . " - This may cause problems for ID mapping. \n";
+                $log->message("PROBLEM: Coordinate systems $id_1 and $id_2 have $count identically-named seq_regions"
+                        . " - This may cause problems for ID mapping.");
                 $names_result = 0;
             }
             else{
-                #print "OK: Coordinate systems $id_1 and $id_2 have no identically-named seq_regions. \n";
+                $log->message("OK: Coordinate systems $id_1 and $id_2 have no identically-named seq_regions.");
             }
     
         }       
@@ -173,7 +176,7 @@ should be the same, so if any rows are returned this points to a problem.
 =cut
 
 sub check_lengths{
-    my ($species_id) = @_;
+    my ($species_id, $helper, $log) = @_;
 
     my $length_result = 1;
 
@@ -186,6 +189,7 @@ sub check_lengths{
                         AND c1.species_id = $species_id
                         AND c2.species_id = $species_id";
 
+    #this needs revision
     if(index(lc($database_type), 'vega') != -1){
         $length_sql = $length_sql . " AND c1.version = c2.version";
     }
@@ -196,11 +200,11 @@ sub check_lengths{
     });
 
     if($count > 0){
-        print "PROBLEM: $count regions have the same name but different lengths for species with id $species_id \n";
+        $log->message("PROBLEM: $count regions have the same name but different lengths for species with id $species_id");
         $length_result = 0;
     }
     else{
-        #print "OK: All seq_region lengths match for the species with id $species_id \n";
+        $log->message("OK: All seq_region lengths match for the species with id $species_id");
     }
 
     return $length_result;

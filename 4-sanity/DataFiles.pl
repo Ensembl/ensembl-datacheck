@@ -31,6 +31,8 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
+
 my $registry = 'Bio::EnsEMBL::Registry';
 
 my $parent_dir = File::Spec->updir;
@@ -60,6 +62,12 @@ else {
 #this could do with a warning/catch when the dbadaptor doesn't exist for a species
 my $dba = $registry->get_DBAdaptor($species, 'rnaseq');
 
+my $log = Logger->new({
+    healthcheck => 'DataFiles',
+    type => 'rnaseq',
+    species => $species,    
+});
+
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
@@ -81,7 +89,7 @@ foreach my $row (@$names_ref){
    }
 }
 
-print "$result \n";
+$log->result($result);
 
 
 sub find_extensions{
@@ -89,7 +97,7 @@ sub find_extensions{
 
     #look if the name ends in .A-Za-z format
     if($name =~ /\.([A-Za-z]+)$/){
-        print "PROBLEM: $name might have a file extension as end. \n";
+        $log->message("PROBLEM: $name might have a file extension as end.");
         return 0;
     }
     else{
@@ -102,7 +110,7 @@ sub find_spaces{
     
     #look for any spaces in the file name.
     if(index($name, " ") != -1){
-        print "PROBLEM: There's a space in filename " . $name . "\n";
+        $log->message("PROBLEM: There's a space in filename " . $name);;
         return 0;
     }
     else{

@@ -31,6 +31,7 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::SqlComparer;
 
 my $registry = 'Bio::EnsEMBL::Registry';
@@ -58,6 +59,10 @@ my @database_types = ('core', 'cdna', 'otherfeatures', 'rnaseq');
 
 my $types = \@database_types;
 
+my $log = Logger->new({
+    healthcheck => 'CoordSystemAcrossSpecies',
+});
+
 my $result = 1;
 
 $result &= DBUtils::SqlComparer::check_sql_across_species(
@@ -65,6 +70,11 @@ $result &= DBUtils::SqlComparer::check_sql_across_species(
     registry => $registry,
     types => $types,
     meta => 1,
+    logger => $log,
 );
 
-print "$result \n";
+#the final result is general case so change from the last species & database type used.
+$log->type('undefined');
+$log->species('undefined');
+
+$log->result($result);

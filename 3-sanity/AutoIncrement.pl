@@ -33,6 +33,8 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
+
 my $registry = 'Bio::EnsEMBL::Registry';
 
 my ($species, $database_type);
@@ -60,7 +62,6 @@ else {
     if(!defined $database_type){
         $database_type = $config->{'database_type'};
     }
-    print "$species $database_type \n";
 } 
 
 my $dba = $registry->get_DBAdaptor($species, $database_type);
@@ -68,6 +69,13 @@ my $dba = $registry->get_DBAdaptor($species, $database_type);
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
    -DB_CONNECTION => $dba->dbc()
 );
+
+my $log = Logger->new({
+    healthcheck => 'AutoIncrement',
+    type => $database_type,
+    species => $species,    
+});
+    
 
 my $result = 1;
 
@@ -117,7 +125,7 @@ foreach my $part (@columns){
 
             #... if the array is empty, autoincrement has not been declared for this column!
             if(!@auto_increment){
-                print "PROBLEM: " . $table . "." . $column . "  is not set to autoincrement! \n";
+                $log->message("PROBLEM: " . $table . "." . $column . "  is not set to autoincrement!");
                 $result &= 0;
             }
             
@@ -126,5 +134,5 @@ foreach my $part (@columns){
 }
 
 #print this for now.
-print $result . "\n";
+$log->result($result);
 
