@@ -25,19 +25,33 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
-
+use Logger;
 use DBUtils::SqlComparer;
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-$registry->load_registry_from_db(
-       -host => 'ensembldb.ensembl.org',
-       -user => 'anonymous',
-       -port => 3306,    
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir. "/config";
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config;
+}
+else{
+    $registry->load_registry_from_db(
+           -host => $config->{'db_registry'}{'host'},
+           -user => $config->{'db_registry'}{'user'},
+           -port => $config->{'db_registry'}{'port'},
+    );
+}
 
 my $sql = "SELECT * FROM coord_system WHERE name != 'lrg'";
 
@@ -45,11 +59,22 @@ my @database_types = ('core', 'cdna', 'otherfeatures', 'rnaseq');
 
 my $types = \@database_types;
 
-my $same = DBUtils::SqlComparer::check_sql_across_species(
+my $log = Logger->new({
+    healthcheck => 'CoordSystemAcrossSpecies',
+});
+
+my $result = 1;
+
+$result &= DBUtils::SqlComparer::check_sql_across_species(
     sql => $sql,    
     registry => $registry,
     types => $types,
     meta => 1,
+    logger => $log,
 );
 
-print "$same \n";
+#the final result is general case so change from the last species & database type used.
+$log->type('undefined');
+$log->species('undefined');
+
+$log->result($result);

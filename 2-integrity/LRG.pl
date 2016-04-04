@@ -26,19 +26,46 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/26644ee7982be37aef610afc69
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
-my $species = $ARGV[0];
+use Logger;
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $species;
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+} 
+
+my $log = Logger->new({
+    healthcheck => 'LRG',
+    type => 'core',
+    species => $species,
+});
+
 
 #only applies to core databases
 my $dba = $registry->get_DBAdaptor($species, 'core');
@@ -54,10 +81,10 @@ if(assert_lrgs($helper)){
     $result &= assert_lrg_annotations($helper, 'transcript');
 }
 else{
-    print "No LRG seq_regions found for $species; skipping the test \n";
+     $log->message("SKIPPING: No LRG seq_regions found for $species; skipping the test");
 }
 
-print "$result \n";
+$log->result($result);
 
 =head2 assert_lrgs
 
@@ -126,7 +153,7 @@ sub assert_lrg_annotations{
         }   
     }
     if(!$lrg_present){
-        print "lrg coordinate system exists but no $feature(s) are attached \n";
+        log->message("PROBLEM: lrg coordinate system exists but no $feature(s) are attached");
         $result = 0;
     }
     
@@ -137,8 +164,8 @@ sub assert_lrg_annotations{
             my $coord_system = $lrg_coord_systems[$i][0];
             #if the coordinate system is not lrg it should not have features with biotype lrg attached!
             if ($coord_system ne 'lrg'){
-                print "LRG biotyped $feature(s) attached to the wrong coordinate system: " 
-                      . ($lrg_coord_systems[$i][0]) ."\n";
+                log->message("PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
+                      . ($lrg_coord_systems[$i][0]));
                 $result = 0;
             }
         }
@@ -166,8 +193,8 @@ sub assert_lrg_annotations{
             my $biotype = $lrg_biotypes[$i][0];
             #if the biotype name isn't associated with LRG it shouldn't be on the lrg coordinate system!
             if(index($biotype, 'LRG') == -1){
-                print "lrg coordinate system has the following wrongly biotyped $feature(s) "
-                      . "attached to it: $biotype \n";
+                log->message("PROBLEM: lrg coordinate system has the following wrongly biotyped $feature(s) "
+                      . "attached to it: $biotype");
                 $result = 0;
             }
         }

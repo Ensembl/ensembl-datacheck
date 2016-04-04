@@ -27,27 +27,55 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/bb8a7c3852206049087c52c5b5
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
-#getting species and database type like this until infrastructure is made
-my $species = $ARGV[0];
-my $database_type = $ARGV[1];
+use Logger;
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my ($species, $database_type);
+
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species, 'type:s' => \$database_type);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+    if(!defined $database_type){
+        $database_type = $config->{'database_type'};
+    }
+} 
 
 my $dba = $registry->get_DBAdaptor($species, $database_type);
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
    -DB_CONNECTION => $dba->dbc()
 );
+
+my $log = Logger->new({
+    healthcheck => 'AutoIncrement',
+    type => $database_type,
+    species => $species,    
+});
+    
 
 my $result = 1;
 
@@ -84,7 +112,8 @@ foreach my $part (@columns){
     );
 
     foreach my $nested_array (@$query_result){
-	    my @auto_increment;
+        #loook for 'aut_increment'  in results and push it in an array.	    
+        my @auto_increment;
 
                 foreach my $cell (@$nested_array){
                     if(defined $cell){
@@ -94,10 +123,10 @@ foreach my $part (@columns){
                      }
                 }
 
-            #... if there is not, autoincrement has not been declared for this column!
+            #... if the array is empty, autoincrement has not been declared for this column!
             if(!@auto_increment){
-                print "PROBLEM: " . $table . "." . $column . "  is not set to autoincrement! \n";
-                $result = 0;
+                $log->message("PROBLEM: " . $table . "." . $column . "  is not set to autoincrement!");
+                $result &= 0;
             }
             
     }
@@ -105,5 +134,5 @@ foreach my $part (@columns){
 }
 
 #print this for now.
-print $result . "\n";
+$log->result($result);
 

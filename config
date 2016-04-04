@@ -1,0 +1,19 @@
+#config file
+
+{
+    #change these as desired
+    'species' => 'cavia porcellus',
+    'database_type' => 'core',    
+
+
+    'db_registry' => {
+        'host' => 'ensembldb.ensembl.org',
+        'user' => 'anonymous',
+        'port' => 3306,
+        'password' => 'xxxxx'
+    }
+
+    #leave these as is unless there's been an API update    
+    #put registries here. or apdators. who knows really
+}
+

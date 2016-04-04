@@ -12,7 +12,7 @@
   ARG[Species Name]      : String - Name of the species to test on.
   ARG[Database type]     : String - Type of the database to run on.
   
-  Database type          : Core databases(?) (user-input).
+  Database type          : Core
 
 Checks that the species that should have them have xrefs projected on genes, and have projected GO
 xrefs.
@@ -27,32 +27,55 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/83/src/org/ensembl
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::RowCounter;
-
-#getting species and database type like this until infrastructure is made
-my $species = $ARGV[0];
-my $database_type = $ARGV[1];
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $species;
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+} 
 
 #Find the proper species name. Needed later for filtering. 
 my $proper_species = $registry->get_alias($species);
 
-my $dba = $registry->get_DBAdaptor($proper_species, $database_type);
+my $dba = $registry->get_DBAdaptor($proper_species, 'core');
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
+
+my $log = Logger->new({
+    healthcheck => 'ProjectedXrefs',
+    type => 'core',
+    species => $species,
+});
 
 my $result = 1;
 
@@ -63,7 +86,7 @@ if($proper_species eq 'homo_sapiens' ||
    $proper_species eq 'ciona_intestinalis' ||
    $proper_species eq 'ciona_savignyi'){
     #no testing for these species
-    print "Test is not needed for " . $species ."\n";
+    $log->message("SKIPPING: Test is not needed for " . $species);
 }
 else{
     #find the number of genes with projected xrefs.
@@ -77,11 +100,11 @@ else{
     });
 
     if($xref_rows == 0){
-        print "PROBLEM: No genes in " . $species . " have projected display_xrefs. \n";
+        $log->message("PROBLEM: No genes in " . $species . " have projected display_xrefs.");
         $result = 0;
     }
     else{
-        print "OK: " . $xref_rows . " genes in " . $species . " have projected display_xrefs. \n";
+        $log->message("OK: " . $xref_rows . " genes in " . $species . " have projected display_xrefs.");
     }
 
     #find the number of projected GO xrefs.
@@ -96,12 +119,12 @@ else{
     });
 
     if($go_rows == 0){
-        print "PROBLEM: No projected GO terms in " . $species . "\n";
+        $log->message("PROBLEM: No projected GO terms in " . $species);
         $result = 0;
     }
     else{
-        print "OK: " . $go_rows . " projected GO terms in " . $species ."\n";
+        $log->message("OK: " . $go_rows . " projected GO terms in " . $species);
    }
 }
 
-print $result . "\n"
+$log->result($result);
