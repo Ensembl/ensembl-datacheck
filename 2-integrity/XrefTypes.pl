@@ -24,19 +24,39 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/26644ee7982be37aef610afc69
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
-my $species = $ARGV[0];
+use Logger;
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $species;
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+} 
 
 #only applies to core databases
 my $dba = $registry->get_DBAdaptor($species, 'core');
@@ -44,6 +64,12 @@ my $dba = $registry->get_DBAdaptor($species, 'core');
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
+
+my $log = Logger->new({
+    healthcheck => 'XrefTypes',
+    type => 'core',
+    species => $species,
+});
 
 my $result = 1;
 
@@ -59,10 +85,6 @@ my $query_result = $helper->execute(
     -SQL => $sql
 );
 
-#my @query_result = ( ['12600', 'Gene', '13054', 'WikiGene'], ['12700', 'Translation', '84411', 'goslim_goa'],
-#                  ['20005', 'Translation', '19774', 'UniParc'], ['20005', 'Gene', '289', 'UniParc'] );
-
-#my $query_result = \@query_result;
 
 my $previous_id = -1;
 my $external_db_id = 0;
@@ -75,30 +97,33 @@ foreach my $row (@$query_result){
         $external_db_id = $row->[0];
     }
     else{
-        die "PROBLEM: external_db_id not defined! \n";
+        $result &= 0;
+        $log->message("PROBLEM: external_db_id not defined!");
     }
     if(defined $row->[1]){
         $object_type = $row->[1];
     }
     else{
-        die "PROBLEM: object_type not defined! \n";
+        $result &= 0;
+        $log->message("PROBLEM: object_type not defined!");
     }
     if(defined $row->[3]){
         $external_db_name = $row->[3];
     }
     else{
-        die "PROBLEM: external_db_name not defined! \n";
+        $result &= 0;
+        $log->message("PROBLEM: external_db_name not defined!");
     }
 
     if($external_db_id == $previous_id){
-        print "External DB with Id $external_db_id $external_db_name "
-              . "is associated with $object_type as well as $previous_type \n";
-        $result = 0;
+        $log->message("PROBLEM: External DB with Id $external_db_id $external_db_name "
+              . "is associated with $object_type as well as $previous_type");
+        $result &= 0;
     }
 
     $previous_type = $object_type;
     $previous_id = $external_db_id;
 }
 
-print "$result \n";
+$log->result($result);
     

@@ -26,24 +26,43 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/83/src/org/ensembl
 use strict;
 use warnings;
 
-use Data::Dumper;
+use File::Spec;
+use Getopt::Long;
 
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::MultiSpecies;
 
+#NEEDS REVISION ANYWAY SO LEAVE THIS FOR NOW
 #contigs come up as mistakes a lot, but they're probably not wrong at all. 
 my $ignore_contigs = $ARGV[0];
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-#This should probably be configurable as well. Config file?
-$registry->load_registry_from_db(
-    -host => 'ensembldb.ensembl.org',
-    -user => 'anonymous',
-    -port => 3306,
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir. "/config";
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config;
+}
+else{
+    $registry->load_registry_from_db(
+           -host => $config->{'db_registry'}{'host'},
+           -user => $config->{'db_registry'}{'user'},
+           -port => $config->{'db_registry'}{'port'},
+    );
+}
+
+my $log = Logger->new({
+    healthcheck => 'AssemblyMapping',
+    type => 'core',
+});
+
 my $result = 1;
 
 #finds a pattern with two strings seperated by :
@@ -55,10 +74,11 @@ my @species_names = @ { DBUtils::MultiSpecies::get_all_species_in_registry($regi
 #my @species_names = ('homo sapiens');
 
 foreach my $species_name (@species_names){
-    print "$species_name \n";
 
     #only applies to core databases
     my $dba = $registry->get_DBAdaptor($species_name, 'core');
+    
+    $log->species($species_name);
 
     my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
@@ -96,8 +116,6 @@ foreach my $species_name (@species_names){
             
             $cs_result_string .= $cs_name . $cs_version
         }
-
-        print "$cs_result_string \n";
             
         my $assembly_map_result = $helper->execute(
             -SQL => $assembly_map_sql,
@@ -128,36 +146,36 @@ foreach my $species_name (@species_names){
                     
                     #look if the name is in the coordinate system string we created earlier
                     if(index($cs_result_string, $name) == -1){
-                        print "PROBLEM: No coordinate system named $name found in $species_name for $assembly_map \n";
+                        $log->message("PROBLEM: No coordinate system named $name found in $species_name for $assembly_map");
                         $result = 0;
                     }
                     else{
                         #look for the combination name and version in the coordinate system string
                         if(index($cs_result_string, $name . $version) == -1){
-                            print "PROBLEM: No coordinate system named $name with version $version "
-                                  . "found in $species_name for $assembly_map \n";
+                            $log->message("PROBLEM: No coordinate system named $name with version $version "
+                                  . "found in $species_name for $assembly_map");
                             $result = 0;
                         }
                         else{
-                            print "OK \n";
+                            $log->message("OK");
                         }
                     }
                 
                 }
                 else{
-                    print "PROBLEM: Assembly mapping element $map_element from $assembly_map "
-                          . "in $species_name does not match the expected pattern $assembly_pattern \n";
+                    $log->message("PROBLEM: Assembly mapping element $map_element from $assembly_map "
+                          . "in $species_name does not match the expected pattern $assembly_pattern");
                     $result = 0;
                 } 
             }
         }
              
     }
-    #makes output easier to read
-    print "\n";
 
 }
+#species is undefined again.
+$log->species("undefined");
 
-print "$result \n";
+$log->result($result);
 
 

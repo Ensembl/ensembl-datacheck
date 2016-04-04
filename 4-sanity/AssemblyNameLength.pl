@@ -24,31 +24,56 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/83/src/org/ensembl
 use strict;
 use warnings;
 
+use File::Spec;
+use Getopt::Long;
+
 use Carp;
 
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
+use Logger;
 use DBUtils::RowCounter;
 
-#Follows the old AssemblyNameLength test
-
-#finding species like this is temporary (probably).
-my $species = $ARGV[0];
- 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-$registry->load_registry_from_db(
-	-host => 'ensembldb.ensembl.org',
-	-user => 'anonymous',
-	-port => 3306,
-);
+my $parent_dir = File::Spec->updir;
+my $file = $parent_dir . "/config";
+
+my $species;
+
+my $config = do $file;
+if(!$config){
+    warn "couldn't parse $file: $@" if $@;
+    warn "couldn't do $file: $!"    unless defined $config;
+    warn "couldn't run $file"       unless $config; 
+}
+else {
+    $registry->load_registry_from_db(
+        -host => $config->{'db_registry'}{'host'},
+        -user => $config->{'db_registry'}{'user'},
+        -port => $config->{'db_registry'}{'port'},
+    );
+    #if there is command line input use that, else take the config file.
+    GetOptions('species:s' => \$species);
+    if(!defined $species){
+        $species = $config->{'species'};
+    }
+} 
 
 my $dba = $registry->get_DBAdaptor($species, 'core');
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
+
+my $log = Logger->new({
+    healthcheck => 'AssemblyNameLength',
+    type => 'core',
+    species => $species,
+});
+
+my $result = 1;
 
 #Check if the assembly name is declared
 my $sql = "SELECT COUNT(*) FROM meta WHERE meta_key = 'assembly.name'";
@@ -59,9 +84,8 @@ my $rowcount = DBUtils::RowCounter::get_row_count({
 });
 
 if($rowcount == 0){
-    #insert sensible error message
-    #return false (or whatever you're going to use to do results) 
-    croak "BAD TABLE!!!";   
+    $log->message("PROBLEM: No assembly name declared in meta (core) for $species");
+    my $result &= 0;   
 }
 else{
     #assembly name is present. make sure it's length < 16
@@ -72,13 +96,10 @@ else{
     my $assembly_name_length = $query_result->[0][0];
 
     if($assembly_name_length > 16){
-        #insert sensible error message
-        #return false (or whatever you're going to use to do results)
-        croak "BAD ASSEMBLY NAME!!!";
+        my $result &= 0;
+        $log->message("PROBLEM: assembly name in meta_key found with length > 16");
     }
 }
 
-print "SUCCESS:D \n";
-#everything went well :)
-#return true (or whatever you're going to use to do results)
+$log->result($result);
         
