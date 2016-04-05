@@ -26,7 +26,7 @@ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/83/src/org/ensembl
 
 =cut
 
-#!/usr/bin/evn perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
