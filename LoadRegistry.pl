@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+#use this to load the registry (based on input from config file). 
 
 use strict;
 use warnings;
@@ -11,8 +12,8 @@ use Bio::EnsEMBL::Utils::SqlHelper;
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
-my $parent_dir = File::Spec->updir;
-my $file = $parent_dir . "/config";
+#my $parent_dir = File::Spec->updir;
+my $file = "config";
 
 my $config = do $file;
 if(!$config){
@@ -25,5 +26,6 @@ else {
         -host => $config->{'db_registry'}{'host'},
         -user => $config->{'db_registry'}{'user'},
         -port => $config->{'db_registry'}{'port'},
+        -verbose => 1,
     );
 }
