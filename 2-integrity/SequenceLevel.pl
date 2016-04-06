@@ -1,3 +1,26 @@
+=head1 NAME
+
+  SequenceLevel - A user-defined integrity test on coord_system (type 2 in the healthcheck system)
+  
+=head1 SYNOPSIS
+
+  $ perl SequenceLevel.pl --species 'homo sapiens' --type 'core'
+ 
+=head1 DESCRIPTION
+
+  --species     : String (optional) - Name of the species to test on. If not given the species given in the config file will be used.
+  --type        : String (optional) - Type of the database to test on. If not given the database type given in the config file will be used.
+
+Checks that there are no contig coordinate systems in the coord_system table that have a
+version other than 'NULL' with check_version.
+check_dna_attachment tests that a coordinate system with a dna sequence region attached to it
+has its coord_system.attrib set to sequence_level.
+
+Perl adaptation of the SequenceLevel.java test.
+See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/SequenceLevel.java
+ 
+=cut
+
 #!/usr/bin/env perl
 
 use strict;
