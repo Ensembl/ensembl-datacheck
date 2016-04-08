@@ -90,19 +90,19 @@ my $species_ids = DBUtils::MultiSpecies::get_multi_species_ids($helper);
 if((scalar @{ $species_ids }) > 1){
     $log->message("Multispecies database detected");
 }
-    
+ 
 #...and iterate over them to run the test on each species.
 foreach my $species_id (@$species_ids){
     foreach my $id (@$species_id){
 
         $log->message("Checking species by ID: $id");
+        
         if(lc($database_type) eq 'core'){
             $result &= check_names($id, $helper, $log);
         }
         $result &= check_lengths($id, $helper, $log);
-        }
+        }      
 }
-
 
 $log->result($result);
 
@@ -142,8 +142,8 @@ sub check_names{
             my $same_sql = "SELECT COUNT(*) FROM seq_region s1, seq_region s2
                                 WHERE s1.coord_system_id = $id_1
                                 AND s2.coord_system_id = $id_2
-                                AND s1.name = s2.name";
-
+                                AND s1.name = s2.name";                   
+                                
             my $count = DBUtils::RowCounter::get_row_count({
                 helper => $helper,
                 sql => $same_sql,
