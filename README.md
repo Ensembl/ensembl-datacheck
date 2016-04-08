@@ -28,38 +28,39 @@ Inital set of tests to be developed:
 <b> Category 2</b>
 <ul>
 <li>AssemblyMapping</li>
-<li>AssemblyMultipleOverlap</li>
-<li>FeatureCoors</li>
+<li><s>AssemblyMultipleOverlap</s></li>
+<li><s>FeatureCoords</s></li>
 <li>LRG</li>
-<li>Meta (& MetaCoords & MetaCrossSpecies & Metavalues (?))</li>
+<li>Meta</li>
 <li>ProjectXrefs</li>
 <li>SeqRegionCoordSystem</li>
-<li>VariationDensity</li>
+<li>SequenceLevel</li>
+<li><s>VariationDensity</s></li>
 <li>XrefTypes</li>
 </ul>
 
 <b> Category 3</b>
 <ul>
 <li>AutoIncrement</li>
-<li>BlanksInsteadOfNulls</li>
-<li>SchemaType</li>
-<li>StableID</li>
+<li><s>BlanksInsteadOfNulls</s></li>
+<li><s>SchemaType</s></li>
+<li><s>StableID</s></li>
 </ul>
 
 <b> Category 4</b>
 <ul>
 <li>AssemblyNameLength</li>
 <li>DataFiles</li>
-<li>GeneCount</li>
-<li>NonGTACNSequency</li>
-<li>XrefPrefixes</li>
+<li><s>GeneCount</s></li>
+<li><s>NonGTACNSequency</s></li>
+<li><s>XrefPrefixes</s></li>
 </ul>
 
 <b> Category 5</b>
 <ul>
-<li>ComparePreviousDatabases</li>
+<li><s>ComparePreviousDatabases</s></li>
 <li>CoordSystemAcrossSpecies</li>
-<li>MySQLStorageEngine</li>
-<li>ProductionMeta (or another Production test)</li>
-<li>SeqRegionAcrossSpecies & SeqRegionAttribAcrossSpecies</li>
+<li><s>MySQLStorageEngine</s></li>
+<li><s>ProductionMeta (or another Production test)</s></li>
+<li><s>SeqRegionAcrossSpecies & SeqRegionAttribAcrossSpecies</s></li>
 </ul>
