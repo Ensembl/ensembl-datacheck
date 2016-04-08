@@ -103,10 +103,10 @@ sub assert_lrgs{
                          JOIN seq_region sr USING (coord_system_id)
                          WHERE cs.name = 'lrg'";
 
+    
     my $count_ref = $helper->execute(
                         -SQL => $assert_sql,
                         );
-
 
     my $count = $count_ref->[0][0];
 
@@ -135,8 +135,8 @@ sub assert_lrg_annotations{
                                         JOIN seq_region sr USING (coord_system_id)
                                         JOIN $feature f using (seq_region_id)
                                         WHERE f.biotype LIKE 'LRG%'
-                                     GROUP BY cs.name";
-
+                                     GROUP BY cs.name";                                  
+                                     
     my $lrg_coord_systems = $helper->execute(
                                         -SQL => $lrg_coord_systems_sql,
                                     );

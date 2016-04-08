@@ -95,11 +95,10 @@ foreach my $species_name (@species_names){
         my $assembly_map_sql = "SELECT meta_value FROM meta
                                    WHERE meta_key = 'assembly.mapping'
                                    AND species_id = $id";
-
+        
         my $cs_result = $helper->execute(
             -SQL => $cs_sql,
-        );
-
+        );       
        
         my $cs_result_string;
         my $cs_name;
@@ -157,7 +156,7 @@ foreach my $species_name (@species_names){
                             $result = 0;
                         }
                         else{
-                            $log->message("OK");
+                            #$log->message("OK");
                         }
                     }
                 
