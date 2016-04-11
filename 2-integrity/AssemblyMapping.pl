@@ -8,11 +8,8 @@
 
 =head1 DESCRIPTION
 
-  ARG[ignore_contigs]    : Boolean - do not warn for contig mappings that do not match the format.
-
   Database               : Core
 
-######NEEDS REVISION#####
 Checks if the assembly.mapping values in the meta table are the right format and if they refer to existing
 coordinate systems (name & version).
 
@@ -34,10 +31,6 @@ use Bio::EnsEMBL::Utils::SqlHelper;
 
 use Logger;
 use DBUtils::MultiSpecies;
-
-#NEEDS REVISION ANYWAY SO LEAVE THIS FOR NOW
-#contigs come up as mistakes a lot, but they're probably not wrong at all. 
-my $ignore_contigs = $ARGV[0];
 
 my $registry = 'Bio::EnsEMBL::Registry';
 
@@ -70,8 +63,6 @@ my $assembly_pattern = qr/([^:]+)(:(.+))?/;
 
 my @species_names = @ { DBUtils::MultiSpecies::get_all_species_in_registry($registry) };
 
-#use this if you want to tests things in the code.
-#my @species_names = ('homo sapiens');
 
 foreach my $species_name (@species_names){
 
@@ -91,11 +82,7 @@ foreach my $species_name (@species_names){
 
         my $cs_sql = "SELECT name, version FROM coord_system
                          WHERE species_id = $id";
-
-        my $assembly_map_sql = "SELECT meta_value FROM meta
-                                   WHERE meta_key = 'assembly.mapping'
-                                   AND species_id = $id";
-        
+  
         my $cs_result = $helper->execute(
             -SQL => $cs_sql,
         );       
@@ -103,9 +90,11 @@ foreach my $species_name (@species_names){
         my $cs_result_string;
         my $cs_name;
         my $cs_version;
-        #make a string containing all the name version pairs. this way we can use index and our life will be easier :)
+        
+        #make a cs_result_string containing all the name version pairs. this way we can use index to look for pairs later on.
         for(my $i = 0; $i <= $#$cs_result; $i++){
             $cs_name = ($cs_result->[$i][0]);
+            #the sql helper returns NULLs as undefined which upsets Perl, so we change them back to NULLs.
             if(defined $cs_result->[$i][1]){
                 $cs_version = ($cs_result->[$i][1]);
             }
@@ -115,12 +104,17 @@ foreach my $species_name (@species_names){
             
             $cs_result_string .= $cs_name . $cs_version
         }
+        
+        my $assembly_map_sql = "SELECT meta_value FROM meta
+                                   WHERE meta_key = 'assembly.mapping'
+                                   AND species_id = $id";
+        
             
         my $assembly_map_result = $helper->execute(
             -SQL => $assembly_map_sql,
         );
 
-        #iterate over each assembly mapping cell
+        #each meta_value that represents an assembly mapping needs to match a certain format and needs to be used in the coord_system table
         for(my $i = 0; $i <= $#$assembly_map_result; $i++){
             my $assembly_map = $assembly_map_result->[$i][0];
 
@@ -128,20 +122,16 @@ foreach my $species_name (@species_names){
             my @map_elements = split(/[|#]/, $assembly_map);
             #and for each element of the split check some stuff...
             foreach my $map_element (@map_elements){
-                
-                #contig returns a lot of errors
-                if($ignore_contigs){
-                    if($map_element eq 'contig'){
-                        next;
-                    }
-                }    
+   
                 #see if it matches the right format
-                my @reg_exp_groups = $map_element =~ $assembly_pattern;
-                #it needs to return a result and the result needs to contain 3 groups.
-                if(@reg_exp_groups && (defined $reg_exp_groups[1] && defined $reg_exp_groups[2])){
-                    #grab the coordinate system and version from the mapping                    
+                if($map_element =~ $assembly_pattern){
+                    my @reg_exp_groups = $map_element =~ $assembly_pattern;
+                    
                     my $name = $reg_exp_groups[0];
-                    my $version = $reg_exp_groups[2];
+                    my $version = '';
+                    if(defined $reg_exp_groups[2]){
+                        $version = $reg_exp_groups[2];
+                    }
                     
                     #look if the name is in the coordinate system string we created earlier
                     if(index($cs_result_string, $name) == -1){
@@ -149,17 +139,16 @@ foreach my $species_name (@species_names){
                         $result = 0;
                     }
                     else{
-                        #look for the combination name and version in the coordinate system string
+                       #look for the combination name and version in the coordinate system string
                         if(index($cs_result_string, $name . $version) == -1){
                             $log->message("PROBLEM: No coordinate system named $name with version $version "
-                                  . "found in $species_name for $assembly_map");
+                                . "found in $species_name for $assembly_map");
                             $result = 0;
                         }
                         else{
                             #$log->message("OK");
                         }
-                    }
-                
+                    }         
                 }
                 else{
                     $log->message("PROBLEM: Assembly mapping element $map_element from $assembly_map "
