@@ -32,26 +32,13 @@ use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
 use Logger;
+use DBUtils::Connect;
 use DBUtils::SqlComparer;
 
+#we don't care about the adaptor we get back from this
+DBUtils::Connect::get_db_adaptor();
+
 my $registry = 'Bio::EnsEMBL::Registry';
-
-my $parent_dir = File::Spec->updir;
-my $file = $parent_dir. "/config";
-
-my $config = do $file;
-if(!$config){
-    warn "couldn't parse $file: $@" if $@;
-    warn "couldn't do $file: $!"    unless defined $config;
-    warn "couldn't run $file"       unless $config;
-}
-else{
-    $registry->load_registry_from_db(
-           -host => $config->{'db_registry'}{'host'},
-           -user => $config->{'db_registry'}{'user'},
-           -port => $config->{'db_registry'}{'port'},
-    );
-}
 
 my $sql = "SELECT * FROM coord_system WHERE name != 'lrg'";
 

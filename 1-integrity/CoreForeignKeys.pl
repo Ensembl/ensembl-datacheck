@@ -9,7 +9,7 @@
 =head1 DESCRIPTION
 
   ARG[species]         : String - name of the species to check on.
-  ARG[database type]   : String - name of the database type to test on. Currenlty only core databases.
+  ARG[database type]   : String - name of the database type to test on. Currenlty only generic databases.
 
 Tests all foreign key references in the core databases with the use of the CheckForOrphans functions. 
 Also holds tests for compara and sangervega but currently these are never run as the database adaptor 
@@ -35,41 +35,17 @@ use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
 use Logger;
+use DBUtils::Connect;
 use DBUtils::CheckForOrphans;
 use DBUtils::TableSets;
 use DBUtils::RowCounter;
 
-my $registry = 'Bio::EnsEMBL::Registry';
+my $dba = DBUtils::Connect::get_db_adaptor();
 
-my ($species, $database_type);
+my $species = DBUtils::Connect::get_db_species($dba);
+my $database_type = $dba->group();
 
-my $parent_dir = File::Spec->updir;
-my $file = $parent_dir . "/config";
-
-my $config = do $file;
-if(!$config){
-    warn "couldn't parse $file: $@" if $@;
-    warn "couldn't do $file: $!"    unless defined $config;
-    warn "couldn't run $file"       unless $config; 
-}
-else {
-    $registry->load_registry_from_db(
-        -host => $config->{'db_registry'}{'host'},
-        -user => $config->{'db_registry'}{'user'},
-        -port => $config->{'db_registry'}{'port'},
-    );
-    #if there is command line input use that, else take the config file.
-    GetOptions('species:s' => \$species, 'type:s' => \$database_type);
-    if(!defined $species){
-        $species = $config->{'species'};
-    }
-    if(!defined $database_type){
-        $database_type = $config->{'database_type'};
-    }
-    print "$species $database_type \n";
-} 
-
-my $dba = $registry->get_DBAdaptor($species, $database_type);
+print"$species $database_type \n";
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
