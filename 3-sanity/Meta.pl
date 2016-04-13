@@ -34,46 +34,20 @@ use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
 use Logger;
+use DBUtils::Connect;
 use DBUtils::TableExistence;
 use DBUtils::RowCounter;
 
-my $registry = 'Bio::EnsEMBL::Registry';
+my $dba = DBUtils::Connect::get_db_adaptor();
 
-my $parent_dir = File::Spec->updir;
-my $file = $parent_dir . "/config";
-
-my $species;
-my $database_type;
-
-my $config = do $file;
-if(!$config){
-    warn "couldn't parse $file: $@" if $@;
-    warn "couldn't do $file: $!"    unless defined $config;
-    warn "couldn't run $file"       unless $config; 
-}
-else {
-    $registry->load_registry_from_db(
-        -host => $config->{'db_registry'}{'host'},
-        -user => $config->{'db_registry'}{'user'},
-        -port => $config->{'db_registry'}{'port'},
-    );
-    #if there is command line input use that, else take the config file.
-    GetOptions('species:s' => \$species, 'type:s' => \$database_type);
-    if(!defined $species){
-        $species = $config->{'species'};
-    }
-    if(!defined $database_type){
-	$database_type = $config->{'database_type'};
-    }
-} 
+my $species = DBUtils::Connect::get_db_species($dba);
+my $database_type = $dba->group();
 
 my $log = Logger->new({
     healthcheck => 'Meta',
     type => $database_type,
     species => $species,
 });
-
-my $dba = $registry->get_DBAdaptor($species, $database_type);
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()

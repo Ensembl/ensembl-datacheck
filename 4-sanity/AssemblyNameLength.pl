@@ -33,45 +33,29 @@ use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
 use Logger;
+use DBUtils::Connect;
 use DBUtils::RowCounter;
 
-my $registry = 'Bio::EnsEMBL::Registry';
+my $dba = DBUtils::Connect::get_db_adaptor();
 
-my $parent_dir = File::Spec->updir;
-my $file = $parent_dir . "/config";
+my $species = DBUtils::Connect::get_db_species($dba);
 
-my $species;
+my $database_type = $dba->group();
 
-my $config = do $file;
-if(!$config){
-    warn "couldn't parse $file: $@" if $@;
-    warn "couldn't do $file: $!"    unless defined $config;
-    warn "couldn't run $file"       unless $config; 
+my $log = Logger->new(
+    healthcheck => 'AssemblyNameLength',
+    species => $species,
+    type => $database_type,
+);
+
+if(lc($database_type) ne 'core'){
+    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution will likely arise");
 }
-else {
-    $registry->load_registry_from_db(
-        -host => $config->{'db_registry'}{'host'},
-        -user => $config->{'db_registry'}{'user'},
-        -port => $config->{'db_registry'}{'port'},
-    );
-    #if there is command line input use that, else take the config file.
-    GetOptions('species:s' => \$species);
-    if(!defined $species){
-        $species = $config->{'species'};
-    }
-} 
-
-my $dba = $registry->get_DBAdaptor($species, 'core');
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
 
-my $log = Logger->new({
-    healthcheck => 'AssemblyNameLength',
-    type => 'core',
-    species => $species,
-});
 
 my $result = 1;
 

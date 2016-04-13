@@ -31,60 +31,42 @@ use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 
 use Logger;
+use DBUtils::Connect;
 
-my $registry = 'Bio::EnsEMBL::Registry';
+my $dba = DBUtils::Connect::get_db_adaptor();
 
-my $parent_dir = File::Spec->updir;
-my $file = $parent_dir . "/config";
+my $species = DBUtils::Connect::get_db_species($dba);
 
-my $species;
+my $database_type = $dba->group();
 
-my $config = do $file;
-if(!$config){
-    warn "couldn't parse $file: $@" if $@;
-    warn "couldn't do $file: $!"    unless defined $config;
-    warn "couldn't run $file"       unless $config; 
+my $log = Logger->new(
+    healthcheck => 'XrefTypes',
+    species => $species,
+    type => $database_type,
+);
+
+if(lc($database_type) ne 'core'){
+    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution will likely arise");
 }
-else {
-    $registry->load_registry_from_db(
-        -host => $config->{'db_registry'}{'host'},
-        -user => $config->{'db_registry'}{'user'},
-        -port => $config->{'db_registry'}{'port'},
-    );
-    #if there is command line input use that, else take the config file.
-    GetOptions('species:s' => \$species);
-    if(!defined $species){
-        $species = $config->{'species'};
-    }
-} 
-
-#only applies to core databases
-my $dba = $registry->get_DBAdaptor($species, 'core');
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
     -DB_CONNECTION => $dba->dbc()
 );
 
-my $log = Logger->new({
-    healthcheck => 'XrefTypes',
-    type => 'core',
-    species => $species,
-});
-
 my $result = 1;
 
-my $sql = "SELECT  x.external_db_id, ox.ensembl_object_type, COUNT(*), e.db_name 
-          FROM object_xref ox, external_db e, xref x 
-              LEFT JOIN transcript t ON t.display_xref_id = x.xref_id 
-              WHERE x.xref_id = ox.xref_id 
-              AND e.external_db_id = x.external_db_id 
-              AND isnull(transcript_id) 
-          GROUP BY x.external_db_id, ox.ensembl_object_type";
+
+my $sql = "SELECT  x.external_db_id, ox.ensembl_object_type, COUNT(*), e.db_name "
+          . "FROM object_xref ox, external_db e, xref x "
+             . "LEFT JOIN transcript t ON t.display_xref_id = x.xref_id "
+              . "WHERE x.xref_id = ox.xref_id "
+              . "AND e.external_db_id = x.external_db_id "
+              . "AND isnull(transcript_id) "
+          . "GROUP BY x.external_db_id, ox.ensembl_object_type";
 
 my $query_result = $helper->execute(
     -SQL => $sql
 );
-
 
 my $previous_id = -1;
 my $external_db_id = 0;

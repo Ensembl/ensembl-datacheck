@@ -21,4 +21,5 @@ sub get_table_info{
     my ($helper, $table) = @_;
     
     #do things
+}
 1;
