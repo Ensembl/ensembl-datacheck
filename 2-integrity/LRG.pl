@@ -4,13 +4,16 @@
 
 =head1 SYNOPSIS
 
-  $ perl LRG.pl 'homo sapiens'
+  $ perl LRG.pl --species 'homo sapiens' --type 'core'
 
 =head1 DESCRIPTION
 
-  ARG[species]    : String - name of the species to check on.
+  --species 'species name'    : String (Optional) - name of the species to check on.
+  --type 'database type'      : String (Optional) - database type to test on
 
-  Database type   : Core
+  Database type               : Core
+
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.  
 
 First checks if LRG coordinate system is present in the database for the given species. If it is, it
 checks if all the features with biotype 'LRG' are mapped to the lrg coordinate system. Then it checks

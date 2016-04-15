@@ -36,7 +36,11 @@ use DBUtils::Connect;
 use DBUtils::SqlComparer;
 
 #we don't care about the adaptor we get back from this
-DBUtils::Connect::get_db_adaptor();
+my $dba = DBUtils::Connect::get_db_adaptor();
+
+my $species = DBUtils::Connect::get_db_species($dba);
+my $database_type = $dba->group();
+print "$species $database_type \n";
 
 my $registry = 'Bio::EnsEMBL::Registry';
 

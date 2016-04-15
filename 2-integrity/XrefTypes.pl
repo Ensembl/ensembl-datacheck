@@ -4,15 +4,18 @@
 
 =head1 SYNOPSIS
 
-  $ perl XrefTypes.pl 'cavia porcellus'
+  $ perl XrefTypes.pl --species 'cavia porcellus' --type 'core'
 
 =head1 DESCRIPTION
 
-  ARG[species]    : String - name of the species to check on.
+  --species 'species name'    : String (Optional) - name of the species to check on.
+  --type 'database type'      : String (Optional) - type of the database to test on
 
-  Database        : Core
+  Database type               : Core
+  
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.
 
-Xrefs from the same (external) source should all be mapped to the same type of Ensembl object.
+Xrefs from the same (external) source should all be mapped to the same type of, and one and only one Ensembl object.
 
 Perl adaptation of the XrefTypes.java test
 See: https://github.com/Ensembl/ensj-healthcheck/blob/26644ee7982be37aef610afc69fae52cc70f5b35/src/org/ensembl/healthcheck/testcase/generic/XrefTypes.java

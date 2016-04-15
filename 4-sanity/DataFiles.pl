@@ -5,12 +5,16 @@
 
 =head1 SYNPOSIS
 
-  $ perl DataFiles.pl 'homo sapiens'
+  $ perl DataFiles.pl --species 'homo sapiens' --type 'rnaseq'
 
 =head1 DESCRIPTION
 
-  ARG[Species Name]    : String - Name of the species to test on.
-  Database type        : RNASEQ (hardcoded).
+  --species 'species name'    : String (Optional) - Name of the species to test on.
+  --type 'database type'      : String (Optional) - Type of the database to test on.
+  
+  Database type               : rnaseq
+  
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.  
 
 File names inserted in the data_file table should not have file extensions or spaces
 in their names. The data files API will automatically deal with file extensions.
@@ -47,7 +51,7 @@ my $log = Logger->new(
 );
 
 if(lc($database_type) ne 'rnaseq'){
-    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution will likely arise");
+    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution/results may arise");
 }
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(

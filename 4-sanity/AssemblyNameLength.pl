@@ -4,12 +4,16 @@ AssemblyNameLength - A sanity test (type 4 in the healthcheck system)
 
 =head1 SYNOPSYS
 
-  $ perl AssemblyNameLength.pl 'Homo sapiens'
+  $ perl AssemblyNameLength.pl --species 'homo sapiens' --type 'core'
 
 =head1 DESCRIPTION
 
-  ARG[Species Name]    : String - Name of the species to test on.
-  Database type        : CORE (hardcoded).
+  --species 'species name'   : String (Optional) - Name of the species to test on.
+  --type 'database type'     : String (Optional) - Database type to test on
+  
+  Database type              : Core
+  
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.
 
 A healthcheck that checks that the meta_value for the key
 assembly.name in the meta table is not longer than 16 characters.
@@ -49,7 +53,7 @@ my $log = Logger->new(
 );
 
 if(lc($database_type) ne 'core'){
-    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution will likely arise");
+    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution/results may arise");
 }
 
 my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
@@ -69,7 +73,7 @@ my $rowcount = DBUtils::RowCounter::get_row_count({
 
 if($rowcount == 0){
     $log->message("PROBLEM: No assembly name declared in meta (core) for $species");
-    my $result &= 0;   
+    $result &= 0;   
 }
 else{
     #assembly name is present. make sure it's length < 16
@@ -80,8 +84,8 @@ else{
     my $assembly_name_length = $query_result->[0][0];
 
     if($assembly_name_length > 16){
-        my $result &= 0;
-        $log->message("PROBLEM: assembly name in meta_key found with length > 16");
+        $result &= 0;
+        $log->message("PROBLEM: assembly.name meta_value found with length > 16");
     }
 }
 

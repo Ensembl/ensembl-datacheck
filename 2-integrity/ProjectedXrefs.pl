@@ -5,14 +5,16 @@
 
 =head2 SYNOPSIS
 
-  $ perl ProjectedXrefs.pl 'canis familiaris' 'core'
+  $ perl ProjectedXrefs.pl --species 'canis familiaris' --type 'core'
 
 =head3 DESCRIPTION
 
-  ARG[Species Name]      : String - Name of the species to test on.
-  ARG[Database type]     : String - Type of the database to run on.
+  --species 'species name'     : String - Name of the species to test on.
+  --type 'database type'       : String - Type of the database to run on.
   
-  Database type          : Core
+  Database type                : Core
+  
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.
 
 Checks that the species that should have them have xrefs projected on genes, and have projected GO
 xrefs.

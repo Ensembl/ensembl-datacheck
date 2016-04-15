@@ -4,12 +4,16 @@
 
 =head1 SYNOPSYS
 
-  $ perl SeqRegionCoordSystem.pl 'homo sapiens' 'core'
+  $ perl SeqRegionCoordSystem.pl --species 'homo sapiens' --type 'core'
 
 =head1 DESCRIPTION
 
-  ARG[Species Name]       : String - Name of the species to test on*.
-  ARG[Database type]      : String - Database type to test on.
+  --species 'species name'       : String (Optional) - Name of the species to test on*.
+  --type 'database type'         : String (Optional) - Database type to test on.
+  
+  Database type                  : Generic databases (core, vega, cdna, otherfeatures, rnaseq)
+  
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.
 
 The SeqRegionCoordsystem test looks for sequence regions in the core database of the species 
 with identical names but different coordinate systems. This is done by the check_names function. 
