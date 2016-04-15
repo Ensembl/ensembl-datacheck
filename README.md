@@ -22,7 +22,7 @@ Inital set of tests to be developed:
 <b> Category 1</b>
 <ul>
 <li>CoreForeignKeys</li>
-<li>AncestralSequencesExtraChecks - (will probalby be merged into CoreForeignKeys)</li>
+<li><s>AncestralSequencesExtraChecks</s> - Tests on compara db - what was it doing in the generic repository?</li>
 </ul>
 
 <b> Category 2</b>
