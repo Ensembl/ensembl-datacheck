@@ -57,6 +57,10 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
 
 my $result = 1;
 
+if(lc($database_type) ne 'core'){
+    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution will likely arise");
+}
+
 $result &= check_version($helper, $log);
 
 $result &= check_dna_attachment($helper, $log);

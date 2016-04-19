@@ -10,7 +10,10 @@
     'db_registry' => {
         'user' => 'anonymous',
         'host' => 'ensembldb.ensembl.org',
+        #'host' => 'mysql-eg-publicsql.ebi.ac.uk',
         'port' => 3306,
+        #'port' => 4157,
+        
         'password' => 'xxxxx',
         
         'species' => 'homo sapiens',
@@ -18,16 +21,17 @@
     },
     
     'db_connection' => {
-        'user' => 'anonymous',
-        'dbname' => 'phytophthora_infestans_core_31_84_1',
-        'host' => 'mysql-eg-publicsql.ebi.ac.uk',
-        'port' => 4157,
+        #'user' => 'anonymous',
+        #'dbname' => 'phytophthora_infestans_core_31_84_1',
+        #'dbname' => 'bacteria_78_collection_core_29_82_1',
+        #'host' => 'mysql-eg-publicsql.ebi.ac.uk',
+        #'port' => 4157,
     
-        #dbname => 'emmas_testing_base',
-        #user => 'newuser',
-        #host => 'HAL2000',
-        #driver => 'mysql',
-        #pass => 'ensembl',
+        dbname => 'emmas_testing_base',
+        user => 'newuser',
+        host => 'HAL2000',
+        driver => 'mysql',
+        pass => 'ensembl',
     },
 
 }

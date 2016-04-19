@@ -139,7 +139,7 @@ sub assert_lrg_annotations{
         }   
     }
     if(!$lrg_present){
-        log->message("PROBLEM: lrg coordinate system exists but no $feature(s) are attached");
+        $log->message("PROBLEM: lrg coordinate system exists but no $feature(s) are attached");
         $result = 0;
     }
     
@@ -150,7 +150,7 @@ sub assert_lrg_annotations{
             my $coord_system = $lrg_coord_systems[$i][0];
             #if the coordinate system is not lrg it should not have features with biotype lrg attached!
             if ($coord_system ne 'lrg'){
-                log->message("PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
+                $log->message("PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
                       . ($lrg_coord_systems[$i][0]));
                 $result = 0;
             }
