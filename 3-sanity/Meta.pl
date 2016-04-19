@@ -8,10 +8,12 @@
   
 =head1 DESCRIPTION
 
-  [ARG: --species]     : String (Optional): name of the species to test. If none is given the species will be taken from the config file.
-  [ARG: --type]        : String (Optional): 
+  --species 'species name'     : String (Optional): name of the species to test.
+  --type 'database type'       : String (Optional): 
   
-  Database type        : All generic databases (core, est, estgene, vega, cdna, otherfeatures, sangervega, rnaseq, presite)
+  Database type                : All generic databases (core, vega, cdna, otherfeatures, rnaseq)
+  
+  If no command line input arguments are given, values from the 'config' file in the main directory will be used.
   
   The meta healthcheck checks if the meta table exists in the database, if it has rows, if
   the schema version in the meta table matches that of the database name, if there are certain
@@ -37,6 +39,7 @@ use Logger;
 use DBUtils::Connect;
 use DBUtils::TableExistence;
 use DBUtils::RowCounter;
+use DBUtils::FromDBName;
 
 my $dba = DBUtils::Connect::get_db_adaptor();
 
@@ -58,8 +61,9 @@ my $result = 1;
 $result &= check_table_exists($helper, $log);
 $result &= check_has_rows($helper, $log);
 
+$result &= check_version($helper, $log, $dba);
+
 my $dbname = ($dba->dbc())->dbname();
-$result &= check_version($helper, $log, $dbname);
 
 if(index($dbname, 'ancestral') == -1){
     if(lc($database_type) eq 'core'){
@@ -105,21 +109,12 @@ sub check_has_rows{
 }
 
 sub check_version{
-    my($helper, $log, $dbname) = @_;
+    my($helper, $log, $dba) = @_;
     
     my $schema_result = 1;
-    my $version_no;
-    #regexp: /_([0-9]+)_/ takes 'number' from something_something_number_number2
-    if($dbname =~ /_([0-9]+)_/){
-	$version_no = $1;
-    }
-    elsif(index($dbname, 'compara') || index($dbname, 'ancestral') || index($dbname, 'ontology')){
-	#for these databases the version number is the last part of the name.
-	if($dbname =~ /_([0-9]+)/){
-	    $version_no = $1;
-	}
-    }
-    if(!$version_no){
+    my $version_no = DBUtils::FromDBName::get_version($dba);
+    
+    if($version_no eq 'UNKNOWN'){
 	$log->message("PROBLEM: Could not extract version number from database name");
 	$schema_result = 0;
     }
@@ -134,18 +129,20 @@ sub check_version{
 	$log->message("PROBLEM: schema_version not defined in meta table");
 	$schema_result = 0;
     }
-    
-    if($schema_version !~ /[0-9]+/){
-	$log->message("PROBLEM: schema_version from meta table not in numeric format");
-	$schema_result = 0;
-    }
-    
-    if($version_no == $schema_version){
-	$log->message("OK: Versions from meta table and database name match");
-    }
     else{
-	$log->message("PROBLEM: Versions from meta table and database do not match");
-	$schema_result = 0;
+        if($schema_version !~ /[0-9]+/){
+            $log->message("PROBLEM: schema_version from meta table not in numeric format");
+            $schema_result = 0;
+        }
+        else{
+            if($version_no == $schema_version){
+                $log->message("OK: Versions from meta table and database name match");
+            }
+            else{
+                $log->message("PROBLEM: Versions from meta table and database do not match");
+                $schema_result = 0;
+            }
+        }
     }
     
     return $schema_result;

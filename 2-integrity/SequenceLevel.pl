@@ -8,8 +8,12 @@
  
 =head1 DESCRIPTION
 
-  --species     : String (optional) - Name of the species to test on. If not given the species given in the config file will be used.
-  --type        : String (optional) - Type of the database to test on. If not given the database type given in the config file will be used.
+  --species 'species name'    : String (optional) - Name of the species to test on.
+  --type 'type'              : String (optional) - Type of the database to test on.
+  
+  Database type               : Core
+  
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.
 
 Checks that there are no contig coordinate systems in the coord_system table that have a
 version other than 'NULL' with check_version.
@@ -52,6 +56,10 @@ my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
 );
 
 my $result = 1;
+
+if(lc($database_type) ne 'core'){
+    $log->message("WARNING: this healthcheck only applies to core databases. Problems in execution will likely arise");
+}
 
 $result &= check_version($helper, $log);
 

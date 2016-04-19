@@ -4,13 +4,16 @@
 
 =head1 SYNOPSIS
 
-  $ perl LRG.pl 'homo sapiens'
+  $ perl LRG.pl --species 'homo sapiens' --type 'core'
 
 =head1 DESCRIPTION
 
-  ARG[species]    : String - name of the species to check on.
+  --species 'species name'    : String (Optional) - name of the species to check on.
+  --type 'database type'      : String (Optional) - database type to test on
 
-  Database type   : Core
+  Database type               : Core
+
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.  
 
 First checks if LRG coordinate system is present in the database for the given species. If it is, it
 checks if all the features with biotype 'LRG' are mapped to the lrg coordinate system. Then it checks
@@ -136,7 +139,7 @@ sub assert_lrg_annotations{
         }   
     }
     if(!$lrg_present){
-        log->message("PROBLEM: lrg coordinate system exists but no $feature(s) are attached");
+        $log->message("PROBLEM: lrg coordinate system exists but no $feature(s) are attached");
         $result = 0;
     }
     
@@ -147,7 +150,7 @@ sub assert_lrg_annotations{
             my $coord_system = $lrg_coord_systems[$i][0];
             #if the coordinate system is not lrg it should not have features with biotype lrg attached!
             if ($coord_system ne 'lrg'){
-                log->message("PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
+                $log->message("PROBLEM: LRG biotyped $feature(s) attached to the wrong coordinate system: " 
                       . ($lrg_coord_systems[$i][0]));
                 $result = 0;
             }

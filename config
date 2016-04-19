@@ -5,23 +5,33 @@
     #However, if you want to connect to a specific database, set this value to 1 and a 
     #Bio::EnsEMBL::DBSQL::DBConnection will be established using the information in the db_connection hash.
     
+    'use_direct_connection' => 0,
     
     'db_registry' => {
-        'host' => 'ensembldb.ensembl.org',
         'user' => 'anonymous',
+        'host' => 'ensembldb.ensembl.org',
+        #'host' => 'mysql-eg-publicsql.ebi.ac.uk',
         'port' => 3306,
+        #'port' => 4157,
+        
         'password' => 'xxxxx',
         
-        'species' => 'canis familiaris',
-        'database_type' => 'core',
+        'species' => 'homo sapiens',
+        'database_type' => 'core',        
     },
     
     'db_connection' => {
-        'user' => 'newuser',
-        'dbname' => 'homo_sapiens_core_84_38',
-        'host' => 'HAL2000',
-        'driver' => 'mysql',
-        'pass' => 'ensembl',
+        #'user' => 'anonymous',
+        #'dbname' => 'phytophthora_infestans_core_31_84_1',
+        #'dbname' => 'bacteria_78_collection_core_29_82_1',
+        #'host' => 'mysql-eg-publicsql.ebi.ac.uk',
+        #'port' => 4157,
+    
+        dbname => 'emmas_testing_base',
+        user => 'newuser',
+        host => 'HAL2000',
+        driver => 'mysql',
+        pass => 'ensembl',
     },
 
 }

@@ -4,20 +4,21 @@
 
 =head1 SYNPOPSIS
 
-  $ perl CoreforeignKeys.pl 'homo sapiens'  'core'
+  $ perl CoreforeignKeys.pl --species 'homo sapiens'  --type 'core'
 
 =head1 DESCRIPTION
 
-  ARG[species]         : String - name of the species to check on.
-  ARG[database type]   : String - name of the database type to test on. Currenlty only generic databases.
+  --species 'species name'      : String (Optional) - name of the species to check on.
+  --type 'database type'        : String (Optional) - name of the database type to test on. Currenlty only generic databases.
 
+If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+  
 Tests all foreign key references in the core databases with the use of the CheckForOrphans functions. 
 Also holds tests for compara and sangervega but currently these are never run as the database adaptor 
 of the core API cannot provide adaptors for them. This should be fixed in future versions.
 
-Perl adaptation of the CoreForeignKeys.java and AncestralSequencesExtraChecks.java healthchecks.
+Perl adaptation of the CoreForeignKeys.java healthcheck
 See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/CoreForeignKeys.java
-and https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/AncestralSequencesExtraChecks.java
 
 NOTE: Currenly these tests take forever, because retrieving the data from the database takes a long time.
 
@@ -204,22 +205,6 @@ if($database_type eq 'sangervega'){
                                             .  "AND ms.code = 'noAnnotation')",
                      );
 }
-
-
-#this snippet used to be the AncestralSequencesExtraChecks test.
-if($database_type eq 'compara'){
-    $test_result &= DBUtils::CheckForOrphans::check_orphans_with_constraint(
-                        helper => $helper,
-                        logger => $log,
-                        table1 => 'seq_region',
-                        col1 => 'seq_region_id',
-                        table2 => 'dna',
-                        col2 => 'seq_region_id',
-                        constraint => "seq_region.coord_system_id = (SELECT coord_system_id FROM coord_system "
-                                                                    . " WHERE attrib LIKE '%sequence_level%')",
-                    );
-}
-
 else {
     $test_result &= DBUtils::CheckForOrphans::check_orphans(
         helper => $helper,

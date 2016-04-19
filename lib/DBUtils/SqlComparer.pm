@@ -63,6 +63,8 @@ sub check_same_sql_result{
     my $log = $arg_for{logger};
     
     my @types = @{ $types_ref };
+    
+    $log->species($species);
 
     my $final_result = 1;
 
@@ -75,7 +77,11 @@ sub check_same_sql_result{
 	$log->type($type);
 
         my $dba = Bio::EnsEMBL::Registry->get_DBAdaptor($species, $type);
-
+        if(!defined $dba){
+            $log->message("WARNING: No DBA adaptor found for this database type/species combination");
+            next;
+        }
+            
         my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
         -DB_CONNECTION => $dba->dbc()
         );
