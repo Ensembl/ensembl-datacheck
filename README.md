@@ -64,3 +64,6 @@ Inital set of tests to be developed:
 <li><s>ProductionMeta (or another Production test)</s></li>
 <li><s>SeqRegionAcrossSpecies & SeqRegionAttribAcrossSpecies</s></li>
 </ul>
+
+
+(Non-ensembl modules used: Moose, Test::CSV, Getopt::Long, File::Spec)
