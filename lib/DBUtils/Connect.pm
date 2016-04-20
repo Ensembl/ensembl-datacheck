@@ -161,4 +161,16 @@ sub get_db_species{
     return $species;
 }
 
+sub get_db_type{
+    my ($dba)= @_;
+    
+    my $type = $dba->group();
+    
+    if($type eq 'none_standard'){
+        $type = DBUtils::FromDBName::get_type($dba);
+    }
+    
+    return $type;
+}    
+
 1;
