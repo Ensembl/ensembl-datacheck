@@ -1,39 +1,31 @@
-#!/usr/bin/env perl
+package ChangeDetection::ChangeDetector;
 
 use strict;
 use warnings;
 
-use Text::CSV;
-
-use Logger;
-use DBUtils::Connect;
 use Data::Dumper;
+
+use DBUtils::Connect;
 
 use Bio::EnsEMBL::Utils::SqlHelper;
 use Bio::EnsEMBL::DBSQL::DBAdaptor;
 
-my $dba = DBUtils::Connect::get_db_adaptor();
 
-my $dbname = ($dba->dbc())->dbname();
+sub get_changed_tables{
+    my ($dba) = @_;
 
-my $species = DBUtils::Connect::get_db_species($dba);
-my $type = DBUtils::Connect::get_db_type($dba);
+    my $dbname = ($dba->dbc())->dbname();
 
-my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
-    -DB_CONNECTION => $dba->dbc()
-    );
-    
-my $log = Logger->new({
-    healthcheck => 'ChangeDetector',
-    type => $type,
-    species => $species,
-});
+    my $helper = Bio::EnsEMBL::Utils::SqlHelper->new(
+        -DB_CONNECTION => $dba->dbc()
+        );     
 
-my $info = get_table_updates($helper);
+    my $updates = get_table_updates($helper);
 
-my $changed_tables = read_file($dbname, $info);
+    my $changed_tables = compare_updates($dbname, $updates);
 
-print Dumper($changed_tables);
+    return $changed_tables;
+}
 
 sub get_table_updates{
     my ($helper) = @_;
@@ -62,8 +54,7 @@ sub tables_to_file{
     close $fh or die "new.csv: $!";
 }
 
-#I need a new name
-sub read_file{
+sub compare_updates{
     my ($dbname, $hash_ref) = @_;
     
     my %new_tables = %$hash_ref;
@@ -112,4 +103,4 @@ sub read_file{
     return \@changed_tables;
 }    
     
-    
+1    
