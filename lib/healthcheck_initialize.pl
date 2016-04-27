@@ -7,6 +7,7 @@ use HealthChecks;
 
 use ChangeDetection::HealthCheckObject;
 use ChangeDetection::ChangeDetector;
+use ChangeDetection::TableFilter;
 
 use DBUtils::Connect;
 
@@ -21,6 +22,9 @@ my $changed_tables = ChangeDetection::ChangeDetector::get_changed_tables($dba);
 
 use Data::Dumper;
 print Dumper($changed_tables);
+
+#create a filtered table file for the CoreForeignKeys healthcheck.    (not sure if this is the best place for this)
+ChangeDetection::TableFilter::filter_foreignkey_file($changed_tables);
 
 my @healthcheck_objects; 
  

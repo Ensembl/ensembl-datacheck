@@ -7,10 +7,26 @@ use warnings;
 #Add healthchecks to this file to add them to the automatic change detection system.
 
 our %healthchecks = (
-    DataFiles => {
-        hc_type => 4,
-        tables => ['data_file'],
-        db_type => 'rnaseq',
+    CoreForeignKeys => {
+        hc_type => 1,
+        tables => ['alt_allele', 'analysis', 'analysis_description', 'assembly', 'assembly_execution',
+                   'associated_xref', 'attrib_type', 'coord_system', 'data_file', 'density_feature',
+                   'density_type', 'dependent_xref', 'ditag', 'ditag_feature', 'dna', 'dna_align_feature',
+                   'exon', 'exon_transcript', 'external_db', 'external_synonym', 'gene','gene_archive',
+                   'gene_attrib', 'identity_xref', 'intron_supporting_evidence', 'map', 'mapping_session',
+                   'marker', 'marker_feature', 'marker_map_location', 'marker_synonym', 'misc_attrib',
+                   'misc_feature', 'misc_feature_misc_set', 'misc_set', 'object_xref', 'ontology_xref',
+                   'operon', 'operon_transcript', 'peptide_archive', 'prediction_transcript', 
+                   'protein_align_feature', 'protein_feature', 'seq_region', 'seq_region_attrib', 
+                   'simple_feature', 'stable_id_event', 'supporting_feature', 'transcript', 'transcript_attrib',
+                   'transcript_intron_supporting_evidence', 'transcript_supporting_feature', 'translation',
+                   'translation_attrib', 'unmapped_object', 'unmapped_reason', 'xref'],
+        db_type => 'generic',
+    },
+    AssemblyMapping => {
+        hc_type => 2,
+        tables => ['coord_system', 'meta'],
+        db_type => 'core',
     },
     LRG => {
         hc_type => 2,
@@ -21,5 +37,40 @@ our %healthchecks = (
         hc_type => 2,
         tables => ['external_db', 'gene', 'xref'],
         db_type => 'core',
+    },
+    SeqRegionCoordSystem => {
+        hc_type => 2,
+        tables => ['coord_system', 'seq_region'],
+        db_type => 'generic',
+    },
+    SequenceLevel => {
+        hc_type => 2,
+        tables => ['coord_system', 'dna', 'seq_region'],
+        db_type => 'core',
+    },
+    XrefTypes => {
+        hc_type => 2,
+        tables => ['external_db', 'object_xref', 'transcript', 'xref'],
+        db_type => 'core',
+    },
+    Meta => {
+        hc_type => 3,
+        tables => ['meta'],
+        db_type => 'generic',
+    },
+    AssemblyNameLength => {
+        hc_type => 4,
+        tables => ['meta'],
+        db_type => 'core',
+    },
+    DataFiles => {
+        hc_type => 4,
+        tables => ['data_file'],
+        db_type => 'rnaseq',
+    },
+    CoordSystemAcrossSpecies => {
+        hc_type => 5,
+        tables => ['coord_system'],
+        db_type => 'generic',
     },
  );

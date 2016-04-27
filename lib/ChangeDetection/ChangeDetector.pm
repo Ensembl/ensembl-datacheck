@@ -51,7 +51,7 @@ sub tables_to_file{
     $Data::Dumper::Terse = 1;
     print $fh Dumper($hash_ref);
     
-    close $fh or die "new.csv: $!";
+    close $fh or die "$file: $!";
 }
 
 sub compare_updates{

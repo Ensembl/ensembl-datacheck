@@ -88,7 +88,10 @@ sub run_healthcheck{
     }
     
     if(defined $file){
-        system("perl $file");
+    #also put -e ?
+        my @cmd = ("perl $file", "--filter_tables");
+    
+        system("perl $file --filter_tables");
     }
 }
 1;
