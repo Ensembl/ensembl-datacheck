@@ -45,8 +45,12 @@ use DBUtils::RowCounter;
 
 use ChangeDetection::TableFilter;
 
+my $filter_tables;
+my $config_file;
 
-my $dba = DBUtils::Connect::get_db_adaptor();
+GetOptions("filter_tables" => \$filter_tables, 'config_file:s' => \$config_file);
+
+my $dba = DBUtils::Connect::get_db_adaptor($config_file);
 
 my $species = DBUtils::Connect::get_db_species($dba);
 my $database_type = $dba->group();
@@ -63,18 +67,17 @@ my $log = Logger->new({
     
 my $test_result = 1;
 
-my $filter_tables;
-GetOptions("filter_tables" => \$filter_tables);
+
 
 my %tables_hash;
 
 if($filter_tables){
-    use ChangeDetection::FilteredCoreForeignKeys;
-    %tables_hash = %$ChangeDetection::FilteredCoreForeignKeys::core_foreign_keys;
+    use Input::FilteredCoreForeignKeys;
+    %tables_hash = %$Input::FilteredCoreForeignKeys::core_foreign_keys;
 }
 else{
-    use ChangeDetection::CoreForeignKeys;
-    %tables_hash = %$ChangeDetection::CoreForeignKeys::core_foreign_keys;
+    use Input::CoreForeignKeys;
+    %tables_hash = %$Input::CoreForeignKeys::core_foreign_keys;
 }
 
 for my $table (keys %tables_hash ) {

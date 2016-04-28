@@ -12,14 +12,14 @@ my $parent_dir = File::Spec->updir;
 sub filter_foreignkey_file{
     my ($changed_tables) = @_;
 
-    use ChangeDetection::CoreForeignKeys;
+    use Input::CoreForeignKeys;
     
     my @changed_tables = @{ $changed_tables };
     
     #build a hash?
     my %changed_keys;
     
-    my %keys_hash = %$ChangeDetection::CoreForeignKeys::core_foreign_keys;
+    my %keys_hash = %$Input::CoreForeignKeys::core_foreign_keys;
     
     foreach my $changed_table (@changed_tables){
         
@@ -71,11 +71,11 @@ sub filter_foreignkey_file{
         }
     }
     
-    my $file = "$parent_dir/lib/ChangeDetection/FilteredCoreForeignKeys.pm";
+    my $file = File::Spec->catfile(('lib', 'Input'), 'FilteredCoreForeignKeys.pm');
     open(my $fh, ">", $file)
         or die "cannot open > $file: $!";
         
-    print $fh "package ChangeDetection::FilteredCoreForeignKeys; \n";
+    print $fh "package Input::FilteredCoreForeignKeys; \n";
     print $fh "use strict; \n";
     print $fh "use warnings; \n";
     

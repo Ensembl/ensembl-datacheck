@@ -44,7 +44,7 @@ sub get_db_adaptor{
    
     my $parent_dir = File::Spec->updir;
     
-    $file ||= "$parent_dir/config";
+    $file ||= File::Spec->catfile(("$parent_dir"), "config");
     
     my $config = do $file;
     if(!$config){

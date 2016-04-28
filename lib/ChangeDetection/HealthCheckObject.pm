@@ -68,19 +68,19 @@ sub run_healthcheck{
     my $name = $self->name;
     
     if($hc_type == 1){
-        $file = "$parent_dir/1-integrity/$name.pl";
+        $file = File::Spec->catfile(('1-integrity'), "$name.pl");
     }
     elsif($hc_type == 2){
-        $file = "$parent_dir/2-integrity/$name.pl";
+        $file = File::Spec->catfile(('2-integrity'), "$name.pl");
     }
     elsif($hc_type == 3){
-        $file = "$parent_dir/3-sanity/$name.pl";
+        $file = File::Spec->catfile(('3-sanity'), "$name.pl");
     }
     elsif($hc_type == 4){
-        $file = "$parent_dir/4-sanity/$name.pl";
+        $file = File::Spec->catfile(('4-sanity'), "$name.pl");
     }
     elsif($hc_type == 5){
-        $file = "$parent_dir/5-comparison/$name.pl";
+        $file = File::Spec->catfile(('5-comparison'), "$name.pl");
     }
     else{
         print "Unknown healthcheck type \n"
@@ -89,9 +89,12 @@ sub run_healthcheck{
     
     if(defined $file){
     #also put -e ?
-        my @cmd = ("perl $file", "--filter_tables");
-    
-        system("perl $file --filter_tables");
+        my $cmd = "perl $file --config_file 'config'";
+        
+        if($name eq 'CoreForeignKeys'){
+            $cmd .= " --filter_tables";
+        }
+        system($cmd);
     }
 }
 1;

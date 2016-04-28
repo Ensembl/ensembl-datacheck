@@ -38,7 +38,11 @@ use Bio::EnsEMBL::Utils::SqlHelper;
 use Logger;
 use DBUtils::Connect;
 
-my $dba = DBUtils::Connect::get_db_adaptor();
+my $config_file;
+
+GetOptions('config_file:s' => \$config_file);
+
+my $dba = DBUtils::Connect::get_db_adaptor($config_file);
 
 my $species = DBUtils::Connect::get_db_species($dba);
 my $database_type = $dba->group();

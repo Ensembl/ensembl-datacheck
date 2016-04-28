@@ -33,9 +33,13 @@ use Logger;
 use DBUtils::Connect;
 use DBUtils::MultiSpecies;
 
+my $config_file;
+
+GetOptions('config_file:s' => \$config_file);
+
 my $registry = 'Bio::EnsEMBL::Registry';
 
-my $dba = DBUtils::Connect::get_db_adaptor();
+my $dba = DBUtils::Connect::get_db_adaptor($config_file);
 
 my $species = DBUtils::Connect::get_db_species($dba);
 

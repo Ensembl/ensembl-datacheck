@@ -3,18 +3,18 @@
 use strict;
 use warnings;
 
-use HealthChecks;
+use Bio::EnsEMBL::DBSQL::DBAdaptor;
+use Bio::EnsEMBL::Utils::SqlHelper;
 
-use ChangeDetection::HealthCheckObject;
 use ChangeDetection::ChangeDetector;
+use ChangeDetection::HealthCheckObject;
 use ChangeDetection::TableFilter;
 
 use DBUtils::Connect;
 
-use Bio::EnsEMBL::Utils::SqlHelper;
-use Bio::EnsEMBL::DBSQL::DBAdaptor;
+use Input::HealthChecks;
 
-my $dba = DBUtils::Connect::get_db_adaptor();
+my $dba = DBUtils::Connect::get_db_adaptor('config');
 
 my $type = DBUtils::Connect::get_db_type($dba);
 
@@ -28,12 +28,12 @@ ChangeDetection::TableFilter::filter_foreignkey_file($changed_tables);
 
 my @healthcheck_objects; 
  
-for my $healthcheck (keys %HealthChecks::healthchecks ) {
+for my $healthcheck (keys %Input::HealthChecks::healthchecks ) {
     my $object = ChangeDetection::HealthCheckObject->new(
         name => $healthcheck,
-        hc_type => $HealthChecks::healthchecks{$healthcheck}{'hc_type'},
-        tables => $HealthChecks::healthchecks{$healthcheck}{'tables'},
-        db_type => $HealthChecks::healthchecks{$healthcheck}{'db_type'},
+        hc_type => $Input::HealthChecks::healthchecks{$healthcheck}{'hc_type'},
+        tables => $Input::HealthChecks::healthchecks{$healthcheck}{'tables'},
+        db_type => $Input::HealthChecks::healthchecks{$healthcheck}{'db_type'},
    );
    push @healthcheck_objects, $object;
 }

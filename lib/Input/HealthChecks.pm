@@ -1,4 +1,4 @@
-package HealthChecks;
+package Input::HealthChecks;
 
 use strict;
 use warnings;
@@ -16,7 +16,7 @@ our %healthchecks = (
                    'gene_attrib', 'identity_xref', 'intron_supporting_evidence', 'map', 'mapping_session',
                    'marker', 'marker_feature', 'marker_map_location', 'marker_synonym', 'misc_attrib',
                    'misc_feature', 'misc_feature_misc_set', 'misc_set', 'object_xref', 'ontology_xref',
-                   'operon', 'operon_transcript', 'peptide_archive', 'prediction_transcript', 
+                   'operon', 'operon_transcript', 'peptide_archive', 'prediction_exon', 'prediction_transcript', 
                    'protein_align_feature', 'protein_feature', 'seq_region', 'seq_region_attrib', 
                    'simple_feature', 'stable_id_event', 'supporting_feature', 'transcript', 'transcript_attrib',
                    'transcript_intron_supporting_evidence', 'transcript_supporting_feature', 'translation',
@@ -52,6 +52,17 @@ our %healthchecks = (
         hc_type => 2,
         tables => ['external_db', 'object_xref', 'transcript', 'xref'],
         db_type => 'core',
+    },
+    AutoIncrement => {
+        hc_type => 3,
+        tables => ['alt_allele', 'analysis', 'assembly_exception', 'attrib_type', 'coord_system', 'data_file',
+                   'density_feature', 'ditag', 'ditag_feature', 'dna_align_feature', 'exon', 'external_db',
+                   'gene', 'intron_supporting_evidence', 'karyotype', 'map', 'mapping_session', 'marker',
+                   'marker_feature', 'marker_synonym', 'meta', 'misc_feature', 'misc_set', 'object_xref',
+                   'operon', 'peptide_archive', 'prediction_exon', 'prediction_transcript', 'protein_align_feature',
+                   'protein_feature', 'repeat_consensus', 'repeat_feature', 'seq_region', 'seq_region_synonym',
+                   'simple_feature', 'transcript', 'translation', 'unmapped_object', 'unmapped_reason', 'xref'],
+        db_type => 'generic',
     },
     Meta => {
         hc_type => 3,

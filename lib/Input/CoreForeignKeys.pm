@@ -1,4 +1,4 @@
-package ChangeDetection::CoreForeignKeys;
+package Input::CoreForeignKeys;
 
 use strict;
 use warnings;
