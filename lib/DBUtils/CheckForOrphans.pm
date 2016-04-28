@@ -39,7 +39,7 @@ use warnings;
 
   Returntype      : Boolean (true if there are no orphans)
 
-Tests if foreigh key col1 in table1 references an instance of col2 in table2. If both_ways is 1 it also checks
+Tests if foreigh key col1 in table1 references an instance of col2 in table2. If both_ways is set to 1 it also checks
 the reverse.
 
 =cut
@@ -56,11 +56,16 @@ sub check_orphans {
     my $col2   = $arg_for{col2};
 
     my $both_ways = $arg_for{both_ways};
+    my $constraint = $arg_for{constraint};
 
 
     my $sql_left = "SELECT COUNT(*) FROM $table1 LEFT JOIN $table2 "
                       . "ON $table1.$col1 = $table2.$col2 "
                       . "WHERE $table2.$col2 IS NULL";
+                      
+    if($constraint){
+        $sql_left .= " AND $constraint";
+    }
 
     my $result_left = $helper->execute_single_result(
         -SQL => $sql_left,
@@ -74,6 +79,10 @@ sub check_orphans {
         my $sql_right = "SELECT COUNT(*) FROM $table2 LEFT JOIN $table1 "
                            . "ON $table2.$col2 = $table1.$col1 "
                            . "WHERE $table1.$col1 IS NULL";
+                           
+        if($constraint){
+            $sql_right .= " AND $constraint";
+        }
 
         $result_right = $helper->execute_single_result(
             -SQL => $sql_right,
@@ -90,60 +99,47 @@ sub check_orphans {
     if($orphan_count > 0){
         #in case you check both ways this will show you in which direction the orphans occur.
         if($result_left > 0){
-            $log->message("PROBLEM: $result_left foreign key violations in "
-                  . "$table1.$col1 -> $table2.$col2");
+        
+            my $message = "PROBLEM: $result_left foreign key violations in "
+                  . "$table1.$col1 -> $table2.$col2";
+                  
+            if($constraint){
+                $message .= " with constraint: $constraint";
+            }
+            
+            $log->message($message);
         }
         if($both_ways){
             if($result_right > 0){
-            $log->message("PROBLEM: $result_right foreign key violations in "
-                  . "$table2.$col2. -> $table1.$col1");
+            
+                my $message = "PROBLEM: $result_right foreign key violations in "
+                  . "$table2.$col2. -> $table1.$col1";
+                  
+                if($constraint){
+                    $message .= " with constraint: $constraint";
+                }
+                
+                $log->message($message);
             }
         }
         return 0;
     }
     else{
         my $message = "OK: No foreign key violations in $table1.$col1 -> $table2.$col2";
+        if($constraint){
+            $message .= " with constraint: $constraint";
+        }
         if($both_ways){
             $message .= " or $table2.$col2 -> $table1.$col1";
+            if($constraint){
+                $message .= " with constraint: $constraint";
+            }
         }
+        
         $log->message($message);
         return 1;
     }
 }
 
-sub check_orphans_with_constraint{
-    my (%arg_for) = @_;
 
-    my $helper = $arg_for{helper};
-    my $log = $arg_for{logger};
-
-    my $table1 = $arg_for{table1};
-    my $col1   = $arg_for{col1};
-    my $table2 = $arg_for{table2};
-    my $col2   = $arg_for{col2};
-
-    my $constraint = $arg_for{constraint};
-
-    my $sql = "SELECT COUNT(*) FROM $table1 LEFT JOIN $table2
-                  ON $table1.$col1 = $table2.$col2
-                  WHERE $table2.$col2 IS NULL
-                  AND $constraint";
-
-    my $orphan_count = $helper->execute_single_result(
-                          -SQL => $sql,
-                       );
-
-    if($orphan_count > 0){
-        $log->message("PROBLEM: $orphan_count foreign key violations in "
-              . "$table1.$col1 -> $table2.$col2 with constraint $constraint");
-
-        return 0;
-    }
-    else{
-        $log->message("OK: No foreigh key violations in $table1.$col1 -> $table2.$col2 "
-              . "with constraint $constraint");
-        
-        return 1;
-    }
-}
 1;

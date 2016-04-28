@@ -44,7 +44,7 @@ sub get_db_adaptor{
    
     my $parent_dir = File::Spec->updir;
     
-    $file ||= "$parent_dir/config";
+    $file ||= File::Spec->catfile(("$parent_dir"), "config");
     
     my $config = do $file;
     if(!$config){
@@ -160,5 +160,17 @@ sub get_db_species{
     
     return $species;
 }
+
+sub get_db_type{
+    my ($dba)= @_;
+    
+    my $type = $dba->group();
+    
+    if($type eq 'none_standard'){
+        $type = DBUtils::FromDBName::get_type($dba);
+    }
+    
+    return $type;
+}    
 
 1;

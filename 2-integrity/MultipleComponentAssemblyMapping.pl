@@ -13,8 +13,11 @@ use Logger;
 use DBUtils::Connect;
 
 #UNFINISHED
+my $config_file;
 
-my $dba = DBUtils::Connect::get_db_adaptor();
+GetOptions('config_file:s' => \$config_file);
+
+my $dba = DBUtils::Connect::get_db_adaptor($config_file);
 
 my $species = DBUtils::Connect::get_db_species($dba);
 
