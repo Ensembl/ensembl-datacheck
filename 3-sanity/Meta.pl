@@ -8,8 +8,10 @@
   
 =head1 DESCRIPTION
 
-  --species 'species name'     : String (Optional): name of the species to test.
-  --type 'database type'       : String (Optional): 
+  --species 'species name'     : String (Optional) - name of the species to test.
+  --type 'database type'       : String (Optional) - type of the database to test on
+  --config_file                : String (Optional) - location of the config file relative to the working directory. Default
+                                 is one folder above the working directory.
   
   Database type                : All generic databases (core, vega, cdna, otherfeatures, rnaseq)
   

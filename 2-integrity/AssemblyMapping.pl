@@ -4,10 +4,12 @@
 
 =head1 SYNOPSIS
 
-  $ perl AssemblyMapping.pl 0
+  $ perl AssemblyMapping.pl --config '../config'
 
 =head1 DESCRIPTION
-
+ --config_file           : String (Optional) - location of the config file relative to the working directory. Default
+                           is one folder above the working directory.
+                           
   Database               : Core
 
 Checks if the assembly.mapping values in the meta table are the right format and if they refer to existing

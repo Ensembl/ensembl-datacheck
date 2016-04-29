@@ -1,3 +1,27 @@
+=head1 NAME
+
+  Input::HealthChecks - contains information about all healthchecks
+  
+=head1 SYNOPSIS
+
+  use Input::HealthChecks;
+  
+  for my $healthcheck (keys %Input::HealthChecks::healthchecks ) {
+    
+    #this gives you a hashref containing the information belonging to $healthcheck
+    my $healthcheck_def = $Input::HealthChecks::healthchecks{$healthcheck};
+  }
+
+=head1 DESCRIPTION
+
+  This module holds the %healthchecks hash which contains information about all the healthchecks, to be used
+  by the HealthCheckSuite.
+  
+  If you want to include a new healthcheck in the HealthCheckSuite, simply add the healthcheck with all
+  the necessary information to the hash, following the format you can see.
+  
+=cut
+
 package Input::HealthChecks;
 
 use strict;

@@ -1,3 +1,23 @@
+=head1 NAME
+  
+  ChangeDetection::TableFilter
+  
+=head1 SYNOPSIS
+
+  use ChangeDetection::TableFilter;
+  ChangeDetection::TableFilter::filter_foreignkey_file($changed_tables_ref);
+  
+  $CoreForeignKeyObject->run_healthcheck(
+    -path => '.',
+    -command => '--config_file 'config' --filter_tables',
+  );
+
+=head1 DESCRIPTION
+
+  Module for filtering the input files of healthchecks that use a lot of tables. Currently only for CoreForeignKeys.
+
+=cut
+
 package ChangeDetection::TableFilter;
 
 use Data::Dumper;
@@ -8,6 +28,17 @@ use strict;
 use warnings;
 
 my $parent_dir = File::Spec->updir;
+
+=head2 filter_foreignkey_file
+
+  ARG($changed_tables)  : Arrayref - all the tables that have changed (and thus will need to be tested)
+  
+  Filters out all the CheckForOrphan inputs to only contain those that involve the changed tables, and
+  prints these to a new file (FilteredCoreForeignKeys), which is used by the CoreForeignKey if you use
+  the --filter_tables flag when calling it. Atm this module assumes you're calling it from the main directory 
+  of the healthchecks.
+
+=cut
 
 sub filter_foreignkey_file{
     my ($changed_tables) = @_;

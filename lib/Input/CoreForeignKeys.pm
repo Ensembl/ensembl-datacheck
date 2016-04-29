@@ -1,3 +1,28 @@
+=head1 NAME
+
+  Input::CoreForeignKeys - contains foreign key relation information for the simplification and clarification
+  of the CoreForeignKey investigation.
+  
+=head1 SYNOPSIS
+
+  use Input::CoreForeignKeys;
+  my %tables_hash = %$Input::CoreForeignKeys::core_foreign_keys;
+  
+=head2 DESCRIPTION
+
+  Contains foreign-key pair information to be used by the CheckForOrphans module in the CoreForeignKey
+  healthcheck. 
+  
+  To add a foreign-key dependency:
+  The name of the referencing table is a key in the $core_foreign_keys hash. If the table is not used yet,
+  create a new key. If it is used, create a hash reference inside it with a number as key (easiest way to 
+  keep keys unique). col1 holds the name of the foreign key column in the referencing table. table2 is the
+  name of the referenced table, and col2 is the name of the primary key column in that table. Set both_ways
+  to 1 if you want to check the dependency in both directions. If you have a constraint, pass it as a string
+  to constraint. Otherwise, pass constraint an empty string.
+  
+=cut
+
 package Input::CoreForeignKeys;
 
 use strict;
