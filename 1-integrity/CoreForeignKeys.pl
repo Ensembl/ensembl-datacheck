@@ -10,17 +10,17 @@
 
   --species 'species name'      : String (Optional) - name of the species to check on.
   --type 'database type'        : String (Optional) - name of the database type to test on. Currenlty only generic databases.
-
+  --filter_tables               : Flag - use it if you're runnign the HealthCheckSuite and have filtered the input file for
+                                  CoreForeigKeys 
+  --config_file                 : String (Optional) - location of the config file relative to the working directory. Default
+                                  is one folder above the working directory.
+                                  
 If no command line input arguments are given, values from the 'config' file in the main directory will be used.
   
 Tests all foreign key references in the core databases with the use of the CheckForOrphans functions. 
-Also holds tests for compara and sangervega but currently these are never run as the database adaptor 
-of the core API cannot provide adaptors for them. This should be fixed in future versions.
 
 Perl adaptation of the CoreForeignKeys.java healthcheck
 See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/CoreForeignKeys.java
-
-NOTE: Currenly these tests take forever, because retrieving the data from the database takes a long time.
 
 =cut
 
@@ -84,15 +84,13 @@ for my $table (keys %tables_hash ) {
 
     for my $test (keys %{ $tables_hash{$table} } ){
 
+        my $test_def = $tables_hash{$table}{$test};
+    
         $test_result &= DBUtils::CheckForOrphans::check_orphans(
             helper => $helper,
             logger => $log,
             table1 => $table,
-            col1 => $tables_hash{$table}{$test}{'col1'},
-            table2 => $tables_hash{$table}{$test}{'table2'},
-            col2 => $tables_hash{$table}{$test}{'col2'},
-            both_ways => $tables_hash{$table}{$test}{'both_ways'},
-            constraint => $tables_hash{$table}{$test}{'constraint'},
+            %{$test_def}
         );
     }
 }

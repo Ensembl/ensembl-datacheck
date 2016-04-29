@@ -36,6 +36,7 @@ use warnings;
   ARG[col2]       : String - name of the primary key colum in the referenced table
   ARG[both_ways]  : Boolean (0/1) - set to 1 (true) if you want to check the foreign key dependencies in both
                     directions.
+  ARG[constraint] : String - a constraint to be added to the query.
 
   Returntype      : Boolean (true if there are no orphans)
 

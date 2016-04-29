@@ -10,6 +10,8 @@
 
   --species 'species name'       : String (Optional) - Name of the species to test on*.
   --type 'database type'         : String (Optional) - Database type to test on.
+  --config_file                  : String (Optional) - location of the config file relative to the working directory. Default
+                                   is one folder above the working directory.
   
   Database type                  : Generic databases (core, vega, cdna, otherfeatures, rnaseq)
   

@@ -11,7 +11,9 @@
 
   --species 'species name'     : String - Name of the species to test on.
   --type 'database type'       : String - Type of the database to run on.
-  
+  --config_file                : String (Optional) - location of the config file relative to the working directory. Default
+                                 is one folder above the working directory.
+                                 
   Database type                : Core
   
 If no command line input arguments are given, values from the 'config' file in the main directory will be used.

@@ -1,3 +1,22 @@
+=head1 NAME
+
+  HealthCheckSuite - Runs healthchecks depending according to changes to the database
+  
+=head1 SYNOPSIS
+
+  $ perl HealthCheckSuite.pl
+  
+=head1 DESCRIPTION
+
+  Using various ChangeDetection modules, this program provides the framework to detect changes in the 
+  database and runs the necessary healthchecks in response. Information from the information_schema.tables
+  meta tables kept by the MySQL server is used to find out what tables have changed. Healthcheck objects are
+  created, after which the necessary healthchecks are determined using the table and database type information
+  each healthcheck contains. The necessary healthchecks are then run.
+  
+  For adding new healthchecks to the suite: see the Input::HealthChecks module.
+=cut
+
 #!/usr/bin/env perl
 
 use strict;
@@ -29,11 +48,11 @@ ChangeDetection::TableFilter::filter_foreignkey_file($changed_tables);
 my @healthcheck_objects; 
  
 for my $healthcheck (keys %Input::HealthChecks::healthchecks ) {
+    
+    my $healthcheck_def = $Input::HealthChecks::healthchecks{$healthcheck};
     my $object = ChangeDetection::HealthCheckObject->new(
         name => $healthcheck,
-        hc_type => $Input::HealthChecks::healthchecks{$healthcheck}{'hc_type'},
-        tables => $Input::HealthChecks::healthchecks{$healthcheck}{'tables'},
-        db_type => $Input::HealthChecks::healthchecks{$healthcheck}{'db_type'},
+        %{$healthcheck_def}
    );
    push @healthcheck_objects, $object;
 }
@@ -59,6 +78,14 @@ foreach my $changed_table (@$changed_tables){
 foreach my $healthcheck_object (@healthcheck_objects){
     my $applicable = $healthcheck_object->applicable;
     if($applicable){
-        $healthcheck_object->run_healthcheck();
+        my $command = "--config_file 'config'";
+        if(($healthcheck_object->name) eq 'CoreForeignKeys'){
+            print "I'm here! \n";
+            $command .= " --filter_tables";
+        }
+        $healthcheck_object->run_healthcheck(
+            command => $command,
+            path => '.',
+        );
     }
 }    

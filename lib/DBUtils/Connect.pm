@@ -29,7 +29,8 @@ use Bio::EnsEMBL::DBSQL::DBConnection;
 
 =head2 get_db_adaptor
 
-  ARG[file location]    : Optional. Location of the config file to get values from. Default is the config file in the main direcotry.
+  ARG[file location]    : Optional. Location of the config file to get values from. Default is 'config',
+                          one directory above the current working directory (assuming you're in i.e. 1-integrity).
   
   Returntype            : EnsEMBL::DBSQL::DBAdaptor instance.
   
