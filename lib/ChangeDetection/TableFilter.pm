@@ -67,9 +67,15 @@ sub filter_foreignkey_file{
                     
                     $test_hash{col1} = $keys_hash{$table}{$test}{'col1'};
                     $test_hash{table2} = $keys_hash{$table}{$test}{'table2'};
-                    $test_hash{col2} = $keys_hash{$table}{$test}{'col2'};
-                    $test_hash{both_ways} = $keys_hash{$table}{$test}{'both_ways'};
-                    $test_hash{constraint} = $keys_hash{$table}{$test}{'constraint'};
+                    if(defined $keys_hash{$table}{$test}{'col2'}){
+                        $test_hash{col2} = $keys_hash{$table}{$test}{'col2'};
+                    }
+                    if(defined $keys_hash{$table}{$test}{'both_ways'}){
+                        $test_hash{both_ways} = $keys_hash{$table}{$test}{'both_ways'};
+                    }
+                    if(defined $keys_hash{$table}{$test}{'constraint'}){
+                        $test_hash{constraint} = $keys_hash{$table}{$test}{'constraint'};
+                    }
                 
                     $table_hash{$test} = \%test_hash;
                 }
@@ -88,9 +94,15 @@ sub filter_foreignkey_file{
                         ###this test goes
                         $test_hash{col1} = $keys_hash{$table}{$test}{'col1'};
                         $test_hash{table2} = $keys_hash{$table}{$test}{'table2'};
-                        $test_hash{col2} = $keys_hash{$table}{$test}{'col2'};
-                        $test_hash{both_ways} = $keys_hash{$table}{$test}{'both_ways'};
-                        $test_hash{constraint} = $keys_hash{$table}{$test}{'constraint'};
+                        if(defined $keys_hash{$table}{$test}{'col2'}){
+                            $test_hash{col2} = $keys_hash{$table}{$test}{'col2'};
+                        }
+                        if(defined $keys_hash{$table}{$test}{'both_ways'}){
+                            $test_hash{both_ways} = $keys_hash{$table}{$test}{'both_ways'};
+                        }
+                        if(defined $keys_hash{$table}{$test}{'constraint'}){
+                            $test_hash{constraint} = $keys_hash{$table}{$test}{'constraint'};
+                        }
                         
                         $table_hash{$test} = \%test_hash;
                     }  

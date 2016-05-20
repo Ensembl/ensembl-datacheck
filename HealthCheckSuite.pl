@@ -80,7 +80,6 @@ foreach my $healthcheck_object (@healthcheck_objects){
     if($applicable){
         my $command = "--config_file 'config'";
         if(($healthcheck_object->name) eq 'CoreForeignKeys'){
-            print "I'm here! \n";
             $command .= " --filter_tables";
         }
         $healthcheck_object->run_healthcheck(
