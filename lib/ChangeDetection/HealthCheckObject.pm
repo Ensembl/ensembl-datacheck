@@ -29,6 +29,8 @@ package ChangeDetection::HealthCheckObject;
 use Moose;
 use File::Spec;
 
+use Bio::EnsEMBL::Utils::Exception qw(throw warning);
+
 use namespace::autoclean;
 
 has 'name' => (
@@ -117,15 +119,18 @@ sub run_healthcheck{
         $file = File::Spec->catfile(($path, '5-comparison'), "$name.pl");
     }
     else{
-        print "Unknown healthcheck type - cannot run healthcheck \n"
-        # ~~~This could do with better handling ~~~
+        warning("Unknown healthcheck type - cannot run healthcheck $name");
     }
     
     if(defined $file){
-    #also put -e ?
-        my $cmd = "perl $file $command";
-        
-        system($cmd);
+        if(-f $file){
+            my $cmd = "perl $file $command";
+            
+            system($cmd);
+        }
+        else{
+            warning("Cannot find the healthcheck script at $file!");
+        }
     }
 }
 1;

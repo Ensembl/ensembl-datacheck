@@ -1,4 +1,3 @@
-
 =head1 NAME
 
   CoordSystemAcrossSpecies - A table comparison test across several databases (type 5 in the healthcheck system)
