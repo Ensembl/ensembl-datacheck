@@ -20,12 +20,14 @@
 
 package ChangeDetection::TableFilter;
 
+use strict;
+use warnings;
+
 use Data::Dumper;
 use File::Spec;
 use Getopt::Long;
 
-use strict;
-use warnings;
+use Bio::EnsEMBL::Utils::Exception qw( throw warning );
 
 my $parent_dir = File::Spec->updir;
 
@@ -104,7 +106,7 @@ sub filter_foreignkey_file{
     
     my $file = File::Spec->catfile(('lib', 'Input'), 'FilteredCoreForeignKeys.pm');
     open(my $fh, ">", $file)
-        or die "cannot open > $file: $!";
+        or warning("cannot open > $file: $!");
         
     print $fh "package Input::FilteredCoreForeignKeys; \n";
     print $fh "use strict; \n";
@@ -115,7 +117,7 @@ sub filter_foreignkey_file{
     $Data::Dumper::Terse = 1;
     print $fh Dumper( \%changed_keys) .";";
     
-    close $fh or die "$file: $!";
+    close $fh or warning("$file: $!");
     #print the hash to the file in such a way that CoreForeignKeys can read it.
 }     
 

@@ -59,6 +59,10 @@ sub check_orphans {
     my $both_ways = $arg_for{both_ways};
     my $constraint = $arg_for{constraint};
 
+    #value = is defined? // else this
+    $col2 = $col2 // $col1;
+    $both_ways = $both_ways // 0;
+    $constraint = $constraint // '';
 
     my $sql_left = "SELECT COUNT(*) FROM $table1 LEFT JOIN $table2 "
                       . "ON $table1.$col1 = $table2.$col2 "

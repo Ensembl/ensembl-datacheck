@@ -25,6 +25,7 @@ use Getopt::Long;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::DBSQL::DBAdaptor;
 use Bio::EnsEMBL::DBSQL::DBConnection;
+use Bio::EnsEMBL::Utils::Exception qw ( throw warning );
 
 
 =head2 get_db_adaptor
@@ -49,10 +50,9 @@ sub get_db_adaptor{
     
     my $config = do $file;
     if(!$config){
-        warn "couldn't parse $file: $@" if $@;
-        warn "couldn't do $file: $!"    unless defined $config;
-        warn "couldn't run $file"       unless $config; 
-        die;
+        throw("couldn't parse $file: $@") if $@;
+        throw("couldn't do $file: $!")    unless defined $config;
+        throw("couldn't run $file")       unless $config; 
     }
     else {
         my $use_direct_connection = $config->{'use_direct_connection'};
@@ -66,8 +66,7 @@ sub get_db_adaptor{
             $dba = _get_registry_con($config);
         }
         if(!defined($dba)){
-            warn "Not able to retrieve a database adaptor. It may be that the given database type isn't availalble for the species.";
-            die;
+            throw("Not able to retrieve a database adaptor. It may be that the database type isn't availalble for the species.");
         }
         return $dba;
     }

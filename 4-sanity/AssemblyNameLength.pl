@@ -33,8 +33,6 @@ use warnings;
 use File::Spec;
 use Getopt::Long;
 
-use Carp;
-
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
 

@@ -40,6 +40,7 @@ check_same_sql_result on each of them.
 package DBUtils::SqlComparer;
 
 use Bio::EnsEMBL::Utils::SqlHelper;
+use Bio::EnsEMBL::Utils::Exception qw(throw warning);
 
 =head2 check_same_sql_result
 
@@ -78,7 +79,7 @@ sub check_same_sql_result{
 
         my $dba = Bio::EnsEMBL::Registry->get_DBAdaptor($species, $type);
         if(!defined $dba){
-            $log->message("WARNING: No DBA adaptor found for this database type/species combination");
+            warning("No DBA adaptor found for this database type/species combination: $species, $type");
             next;
         }
             

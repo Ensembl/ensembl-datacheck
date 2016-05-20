@@ -27,6 +27,7 @@ use DBUtils::Connect;
 
 use Bio::EnsEMBL::Utils::SqlHelper;
 use Bio::EnsEMBL::DBSQL::DBAdaptor;
+use Bio::EnsEMBL::Utils::Exception qw( throw warning); 
 
 =head2 get_changed_tables
 
@@ -91,12 +92,12 @@ sub _tables_to_file{
     my $file = $dbname;
     
     open(my $fh, ">", $file)
-        or die "cannot open > $file: $!";
+        or throw("cannot open > $file: $!");
 
     $Data::Dumper::Terse = 1;
     print $fh Dumper($hash_ref);
     
-    close $fh or die "$file: $!";
+    close $fh or warning("$file: $!");
 }
 
 =head2 _compare_updates
@@ -126,9 +127,9 @@ sub _compare_updates{
     if(-f $file){
         my $old_tables = do $file;
         if(!$old_tables){
-            warn "couldn't parse $file: $@" if $@;
-            warn "couldn't do $file: $!"    unless defined $old_tables;
-            warn "couldn't run $file"       unless $old_tables;
+            throw("couldn't parse $file: $@") if $@;
+            throw("couldn't do $file: $!")    unless defined $old_tables;
+            throw("couldn't run $file")       unless $old_tables;
         }
         else{          
             my $new_time;
