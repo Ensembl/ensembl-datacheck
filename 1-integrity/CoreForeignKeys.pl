@@ -30,7 +30,7 @@ use warnings;
 use strict;
 
 use File::Spec;
-use Getopt::Long;
+use Getopt::Long qw(:config pass_through);
 
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::SqlHelper;
