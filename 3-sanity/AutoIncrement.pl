@@ -37,7 +37,7 @@ use Bio::EnsEMBL::Utils::SqlHelper;
 use DBUtils::Connect;
 
 use File::Spec;
-use Getopt::Long;
+use Getopt::Long qw(:config pass_through);
 
 use Input::AutoIncrement;
 
