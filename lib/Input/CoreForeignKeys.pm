@@ -236,6 +236,11 @@ our $core_foreign_keys = {
             col1 => 'coord_system_id',
             table2 => 'coord_system',
         },
+        2 => {
+            col1 => 'seq_region_id',
+            table2 => 'dna',
+            constraint => "coord_system_id = (SELECT coord_system_id FROM coord_system WHERE attrib LIKE '%sequence_level%')",
+        },
     },
     seq_region_attrib => {
         1 => {
