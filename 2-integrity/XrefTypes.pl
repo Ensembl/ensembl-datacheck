@@ -15,7 +15,7 @@
 
   Database type               : Core
   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.
 
 Xrefs from the same (external) source should all be mapped to the same type of, and one and only one Ensembl object.
 

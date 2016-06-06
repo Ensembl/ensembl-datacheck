@@ -161,6 +161,18 @@ sub get_db_species{
     return $species;
 }
 
+=head2 get_db_type
+
+  ARG(adaptor)      : EnsEMBL::DBSQL::DBAdaptor instancee.
+  
+  Returntype        : String (database type)
+  
+Retrieves the type of the database of which the adaptor is passed. Uses the
+DBUtils::FromDBName module if the Adaptor method group() doesn't return
+something useful.
+ 
+=cut
+
 sub get_db_type{
     my ($dba)= @_;
     

@@ -47,7 +47,9 @@ use Bio::EnsEMBL::Utils::Exception qw(throw warning);
   ARG[sql]        : String - the sql query of which the results will be compared.
   ARG[species]    : String - the species for which you want to compare results.
   ARG[types]      : Arrayref - an arrayref for all the database types which you want to query.
-  ARG[meta]       : Boolean (0/1) - if 1 will compare metadata on the FIRST table from your sql query.
+  ARG[meta]       : Boolean - if true will compare metadata on the FIRST table from your sql query.
+  
+  Returntype      : Boolean - true if results are the same.
 
 Performs the sql query on all the given datbase types of the species. Then calls compare_sql_boolean to
 compare the results.
@@ -152,6 +154,8 @@ sub check_same_sql_result{
 
   ARG[result1]     : Arrayref - Reference to the array containing the results of the query on the first database
   ARG[result2]     : Arrayref - Reference to the array containing the results of the query on the second database
+  
+  Returntype       : Boolean - true if results are the same.
 
 Iterates over both of the arrayrefs to compare the number of rows, the number of columns, and the content in
 each cell.
@@ -216,7 +220,9 @@ sub compare_sql_results{
   ARG[sql]        : String - the sql query of which the results will be compared.
   ARG[registry]   : Database registry instance.
   ARG[types]      : Arrayref - an arrayref for all the database types which you want to query.
-  ARG[meta]       : Boolean (0/1) - if 1 will compare metadata on the FIRST table from your sql query.
+  ARG[meta]       : Boolean - if 1 will compare metadata on the FIRST table from your sql query.
+  
+  Returntype      : Boolean - true if the sql gives the same result across all the database types for each species.
 
 Retrieves all the species from the given registry. Iterates over each species, calling the 
 check_same_sql_result sub on them to compare the given database types on the results of the provided sql.

@@ -15,7 +15,7 @@
 
   Database type               : Core
   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.
 
 Checks that there are no contig coordinate systems in the coord_system table that have a
 version other than 'NULL' with check_version.
@@ -73,6 +73,16 @@ $result &= check_dna_attachment($helper, $log);
 
 $log->result($result);
 
+=head2 check_version
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  
+  Returntype      : Boolean
+
+ Makes sure there are no contigs in the coord_syystem table that have a version value of NULL. 
+  
+=cut
 
 sub check_version{
     my ($helper, $log) = @_;
@@ -92,6 +102,18 @@ sub check_version{
     return 1;    
 }
 
+=head2 check_dna_attachment
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  
+  Returntype      : Boolean
+  
+  If there are sequence regions in that attached to a coordinate system that contain sequences,
+  it checks that the coord_system.attrib is set to a sequence_level value.
+  
+=cut
+
 sub check_dna_attachment{
     my ($helper, $log) = @_;
     
@@ -109,12 +131,12 @@ sub check_dna_attachment{
     my @loose_systems = @{ $loose_systems };
     
     foreach my $loose_system (@loose_systems){
-	$dna_result &= 0;
-	my $coord_system = $loose_system->[0];
-	my $rows = $loose_system->[1];
-	
-	$log->message("PROBLEM: Coordinate system $coord_system has $rows seq regions containing sequence, "
-			. "but it does not have the sequence_level attribute");
+        $dna_result &= 0;
+        my $coord_system = $loose_system->[0];
+        my $rows = $loose_system->[1];
+        
+        $log->message("PROBLEM: Coordinate system $coord_system has $rows seq regions containing sequence, "
+                . "but it does not have the sequence_level attribute");
     }
     
     return $dna_result;

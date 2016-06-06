@@ -14,7 +14,7 @@
                                 is one folder above the working directory.
   Database type               : Core
 
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.  
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used. 
 
 First checks if LRG coordinate system is present in the database for the given species. If it is, it
 checks if all the features with biotype 'LRG' are mapped to the lrg coordinate system. Then it checks
@@ -80,6 +80,7 @@ $log->result($result);
 =head2 assert_lrgs
 
   ARG[$helper]    : Bio::EnsEMBL::Utils::SqlHelper instance
+  Returntype      : Boolean
 
 Retrieves the number of sequence regions mapped on the lrg coordinate system. Returns true if
 there are one or more sequence regions.
@@ -111,6 +112,8 @@ sub assert_lrgs{
 
   ARG[$helper]    : Bio::EnsEMBL::Utils::SqlHelper instance.
   ARG[$feature]   : String - name of the feature to test on.
+  
+  Returntype      : Boolean
 
 Checks if all the features with biotype 'LRG' are mapped to the lrg coordinate system. Then it checks
 if all the features mapped on the lrg coordinate system have the biotype 'LRG'.

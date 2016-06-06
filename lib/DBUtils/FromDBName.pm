@@ -13,7 +13,7 @@
 
 A module that retrieves information about the database using the database name.
 
-Adapted rom DatabaseRegistryEntry.java. Alterations: new regexs for stable_ids database, correction on EM_DB. 
+Adapted rom DatabaseRegistryEntry.java. Alterations: new regexs for stable_ids database (ESI-DB), correction on EM_DB. 
 See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/DatabaseRegistryEntry.java
 
 =cut
@@ -67,6 +67,16 @@ use warnings;
         $V_DB, $MYSQL_DB, $BLAST_DB, $UD_DB, $TAX_DB, $EW_DB, $HELP_DB, $GB_DB, $MASTER_DB);
 
 
+=head2 get_species
+
+  ARG[adaptor]     : EnsEMBL::DBSQL::DBAdaptor instance.
+  
+  Returntype       : String (species name)
+  
+Extracts the species from the database name through regular expressions.
+  
+=cut        
+        
 sub get_species{
     my ($dba) = @_;
     my $species;
@@ -86,6 +96,16 @@ sub get_species{
     
     return $species;
 }
+
+=head2 get_type
+
+  ARG[adaptor]     : EnsEMBL::DBSQL::DBAdaptor instance.
+  
+  Returntype       : String (database type)
+  
+Extracts the database type from the database name through regular expressions.
+  
+=cut 
 
 sub get_type{
     my ($dba) = @_;
@@ -107,6 +127,16 @@ sub get_type{
     return $type;
 }
 
+=head2 get_version
+
+  ARG[adaptor]     : EnsEMBL::DBSQL::DBAdaptor instance.
+  
+  Returntype       : String (release version)
+  
+Extracts the database release version from the database name through regular expressions.
+  
+=cut 
+
 sub get_version{
     my ($dba) = @_;
     my $version;
@@ -126,6 +156,16 @@ sub get_version{
     
     return $version;
 }
+
+=head2 get_gene_build
+
+  ARG[adaptor]     : EnsEMBL::DBSQL::DBAdaptor instance.
+  
+  Returntype       : String (gene build/assembly)
+  
+Extracts the gene build/assembly from the database name through regular expressions.
+  
+=cut 
 
 sub get_gene_build{
     my ($dba) = @_;
@@ -148,6 +188,17 @@ sub get_gene_build{
      
      return $gene_build;
 }     
+
+
+=head2 _db_name
+
+  ARG[adaptor]     : EnsEMBL::DBSQL::DBAdaptor instance.
+  
+  Returntype       : String (database name)
+  
+Returns the database name corresponding to the DBAdaptor input argument.
+  
+=cut 
 
 sub _db_name{
     my ($dba) = @_;

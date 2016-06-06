@@ -16,7 +16,7 @@
                                   
   Database type               : rnaseq
   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.  
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used. 
 
 File names inserted in the data_file table should not have file extensions or spaces
 in their names. The data files API will automatically deal with file extensions.
@@ -83,6 +83,15 @@ foreach my $row (@$names_ref){
 
 $log->result($result);
 
+=head2 find_extensions
+
+  ARG[name]      : String - a entry of the name column of the data_file table
+  
+  Returntype     : Boolean
+  
+Checks if the file name doesn't have a file extension
+
+=cut
 
 sub find_extensions{
     my ($name) = @_;
@@ -96,6 +105,16 @@ sub find_extensions{
         return 1;
     }
 }
+
+=head2 find_spaces
+
+   ARG[name]      : String - a entry of the name column of the data_file table
+  
+   Returntype     : Boolean 
+   
+Checks that there are no spaces in the file name.
+
+=cut
 
 sub find_spaces{
     my ($name) = @_;

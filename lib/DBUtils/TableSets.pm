@@ -1,3 +1,21 @@
+=head1 NAME
+  DBUtils::TableSets
+  
+=head1 SYNOPSIS
+
+  use DBUtils::TableSets;
+  my @feature_tables = @{ DButils::TableSets::get_feature_tables() };
+  
+=head1 DESCRIPTION
+
+  Returntype     : Arrayref containing all tables of the group.
+
+Retrieves sets of tables that belong to a common group. Based on the sets
+in EnsTestCase.java.
+See: https://github.com/Ensembl/ensj-healthcheck/blob/26644ee7982be37aef610afc69fae52cc70f5b35/src/org/ensembl/healthcheck/testcase/EnsTestCase.java
+
+=cut
+
 package DBUtils::TableSets;
 
 use warnings;

@@ -1,3 +1,19 @@
+=head1 NAME
+
+  Input::AutoIncrement - containts the table-column pairs that should be set to autoincrement.
+  
+=head1 SYNPOSIS
+
+  use Input::AutoIncrement;
+  my @columns = @Input::AutoIncrement::AI_columns;
+
+=head1 DESCRIPTION
+
+  Contains the table-column pairs that are used by the AutoIncrement healthcheck to check if they are
+  set to auto_increment. Add or delete from the array as desired.
+  
+=cut
+
 package Input::AutoIncrement;
 
 use strict;

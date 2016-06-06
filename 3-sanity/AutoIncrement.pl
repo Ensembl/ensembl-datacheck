@@ -16,7 +16,7 @@
 
   Database type                : Generic databases (core, vega, cdna, otherfeatures, rnaseq)
   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.
 
 Certain columns in the core tables should have the AUTO_INCREMENT flag set. This healthchecks retrieves
 meta information for those columns to check that this is the case.
@@ -107,6 +107,5 @@ foreach my $part (@columns){
        
 }
 
-#print this for now.
 $log->result($result);
 

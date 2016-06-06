@@ -2,10 +2,10 @@
 
 {
     #the default is to use Bio::EnsEMBL::Registry to connect to an Ensembl DB (using the info in db_registry hash). 
-    #However, if you want to connect to a specific database, set this value to 1 and a 
+    #However, if you want to connect to a specific database, set use_direct_connection to 1 and a 
     #Bio::EnsEMBL::DBSQL::DBConnection will be established using the information in the db_connection hash.
     
-    'use_direct_connection' => 1,
+    'use_direct_connection' => 0,
     
     'db_registry' => {
         'user' => 'anonymous',
@@ -16,7 +16,7 @@
         
         'password' => 'xxxxx',
         
-        'species' => 'homo sapiens',
+        'species' => 'cavia porcellus',
         'database_type' => 'core',        
     },
     
@@ -27,7 +27,7 @@
         #'host' => 'mysql-eg-publicsql.ebi.ac.uk',
         #'port' => 4157,
     
-        dbname => 'emmas_testing_base',
+        dbname => 'homo_sapiens_core_84_38',
         user => 'newuser',
         host => 'HAL2000',
         driver => 'mysql',

@@ -16,7 +16,7 @@
                                  
   Database type                : Core
   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.
 
 Checks that the species that should have them have xrefs projected on genes, and have projected GO
 xrefs.

@@ -49,7 +49,7 @@ sub filter_foreignkey_file{
     
     my @changed_tables = @{ $changed_tables };
     
-    #build a hash?
+    #build a hash
     my %changed_keys;
     
     my %keys_hash = %$Input::CoreForeignKeys::core_foreign_keys;
