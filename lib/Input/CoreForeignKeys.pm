@@ -8,7 +8,7 @@
   use Input::CoreForeignKeys;
   my %tables_hash = %$Input::CoreForeignKeys::core_foreign_keys;
   
-=head2 DESCRIPTION
+=head1 DESCRIPTION
 
   Contains foreign-key pair information to be used by the CheckForOrphans module in the CoreForeignKey
   healthcheck. 

@@ -32,16 +32,17 @@ use warnings;
   ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
   ARG[table1]     : String - name of the referencing table
   ARG[col1]       : String - name of the foreign key column in the referencing table
-  ARG[table2]     : String - name of the referenced table
-  ARG[col2]       : String - name of the primary key colum in the referenced table
-  ARG[both_ways]  : Boolean (0/1) - set to 1 (true) if you want to check the foreign key dependencies in both
+  ARG[table2]     : String (Optional) - name of the referenced table
+  ARG[col2]       : String  (Optional)- name of the primary key colum in the referenced table
+  ARG[both_ways]  : Boolean (Optional) - set to 1 (true) if you want to check the foreign key dependencies in both
                     directions.
-  ARG[constraint] : String - a constraint to be added to the query.
+  ARG[constraint] : String (Optional) - a constraint to be added to the query.
 
   Returntype      : Boolean (true if there are no orphans)
 
 Tests if foreigh key col1 in table1 references an instance of col2 in table2. If both_ways is set to 1 it also checks
-the reverse.
+the reverse. If no value for col2 is given, it the value from col1 will be used for col2 as well. If both_ways is not given,
+it will be set to 0.
 
 =cut
 

@@ -15,7 +15,7 @@ AssemblyNameLength - A sanity test (type 4 in the healthcheck system)
   
   Database type              : Core
   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.
 
 A healthcheck that checks that the meta_value for the key
 assembly.name in the meta table is not longer than 16 characters.

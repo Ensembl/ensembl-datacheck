@@ -6,7 +6,7 @@
 
   $ perl CoordSystemAcrossSpecies.pl --species 'homo sapiens'
 
-=head2 DESCRIPTION
+=head1 DESCRIPTION
 
  --species 'species name'      : String (Optional) - name of the species to check on
  --config_file                 : String (Optional) - location of the config file relative to the working directory. Default

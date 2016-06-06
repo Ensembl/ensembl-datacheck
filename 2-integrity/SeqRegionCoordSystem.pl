@@ -15,12 +15,12 @@
   
   Database type                  : Generic databases (core, vega, cdna, otherfeatures, rnaseq)
   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.
 
-The SeqRegionCoordsystem test looks for sequence regions in the core database of the species 
-with identical names but different coordinate systems. This is done by the check_names function. 
-It also checks that sequences with identical names and different coordinate systems are the
-same length. This is done by the check_lengths function.
+For core databases the SeqRegionCoordsystem test looks for sequence regions with identical 
+names but different coordinate systems. This is done by the check_names function. 
+For all generic datbases it checks that sequences with identical names and different coordinate 
+systems are the same length. This is done by the check_lengths function.
 NOTE: These two tests are contradictory for the CORE database test: check_lengths function 
 is not needed since there should not be any identically named sequences anyway.
 
@@ -94,8 +94,10 @@ $log->result($result);
 =head2 check_names
     
   ARG[species_id]    : Int - species_id from meta table of the species being checked
+  ARG[helper]        : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]        : Logger instance
 
-  Returntype         : Boolean (0/1)
+  Returntype         : Boolean
 
 A SQL query returns the number of instances (=rows) where two sequences have the same
 name but different coordinate systems for the same species_id. This should not happen
@@ -151,8 +153,10 @@ sub check_names{
 =head2 check_length
     
   ARG[species_id]    : Int - species_id from meta table of the species being checked
+  ARG[helper]        : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]        : Logger instance
 
-  Returntype         : Boolean (0/1)
+  Returntype         : Boolean
 
 A SQL query returns the number of instances (=rows) where two sequences have the same name,
 and are in different coordinate systems, but the sequence length isn't the same. Sequence length

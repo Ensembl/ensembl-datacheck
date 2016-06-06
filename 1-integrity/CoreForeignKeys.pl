@@ -9,18 +9,20 @@
 =head1 DESCRIPTION
 
   --species 'species name'      : String (Optional) - name of the species to check on.
-  --type 'database type'        : String (Optional) - name of the database type to test on. Currenlty only generic databases.
-  --filter_tables               : Flag - use it if you're runnign the HealthCheckSuite and have filtered the input file for
-                                  CoreForeigKeys 
+  --type 'database type'        : String (Optional) - name of the database type to test on. 
+  --filter_tables               : Flag - use it if you're runnigng the HealthCheckSuite and have filtered the input file for
+                                  CoreForeigKeys - it will use Input::FilteredCoreForeignKeys.
   --config_file                 : String (Optional) - location of the config file relative to the working directory. Default
                                   is one folder above the working directory.
                                   
-If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.  
+If the filter_tables flag is not set, foreign key pairs will be taken from the Input::CoreForeignKeys module. 
   
-Tests all foreign key references in the core databases with the use of the CheckForOrphans functions. 
+Tests all foreign key references in the generic databases with the use of the CheckForOrphans module. 
 
-Perl adaptation of the CoreForeignKeys.java healthcheck
+Perl adaptation of the CoreForeignKeys.java and AncestralSequencesExtraChecks.java healthchecks
 See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/CoreForeignKeys.java
+and: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/AncestralSequencesExtraChecks.java
 
 =cut
 

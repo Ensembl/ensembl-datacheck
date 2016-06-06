@@ -15,15 +15,15 @@
   
   Database type                : All generic databases (core, vega, cdna, otherfeatures, rnaseq)
   
-  If no command line input arguments are given, values from the 'config' file in the main directory will be used.
+ If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.
   
-  The meta healthcheck checks if the meta table exists in the database, if it has rows, if
-  the schema version in the meta table matches that of the database name, if there are certain
-  keys for key/value pairs used, if there are no duplicate key/value pairs, and if there
-  are no values that have 'ARRAY(...' instead of an actual value.
+ The meta healthcheck checks if the meta table exists in the database, if it has rows, if
+ the schema version in the meta table matches that of the database name, if there are certain
+ keys for key/value pairs used, if there are no duplicate key/value pairs, and if there
+ are no values that have 'ARRAY(...' instead of an actual value.
   
-  Perl implementation of the Meta.java test
-  See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/Meta.java
+ Perl implementation of the Meta.java test
+ See: https://github.com/Ensembl/ensj-healthcheck/blob/release/84/src/org/ensembl/healthcheck/testcase/generic/Meta.java
   
 =cut
 #!/usr/bin/env perl
@@ -82,6 +82,16 @@ if(index($dbname, 'ancestral') == -1){
 
 $log->result($result);
 
+=head2 check_table_exists
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  
+  Returntype      : Boolean
+  
+Checks if the meta table exists.
+
+=cut
 
 sub check_table_exists{
     my ($helper, $log) = @_;
@@ -95,6 +105,17 @@ sub check_table_exists{
 	return 0;
     }
 }
+
+=head2 check_has_rows
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  
+  Returntype      : Boolean
+  
+Checks if the meta table has rows.
+
+=cut
 
 sub check_has_rows{
     my ($helper, $log) = @_;
@@ -113,6 +134,18 @@ sub check_has_rows{
 	return 0;
     }    
 }
+
+=head2 check_version
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  ARG[dba]        : Bio::EnsEMBL::DBSQL::DBAdaptor instance
+  
+  Returntype      : Boolean
+
+  Checks if the version number in the meta table is in numeric format, and
+  if it matches the version number in the database name.
+=cut
 
 sub check_version{
     my($helper, $log, $dba) = @_;
@@ -154,6 +187,18 @@ sub check_version{
     return $schema_result;
 }
 
+=head2 check_keys_present
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  
+  Returntype      : Boolean
+  
+Checks that a number of values for meta_key exist in the meta table. Also checks that
+there are at least three different species.alias keys.
+  
+=cut
+
 sub check_keys_present{
     my ($helper, $log) = @_;
     
@@ -189,6 +234,17 @@ sub check_keys_present{
     return $key_result;
 }
 
+=head2 check_duplicates
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  
+  Returntype      : Boolean
+
+Checks that there are no duplicate meta_key meta_value pairs.
+
+=cut
+
 sub check_duplicates{
     my($helper, $log) = @_;
     
@@ -210,6 +266,17 @@ sub check_duplicates{
     
     return $duplicate_result;
  }
+ 
+=head2 check_duplicates
+
+  ARG[helper]     : Bio::EnsEMBL::Utils::SqlHelper instance
+  ARG[Logger]     : Logger object instance
+  
+  Returntype      : Boolean
+
+Checks that there are no meta_value entries that have a value like 'ARRAY(...'.
+  
+=cut
  
  sub check_for_arrays{
     my($helper, $log) = @_;

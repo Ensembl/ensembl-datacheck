@@ -7,12 +7,16 @@
   $ perl AssemblyMapping.pl --config '../config'
 
 =head1 DESCRIPTION
- --config_file           : String (Optional) - location of the config file relative to the working directory. Default
-                           is one folder above the working directory.
+  --species 'species name'      : String (Optional) - name of the species to check on.
+  --type 'database type'        : String (Optional) - name of the database type to test on.
+  --config_file                 : String (Optional) - location of the config file relative to the working directory. Default
+                                  is one folder above the working directory.
                            
-  Database               : Core
+  Database                      : Core
 
-Checks if the assembly.mapping values in the meta table are the right format and if they refer to existing
+If no command line input arguments are given, values from the 'config' file in the parent directory of the working directory will be used.   
+  
+Checks if the assembly.mapping values in the meta table are in the right format and if they refer to existing
 coordinate systems (name & version).
 
 Perl adaptation of the AssemblyMapping.java test
