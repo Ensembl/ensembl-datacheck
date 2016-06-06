@@ -21,7 +21,7 @@
   
 =head1 DESCRIPTION
 
-  The Logger object provides a uniform informative output for the healthchecksystem. The message method
+  The Logger object provides a uniform informative output for the healthcheck system. The message method
   can be used for informative messages, whereas the result method is used to display the final success
   or failure of a healthcheck.
 
