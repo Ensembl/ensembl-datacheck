@@ -17,5 +17,5 @@ Apart from the healthchecks, an infrastructure was also developed. The overarchi
 
 Modules used as helper functions by the healthchecks can be found in the <b>DBUtils</b> namespace. Additionally, large amounts of hardcoded values have been removed from the healthchecks themselves and are stored as modules in the <b>Input</b> namespace. This is also where you should make additions or deletions to these values (such as foreign key pairs).
 
- 
+Part of the thesis research focussed on the simplification of integrity constraints. The scripts used for this can be found on the integrity-simplification branch, in the integrity-simplification folder. 
 
