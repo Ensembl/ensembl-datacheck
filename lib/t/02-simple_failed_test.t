@@ -14,7 +14,7 @@ BEGIN {
 my $test = Bio::EnsEMBL::DataTest::BaseTest->new(
   name => "mytest",
   test => sub {
-    ok( 1 == 1, "OK?" );
+    ok( 0 == 1, "Not OK!" );
   } );
   
 ok($test,"Simple test OK");
@@ -25,8 +25,8 @@ ok($res,"Test output OK");
 diag(Dumper($res));
 is(ref($res), 'HASH', "Is a hashref");
 
-is($res->{pass}, 1, 'Passed');
+is($res->{pass}, 0, 'Failed');
 is(scalar(@{$res->{details}}), 1, '1 detail');
-is($res->{details}->[0]->{ok}, 1, 'Detail 1 OK');
+is($res->{details}->[0]->{ok}, 0, 'Detail 1 not OK');
 
 done_testing;
