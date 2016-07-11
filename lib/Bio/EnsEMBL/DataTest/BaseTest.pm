@@ -36,7 +36,8 @@ sub run {
   }
 
   # run the test code
-  $self->test()->( $self, @_ );
+  
+  $self->test()->( @_ );
 
   # capture and return the results
   my @details = Test::More->builder()->details();
