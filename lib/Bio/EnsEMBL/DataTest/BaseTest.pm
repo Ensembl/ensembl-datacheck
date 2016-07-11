@@ -18,7 +18,7 @@ has 'test_predicate' => (
 
 sub will_test {
   my ($self) = shift;
-  return $self->test_predicate(@_);
+  return &{$self->test_predicate}(@_);
 }
 
 sub run {
@@ -30,7 +30,7 @@ sub run {
   Test::More->builder()->failure_output( \$output );
 
   # check to see if we're going to run this test
-  my $will_test = $self->will_test()->( $self, @_ );
+  my $will_test = $self->will_test( @_ );
   if ( $will_test->{run} != 1 ) {
     return { skipped => 1, reason => $will_test->{reason} };
   }
