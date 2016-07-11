@@ -11,11 +11,9 @@ override 'will_test' => sub {
   
   my ( $self, $dba ) = @_;
   my $result = super();
-  print Dumper($result);
   if($result->{run} !=1 ){
     return $result;
   }
-  print Dumper($dba);
   return $self->check_type($dba);
 };
 
@@ -26,12 +24,10 @@ sub has_type {
 
 sub check_type {
   my ($self,$dba) = @_;
-  print "Checking type\n";
     if ( !defined $self->{db_types}  || scalar (@{$self->{db_types}})==0 ) {
     return { run => 1, reason => "no type specified" };
   }
   my $dbname = $dba->dbc()->dbname();
-  print "Checking type of $dbname\n";
   # core
   if($dbname =~ '_core_') {
     if(!$self->has_type('core')) {

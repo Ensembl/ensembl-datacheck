@@ -1,6 +1,7 @@
 package Bio::EnsEMBL::DataTest::TableAwareTest;
 use Moose;
 use Carp;
+use Data::Dumper;
 use Bio::EnsEMBL::DataTest::Utils::DBUtils qw/table_dates/;
 
 extends 'Bio::EnsEMBL::DataTest::TypeAwareTest';
@@ -13,7 +14,7 @@ override 'will_test' => sub {
 
   my $result = super();
 
-  if ( $result->{run} != 0 ) {
+  if ( $result->{run} != 1 ) {
     return $result;
   }
   return $self->check_tables( $dba, $table_info );
@@ -24,7 +25,7 @@ sub check_tables {
   if ( !defined $table_info ) {
     return { run => 1, reason => "No table info supplied" };
   }
-  my $tgt_info = table_dates( $dba->dbc(), $dba->dbname() );
+  my $tgt_info = table_dates( $dba->dbc(), $dba->dbc()->dbname() );
   # check each specified table
   for my $table  (@{$self->tables()} ) {
     if ( !defined $tgt_info->{$table} ||
@@ -38,7 +39,7 @@ sub check_tables {
   return {
     run    => 0,
     reason => "Table(s) " .
-      join( ',', $self->{tables} ) . " have not changed"
+      join( ',', @{$self->{tables}} ) . " have not changed"
   };
 }
 
