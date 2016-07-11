@@ -5,6 +5,8 @@ use Test::Builder;
 use Carp;
 use Data::Dumper;
 
+with 'MooseX::Log::Log4perl';
+
 has 'name' => ( is => 'ro', isa => 'Str' );
 has 'test' => ( is => 'ro', isa => 'CodeRef' );
 # default test predicate allows a specific test to run specific predicate code
