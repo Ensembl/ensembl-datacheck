@@ -25,7 +25,25 @@ my $test = Bio::EnsEMBL::DataTest::TableAwareTest->new(
   } );
 
 ok( $test, "Simple test OK" );
+
 {
+  # test with no info
+  my $res = run_test(
+    sub {
+      $test->run( $core_dba, undef );
+    } );
+  ok( $res, "Test output OK" );
+  diag( Dumper($res) );
+  is( ref($res),                      'HASH', "Is a hashref" );
+  is( $res->{skipped},                0,      'Skipped' );
+  is( $res->{pass},                   1,      'Passed' );
+  is( scalar( @{ $res->{details} } ), 1,      '1 detail' );
+  is( $res->{details}->[0]->{ok},     1,      'Detail 1 OK' );
+}
+
+
+{
+  # test with no changes
   my $res = run_test(
     sub {
       $test->run( $core_dba, $info );
@@ -66,5 +84,6 @@ ok( $test, "Simple test OK" );
   is( scalar( @{ $res->{details} } ), 1,      '1 detail' );
   is( $res->{details}->[0]->{ok},     1,      'Detail 1 OK' );
 }
+
 
 done_testing;
