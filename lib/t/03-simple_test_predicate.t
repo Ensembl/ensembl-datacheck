@@ -13,6 +13,9 @@ BEGIN {
 
 my $test = Bio::EnsEMBL::DataTest::BaseTest->new(
   name => "mytest",
+  test_predicate => sub {
+    return {run=>0, reason=>"Don't want to"}
+  },
   test => sub {
     ok( 1 == 1, "OK?" );
   } );
@@ -21,7 +24,7 @@ ok($test,"Simple test OK");
 
 my $will_test = $test->will_test();
 ok($will_test, "will test ran");
-is($will_test->{run}, 1, "Will run test");
+is($will_test->{run}, 0, "Will not run test");
 my $res = run_test(sub {
   $test->run();
 });
@@ -29,8 +32,7 @@ ok($res,"Test output OK");
 diag(Dumper($res));
 is(ref($res), 'HASH', "Is a hashref");
 
-is($res->{pass}, 1, 'Passed');
-is(scalar(@{$res->{details}}), 1, '1 detail');
-is($res->{details}->[0]->{ok}, 1, 'Detail 1 OK');
+is($res->{skipped}, 1, 'Skipped');
+is($res->{reason}, "Don't want to", 'Reason for skipping');
 
 done_testing;

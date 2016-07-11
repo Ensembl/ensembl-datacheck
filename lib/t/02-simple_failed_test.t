@@ -18,6 +18,11 @@ my $test = Bio::EnsEMBL::DataTest::BaseTest->new(
   } );
   
 ok($test,"Simple test OK");
+
+my $will_test = $test->will_test();
+ok($will_test, "will test ran");
+is($will_test->{run}, 1, "Will run test");
+
 my $res = run_test(sub {
   $test->run();
 });
