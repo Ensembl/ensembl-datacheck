@@ -5,6 +5,7 @@ use Data::Dumper;
 
 extends 'Bio::EnsEMBL::DataTest::BaseTest';
 
+has 'per_species' => ( is => 'ro', default => 'false', isa => 'Bool' );
 has 'db_types' => ( is => 'ro', isa => 'ArrayRef[Str]' );
 
 override 'will_test' => sub {
