@@ -10,6 +10,7 @@ has 'db_types' => ( is => 'ro', isa => 'ArrayRef[Str]' );
 
 after 'run' => sub {
   my ( $self, $dba ) = @_;
+  $self->log()->debug("Disconnecting from ".$dba->dbc()->dbname());
   $dba->dbc()->disconnect_if_idle();
   return;
 };
