@@ -79,6 +79,12 @@ sub check_type {
     } elsif(!$dba->isa('Bio::EnsEMBL::Compara::DBSQL::DBAdaptor')) {
       return {run=>0, reason=>'Test requires a Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'};      
     }    
+  } elsif($dbname =~ /_funcgen_/) {
+    if(!$self->has_type('funcgen')) {
+      return {run=>0, reason=>'Test will not work with a funcgen database'};      
+    } elsif(!$dba->isa('Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor')) {
+      return {run=>0, reason=>'Test requires a Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'};      
+    }    
   } else {
     croak "Cannot check correct type for database $dbname";
   }
