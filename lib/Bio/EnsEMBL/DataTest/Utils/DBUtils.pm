@@ -28,7 +28,8 @@ BEGIN {
   require Exporter;
   our $VERSION = 1.00;
   our @ISA     = qw(Exporter);
-  our @EXPORT  = qw(table_dates rowcount is_rowcount is_rowcount_zero is_rowcount_nonzero);
+  our @EXPORT =
+    qw(table_dates rowcount is_rowcount is_rowcount_zero is_rowcount_nonzero ok_foreignkeys);
 }
 
 sub table_dates {
@@ -47,33 +48,79 @@ sub table_dates {
 'select table_name,update_time from information_schema.tables where table_schema=?',
     -PARAMS => [$dbname] );
 }
+
 sub rowcount {
   my ( $dbc, $sql ) = @_;
-  if($dbc->can('dbc')) {
+  if ( $dbc->can('dbc') ) {
     $dbc = $dbc->dbc();
   }
   diag($sql);
-  return $dbc->sql_helper()->execute_single_result( -SQL => $sql );
+  if ( index( uc($sql), "SELECT COUNT" ) != -1 &&
+       index( uc($sql), "GROUP BY" ) == -1 )
+  {
+    return $dbc->sql_helper()->execute_single_result( -SQL => $sql );
+  }
+  else {
+    return scalar @{ $dbc->sql_helper()->execute( -SQL => $sql ) };
+  }
 }
 
-
 sub is_rowcount {
-  my ($dba, $sql, $expected, $name) = @_;
-  is(rowcount($dba,$sql), $expected, $name);
+  my ( $dba, $sql, $expected, $name ) = @_;
+  is( rowcount( $dba, $sql ), $expected, $name );
   return;
 }
 
 sub is_rowcount_zero {
-  my ($dba, $sql, $name) = @_;
-  is_rowcount($dba,$sql,0,$name);
+  my ( $dba, $sql, $name ) = @_;
+  is_rowcount( $dba, $sql, 0, $name );
   return;
 }
 
 sub is_rowcount_nonzero {
-  my ($dba, $sql, $name) = @_;
-  ok(rowcount($dba,$sql)>0, $name);
+  my ( $dba, $sql, $name ) = @_;
+  ok( rowcount( $dba, $sql ) > 0, $name );
   return;
 }
 
+sub ok_foreignkeys {
+  my ( $dba, $table1, $col1, $table2, $col2, $both_ways, $constraint, $name ) =
+    @_;
+
+  $col2 ||= $col1;
+  $both_ways ||= 0;
+  my $sql_left =
+    "SELECT COUNT(*) FROM $table1 LEFT JOIN $table2 " .
+    "ON $table1.$col1 = $table2.$col2 " . "WHERE $table2.$col2 IS NULL";
+
+  if ($constraint) {
+    $sql_left .= " AND $constraint";
+  }
+
+  is_rowcount_zero( $dba,
+                    $sql_left, (
+                      $name ||
+"Checking for values in ${table1}.${col1} not found in ${table2}.${col2}" )
+  );
+
+  if ($both_ways) {
+
+    my $sql_right =
+      "SELECT COUNT(*) FROM $table2 LEFT JOIN $table1 " .
+      "ON $table2.$col2 = $table1.$col1 " . "WHERE $table1.$col1 IS NULL";
+
+    if ($constraint) {
+      $sql_right .= " AND $constraint";
+    }
+
+    is_rowcount_zero( $dba,
+                      $sql_right, (
+                        $name ||
+"Checking for values in ${table2}.${col2} not found in ${table1}.${col1}" ) );
+
+  }
+
+  return;
+} ## end sub ok_foreignkeys
 
 1;
