@@ -20,7 +20,7 @@ use Test::More;
 use Bio::EnsEMBL::DataTest::Utils::DBUtils qw/is_query/;
 
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
-  name     => 'lrg',
+  name     => 'sequence_level',
   db_types => ['core'],
   tables   => [ 'seq_region', 'coord_system', 'dna' ],
   test     => sub {
