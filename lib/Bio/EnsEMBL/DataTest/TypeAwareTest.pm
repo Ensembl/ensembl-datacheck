@@ -23,7 +23,7 @@ use Data::Dumper;
 
 extends 'Bio::EnsEMBL::DataTest::BaseTest';
 
-has 'per_species' => ( is => 'ro', default => 0, isa => 'Bool', required => 0 );
+has 'per_species' => ( is => 'ro', default => 1, isa => 'Bool', required => 0 );
 has 'db_types' => ( is => 'ro', isa => 'ArrayRef[Str]' );
 
 after 'run' => sub {
