@@ -29,7 +29,7 @@ BEGIN {
   our $VERSION = 1.00;
   our @ISA     = qw(Exporter);
   our @EXPORT =
-    qw(table_dates rowcount is_rowcount is_rowcount_zero is_rowcount_nonzero ok_foreignkeys);
+    qw(table_dates rowcount is_rowcount is_rowcount_zero is_rowcount_nonzero ok_foreignkeys get_species_ids is_query);
 }
 
 sub table_dates {
@@ -47,6 +47,16 @@ sub table_dates {
     -SQL =>
 'select table_name,update_time from information_schema.tables where table_schema=?',
     -PARAMS => [$dbname] );
+}
+
+sub get_species_ids {
+  my ($dbc) = @_;
+  if ( $dbc->can('dbc') ) {
+    $dbc = $dbc->dbc();
+  }
+  return $dbc->sql_helper()
+    ->execute( -SQL =>
+          'select distinct species_id from meta where species_id is not null' );
 }
 
 sub rowcount {
@@ -67,6 +77,7 @@ sub rowcount {
 
 sub is_rowcount {
   my ( $dba, $sql, $expected, $name ) = @_;
+  $name ||= "Checking that $sql returns $expected";
   is( rowcount( $dba, $sql ), $expected, $name );
   return;
 }
@@ -80,6 +91,12 @@ sub is_rowcount_zero {
 sub is_rowcount_nonzero {
   my ( $dba, $sql, $name ) = @_;
   ok( rowcount( $dba, $sql ) > 0, $name );
+  return;
+}
+
+sub is_query {
+  my ( $dba, $expected, $sql,  $name ) = @_;
+  is( $expected, $dba->dbc()->sql_helper()->execute_single_result( -SQL => $sql ), $name );
   return;
 }
 
@@ -100,8 +117,7 @@ sub ok_foreignkeys {
   is_rowcount_zero( $dba,
                     $sql_left, (
                       $name ||
-"Checking for values in ${table1}.${col1} not found in ${table2}.${col2}" )
-  );
+"Checking for values in ${table1}.${col1} not found in ${table2}.${col2}" ) );
 
   if ($both_ways) {
 
