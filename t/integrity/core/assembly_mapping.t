@@ -23,11 +23,8 @@ use Data::Dumper;
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
   name     => 'assembly_mapping',
   db_types => ['core'],
-  tables   => [
-              'seq_region', 'assembly_exception',
-              'seq_region', 'dna_align_feature',
-              'analysis',   'external_db' ],
-  test => sub {
+  tables   => [ 'meta', 'coord_system' ],
+  test     => sub {
     my ($dba) = @_;
 
     my $id = $dba->species_id();
