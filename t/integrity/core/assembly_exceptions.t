@@ -22,6 +22,9 @@ use Data::Dumper;
 
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
   name     => 'assembly_exceptions',
+  description =>
+    q/Check if assembly_exceptions are present and correct/
+  ,
   db_types => ['core'],
   tables   => [
               'seq_region', 'assembly_exception',

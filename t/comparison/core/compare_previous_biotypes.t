@@ -20,7 +20,10 @@ use Test::More;
 use Bio::EnsEMBL::DataTest::Utils::DBUtils qw/is_same_counts/;
 
 Bio::EnsEMBL::DataTest::CompareDbTest->new(
-  name     => 'compare_previous_biotypes',
+  name => 'compare_previous_biotypes',
+  description =>
+    q/Compare counts of genes with different biotypes between two databases/
+  ,
   db_types => ['core'],
   tables   => ['gene'],
   test     => sub {
@@ -28,7 +31,7 @@ Bio::EnsEMBL::DataTest::CompareDbTest->new(
     my $sql = q/select biotype,count(*) from gene 
     join seq_region using (seq_region_id) 
     join coord_system using (coord_system_id) where species_id=/ .
-      $dba->species_id().' group by biotype';
+      $dba->species_id() . ' group by biotype';
     is_same_counts( $dba, $dba2, $sql, 0.75, "Comparing biotype counts" );
     return;
   } );

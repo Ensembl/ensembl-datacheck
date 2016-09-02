@@ -25,6 +25,9 @@ use Bio::EnsEMBL::DataTest::Utils::TableSets
 
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
   name     => 'core_foreign_keys',
+    description =>
+    q/Check for incorrect foreign keys between tables/
+  ,
   db_types => [ 'core', 'otherfeatures' ],
   tables =>
     [ @{ get_object_xref_tables() }, @{ get_tables_with_analysis_id() } ],

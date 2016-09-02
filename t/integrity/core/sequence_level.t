@@ -21,6 +21,9 @@ use Bio::EnsEMBL::DataTest::Utils::DBUtils qw/is_query/;
 
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
   name     => 'sequence_level',
+    description =>
+    q/Check that DNA is attached and only attached to sequence-level seq_regions/
+  ,
   db_types => ['core'],
   tables   => [ 'seq_region', 'coord_system', 'dna' ],
   test     => sub {

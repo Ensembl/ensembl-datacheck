@@ -22,6 +22,9 @@ use Data::Dumper;
 
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
   name     => 'assembly_mapping',
+    description =>
+    q/Check vality of assembly mappings/
+  ,
   db_types => ['core'],
   tables   => [ 'meta', 'coord_system' ],
   test     => sub {

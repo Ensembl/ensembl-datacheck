@@ -54,6 +54,9 @@ sub ok_lrg_annotations {
 
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
   name     => 'lrg',
+  description =>
+    q/Check that LRG features and seq_regions are correctly associated/
+  ,
   db_types => ['core'],
   tables   => [ 'seq_region', 'coord_system', 'gene', 'transcript' ],
   test     => sub {

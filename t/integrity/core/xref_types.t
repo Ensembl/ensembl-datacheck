@@ -20,7 +20,10 @@ use Test::More;
 use Bio::EnsEMBL::DataTest::Utils::DBUtils qw/is_query/;
 
 Bio::EnsEMBL::DataTest::TableAwareTest->new(
-  name        => 'xref_types',
+  name => 'xref_types',
+  description =>
+    q/Check that xrefs are only attached to one feature type/
+  ,
   db_types    => ['core'],
   per_species => 0,
   tables      => [ 'object_xref', 'xref', 'external_db' ],
