@@ -18,13 +18,13 @@ use strict;
 
 use Log::Log4perl qw/:easy/;
 use Carp;
-use File::Slurp;
-use File::Find;
 use Data::Dumper;
 use Pod::Usage;
 
 use Bio::EnsEMBL::DBSQL::DBAdaptor;
 use Bio::EnsEMBL::Utils::CliHelper;
+
+use Bio::EnsEMBL::DataTest::Utils::TestUtils qw/load_tests/;
 
 my $cli_helper = Bio::EnsEMBL::Utils::CliHelper->new();
 # get the basic options for connecting to a database server
@@ -57,7 +57,7 @@ for my $test_loc ( @{ $opts->{test} } ) {
 # connect to production db if supplied
 if ( defined $opts->{mhost} ) {
   $logger->info("Connecting to production database");
-  my ($prod_dba) = @{ $cli_helper->get_dba_for_opts($opts), 'm' };
+  my ($prod_dba) = @{ $cli_helper->get_dba_for_opts($opts), 1, 'm' };
 }
 
 # connect to each database in turn
@@ -91,46 +91,4 @@ for my $dba_args ( @{ $cli_helper->get_dba_args_for_opts($opts) } ) {
   }
 }
 
-# load tests from supplied source file/directory
-sub load_tests {
-  my ($test_loc) = @_;
-  $logger->info("Test loc $test_loc");
-  my $tests = [];
-  if ( -f $test_loc ) {
-    push @$tests, read_test($test_loc);
-  }
-  elsif ( -d $test_loc || -l $test_loc ) {
-    $logger->info("Reading tests from $test_loc");
-    find( {
-        wanted => sub {
-          if (m/\.t$/) {
-            push @$tests, read_test($_);
-          }
-        },
-        no_chdir => 1,
-        follow   => 1 },
-      $test_loc );
-  }
-  else {
-    croak("Cannot read test location $test_loc");
-  }
-  return $tests;
-} ## end sub load_tests
-
-# read test from a single file
-sub read_test {
-  my ($file) = @_;
-  $logger->debug("Reading test from $file");
-  my $test_str = read_file($file) || croak "Could not read test file $file";
-  my $test = eval $test_str;
-  if ($@) {
-    croak "Could not parse test file $file: $@";
-  }
-  return $test;
-}
-
-# invoke test on a given database
-sub test_database {
-  my ( $dba, $tests ) = @_;
-  return;
-}
+print Dumper($test_results);
