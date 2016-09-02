@@ -37,9 +37,7 @@ my $will_test = $test->will_test();
 ok($will_test, "will test ran");
 is($will_test->{run}, 1, "Will run test");
 
-my $res = run_test(sub {
-  $test->run();
-});
+my $res = $test->run();
 ok($res,"Test output OK");
 diag(Dumper($res));
 is(ref($res), 'HASH', "Is a hashref");
