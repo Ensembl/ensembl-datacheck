@@ -1,19 +1,32 @@
+=head1 LICENSE
+
+Copyright [2016] EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 =head1 NAME
-  Bio::EnsEMBL::DataTest::Utils::TableSets
-  
+
+Bio::EnsEMBL::DataTest::Utils::TableSets
+
 =head1 SYNOPSIS
 
-  use Bio::EnsEMBL::DataTest::Utils::TableSets;
-  my @feature_tables = @{ DButils::TableSets::get_feature_tables() };
-  
+my $core_keys = get_core_foreign_keys();
+
 =head1 DESCRIPTION
 
-  Returntype     : Arrayref containing all tables of the group.
+Package defining tables and keys used in healthchecks
 
-Retrieves sets of tables that belong to a common group. Based on the sets
-in EnsTestCase.java.
-See: https://github.com/Ensembl/ensj-healthcheck/blob/26644ee7982be37aef610afc69fae52cc70f5b35/src/org/ensembl/healthcheck/testcase/EnsTestCase.java
+=head1 METHODS
 
 =cut
 
@@ -180,26 +193,81 @@ my $core_foreign_keys = {
                        { col1 => 'external_db_id', table2 => 'external_db' } ],
   xref => [ { col1 => 'external_db_id', table2 => 'external_db' } ] };
 
+=head2 get_feature_tables
+
+  Description: Get list of tables representing genomic features
+  Returntype : arrayref of strings
+  Exceptions : none
+  Caller     : general
+  Status     : Stable
+
+=cut
 sub get_feature_tables {
   return $feature_tables;
 }
 
+=head2 get_object_xref_tables
+
+  Description: Get list of tables referencing object_xref
+  Returntype : arrayref of strings
+  Exceptions : none
+  Caller     : general
+  Status     : Stable
+
+=cut
 sub get_object_xref_tables {
   return $object_xref_tables;
 }
 
+=head2 get_tables_with_analysis_id
+
+  Description: Get list of tables which reference analysis
+  Returntype : arrayref of strings
+  Exceptions : none
+  Caller     : general
+  Status     : Stable
+
+=cut
 sub get_tables_with_analysis_id {
   return $tables_with_analysis_id;
 }
 
+=head2 get_funcgen_feature_tables
+
+  Description: Get list of funcgen tables representing features
+  Returntype : arrayref of strings
+  Exceptions : none
+  Caller     : general
+  Status     : Stable
+
+=cut
 sub get_funcgen_feature_tables {
   return $funcgen_feature_tables;
 }
 
+=head2 get_funcgen_tables_with_analysis_id
+
+  Description: Get list of funcgen tables which reference analysis
+  Returntype : arrayref of strings
+  Exceptions : none
+  Caller     : general
+  Status     : Stable
+
+=cut
 sub get_funcgen_tables_with_analysis_id {
   return $funcgen_tables_with_analysis_id;
 }
 
+=head2 get_core_foreign_keys
+
+  Description: Get list of tables which reference analysis
+  Returntype : hashref of tables where values are an arrayref of hashrefs 
+               containing column details 
+  Exceptions : none
+  Caller     : general
+  Status     : Stable
+
+=cut
 sub get_core_foreign_keys {
   return $core_foreign_keys;
 }
