@@ -26,11 +26,11 @@ extends 'Bio::EnsEMBL::DataTest::TypeAwareTest';
 
 has 'tables' => ( is => 'ro', isa => 'ArrayRef[Str]' );
 
-override 'will_test' => sub {
+around 'will_test' => sub {
 
-  my ( $self, $dba, $table_info ) = @_;
+  my ( $orig, $self, $dba, $table_info ) = @_;
 
-  my $result = super();
+  my $result = $self->$orig($dba);
 
   if ( $result->{run} != 1 ) {
     return $result;

@@ -29,7 +29,9 @@ BEGIN {
   our $VERSION = 1.00;
   our @ISA     = qw(Exporter);
   our @EXPORT =
-    qw(table_dates rowcount is_rowcount is_rowcount_zero is_rowcount_nonzero ok_foreignkeys get_species_ids is_query);
+    qw(table_dates rowcount is_rowcount is_rowcount_zero is_rowcount_nonzero
+    ok_foreignkeys get_species_ids is_query is_same_counts is_same_result)
+    ;
 }
 
 sub table_dates {
@@ -95,8 +97,40 @@ sub is_rowcount_nonzero {
 }
 
 sub is_query {
-  my ( $dba, $expected, $sql,  $name ) = @_;
-  is( $expected, $dba->dbc()->sql_helper()->execute_single_result( -SQL => $sql ), $name );
+  my ( $dba, $expected, $sql, $name ) = @_;
+  is( $expected,
+      $dba->dbc()->sql_helper()->execute_single_result( -SQL => $sql ), $name );
+  return;
+}
+
+sub is_same_result {
+  my ( $dba, $dba2, $sql, $name ) = @_;
+  $name ||= "Comparing results of $sql";
+  my $r1 = $dba->dbc()->sql_helper()->execute( -SQL => $sql );
+  my $r2 = $dba2->dbc()->sql_helper()->execute( -SQL => $sql );
+  if ( scalar(@$r1) != scalar(@$r2) ) {
+    fail( $name . " - different row counts" );
+  }
+  else {
+    for ( my $i = 0; $i < scalar(@$r1); $i++ ) {
+      for ( my $j = 0; $j < scalar( @{ $r1->[$i] } ); $j++ ) {
+        is( $r1->[$i]->[$j], $r1->[$i]->[$j], $name . " row $i, column $j" );
+      }
+    }
+  }
+  return;
+}
+
+sub is_same_counts {
+  my ( $dba, $dba2, $sql, $threshold, $name ) = @_;
+  $threshold ||= 1;
+  $name      ||= "Checking counts from $sql";
+  my $c1 = $dba->dbc()->sql_helper()->execute_into_hash( -SQL => $sql );
+  my $c2 = $dba2->dbc()->sql_helper()->execute_into_hash( -SQL => $sql );
+  while ( my ( $k, $v1 ) = each %$c1 ) {
+    my $v2 = $c2->{$k} || 0;
+    ok( $v1 > ( $v2*$threshold ), $name . " - comparing $k ($v1 vs $v2)" );
+  }
   return;
 }
 
