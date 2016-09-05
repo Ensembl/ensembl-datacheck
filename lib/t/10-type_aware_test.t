@@ -25,9 +25,13 @@ BEGIN {
 	use_ok( 'Bio::EnsEMBL::DataTest::TypeAwareTest' );
 }
 
+diag("Loading test databases");
+
 my $homo = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens');
 my $core_dba = $homo->get_DBAdaptor('core');
 my $variation_dba = $homo->get_DBAdaptor('variation');
+
+diag("Instantiating and executing a TypeAwareTest on a human core");
 
 my $test = Bio::EnsEMBL::DataTest::TypeAwareTest->new(
   name => "mytest",
@@ -49,6 +53,8 @@ my $res2 = $test->run($variation_dba);
 ok($res2,"Test output OK");
 diag(Dumper($res2));
 is(ref($res2), 'HASH', "Is a hashref");
+
+diag("Instantiating and executing a TypeAwareTest on a human variation to make sure it skips");
 
 is($res2->{skipped}, 1, 'Skipped');
 is($res2->{reason}, "Test will not work with a variation database", 'Reason for skipping');

@@ -25,10 +25,14 @@ BEGIN {
   use_ok('Bio::EnsEMBL::DataTest::TableAwareTest');
 }
 
+diag("Loading test databases");
+
 my $homo     = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens');
 my $core_dba = $homo->get_DBAdaptor('core');
 
 my $info = table_dates( $core_dba->dbc() );
+
+diag("Instatiating and executing a TableAwareTest");
 
 my $test = Bio::EnsEMBL::DataTest::TableAwareTest->new(
   name     => "mytest",
@@ -38,6 +42,8 @@ my $test = Bio::EnsEMBL::DataTest::TableAwareTest->new(
     ok( 1 == 1, "OK?" );
   } );
 
+
+diag("Checking that test will not run without changes");
 
 {
   # test with no changes
@@ -50,35 +56,39 @@ my $test = Bio::EnsEMBL::DataTest::TableAwareTest->new(
   is( $res->{reason}, "Table(s) gene have not changed", 'Reason for skipping' );
 }
 
-#{
-#  # tweak transcript
-#  $info->{transcript} = "Now!";
-#  my $res = run_test(
-#    sub {
-#      $test->run( $core_dba, $info );
-#    } );
-#  ok( $res, "Test output OK" );
-#  diag( Dumper($res) );
-#  is( ref($res), 'HASH', "Is a hashref" );
-#  is( $res->{skipped}, 1, 'Skipped' );
-#  is( $res->{reason}, "Table(s) gene have not changed", 'Reason for skipping' );
-#}
-#
-#{
-#  # tweak gene
-#  $info->{gene} = "New!";
-#  my $res = run_test(
-#    sub {
-#      $test->run( $core_dba, $info );
-#    } );
-#  ok( $res, "Test output OK" );
-#  diag( Dumper($res) );
-#  is( ref($res),                      'HASH', "Is a hashref" );
-#  is( $res->{skipped},                0,      'Skipped' );
-#  is( $res->{pass},                   1,      'Passed' );
-#  is( scalar( @{ $res->{details} } ), 1,      '1 detail' );
-#  is( $res->{details}->[0]->{ok},     1,      'Detail 1 OK' );
-#}
+diag("Checking that test will not run after transcript changed");
+
+{
+  # tweak transcript
+  $info->{transcript} = "Now!";
+  my $res = run_test(
+    sub {
+      $test->run( $core_dba, $info );
+    } );
+  ok( $res, "Test output OK" );
+  diag( Dumper($res) );
+  is( ref($res), 'HASH', "Is a hashref" );
+  is( $res->{skipped}, 1, 'Skipped' );
+  is( $res->{reason}, "Table(s) gene have not changed", 'Reason for skipping' );
+}
+
+diag("Checking that test will run after gene changed");
+
+{
+  # tweak gene
+  $info->{gene} = "New!";
+  my $res = run_test(
+    sub {
+      $test->run( $core_dba, $info );
+    } );
+  ok( $res, "Test output OK" );
+  diag( Dumper($res) );
+  is( ref($res),                      'HASH', "Is a hashref" );
+  is( $res->{skipped},                0,      'Skipped' );
+  is( $res->{pass},                   1,      'Passed' );
+  is( scalar( @{ $res->{details} } ), 1,      '1 detail' );
+  is( $res->{details}->[0]->{ok},     1,      'Detail 1 OK' );
+}
 
 
 done_testing;

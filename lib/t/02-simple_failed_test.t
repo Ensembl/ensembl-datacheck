@@ -24,6 +24,7 @@ BEGIN {
 	use_ok( 'Bio::EnsEMBL::DataTest::BaseTest' );
 }
 
+diag("Instantiating and executing a BaseTest that fails");
 
 my $test = Bio::EnsEMBL::DataTest::BaseTest->new(
   name => "mytest",

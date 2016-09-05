@@ -24,6 +24,7 @@ BEGIN {
 	use_ok( 'Bio::EnsEMBL::DataTest::BaseTest' );
 }
 
+diag("Instantiating and executing a BaseTest wth a custom predicate");
 
 my $test = Bio::EnsEMBL::DataTest::BaseTest->new(
   name => "mytest",
