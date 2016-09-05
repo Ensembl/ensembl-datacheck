@@ -61,10 +61,9 @@ diag("Checking that test will not run after transcript changed");
 {
   # tweak transcript
   $info->{transcript} = "Now!";
-  my $res = run_test(
-    sub {
+  my $res = 
       $test->run( $core_dba, $info );
-    } );
+   
   ok( $res, "Test output OK" );
   diag( Dumper($res) );
   is( ref($res), 'HASH', "Is a hashref" );
@@ -77,10 +76,8 @@ diag("Checking that test will run after gene changed");
 {
   # tweak gene
   $info->{gene} = "New!";
-  my $res = run_test(
-    sub {
+  my $res = 
       $test->run( $core_dba, $info );
-    } );
   ok( $res, "Test output OK" );
   diag( Dumper($res) );
   is( ref($res),                      'HASH', "Is a hashref" );
