@@ -27,13 +27,22 @@ Instances of this test are invoked by `run` which uses `Test::More` to capture t
 ###`Bio::EnsEMBL::DataTest::TableAwareTest`
 `TableAwareTest` supports tests that only need to run if defined tables have changed. This requires a hash containing update dates for each table when the test was last run to be passed to `run` as the second argument. This can be generated using `Bio::EnsEMBL::DataTest::Utils::DBUtils::table_dates`.
 
+###`Bio::EnsEMBL::DataTest::CompareDbTest`
+`CompareDbTest` is an extension of `TableAwareTest` that supports tests that take two DBAs for comparison (e.g. old and new databases, or master and slave databases). 
+
 ###`Bio::EnsEMBL::DataTest::Utils::TestUtils`
-This module contains the code needed to run a `Test::More`-based test and capture output.
+This module contains the code needed to load, run a `Test::More`-based test and capture output.
 
 ###`Bio::EnsEMBL::DataTest::Utils::DBUtils`
-This module contains helper methods for dealing with Ensembl databases.
+This module contains helper methods for dealing with Ensembl databases, include `Test::More`-style tests for databases e.g. `is_rowcount` for checking the number of rows returned.
 
 ## Scripts
 
 ### `run_tests.pl`
-This is a basic script which reads a collection of tests from a location on the file system and applies them to the databases specified.
+This is a basic script which reads a collection of tests from a location on the file system and applies them to the databases specified e.g.
+perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v -host localhost -port 3306 -user anonymous -dbname schizosaccharomyces_pombe_core_31_84_2
+
+### `run_compare_tests.pl`
+This is a basic script which reads a collection of tests from a location on the file system and applies them to pairs of databases (the second set is specified with arguments prefixed with `prev`) e.g.
+perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v -host localhost -port 3306 -user anonymous -dbname schizosaccharomyces_pombe_core_31_84_2 \
+ -prevhost localhost -prevport 3306 -prevuser anonymous -prevdbname schizosaccharomyces_pombe_core_30_83_2
