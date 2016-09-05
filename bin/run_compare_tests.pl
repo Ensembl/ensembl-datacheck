@@ -13,6 +13,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+=head1 NAME
+
+run_compare_tests.pl
+
+=head1 SYNOPSIS
+
+run_compare_tests.pl -user <user> [-pass <pass>] -host <host> -port <port>
+  [-dbname <dbname> | -dbpattern <dbpattern>]
+  -prevuser <user> [-prevpass <pass>] -prevhost <host> -prevport <port>
+  [-prevdbname <dbname> | -prevdbpattern <dbpattern>]
+  -test <test file or directory>
+  -verbose
+
+=head1 DESCRIPTION
+
+Basic script for running a set of tests comparing databases from two locations.
+
+Command line arguments
+-user          Username for MySQL server containing test database
+-pass          Password for MySQL server containing test database
+-host          Hostname for MySQL server containing test database
+-port          Port for MySQL server containing test database
+-dbname        (optional) Name of database to test
+-dbpattern     (optional) Regexp for names of databases to test
+-prevuser      Username for MySQL server containing reference version of test database
+-prevpass      Password for MySQL server containing reference version of test database
+-prevhost      Hostname for MySQL server containing reference version of test database
+-prevport      Port for MySQL server containing reference version of test database
+-prevdbname    (optional) Name of reference version of database to test
+-prevdbpattern (optional) Regexp for names of reference versions databases to test
+-test          Directory or file containing tests to run
+-verbose       Display debugging output
+
+=cut
+
 use warnings;
 use strict;
 

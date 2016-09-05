@@ -13,6 +13,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+=head1 NAME
+
+run_tests.pl
+
+=head1 SYNOPSIS
+
+run_tests.pl -user <user> [-pass <pass>] -host <host> -port <port>
+  [-dbname <dbname> | -dbpattern <dbpattern>]
+  [-muser <user> -mpass <pass>] -mhost <host> -mport <port>]
+  -test <test file or directory>
+  -verbose
+
+=head1 DESCRIPTION
+
+Basic script for running a set of tests on one or more databases.
+
+Command line arguments
+-user       Username for MySQL server containing test database
+-pass       Password for MySQL server containing test database
+-host       Hostname for MySQL server containing test database
+-port       Port for MySQL server containing test database
+-dbname     (optional) Name of database to test
+-dbpattern  (optional) Regexp for names of databases to test
+-muser      (optional) Username for MySQL server containing production database
+-mpass      (optional) Password for MySQL server containing production database
+-mhost      (optional) Hostname for MySQL server containing production database
+-mport      (optional) Port for MySQL server containing production database
+-test       Directory or file containing tests to run
+-verbose    Display debugging output
+
+=cut
+
 use warnings;
 use strict;
 
