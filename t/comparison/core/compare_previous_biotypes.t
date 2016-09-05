@@ -22,8 +22,7 @@ use Bio::EnsEMBL::DataTest::Utils::DBUtils qw/is_same_counts/;
 Bio::EnsEMBL::DataTest::CompareDbTest->new(
   name => 'compare_previous_biotypes',
   description =>
-    q/Compare counts of genes with different biotypes between two databases/
-  ,
+    q/Check that the numbers of genes with different biotypes has not dropped by less than 75% between versions of databases/,
   db_types => ['core'],
   tables   => ['gene'],
   test     => sub {
