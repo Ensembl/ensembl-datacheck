@@ -40,9 +40,18 @@ This module contains helper methods for dealing with Ensembl databases, include 
 
 ### `run_tests.pl`
 This is a basic script which reads a collection of tests from a location on the file system and applies them to the databases specified e.g.
-perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v -host localhost -port 3306 -user anonymous -dbname schizosaccharomyces_pombe_core_31_84_2
+```
+perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v 
+  -host localhost -port 3306 -user anonymous 
+  -dbname schizosaccharomyces_pombe_core_31_84_2
+```
 
 ### `run_compare_tests.pl`
 This is a basic script which reads a collection of tests from a location on the file system and applies them to pairs of databases (the second set is specified with arguments prefixed with `prev`) e.g.
-perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v -host localhost -port 3306 -user anonymous -dbname schizosaccharomyces_pombe_core_31_84_2 \
- -prevhost localhost -prevport 3306 -prevuser anonymous -prevdbname schizosaccharomyces_pombe_core_30_83_2
+```
+perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v 
+  -host localhost -port 3306 -user anonymous 
+  -dbname schizosaccharomyces_pombe_core_31_84_2
+  -prevhost localhost -prevport 3306 -prevuser anonymous 
+  -prevdbname schizosaccharomyces_pombe_core_30_83_2
+```
