@@ -1,2 +1,673 @@
-18256	10	This is a note on gene 18256
-18259	10	Another note on gene 18259
+259240	3	hs6M1-8P
+259240	3	OR2AD1
+259240	4	OR2AD1P
+259240	52	Havana
+259240	53	vega@sanger.ac.uk
+259240	142	40.41
+259240	395	OTTHUMG00000031262
+259240	407	Overlapping RefSeq annotation not matched
+259241	4	XXbac-BPG258E24.10
+259241	52	Havana
+259241	53	vega@sanger.ac.uk
+259241	142	35.78
+259241	395	OTTHUMG00000189247
+259241	407	Overlapping RefSeq Gene ID 100129636 matches but different biotype of misc_RNA
+259242	3	hs6M1-15
+259242	4	OR2W1
+259242	52	Havana
+259242	53	vega@sanger.ac.uk
+259242	142	41.15
+259242	395	OTTHUMG00000031048
+259242	407	Overlapping RefSeq Gene ID 26692 matches and has similar biotype of protein_coding
+259243	3	hs6M1-26
+259243	4	OR2P1P
+259243	52	Havana
+259243	53	vega@sanger.ac.uk
+259243	142	44.85
+259243	395	OTTHUMG00000031042
+259243	407	Overlapping RefSeq annotation not matched
+259244	3	dJ88J8.3
+259244	3	hsSARA-p
+259244	3	SARAP
+259244	3	SARAP1
+259244	4	SAR1P1
+259244	52	Havana
+259244	53	vega@sanger.ac.uk
+259244	123	Name updated from SARAP to SAR1P1
+259244	142	41.44
+259244	395	OTTHUMG00000031279
+259244	407	Overlapping RefSeq annotation not matched
+259245	3	OR6-4
+259245	4	OR2B3
+259245	52	Havana
+259245	53	vega@sanger.ac.uk
+259245	142	42.50
+259245	395	OTTHUMG00000031226
+259245	407	Overlapping RefSeq Gene ID 442184 matches and has similar biotype of protein_coding
+259246	3	OR2J1P
+259246	4	OR2J1
+259246	52	Havana
+259246	53	vega@sanger.ac.uk
+259246	142	36.16
+259246	395	OTTHUMG00000031280
+259246	407	Overlapping RefSeq annotation not matched
+259247	4	OR2J3
+259247	52	Havana
+259247	53	vega@sanger.ac.uk
+259247	142	34.94
+259247	395	OTTHUMG00000031092
+259247	407	Overlapping RefSeq Gene ID 442186 matches and has similar biotype of protein_coding
+259248	3	XXbac-BPG258E24.10
+259248	4	XXbac-BCX196D17.5
+259248	52	Havana
+259248	53	vega@sanger.ac.uk
+259248	123	ASB_lincRNA
+259248	142	37.14
+259248	395	OTTHUMG00000085915
+259248	407	Overlapping RefSeq annotation not matched
+259249	4	OR2N1P
+259249	52	Havana
+259249	53	vega@sanger.ac.uk
+259249	142	35.28
+259249	395	OTTHUMG00000031224
+259249	407	Overlapping RefSeq annotation not matched
+259250	4	XXbac-BPG171B11.8
+259250	52	Havana
+259250	53	vega@sanger.ac.uk
+259250	395	OTTHUMG00000192348
+259250	142	40.70
+259250	407	Overlapping RefSeq annotation not matched
+259251	4	OR2J2
+259251	52	Havana
+259251	53	vega@sanger.ac.uk
+259251	142	36.45
+259251	395	OTTHUMG00000031091
+259251	407	Overlapping RefSeq Gene ID 26707 matches and has similar biotype of protein_coding
+259252	4	OR2J4P
+259252	52	Havana
+259252	53	vega@sanger.ac.uk
+259252	142	44.02
+259252	395	OTTHUMG00000031062
+259252	407	Overlapping RefSeq annotation not matched
+259253	4	OR2H4P
+259253	52	Havana
+259253	53	vega@sanger.ac.uk
+259253	395	OTTHUMG00000031233
+259253	142	37.15
+259253	407	Overlapping RefSeq annotation not matched
+259254	3	hs6M1-22
+259254	4	OR2B4P
+259254	52	Havana
+259254	53	vega@sanger.ac.uk
+259254	395	OTTHUMG00000031195
+259254	142	37.74
+259254	407	Overlapping RefSeq annotation not matched
+259255	4	OR2G1P
+259255	52	Havana
+259255	53	vega@sanger.ac.uk
+259255	395	OTTHUMG00000031115
+259255	142	48.55
+259255	407	Overlapping RefSeq annotation not matched
+259256	3	hs6M1-24
+259256	4	OR2U1P
+259256	52	Havana
+259256	53	vega@sanger.ac.uk
+259256	395	OTTHUMG00000031040
+259256	142	43.94
+259256	407	Overlapping RefSeq annotation not matched
+259257	3	hs6M1-23
+259257	4	OR2U2P
+259257	52	Havana
+259257	53	vega@sanger.ac.uk
+259257	395	OTTHUMG00000031055
+259257	142	42.92
+259257	407	Overlapping RefSeq annotation not matched
+259258	3	OR5U1
+259258	4	OR14J1
+259258	52	Havana
+259258	53	vega@sanger.ac.uk
+259258	142	37.33
+259258	395	OTTHUMG00000031184
+259258	407	Overlapping RefSeq Gene ID 442191 matches and has similar biotype of protein_coding
+259259	3	bA150A6.3
+259259	3	DDX6-Lp
+259259	4	DDX6P
+259259	52	Havana
+259259	53	vega@sanger.ac.uk
+259259	142	42.20
+259259	395	OTTHUMG00000031293
+259259	407	Overlapping RefSeq annotation not matched
+259260	3	hs6M1-21
+259260	4	OR5V1
+259260	52	Havana
+259260	53	vega@sanger.ac.uk
+259260	54	Fragmented variants confirmed by experimental evidence. See: Complex Transcription and Splicing of Odorant Receptor Genes. Volz, A., et al. J Biol Chem 278 (22): 19691-701, 2003
+259260	380	overlapping locus
+259260	395	OTTHUMG00000031199
+259260	142	36.62
+259260	407	Overlapping RefSeq Gene ID 81696 matches and has similar biotype of protein_coding
+259261	3	hs6M1-27
+259261	4	OR12D3
+259261	52	Havana
+259261	53	vega@sanger.ac.uk
+259261	54	Fragmented variants confirmed by experimental evidence. See: Complex Transcription and Splicing of Odorant Receptor Genes. Volz, A., et al. J Biol Chem 278 (22): 19691-701, 2003
+259261	380	overlapping locus
+259261	395	OTTHUMG00000031051
+259261	142	38.15
+259261	407	Overlapping RefSeq Gene ID 81797 matches and has similar biotype of protein_coding
+259262	3	dJ994E9.8
+259262	3	hs6M1-20
+259262	4	OR12D2
+259262	52	Havana
+259262	53	vega@sanger.ac.uk
+259262	142	39.78
+259262	395	OTTHUMG00000031049
+259262	407	Overlapping RefSeq Gene ID 26529 matches and has similar biotype of protein_coding
+259263	3	hs6M1-19
+259263	3	OR12D1
+259263	4	OR12D1P
+259263	52	Havana
+259263	53	vega@sanger.ac.uk
+259263	395	OTTHUMG00000031141
+259263	142	36.70
+259263	407	Overlapping RefSeq annotation not matched
+259264	3	dJ994E9.6
+259264	3	hs6M1-18
+259264	3	OR11A2
+259264	4	OR11A1
+259264	52	Havana
+259264	53	vega@sanger.ac.uk
+259264	54	Fragmented variants confirmed by experimental evidence. See: Complex Transcription and Splicing of Odorant Receptor Genes. Volz, A., et al. J Biol Chem 278 (22): 19691-701, 2003
+259264	380	overlapping locus
+259264	395	OTTHUMG00000031225
+259264	142	39.08
+259264	407	Overlapping RefSeq Gene ID 26531 matches and has similar biotype of protein_coding
+259265	3	hs6M1-17
+259265	3	OR10C1P
+259265	3	OR10C2
+259265	4	OR10C1
+259265	52	Havana
+259265	53	vega@sanger.ac.uk
+259265	54	Fragmented variants confirmed by experimental evidence. See: Complex Transcription and Splicing of Odorant Receptor Genes. Volz, A., et al. J Biol Chem 278 (22): 19691-701, 2003
+259265	395	OTTHUMG00000031207
+259265	142	50.00
+259265	407	Overlapping RefSeq Gene ID 442194 matches and has similar biotype of protein_coding
+259266	4	XXbac-BPG13B8.11
+259266	52	Havana
+259266	53	vega@sanger.ac.uk
+259266	395	OTTHUMG00000187605
+259266	142	44.70
+259266	407	Overlapping RefSeq annotation not matched
+259267	3	OR2H6
+259267	3	OR2H8
+259267	3	OR6-2
+259267	4	OR2H1
+259267	52	Havana
+259267	53	vega@sanger.ac.uk
+259267	54	Fragmented variants confirmed by experimental evidence. See: Complex Transcription and Splicing of Odorant Receptor Genes. Volz, A., et al. J Biol Chem 278 (22): 19691-701, 2003
+259267	395	OTTHUMG00000031050
+259267	142	41.35
+259267	407	Overlapping RefSeq Gene ID 26716 matches and has similar biotype of protein_coding
+259268	3	dJ994E9.3
+259268	4	UBDP1
+259268	52	Havana
+259268	53	vega@sanger.ac.uk
+259268	395	OTTHUMG00000031258
+259268	142	41.09
+259268	407	Overlapping RefSeq annotation not matched
+259269	3	XXbac-BPG13B8.9
+259269	4	MAS1LP
+259269	52	Havana
+259269	53	vega@sanger.ac.uk
+259269	142	52.82
+259269	395	OTTHUMG00000086553
+259269	407	Overlapping RefSeq annotation not matched
+259270	3	dJ994E9.2
+259270	3	MAS-L
+259270	3	MRG
+259270	4	MAS1L
+259270	52	Havana
+259270	53	vega@sanger.ac.uk
+259270	142	50.24
+259270	395	OTTHUMG00000031089
+259270	407	Overlapping RefSeq Gene ID 116511 matches and has similar biotype of protein_coding
+259271	3	dJ994E9.1
+259271	4	RPS17P1
+259271	52	Havana
+259271	53	vega@sanger.ac.uk
+259271	395	OTTHUMG00000031086
+259271	142	50.25
+259271	407	Overlapping RefSeq annotation not matched
+259272	4	XXbac-BPG13B8.10
+259272	52	Havana
+259272	53	vega@sanger.ac.uk
+259272	395	OTTHUMG00000086581
+259272	142	47.68
+259272	407	Overlapping RefSeq annotation not matched
+259273	4	DAQB-12N14.5
+259273	52	Havana
+259273	53	vega@sanger.ac.uk
+259273	395	OTTHUMG00000065812
+259273	142	57.54
+259273	407	Overlapping RefSeq Gene ID 100507362 matches but different biotype of misc_RNA
+259274	3	dJ271M21.8
+259274	3	PsiGPR53
+259274	4	GPR53P
+259274	52	Havana
+259274	53	vega@sanger.ac.uk
+259274	142	52.68
+259274	395	OTTHUMG00000031126
+259274	407	Overlapping RefSeq annotation not matched
+259275	3	HS6M1-14
+259275	3	OR2I1
+259275	3	OR2I2
+259275	3	OR2I3P
+259275	3	OR2I4P
+259275	4	OR2I1P
+259275	52	Havana
+259275	53	vega@sanger.ac.uk
+259275	142	44.80
+259275	395	OTTHUMG00000031230
+259275	407	Overlapping RefSeq annotation not matched
+259276	3	dJ271M21.6
+259276	3	FAT10
+259276	3	UBD-3
+259276	4	UBD
+259276	52	Havana
+259276	53	vega@sanger.ac.uk
+259276	142	43.28
+259276	380	overlapping locus
+259276	395	OTTHUMG00000031289
+259276	407	Overlapping RefSeq Gene ID 10537 matches and has similar biotype of protein_coding
+259277	3	dJ271M21.1.1
+259277	3	dJ271M21.1.2
+259277	3	GABAB(1e)
+259277	3	GABABR1
+259277	3	GABBR1-2
+259277	3	GABBR1-3
+259277	3	GPRC3A
+259277	3	hGB1a
+259277	4	GABBR1
+259277	52	Havana
+259277	53	vega@sanger.ac.uk
+259277	142	45.01
+259277	380	overlapping locus
+259277	395	OTTHUMG00000031095
+259277	407	Overlapping RefSeq Gene ID 2550 matches and has similar biotype of protein_coding
+259278	3	HS271M21
+259278	3	hs6M1-13
+259278	3	OR2H5
+259278	4	OR2H5P
+259278	52	Havana
+259278	53	vega@sanger.ac.uk
+259278	142	53.56
+259278	395	OTTHUMG00000031261
+259278	407	Overlapping RefSeq annotation not matched
+259279	3	XXbac-BPG126D10.10
+259279	4	TMEM183AP1
+259279	52	Havana
+259279	53	vega@sanger.ac.uk
+259279	142	55.17
+259279	395	OTTHUMG00000086663
+259279	407	Overlapping RefSeq annotation not matched
+259280	142	50.00
+259280	407	Overlapping RefSeq Gene ID 692092 matches and has similar biotype of snoRNA
+259281	3	dJ271M21.3
+259281	3	RPL13AP-2
+259281	4	RPL13AP
+259281	52	Havana
+259281	53	vega@sanger.ac.uk
+259281	142	51.35
+259281	395	OTTHUMG00000031039
+259281	407	Overlapping RefSeq annotation not matched
+259282	3	dJ271M21.2
+259282	3	hs6M1-12
+259282	4	OR2H2
+259282	52	Havana
+259282	53	vega@sanger.ac.uk
+259282	142	42.73
+259282	395	OTTHUMG00000031052
+259282	407	Overlapping RefSeq Gene ID 7932 matches and has similar biotype of protein_coding
+259283	3	dJ271M21
+259283	3	SMT3Bp
+259283	3	SMT3H2P
+259283	4	SUMO2P
+259283	52	Havana
+259283	53	vega@sanger.ac.uk
+259283	142	45.42
+259283	395	OTTHUMG00000031140
+259283	407	Overlapping RefSeq annotation not matched
+259284	3	bA145L22.1
+259284	3	MGC26137
+259284	4	MOG
+259284	52	Havana
+259284	53	vega@sanger.ac.uk
+259284	123	G2C
+259284	142	45.69
+259284	395	OTTHUMG00000031099
+259284	407	Overlapping RefSeq Gene ID 4340 matches and has similar biotype of protein_coding
+259285	4	ZFP57
+259285	3	C6orf40
+259285	3	bA145L22.2
+259285	52	Havana
+259285	395	OTTHUMG00000031158
+259285	53	vega@sanger.ac.uk
+259285	142	48.32
+259285	407	Overlapping RefSeq Gene ID 346171 matches and has similar biotype of protein_coding
+259286	3	XXbac-BPG126D10.11
+259286	4	ZDHHC20P1
+259286	52	Havana
+259286	53	vega@sanger.ac.uk
+259286	142	39.95
+259286	395	OTTHUMG00000086707
+259286	407	Overlapping RefSeq annotation not matched
+259287	4	HLA-F
+259287	52	Havana
+259287	53	vega@sanger.ac.uk
+259287	54	allele F*01:03:01:01
+259287	142	45.02
+259287	395	OTTHUMG00000031156
+259287	407	Overlapping RefSeq Gene ID 3134 matches and has similar biotype of protein_coding
+259288	3	HCGIV-11
+259288	3	HCGIV.10
+259288	4	HCG4P11
+259288	52	Havana
+259288	53	vega@sanger.ac.uk
+259288	142	63.77
+259288	395	OTTHUMG00000130503
+259288	407	Overlapping RefSeq annotation not matched
+259289	4	XXbac-BPG170G13.33
+259289	52	Havana
+259289	53	vega@sanger.ac.uk
+259289	142	45.94
+259289	380	overlapping locus
+259289	395	OTTHUMG00000185970
+259289	407	Overlapping RefSeq Gene ID 285830 matches but different biotype of misc_RNA
+259290	3	dJ377H14.8
+259290	4	RPL23AP1
+259290	52	Havana
+259290	53	vega@sanger.ac.uk
+259290	142	48.62
+259290	380	overlapping locus
+259290	395	OTTHUMG00000031098
+259290	407	Overlapping RefSeq annotation not matched
+259291	3	dJ377H14.7
+259291	3	PERB11.5
+259291	4	MICE
+259291	52	Havana
+259291	53	vega@sanger.ac.uk
+259291	142	55.09
+259291	380	overlapping locus
+259291	395	OTTHUMG00000031084
+259291	407	Overlapping RefSeq annotation not matched
+259292	3	dJ377H14.6
+259292	3	HCGIX-5
+259292	4	HCG9P5
+259292	52	Havana
+259292	53	vega@sanger.ac.uk
+259292	142	64.89
+259292	395	OTTHUMG00000031159
+259292	407	Overlapping RefSeq annotation not matched
+259293	142	41.18
+259293	407	Overlapping RefSeq annotation not matched
+259294	3	dJ377H14.5
+259294	4	IFITM4P
+259294	52	Havana
+259294	53	vega@sanger.ac.uk
+259294	395	OTTHUMG00000031097
+259294	142	55.48
+259294	407	Overlapping RefSeq Gene ID 340198 matches and has similar biotype of pseudogene
+259295	4	XXbac-BPG170G13.32
+259295	52	Havana
+259295	53	vega@sanger.ac.uk
+259295	142	50.62
+259295	395	OTTHUMG00000185717
+259295	407	Overlapping RefSeq annotation not matched
+259296	4	XXbac-BPG170G13.31
+259296	52	Havana
+259296	53	vega@sanger.ac.uk
+259296	142	58.52
+259296	395	OTTHUMG00000184571
+259296	407	Overlapping RefSeq annotation not matched
+259297	3	C6orf101
+259297	3	DAQB-335A13.14
+259297	3	dJ377H14.3
+259297	3	dJ377H14.4
+259297	3	HLA-75
+259297	3	XXbac-BPG170G13.21
+259297	4	HLA-V
+259297	52	Havana
+259297	53	vega@sanger.ac.uk
+259297	54	allele V*01:01:01:01
+259297	123	unmerged HLA-75 and -90 (HLA-V and -P) as the middle exon is duplicated. Also these are known publically as two separate genes. (lw2)
+259297	395	OTTHUMG00000031277
+259297	142	45.28
+259297	407	Overlapping RefSeq annotation not matched
+259298	3	HCGIV.9
+259298	4	HCG4
+259298	52	Havana
+259298	53	vega@sanger.ac.uk
+259298	395	OTTHUMG00000035423
+259298	142	63.93
+259298	407	Overlapping RefSeq Gene ID 54435 matches but different biotype of misc_RNA
+259299	4	HLA-P
+259299	52	Havana
+259299	53	vega@sanger.ac.uk
+259299	54	allele P*02:01:01:02
+259299	123	unmerged HLA-75 and -90 (HLA-V and -P) as the middle exon is duplicated. Also these are known publically as two separate genes. (lw2)
+259299	142	53.75
+259299	395	OTTHUMG00000172781
+259299	407	Overlapping RefSeq annotation not matched
+259300	3	dJ377H14.2
+259300	3	RPL7B
+259300	4	RPL7AP7
+259300	52	Havana
+259300	53	vega@sanger.ac.uk
+259300	142	49.94
+259300	395	OTTHUMG00000031297
+259300	407	Overlapping RefSeq annotation not matched
+259301	4	MICG
+259301	52	Havana
+259301	53	vega@sanger.ac.uk
+259301	395	OTTHUMG00000031087
+259301	142	62.12
+259301	407	Overlapping RefSeq annotation not matched
+259302	3	MHC-G
+259302	4	HLA-G
+259302	52	Havana
+259302	53	vega@sanger.ac.uk
+259302	54	allele G*01:01:01:05
+259302	142	56.38
+259302	395	OTTHUMG00000031157
+259302	407	Overlapping RefSeq Gene ID 3135 matches and has similar biotype of protein_coding
+259303	3	HCGIV-08
+259303	3	HCGIV-8
+259303	3	HCGIV.7
+259303	4	HCG4P8
+259303	52	Havana
+259303	53	vega@sanger.ac.uk
+259303	395	OTTHUMG00000130505
+259303	142	65.31
+259303	407	Overlapping RefSeq annotation not matched
+259304	4	MICF
+259304	52	Havana
+259304	53	vega@sanger.ac.uk
+259304	142	57.36
+259304	395	OTTHUMG00000031085
+259304	407	Overlapping RefSeq annotation not matched
+259305	4	HCP5B
+259305	52	Havana
+259305	53	vega@sanger.ac.uk
+259305	142	50.45
+259305	395	OTTHUMG00000189541
+259305	407	Overlapping RefSeq annotation not matched
+259306	3	HCGIV-07
+259306	3	HCGIV-7
+259306	3	HCGIV.C
+259306	4	HCG4P7
+259306	52	Havana
+259306	53	vega@sanger.ac.uk
+259306	142	65.13
+259306	395	OTTHUMG00000130509
+259306	407	Overlapping RefSeq annotation not matched
+259307	4	HLA-H
+259307	52	Havana
+259307	53	vega@sanger.ac.uk
+259307	54	allele H*02:04
+259307	142	60.53
+259307	395	OTTHUMG00000031160
+259307	407	Overlapping RefSeq Gene ID 3136 matches and has similar biotype of pseudogene
+259308	4	HLA-T
+259308	52	Havana
+259308	53	vega@sanger.ac.uk
+259308	142	51.54
+259308	395	OTTHUMG00000031232
+259308	407	Overlapping RefSeq annotation not matched
+259309	3	BAT1P1
+259309	3	XXbac-BPG8G10.2
+259309	4	DDX39BP1
+259309	52	Havana
+259309	53	vega@sanger.ac.uk
+259309	142	50.14
+259309	395	OTTHUMG00000130504
+259309	407	Overlapping RefSeq annotation not matched
+259310	3	XXbac-BPG8G10.3
+259310	4	MCCD1P1
+259310	52	Havana
+259310	53	vega@sanger.ac.uk
+259310	142	57.01
+259310	395	OTTHUMG00000130506
+259310	407	Overlapping RefSeq annotation not matched
+259311	3	HCG4P6
+259311	4	HCG4B
+259311	52	Havana
+259311	53	vega@sanger.ac.uk
+259311	142	63.57
+259311	395	OTTHUMG00000031188
+259311	407	Overlapping RefSeq Gene ID 80868 matches but different biotype of misc_RNA
+259312	3	HLA-70
+259312	3	HLA70
+259312	3	HLAK
+259312	4	HLA-K
+259312	52	Havana
+259312	53	vega@sanger.ac.uk
+259312	54	allele K*01:01:01:01
+259312	142	59.12
+259312	395	OTTHUMG00000031162
+259312	407	Overlapping RefSeq annotation not matched
+259313	4	HLA-U
+259313	52	Havana
+259313	53	vega@sanger.ac.uk
+259313	142	61.83
+259313	395	OTTHUMG00000031245
+259313	407	Overlapping RefSeq annotation not matched
+259314	4	HLA-A
+259314	52	Havana
+259314	53	vega@sanger.ac.uk
+259314	54	allele A*03:01:01:01
+259314	395	OTTHUMG00000130501
+259314	142	55.18
+259314	407	Overlapping RefSeq Gene ID 3105 matches and has similar biotype of protein_coding
+259315	4	HCG4P5
+259315	52	Havana
+259315	53	vega@sanger.ac.uk
+259315	142	65.06
+259315	395	OTTHUMG00000031152
+259315	407	Overlapping RefSeq annotation not matched
+259316	4	HLA-W
+259316	52	Havana
+259316	53	vega@sanger.ac.uk
+259316	142	53.27
+259316	395	OTTHUMG00000031242
+259316	407	Overlapping RefSeq annotation not matched
+259317	3	PERB11.4
+259317	4	MICD
+259317	52	Havana
+259317	53	vega@sanger.ac.uk
+259317	142	57.21
+259317	395	OTTHUMG00000031082
+259317	407	Overlapping RefSeq annotation not matched
+259318	3	HCGIX
+259318	3	HCGIX-4
+259318	3	HCGIX4
+259318	3	PERB11
+259318	4	HCG9
+259318	52	Havana
+259318	53	vega@sanger.ac.uk
+259318	142	51.62
+259318	395	OTTHUMG00000031119
+259318	407	Overlapping RefSeq Gene ID 10255 matches but different biotype of misc_RNA
+259319	3	XXbac-BPG309N1.15
+259319	4	BAT1P2
+259319	52	Havana
+259319	53	vega@sanger.ac.uk
+259319	142	48.87
+259319	395	OTTHUMG00000130507
+259319	407	Overlapping RefSeq annotation not matched
+259320	3	XXbac-BPG309N1.16
+259320	4	MCCD1P2
+259320	52	Havana
+259320	53	vega@sanger.ac.uk
+259320	142	57.29
+259320	395	OTTHUMG00000130500
+259320	407	Overlapping RefSeq annotation not matched
+259321	3	CXYorf11
+259321	3	NCRNA00108
+259321	4	LL0YNC03-29C1.1
+259321	52	Havana
+259321	53	vega@sanger.ac.uk
+259321	142	59.60
+259321	395	OTTHUMG00000046372
+259321	407	No overlapping RefSeq annotation found
+259322	3	cU136G2.1
+259322	3	LL0XNC01-136G2.1
+259322	4	PLCXD1
+259322	52	Havana
+259322	53	vega@sanger.ac.uk
+259322	142	53.82
+259322	395	OTTHUMG00000022693
+259322	407	Overlapping RefSeq Gene ID 55344 matches and has similar biotype of protein_coding
+259323	3	cU136G2.2
+259323	4	GTPBP6
+259323	52	Havana
+259323	53	vega@sanger.ac.uk
+259323	142	57.63
+259323	395	OTTHUMG00000022694
+259323	407	Overlapping RefSeq Gene ID 8225 matches and has similar biotype of protein_coding
+259324	3	cM56G10.2
+259324	3	CXYorf10
+259324	3	LL0YNC03-56G10.2
+259324	4	NCRNA00107
+259324	52	Havana
+259324	53	vega@sanger.ac.uk
+259324	142	51.97
+259324	395	OTTHUMG00000021049
+259324	407	Overlapping RefSeq Gene ID 283981 matches but different biotype of misc_RNA
+259325	4	PPP2R3B
+259325	52	Havana
+259325	53	vega@sanger.ac.uk
+259325	142	58.29
+259325	395	OTTHUMG00000021052
+259325	407	Overlapping RefSeq Gene ID 28227 matches and has similar biotype of protein_coding
+259326	4	RP13-465B17.4
+259326	52	Havana
+259326	53	vega@sanger.ac.uk
+259326	142	50.68
+259326	395	OTTHUMG00000189992
+259326	407	No overlapping RefSeq annotation found
+259327	142	53.10
+259327	407	No overlapping RefSeq annotation found
+259328	3	CXYorf9
+259328	4	RP11-309M23.1
+259328	52	Havana
+259328	53	vega@sanger.ac.uk
+259328	142	48.11
+259328	395	OTTHUMG00000021054
+259328	407	No overlapping RefSeq annotation found
+259329	3	bA309M23.2
+259329	4	RP11-309M23.2
+259329	52	Havana
+259329	53	vega@sanger.ac.uk
+259329	395	OTTHUMG00000021055
+259329	142	51.72
+259329	407	No overlapping RefSeq annotation found

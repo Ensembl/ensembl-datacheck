@@ -1,3 +1,0 @@
-variation_feature	1	1000002
-structural_variation_feature	1	1000002
-phenotype_feature	1	1000002

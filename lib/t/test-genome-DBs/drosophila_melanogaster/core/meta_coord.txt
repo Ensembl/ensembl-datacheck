@@ -1,0 +1,6 @@
+dna_align_feature	1	121
+karyotype	1	126184
+gene	1	88786
+exon	1	6728
+transcript	1	10130
+repeat_feature	1	8235

@@ -1,0 +1,17 @@
+{
+  "drosophila_melanogaster" : {
+    "core" : {
+      "regions" : [
+        ["2L", 2000000, 4000000],
+      ],
+      "adaptors" : [
+        { "name" : "gene"},
+        { "name" : "dnaalignfeature"},
+        { "name" : "karyotypeband"},
+        { "name" : "miscfeature"},
+        { "name" : "repeatfeature"},
+        { "name" : "simplefeature"},
+      ]
+    }
+  }
+}

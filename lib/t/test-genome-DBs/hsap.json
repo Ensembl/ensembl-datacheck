@@ -1,0 +1,19 @@
+{
+  "homo_sapiens" : {
+    "core" : {
+      "regions" : [
+        ["6", 29000000, 30000000],
+        ["X", 1, 400000],
+        ["HG480_HG481_PATCH", 803878, 1088404],
+      ],
+      "adaptors" : [
+        { "name" : "gene"},
+        { "name" : "dnaalignfeature"},
+        { "name" : "karyotypeband"},
+        { "name" : "miscfeature"},
+        { "name" : "repeatfeature"},
+        { "name" : "simplefeature"},
+      ]
+    }
+  }
+}

@@ -1,4 +1,4 @@
-1	ntctgs	NT contigs		70000000
-2	tilepath	Tilepath		15000000
-4	cloneset	1Mb cloneset		6000000
-8	gap	Gaps		50000000
+91	ABC	ABC libraries	Mapped clone end sequences from ABCs (ABC7, ABC8, ABC9, ABC10, ABC11, ABC12, ABC13, ABC14, ABC16, ABC21, ABC22, ABC24, ABC27) human fosmid libraries (ABC)	18047227
+92	encode_excluded	ENCODE excluded regions	Genomic regions that have been identified as problematic in the human genome by the ENCODE project. These regions contain abnormally high unique-mapping read coverage signal in open chromatin and control/input datasets across many cell lines and are classified as dispersed high mappability artifacts, dispersed low mappability artifacts, satellite repeats, centromeric repeats, telomeric repeats or snRNA repeats.	4132352
+93	tilepath	Tilepath	BAC clones upon which the current genomic assembly was based.  Colours indicate a finished sequence (gold clones), phase 1 sequencing (dark pink), phase 0 (light pink) or other (grey).  Clones that have been fluorescence in situ hybridisation (FISH) mapped are marked with a black triangle in the top left corner.  If a clone is shown in outline, the mapping to the genome is problematic and the true length may not be displayed.	1071649
+94	WIBR-2	WIBR-2 library	Mapped clone end sequences from WIBR-2 human fosmid library (WI2)	18043599

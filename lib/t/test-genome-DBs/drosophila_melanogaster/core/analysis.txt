@@ -1,0 +1,36 @@
+412	2017-04-28 16:27:07	trnascan_align	\N	\N	\N	tRNAscan-SE	1.23	/nfs/software/ensembl/RHEL7/linuxbrew/bin/tRNAscan-SE		Bio::EnsEMBL::Analysis::Runnable::tRNAscan	\N	\N	\N
+413	2017-04-28 16:27:07	mirbase	miRBase	21	\N	\N	\N	\N	\N	Bio::EnsEMBL::EGPipeline::RNAFeatures::miRBase	\N	\N	\N
+414	2016-06-09 11:49:06	cmscan_rfam_12.1	Rfam	12.1	/nfs/panda/ensemblgenomes/external/Rfam/12.1/Rfam.cm	Infernal	1.1	/nfs/panda/ensemblgenomes/external/bin/cmscan		Bio::EnsEMBL::Analysis::Runnable::CMScan	\N	\N	\N
+415	2017-04-28 16:27:07	cmscan_rfam_12.2_lca	Rfam	12.2	/nfs/panda/ensemblgenomes/external/Rfam/12.2/Rfam.cm	Infernal	1.1	/nfs/software/ensembl/RHEL7/linuxbrew/bin/cmscan		Bio::EnsEMBL::Analysis::Runnable::CMScan	\N	\N	\N
+416	2017-09-01 10:14:21	flybase	\N	\N	\N	flybase	\N	\N	\N	Bio::EnsEMBL::EGPipeline::LoadGFF3::LoadGFF3	\N	\N	\N
+417	2017-09-18 13:32:29	xref_refseq_blastn	refseq_dna	\N	\N	blastn	\N	blastn	-word_size 11 -num_alignments 100000 -num_descriptions 100000 -lcase_masking -num_threads 3	Bio::EnsEMBL::Analysis::Runnable::BlastEG	\N	\N	\N
+418	2017-09-08 11:56:09	xrefuniprot	\N	\N	\N	xrefuniprot	\N	\N	\N	Bio::EnsEMBL::EGPipeline::Xref::LoadUniProtXrefs	\N	\N	\N
+419	2017-09-07 17:17:41	xrefchecksum	\N	\N	\N	xrefchecksum	\N	\N	\N	Bio::EnsEMBL::EGPipeline::Xref::LoadUniParc	\N	\N	\N
+420	2017-09-07 17:40:47	xrefuniparc	\N	\N	\N	xrefuniparc	\N	\N	\N	Bio::EnsEMBL::EGPipeline::Xref::LoadUniProt	\N	\N	\N
+421	2017-11-14 11:42:02	tmhmm	TMHMM	2.0c	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+422	2017-11-14 11:42:04	seg	Seg	\N	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+423	2017-11-14 11:42:01	signalp	SignalP	4.1	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+424	2017-11-23 21:17:07	goa_import	GO	\N	\N	goa_import	\N	\N	\N	\N	\N	\N	\N
+425	2017-11-14 11:42:01	mobidblite	MobiDBLite	1.0	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+426	2017-11-14 11:41:47	cdd	CDD	3.14	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+427	2017-11-14 11:41:52	hmmpanther	PANTHER	12,0	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+428	2017-11-14 11:41:49	gene3d	Gene3D	4.1.0	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+429	2017-11-14 11:41:53	pfam	Pfam	31.0	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+430	2017-11-14 11:41:59	superfamily	SuperFamily	1.75	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+431	2017-11-14 11:41:58	smart	Smart	7.1	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+432	2017-11-14 11:41:55	pfscan	Prosite_profiles	20.132	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+433	2017-09-18 15:43:45	xref_trembl_blastp	trembl	\N	\N	blastp	\N	blastp	-word_size  3 -num_alignments 100000 -num_descriptions 100000 -lcase_masking -seg yes -num_threads 3	Bio::EnsEMBL::Analysis::Runnable::BlastEG	\N	\N	\N
+434	2017-11-14 11:41:55	pirsf	PIRSF	3.02	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+435	2017-11-14 11:41:55	scanprosite	Prosite_patterns	20.132	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+436	2017-11-14 11:42:01	ncoils	ncoils	2.2.1	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+437	2017-11-14 11:42:06	interpro2pathway	InterPro2Pathway	\N	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+438	2017-11-14 11:41:59	tigrfam	TIGRfam	15.0	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+439	2017-09-18 13:25:24	xref_refseq_blastp	refseq_peptide	\N	\N	blastp	\N	blastp	-word_size  3 -num_alignments 100000 -num_descriptions 100000 -lcase_masking -seg yes -num_threads 3	Bio::EnsEMBL::Analysis::Runnable::BlastEG	\N	\N	\N
+440	2017-11-14 11:41:56	prints	PRINTS	42.0	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+441	2017-11-14 11:41:49	hamap	HAMAP	201701.18	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+442	2017-11-14 11:41:58	sfld	SFLD	3	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+443	2017-11-14 11:41:45	blastprodom	ProDom	2006.1	\N	5.26-65.0	\N	\N	\N	\N	\N	\N	\N
+444	2017-09-18 13:17:21	xref_sprot_blastp	sprot	\N	\N	blastp	\N	blastp	-word_size  3 -num_alignments 100000 -num_descriptions 100000 -lcase_masking -seg yes -num_threads 3	Bio::EnsEMBL::Analysis::Runnable::BlastEG	\N	\N	\N
+445	2017-08-16 17:14:44	dust	\N	\N	\N	dustmasker	\N	/nfs/software/ensembl/RHEL7/linuxbrew/bin/dustmasker	\N	Bio::EnsEMBL::Analysis::Runnable::DustMasker	\N	dust	low_complexity_region
+446	2017-08-16 17:14:44	trf	\N	\N	\N	trf	4.0	/nfs/software/ensembl/RHEL7/linuxbrew/bin/trf	2 5 7 80 10 40 500 -d -h	Bio::EnsEMBL::Analysis::Runnable::TRF	\N	trf	tandem_repeat
+447	2017-08-16 17:14:45	repeatmask_repbase	repbase	\N	\N	RepeatMasker	4.0.5	/nfs/software/ensembl/RHEL7/linuxbrew/bin/RepeatMasker	 -nolow -gccalc  -species "Drosophila melanogaster"  -engine crossmatch -q 	Bio::EnsEMBL::Analysis::Runnable::RepeatMasker	\N	repeatmasker	repeat_region
