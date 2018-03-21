@@ -16,7 +16,7 @@
 
 =cut
 
-package TestChecks::DbCheck_1;
+package TestChecks::DbCheck_5;
 
 use warnings;
 use strict;
@@ -27,14 +27,22 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'DbCheck_1',
-  DESCRIPTION => 'Passing DbCheck example.',
+  NAME        => 'DbCheck_5',
+  DESCRIPTION => 'Skipping DbCheck example.',
+  DB_TYPES    => ['core'],
+  TABLES      => ['gene', 'transcript'],
 };
 
+sub skip_tests {
+  my ($self, $magic_word) = @_;
+  if (defined $magic_word && $magic_word eq 'please') {
+    return(1, 'All good here, thank you');
+  } else {
+    return;
+  }
+}
+
 sub tests {
-  my ($self) = @_;
-  $self->dba->dbc->connect;
-  pass();
   pass();
 }
 

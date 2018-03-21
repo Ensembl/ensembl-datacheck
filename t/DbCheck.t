@@ -19,6 +19,7 @@ use Bio::EnsEMBL::DataCheck::DbCheck;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
+use Test::Exception;
 use Test::More;
 
 use lib "$FindBin::Bin/TestChecks";
@@ -26,6 +27,7 @@ use DbCheck_1;
 use DbCheck_2;
 use DbCheck_3;
 use DbCheck_4;
+use DbCheck_5;
 
 my $test_db_dir = $FindBin::Bin;
 
@@ -247,12 +249,57 @@ subtest 'DbCheck with db_type and tables', sub {
   is($dbcheck->_passed,        1,           '_passed attribute is true');
 };
 
-# To do: DbCheck with skip_tests method defined
+subtest 'DbCheck with skip_tests method defined', sub {
+  my $dbcheck = TestChecks::DbCheck_5->new(
+    dba => $dba,
+  );
+  isa_ok($dbcheck, $module);
 
-# To do: DbCheck with no dba passed (should die)
+  my $name = $dbcheck->name;
 
-# To do: Confirm that dba connection is dropped after run
+  my ($skip, $skip_reason) = $dbcheck->skip_tests();
+  is($skip, undef, 'Do not skip if condition is not met');
+  is($skip_reason, undef, 'No skip reason');
 
-# To do: DbCheck with per_species = 1 (need test collection db for this)
+  ($skip, $skip_reason) = $dbcheck->skip_datacheck();
+  is($skip, undef, 'Do not skip if condition is not met');
+  is($skip_reason, undef, 'No skip reason');
+
+  ($skip, $skip_reason) = $dbcheck->skip_tests('please');
+  is($skip, 1, 'Skip if condition is not met');
+  is($skip_reason, 'All good here, thank you', 'Correct skip reason');
+
+  ($skip, $skip_reason) = $dbcheck->skip_datacheck('please');
+  is($skip, 1, 'Skip if condition is not met');
+  is($skip_reason, 'All good here, thank you', 'Correct skip reason');
+};
+
+subtest 'DbCheck with and without dba attribute', sub {
+  my $dbcheck = TestChecks::DbCheck_1->new();
+  isa_ok($dbcheck, $module);
+
+  my $name = $dbcheck->name;
+
+  throws_ok(
+    sub { $dbcheck->run },
+    qr/DBAdaptor must be set as 'dba' attribute/, 'DbCheck->run fails without dba');
+
+  is($dbcheck->_passed, undef, '_passed attribute is undefined');
+
+  $dbcheck->dba($dba);
+
+  is($dba->dbc->connected, undef, 'No DB connection');
+
+  # The tests that are run are Test::More tests. Running them within a test
+  # is a bit confusing. To simulate a proper test of the tests, need to reset
+  # the Test::More framework.
+  Test::More->builder->reset();
+  my $output = $dbcheck->run;
+  diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($dbcheck->_passed, 1, '_passed attribute is true');
+
+  is($dba->dbc->connected, undef, 'No DB connection');
+};
 
 done_testing();

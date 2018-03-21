@@ -17,7 +17,7 @@ use warnings;
 
 use Bio::EnsEMBL::DataCheck::BaseCheck;
 
-use FindBin;
+use FindBin; FindBin::again();
 use Test::More;
 
 use lib "$FindBin::Bin/TestChecks";

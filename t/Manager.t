@@ -41,7 +41,7 @@ diag('Attributes');
 can_ok($module, qw(datacheck_dir names patterns groups datacheck_types history_file));
 
 diag('Methods');
-can_ok($module, qw(run_checks load_checks filter read_results write_results));
+can_ok($module, qw(run_checks load_checks filter read_history write_history));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
@@ -52,9 +52,9 @@ subtest 'Default attributes', sub {
   my $manager = $module->new();
 
   like($manager->datacheck_dir, qr!lib/Bio/EnsEMBL/DataCheck/Checks!, 'Default datacheck_dir correct');
-  is_deeply($manager->names,           [], 'Default names correct (empty list)');
+  is_deeply($manager->names,  [], 'Default names correct (empty list)');
   is_deeply($manager->patterns,        [], 'Default patterns correct (empty list)');
-  is_deeply($manager->groups,          [], 'Default groups correct (empty list)');
+  is_deeply($manager->groups, [], 'Default groups correct (empty list)');
   is_deeply($manager->datacheck_types, [], 'Default datacheck_types correct (empty list)');
   is($manager->history_file,        undef, 'Default history_file correct (undefined)');
 };
@@ -65,7 +65,7 @@ subtest 'TestChecks directory', sub {
 
   my $datachecks = $manager->load_checks();
 
-  is(scalar(@$datachecks), 7, 'Loaded seven datachecks');
+  is(scalar(@$datachecks), 8, 'Loaded eight datachecks');
   foreach (@$datachecks) {
     isa_ok($_, 'Bio::EnsEMBL::DataCheck::BaseCheck');
     is($_->_started,  undef, '_started attribute undefined for '.$_->name);
@@ -151,15 +151,15 @@ subtest 'Filter datacheck type', sub {
   );
 
   my $datachecks = $manager->load_checks();
-  is(scalar(@$datachecks), 6, 'Loaded six datachecks');
+  is(scalar(@$datachecks), 7, 'Loaded seven datachecks');
   my %datacheck_names = map {$_->name => 1} @$datachecks;
   foreach (@$datachecks) {
     is($_->datacheck_type, $datacheck_type, $_->name." datacheck type matches '$datacheck_type'");
   }
 };
 
-subtest 'Read history file', sub {
-  # Note that the $test_history hash does not include results for all
+subtest 'Read history file (BaseCheck)', sub {
+  # Note that the $test_history hash does not include details for all
   # test datachecks, and also has a superfluous result, in order to
   # test partially matching history_files.
   my $test_history = {
@@ -200,12 +200,12 @@ subtest 'Read history file', sub {
     } elsif ($_->name eq 'BaseCheck_2') {
       is($_->_started,  1520338727, '_started attribute correct for BaseCheck_2');
       is($_->_finished, 1520338728, '_finished attribute correct for BaseCheck_2');
-      is($_->_passed,   0,          '_passed attribute correct for BaseCheck_2');
+      is($_->_passed,   0, '_passed attribute correct for BaseCheck_2');
 
     } elsif ($_->name eq 'BaseCheck_3') {
       is($_->_started,  1520338729, '_started attribute correct for BaseCheck_3');
       is($_->_finished, undef,      '_finished attribute correct for BaseCheck_3');
-      is($_->_passed,   1,          '_passed attribute correct for BaseCheck_3');
+      is($_->_passed,   1, '_passed attribute correct for BaseCheck_3');
     }
   }
 };
@@ -230,23 +230,23 @@ subtest 'Write history file (BaseCheck)', sub {
   sleep(2);
   my $after = time();
 
-  $manager->write_results($datachecks, $history_file->stringify);
+  $manager->write_history($datachecks, $history_file->stringify);
   my $json = $history_file->slurp;
-  my $results = JSON->new->decode($json);
+  my $history = JSON->new->decode($json);
 
   foreach (@$datachecks) {
-    ok(exists $$results{$_->name}, 'Results written for '.$_->name);
+    ok(exists $$history{$_->name}, 'Results written for '.$_->name);
 
-    my @datacheck_attributes = sort keys %{$$results{$_->name}};
+    my @datacheck_attributes = sort keys %{$$history{$_->name}};
     is_deeply(\@datacheck_attributes, \@attributes, 'Expected attributes exist for '.$_->name);
 
-    if (exists $$results{$_->name}{started}) {
-      my $started = $$results{$_->name}{started};
+    if (exists $$history{$_->name}{started}) {
+      my $started = $$history{$_->name}{started};
       ok($before < $started && $after > $started, 'Started within expected range for '.$_->name);
     }
 
-    if (exists $$results{$_->name}{finished}) {
-      my $finished = $$results{$_->name}{finished};
+    if (exists $$history{$_->name}{finished}) {
+      my $finished = $$history{$_->name}{finished};
       if (defined $finished) {
         ok($before < $finished && $after > $finished, 'Finished within expected range for '.$_->name);
       }
@@ -255,7 +255,7 @@ subtest 'Write history file (BaseCheck)', sub {
 };
 
 subtest 'Read and write history file', sub {
-  # Note that the $test_history hash does not include results for all
+  # Note that the $test_history hash does not include details for all
   # test datachecks, and also has a superfluous result, in order to
   # test partially matching history_files.
   my $test_history = {
@@ -292,19 +292,19 @@ subtest 'Read and write history file', sub {
   }
 
   throws_ok(
-    sub { $manager->write_results($datachecks, $history_file->stringify) },
+    sub { $manager->write_history($datachecks, $history_file->stringify) },
     qr/exists, and will not be overwritten/, 'history_file not overwritten by default');
 
-  my $results = $manager->write_results($datachecks, $history_file->stringify, 1);
+  my $history = $manager->write_history($datachecks, $history_file->stringify, 1);
 
-  # We want to have the same results for BaseCheck_0 and BaseCheck_2,
-  # because we have not run those tests. BaseCheck_1 results should now
+  # We want to have the same details for BaseCheck_0 and BaseCheck_2,
+  # because we have not run those tests. BaseCheck_1 details should now
   # be there, and BaseCheck_3 should have been updated.
-  is(keys %{$results}, 4, 'Correct number of results');
-  is($$results{'BaseCheck_0'}{'started'}, 1520338725, 'Results for BaseCheck_0 persist');
-  ok(exists $$results{'BaseCheck_1'}{'started'}, 'Results for BaseCheck_1 added');
-  is($$results{'BaseCheck_2'}{'started'}, 1520338727, 'Results for BaseCheck_2 persist');
-  cmp_ok($$results{'BaseCheck_3'}{'started'}, '>', 1520338729, 'Results for BaseCheck_3 updated');
+  is(keys %{$history}, 4, 'Correct number of datachecks');
+  is($$history{'BaseCheck_0'}{'started'}, 1520338725, 'Results for BaseCheck_0 persist');
+  ok(exists $$history{'BaseCheck_1'}{'started'}, 'Results for BaseCheck_1 added');
+  is($$history{'BaseCheck_2'}{'started'}, 1520338727, 'Results for BaseCheck_2 persist');
+  cmp_ok($$history{'BaseCheck_3'}{'started'}, '>', 1520338729, 'Results for BaseCheck_3 updated');
 };
 
 subtest 'Run datachecks (BaseCheck)', sub {
@@ -336,6 +336,95 @@ subtest 'Run datachecks (BaseCheck)', sub {
   }
 };
 
-# To do: tests with DbChecks
+subtest 'Run datachecks (DbCheck)', sub {
+  my $before = time();
+  sleep(2);
+
+  my $manager = $module->new(
+    datacheck_dir => $datacheck_dir,
+    names         => ['DbCheck_1', 'DbCheck_3'],
+  );
+
+  # The tests that are run are Test::More tests. Running them within a test
+  # is a bit confusing, and gets a bit messed up here...
+  diag("The test harness gets confused when executing 'run_checks', ".
+       "because that runs tests in a harness. It's safe to ignore the ".
+      "following 'Result: FAIL' message.");
+
+  my ($datachecks, $aggregator) = $manager->run_checks(dba => $dba);
+
+  sleep(2);
+  my $after = time();
+
+  foreach (@$datachecks) {
+    like($_->_passed, qr/^[01]$/, '_passed attribute has valid value for '.$_->name);
+    ok($before < $_->_started && $after > $_->_started, '_started attribute within expected range for '.$_->name);
+    if (defined $_->_finished) {
+      ok($before < $_->_finished && $after > $_->_finished, '_finished attribute within expected range for '.$_->name);
+    }
+  }
+};
+
+subtest 'Read and write history file (DbCheck)', sub {
+  my $history_file = Path::Tiny->tempfile();
+  my $manager = $module->new(
+    datacheck_dir => $datacheck_dir,
+    history_file  => $history_file->stringify,
+    patterns      => ['DbCheck'],
+  );
+
+  my @attributes = sort ('passed', 'started', 'finished');
+
+  my $before = time();
+  sleep(2);
+
+  # The tests that are run are Test::More tests. Running them within a test
+  # is a bit confusing, and gets a bit messed up here...
+  diag("The test harness gets confused when executing 'run_checks', ".
+       "because that runs tests in a harness. It's safe to ignore the ".
+      "following 'Result: FAIL' message.");
+
+  my ($datachecks, undef) = $manager->run_checks(dba => $dba);
+
+  sleep(2);
+  my $after = time();
+
+  my $json = $history_file->slurp;
+  my $history = JSON->new->decode($json);
+
+  my $dbserver   = $dba->dbc->host . ':' . $dba->dbc->port;
+  my $dbname     = $dba->dbc->dbname;
+  my $db_history = $$history{$dbserver}{$dbname}{'all'};
+
+  foreach (@$datachecks) {
+    ok(exists $$db_history{$_->name}, 'Results written for '.$_->name);
+
+    my @datacheck_attributes = sort keys %{$$db_history{$_->name}};
+    is_deeply(\@datacheck_attributes, \@attributes, 'Expected attributes exist for '.$_->name);
+
+    if (exists $$db_history{$_->name}{started}) {
+      my $started = $$db_history{$_->name}{started};
+      ok($before < $started && $after > $started, 'Started within expected range for '.$_->name);
+    }
+
+    if (exists $$db_history{$_->name}{finished}) {
+      my $finished = $$db_history{$_->name}{finished};
+      if (defined $finished) {
+        ok($before < $finished && $after > $finished, 'Finished within expected range for '.$_->name);
+      }
+    }
+  }
+
+  # The tests that are run are Test::More tests. Running them within a test
+  # is a bit confusing, and gets a bit messed up here...
+  diag("The test harness gets confused when executing 'run_checks', ".
+       "because that runs tests in a harness. It's safe to ignore the ".
+      "following 'Result: FAIL' message.");
+
+  my (undef, $aggregator) = $manager->run_checks(dba => $dba);
+
+  is($aggregator->skipped, 4, 'Skipped four datachecks due to history_file');
+  is($aggregator->failed,  1, 'Failed one healthcheck');
+};
 
 done_testing();
