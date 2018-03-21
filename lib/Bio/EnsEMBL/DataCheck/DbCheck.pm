@@ -125,7 +125,7 @@ sub skip_datacheck {
   if (!$skip) {
     ($skip, $skip_reason) = $self->check_history();
     if (!$skip) {
-      ($skip, $skip_reason) = $self->skip_tests();
+      ($skip, $skip_reason) = $self->skip_tests(@_);
     }
   }
 

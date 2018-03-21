@@ -132,7 +132,7 @@ sub run {
 
   subtest $name => sub {
     SKIP: {
-      my ($skip, $skip_reason) = $self->skip_datacheck();
+      my ($skip, $skip_reason) = $self->skip_datacheck(@_);
 
       $self->_started(time);
       $self->_finished(undef);
