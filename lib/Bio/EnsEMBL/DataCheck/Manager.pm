@@ -92,11 +92,28 @@ has 'datacheck_types' => (
 );
 
 =head2 history_file
-  Description: Path to a file with results from a previous datacheck run
+  Description: Path to a file with details from a previous datacheck run
 =cut
 has 'history_file' => (
   is  => 'rw',
   isa => 'Str | Undef',
+);
+
+=head2 test_output_file
+  Description: Path to a file in which to store TAP format output from tests
+=cut
+has 'test_output_file' => (
+  is  => 'rw',
+  isa => 'Str | Undef',
+);
+
+=head2 overwrite_files
+  Description: By default, history_file and test_output_file will be overwritten
+=cut
+has 'overwrite_files' => (
+  is      => 'rw',
+  isa     => 'Bool',
+  default => 1
 );
 
 sub run_checks {
@@ -104,8 +121,29 @@ sub run_checks {
 
   my $datachecks = $self->load_checks(@_);
 
+  # Copy STDOUT to another filehandle
+  open (my $STDOUT_COPY, '>&', STDOUT);
+
+  my $test_output_file = $self->test_output_file;
+  if (defined $test_output_file) {
+    if (-s $test_output_file) {
+      unless ($self->overwrite_files) {
+        die "'$test_output_file' exists, and will not be overwritten";
+      }
+    } else {
+      path($test_output_file)->parent->mkpath;
+    }
+
+    open(STDOUT, '>', $test_output_file);
+  }
+
   my $harness = TAP::Harness->new( { verbosity => 1 } );
   my $aggregator = $harness->runtests(map { [ $_, $_->name ] } @$datachecks);
+
+  if (defined $test_output_file) {
+    # Restore STDOUT
+    open(STDOUT, '>&', $STDOUT_COPY);
+  }
 
   if (defined $self->history_file) {
     $self->write_history($datachecks, $self->history_file, 1);
@@ -217,22 +255,24 @@ sub read_history {
 
 sub write_history {
   my $self = shift;
-  my ($datachecks, $history_file, $overwrite) = @_;
+  my ($datachecks, $history_file) = @_;
 
   if (!defined $history_file) {
     die "Path to history file not specified";
   }
 
-  if (-s $history_file && !$overwrite) {
-    die "'$history_file' exists, and will not be overwritten";
-  }
-
   my %history;
   if (-s $history_file) {
+    unless ($self->overwrite_files) {
+      die "'$history_file' exists, and will not be overwritten";
+    }
+
     # We read the data from file again, which will pick up and thus
     # preserve any changes that have been written by other Managers
     # that finished running after the current Manager instance was created.
     %history = %{ $self->read_history([], $history_file) };
+  } else {
+    path($history_file)->parent->mkpath;
   }
 
   foreach my $datacheck (@$datachecks) {

@@ -61,7 +61,7 @@ subtest 'Default attributes', sub {
 
 subtest 'TestChecks directory', sub {
   my $manager = $module->new(datacheck_dir => $datacheck_dir);
-  like($manager->datacheck_dir, qr!lib/t/TestChecks!, 'TestChecks datacheck_dir correct');
+  like($manager->datacheck_dir, qr!t/TestChecks!, 'TestChecks datacheck_dir correct');
 
   my $datachecks = $manager->load_checks();
 
@@ -280,10 +280,16 @@ subtest 'Read and write history file', sub {
   my $history_file = Path::Tiny->tempfile();
   $history_file->spew($json);
 
+  # We need to redirect test output to a file, otherwise it gets muddled
+  # with the output from this .t file, and confuses the test harness.
+  my $test_output_file = Path::Tiny->tempfile();
+
   my $manager = $module->new(
-    datacheck_dir => $datacheck_dir,
-    history_file  => $history_file->stringify,
-    names         => ['BaseCheck_1', 'BaseCheck_3'],
+    datacheck_dir    => $datacheck_dir,
+    history_file     => $history_file->stringify,
+    test_output_file => $test_output_file->stringify,
+    overwrite_files  => 0,
+    names            => ['BaseCheck_1', 'BaseCheck_3'],
   );
 
   my $datachecks = $manager->load_checks();
@@ -293,9 +299,10 @@ subtest 'Read and write history file', sub {
 
   throws_ok(
     sub { $manager->write_history($datachecks, $history_file->stringify) },
-    qr/exists, and will not be overwritten/, 'history_file not overwritten by default');
+    qr/exists, and will not be overwritten/, 'history_file not overwritten');
 
-  my $history = $manager->write_history($datachecks, $history_file->stringify, 1);
+  $manager->overwrite_files(1);
+  my $history = $manager->write_history($datachecks, $history_file->stringify);
 
   # We want to have the same details for BaseCheck_0 and BaseCheck_2,
   # because we have not run those tests. BaseCheck_1 details should now
@@ -308,19 +315,18 @@ subtest 'Read and write history file', sub {
 };
 
 subtest 'Run datachecks (BaseCheck)', sub {
+  # We need to redirect test output to a file, otherwise it gets muddled
+  # with the output from this .t file, and confuses the test harness.
+  my $test_output_file = Path::Tiny->tempfile();
+
   my $before = time();
   sleep(2);
 
   my $manager = $module->new(
-    datacheck_dir => $datacheck_dir,
-    names         => ['BaseCheck_1', 'BaseCheck_3'],
+    datacheck_dir    => $datacheck_dir,
+    test_output_file => $test_output_file->stringify,
+    names            => ['BaseCheck_1', 'BaseCheck_3'],
   );
-
-  # The tests that are run are Test::More tests. Running them within a test
-  # is a bit confusing, and gets a bit messed up here...
-  diag("The test harness gets confused when executing 'run_checks', ".
-       "because that runs tests in a harness. It's safe to ignore the ".
-      "following 'Result: FAIL' message.");
 
   my ($datachecks, $aggregator) = $manager->run_checks();
 
@@ -337,19 +343,18 @@ subtest 'Run datachecks (BaseCheck)', sub {
 };
 
 subtest 'Run datachecks (DbCheck)', sub {
+  # We need to redirect test output to a file, otherwise it gets muddled
+  # with the output from this .t file, and confuses the test harness.
+  my $test_output_file = Path::Tiny->tempfile();
+
   my $before = time();
   sleep(2);
 
   my $manager = $module->new(
-    datacheck_dir => $datacheck_dir,
-    names         => ['DbCheck_1', 'DbCheck_3'],
+    datacheck_dir    => $datacheck_dir,
+    test_output_file => $test_output_file->stringify,
+    names            => ['DbCheck_1', 'DbCheck_3'],
   );
-
-  # The tests that are run are Test::More tests. Running them within a test
-  # is a bit confusing, and gets a bit messed up here...
-  diag("The test harness gets confused when executing 'run_checks', ".
-       "because that runs tests in a harness. It's safe to ignore the ".
-      "following 'Result: FAIL' message.");
 
   my ($datachecks, $aggregator) = $manager->run_checks(dba => $dba);
 
@@ -366,23 +371,20 @@ subtest 'Run datachecks (DbCheck)', sub {
 };
 
 subtest 'Read and write history file (DbCheck)', sub {
-  my $history_file = Path::Tiny->tempfile();
+  my $history_file     = Path::Tiny->tempfile();
+  my $test_output_file = Path::Tiny->tempfile();
+
   my $manager = $module->new(
-    datacheck_dir => $datacheck_dir,
-    history_file  => $history_file->stringify,
-    patterns      => ['DbCheck'],
+    datacheck_dir     => $datacheck_dir,
+    history_file      => $history_file->stringify,
+    test_output_file  => $test_output_file->stringify,
+    patterns          => ['DbCheck'],
   );
 
   my @attributes = sort ('passed', 'started', 'finished');
 
   my $before = time();
   sleep(2);
-
-  # The tests that are run are Test::More tests. Running them within a test
-  # is a bit confusing, and gets a bit messed up here...
-  diag("The test harness gets confused when executing 'run_checks', ".
-       "because that runs tests in a harness. It's safe to ignore the ".
-      "following 'Result: FAIL' message.");
 
   my ($datachecks, undef) = $manager->run_checks(dba => $dba);
 
@@ -397,6 +399,8 @@ subtest 'Read and write history file (DbCheck)', sub {
   my $db_history = $$history{$dbserver}{$dbname}{'all'};
 
   foreach (@$datachecks) {
+    diag($_->name.' => '.$_->_passed);
+    diag($$db_history{$_->name}{passed});
     ok(exists $$db_history{$_->name}, 'Results written for '.$_->name);
 
     my @datacheck_attributes = sort keys %{$$db_history{$_->name}};
@@ -416,15 +420,22 @@ subtest 'Read and write history file (DbCheck)', sub {
   }
 
   # The tests that are run are Test::More tests. Running them within a test
-  # is a bit confusing, and gets a bit messed up here...
-  diag("The test harness gets confused when executing 'run_checks', ".
-       "because that runs tests in a harness. It's safe to ignore the ".
-      "following 'Result: FAIL' message.");
+  # is a bit confusing. To simulate a proper test of the tests, need to reset
+  # the Test::More framework.
+  Test::More->builder->reset();
 
-  my (undef, $aggregator) = $manager->run_checks(dba => $dba);
+  ($datachecks, undef) = $manager->run_checks(dba => $dba);
 
-  is($aggregator->skipped, 4, 'Skipped four datachecks due to history_file');
-  is($aggregator->failed,  1, 'Failed one healthcheck');
+  # Should have 4 skipped checks and one failed one,
+  # if the history file was read correctly.
+  my ($skipped, $failed) = (0, 0);
+  foreach (@$datachecks) {
+    diag($_->name.' => '.$_->_passed);
+    $skipped++ if $_->_passed && ! defined $_->_finished;
+    $failed++  if ! $_->_passed;
+  }
+  is($skipped, 4, 'Correct number of skipped tests');
+  is($failed,  1, 'Correct number of failed tests');
 };
 
 done_testing();

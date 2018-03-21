@@ -32,6 +32,7 @@ use constant {
 };
 
 sub tests {
+  diag("I'm supposed to fail :(");
   fail();
 }
 
