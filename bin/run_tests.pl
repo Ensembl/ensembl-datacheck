@@ -23,21 +23,22 @@ use Getopt::Long qw(:config no_ignore_case);
 
 my ($host, $port, $user, $pass, $dbname,
     @names, @patterns, @groups, @datacheck_types,
-    $datacheck_dir, $history_file,
+    $datacheck_dir, $history_file, $test_output_file,
 );
 
 GetOptions(
-  "host=s",            \$host,
-  "P|port=i",          \$port,
-  "user=s",            \$user,
-  "p|pass=s",          \$pass,
-  "dbname=s",          \$dbname,
-  "names:s",           \@names,
-  "patterns:s",        \@patterns,
-  "groups:s",          \@groups,
-  "datacheck_types:s", \@datacheck_types,
-  "datacheck_dir:s",   \$datacheck_dir,
-  "history_file:s",    \$history_file,
+  "host=s",             \$host,
+  "P|port=i",           \$port,
+  "user=s",             \$user,
+  "p|pass=s",           \$pass,
+  "dbname=s",           \$dbname,
+  "names:s",            \@names,
+  "patterns:s",         \@patterns,
+  "groups:s",           \@groups,
+  "datacheck_types:s",  \@datacheck_types,
+  "datacheck_dir:s",    \$datacheck_dir,
+  "history_file:s",     \$history_file,
+  "test_output_file:s", \$test_output_file,
 );
 
 my $dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(
@@ -48,19 +49,19 @@ my $dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(
   -dbname => $dbname,
 );
 
-my $manager_params = {
-  names           => \@names,
-  patterns        => \@patterns,
-  groups          => \@groups,
-  datacheck_types => \@datacheck_types,
-}
-$$manager_params{datacheck_dir} = $datacheck_dir if defined $datacheck_dir;
-$$manager_params{history_file}  = $history_file if defined $history_file;
+my %manager_params;
+$manager_params{names}            = \@names if scalar @names;
+$manager_params{patterns}         = \@patterns if scalar @patterns;
+$manager_params{groups}           = \@groups if scalar @groups;
+$manager_params{datacheck_types}  = \@datacheck_types if scalar @datacheck_types;
+$manager_params{datacheck_dir}    = $datacheck_dir if defined $datacheck_dir;
+$manager_params{history_file}     = $history_file if defined $history_file;
+$manager_params{test_output_file} = $test_output_file if defined $test_output_file;
 
-my $datacheck_params = {
+my %datacheck_params = (
   dba => $dba,
-};
+);
 
-my $manager = Bio::EnsEMBL::DataCheck::Manager->new($manager_params);
+my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
 
-my ($datachecks, $aggregator) = $manager->run_checks($datacheck_params);
+my ($datachecks, $aggregator) = $manager->run_checks(%datacheck_params);
