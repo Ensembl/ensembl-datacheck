@@ -108,7 +108,7 @@ sub run_checks {
   my $aggregator = $harness->runtests(map { [ $_, $_->name ] } @$datachecks);
 
   if (defined $self->history_file) {
-    $self->write_results($datachecks, $self->history_file, 1);
+    $self->write_history($datachecks, $self->history_file, 1);
   }
 
   return ($datachecks, $aggregator);
@@ -143,7 +143,7 @@ sub load_checks {
   }
 
   if (defined $self->history_file) {
-    $self->read_results(\@datachecks, $self->history_file);
+    $self->read_history(\@datachecks, $self->history_file);
   }
 
   return \@datachecks;
@@ -176,63 +176,63 @@ sub filter {
   }
 }
 
-sub read_results {
+sub read_history {
   my $self = shift;
   my ($datachecks, $history_file) = @_;
 
-  if (! -e $history_file) {
-    die "'$history_file' does not exist";
-  }
+  my %history = ();
 
-  # slurp gets an exclusive lock on the file before reading it.
-  my $json = path($history_file)->slurp;
-  my %results = %{ JSON->new->decode($json) };
+  if (-s $history_file) {
+    # slurp gets an exclusive lock on the file before reading it.
+    my $json = path($history_file)->slurp;
+    %history = %{ JSON->new->decode($json) };
 
-  foreach (@$datachecks) {
-    my $name = $_->name;
-    my $result;
+    foreach (@$datachecks) {
+      my $name = $_->name;
+      my $result;
 
-    if ($_->isa('Bio::EnsEMBL::DataCheck::DbCheck')) {
-      my $host   = $_->dba->dbc->host;
-      my $port   = $_->dba->dbc->port;
-      my $dbname = $_->dba->dbc->dbname;
+      if ($_->isa('Bio::EnsEMBL::DataCheck::DbCheck')) {
+        my $host   = $_->dba->dbc->host;
+        my $port   = $_->dba->dbc->port;
+        my $dbname = $_->dba->dbc->dbname;
 
-      if ($_->per_species) {
-        my $species_id = $_->dba->species_id;
-        $result = $results{"$host:$port"}{$dbname}{$species_id}{$name};
-      } else {
-        $result = $results{"$host:$port"}{$dbname}{'all'}{$name};
+        if ($_->per_species) {
+          my $species_id = $_->dba->species_id;
+          $result = $history{"$host:$port"}{$dbname}{$species_id}{$name};
+        } else {
+          $result = $history{"$host:$port"}{$dbname}{'all'}{$name};
+        }
+      } elsif (exists $history{$name}) {
+        $result = $history{$name};
       }
-    } elsif (exists $results{$name}) {
-      $result = $results{$name};
-    }
 
-    $_->_started($$result{'started'});
-    $_->_finished($$result{'finished'});
-    $_->_passed($$result{'passed'});
+      $_->_started($$result{'started'});
+      $_->_finished($$result{'finished'});
+      $_->_passed($$result{'passed'});
+    }
   }
 
-  return \%results;
+  return \%history;
 }
 
-sub write_results {
+sub write_history {
   my $self = shift;
   my ($datachecks, $history_file, $overwrite) = @_;
 
   if (!defined $history_file) {
-    die "Path to results file not specified";
+    die "Path to history file not specified";
   }
 
   if (-s $history_file && !$overwrite) {
     die "'$history_file' exists, and will not be overwritten";
   }
 
-  my %results;
+  my %history;
   if (-s $history_file) {
     # We read the data from file again, which will pick up and thus
     # preserve any changes that have been written by other Managers
     # that finished running after the current Manager instance was created.
-    %results = %{ $self->read_results([], $history_file) };
+    %history = %{ $self->read_history([], $history_file) };
   }
 
   foreach my $datacheck (@$datachecks) {
@@ -250,20 +250,20 @@ sub write_results {
 
       if ($datacheck->per_species) {
         my $species_id = $datacheck->dba->species_id;
-        $results{"$host:$port"}{$dbname}{$species_id}{$name} = $result;
+        $history{"$host:$port"}{$dbname}{$species_id}{$name} = $result;
       } else {
-        $results{"$host:$port"}{$dbname}{'all'}{$name} = $result;
+        $history{"$host:$port"}{$dbname}{'all'}{$name} = $result;
       }
     } else {
-      $results{$name} = $result;
+      $history{$name} = $result;
     }
   }
 
   # spew gets an exclusive lock on the file before reading it.
-  my $json = JSON->new->pretty->encode(\%results);
+  my $json = JSON->new->pretty->encode(\%history);
   path($history_file)->spew($json);
 
-  return \%results;
+  return \%history;
 }
 
 1;
