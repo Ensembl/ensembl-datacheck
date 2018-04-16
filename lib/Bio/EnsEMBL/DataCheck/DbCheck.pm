@@ -30,13 +30,14 @@ use feature 'say';
 use List::Util qw/any/;
 use Moose;
 use Moose::Util::TypeConstraints;
+use Test::More;
 
 extends 'Bio::EnsEMBL::DataCheck::BaseCheck';
 
 use constant {
-  DB_TYPES    => undef,
-  TABLES      => undef,
-  PER_SPECIES => undef,
+  DB_TYPES => undef,
+  TABLES   => undef,
+  PER_DB   => undef,
 };
 
 subtype 'DBAdaptor', as 'Object', where {
@@ -66,11 +67,11 @@ has 'tables' => (
   default => sub { [] }
 );
 
-=head2 per_species
-  Description: If 1, the tests contain species-specific elements
-               and must be run on each species in the database.
+=head2 per_db
+  Description: If 1, the tests can safely be run once for a whole database,
+               rather than once per species (only relevant for collection dbs).
 =cut
-has 'per_species' => (
+has 'per_db' => (
   is      => 'ro',
   isa     => 'Bool',
   default => 0
@@ -97,9 +98,9 @@ around BUILDARGS => sub {
   die "'tables' cannot be overridden" if exists $param{tables};
   die "'per_species' cannot be overridden" if exists $param{per_species};
 
-  $param{db_types}    = $class->DB_TYPES if defined $class->DB_TYPES;
-  $param{tables}      = $class->TABLES if defined $class->TABLES;
-  $param{per_species} = $class->PER_SPECIES if defined $class->PER_SPECIES;
+  $param{db_types} = $class->DB_TYPES if defined $class->DB_TYPES;
+  $param{tables}   = $class->TABLES if defined $class->TABLES;
+  $param{per_db}   = $class->PER_DB if defined $class->PER_DB;
 
   return $class->$orig(%param);
 };
@@ -117,6 +118,36 @@ after 'run' => sub {
 
   $self->dba->dbc && $self->dba->dbc->disconnect_if_idle();
 };
+
+sub run_tests {
+  my $self = shift;
+
+  if (!$self->per_db && $self->dba->is_multispecies) {
+    # We cannot change the species of an established DBA; but we
+    # can get it to give us a list of species, and then create
+    # a new DBA (reusing the same connection) for each species in turn.
+    my $original_dba = $self->dba;
+
+    foreach my $species (@{$self->dba->all_species}) {
+      my $dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(
+        -dbconn         => $original_dba->dbc,
+        -species        => $species,
+        -add_species_id => 1,
+      );
+      $self->dba($dba);
+
+      subtest $self->dba->species => sub {
+        $self->tests(@_);
+      };
+    }
+
+    # It really shouldn't matter if we don't reset to the original
+    # DBA. But it can't hurt either, and seems the right thing to do.
+    $self->dba($original_dba);
+  } else {
+    $self->tests(@_);
+  }
+}
 
 sub skip_datacheck {
   my $self = shift;

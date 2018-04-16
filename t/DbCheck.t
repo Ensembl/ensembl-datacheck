@@ -46,7 +46,7 @@ my $dba      = $testdb->get_DBAdaptor($db_type);
 my $module = 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 diag('Fixed attributes');
-can_ok($module, qw(db_types tables per_species));
+can_ok($module, qw(db_types tables per_db));
 
 diag('Runtime attributes');
 can_ok($module, qw(dba));
@@ -69,7 +69,7 @@ subtest 'Minimal DbCheck with passing tests', sub {
 
   is_deeply($dbcheck->db_types, [],        'db_types attribute defaults to empty list');
   is_deeply($dbcheck->tables,   [],        'tables attribute defaults to empty list');
-  is($dbcheck->per_species,     0,         'per_species attribute defaults to zero');
+  is($dbcheck->per_db,          0,         'per_db attribute defaults to zero');
   isa_ok($dbcheck->dba,         $dba_type, 'dba attribute');
 
   is($dbcheck->skip_tests(),     undef, 'skip_tests method undefined');

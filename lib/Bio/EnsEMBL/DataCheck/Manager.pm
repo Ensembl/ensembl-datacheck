@@ -234,7 +234,7 @@ sub read_history {
         my $port   = $_->dba->dbc->port;
         my $dbname = $_->dba->dbc->dbname;
 
-        if ($_->per_species) {
+        if (! $_->per_db) {
           my $species_id = $_->dba->species_id;
           $result = $history{"$host:$port"}{$dbname}{$species_id}{$name};
         } else {
@@ -288,7 +288,7 @@ sub write_history {
       my $port   = $datacheck->dba->dbc->port;
       my $dbname = $datacheck->dba->dbc->dbname;
 
-      if ($datacheck->per_species) {
+      if (! $datacheck->per_db) {
         my $species_id = $datacheck->dba->species_id;
         $history{"$host:$port"}{$dbname}{$species_id}{$name} = $result;
       } else {
