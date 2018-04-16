@@ -129,6 +129,8 @@ if ($error) {
   my $tmp_file = catdir('/tmp', $ENV{'USER'}."_$name.pm");
   move $datacheck_file, $tmp_file;
   die "Datacheck '$name' cannot be loaded. File moved to: $tmp_file";
+} else {
+  say "Created datacheck '$datacheck_file'";
 }
 
 sub copyright {
