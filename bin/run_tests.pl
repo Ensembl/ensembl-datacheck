@@ -41,12 +41,15 @@ GetOptions(
   "test_output_file:s", \$test_output_file,
 );
 
+my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
+
 my $dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(
-  -host   => $host,
-  -port   => $port,
-  -user   => $user,
-  -pass   => $pass,
-  -dbname => $dbname,
+  -host            => $host,
+  -port            => $port,
+  -user            => $user,
+  -pass            => $pass,
+  -dbname          => $dbname,
+  -multispecies_db => $multispecies_db
 );
 
 my %manager_params;
