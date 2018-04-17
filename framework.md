@@ -1,57 +1,53 @@
-# `Bio::EnsEMBL::DataTest` Framework
-`ensembl-datacheck` uses a set of base modules and scripts to define and execute tests using the `Test::More` library.
+# `Bio::EnsEMBL::DataCheck` Framework
+`ensembl-datacheck` uses a set of base modules and scripts to define and execute tests using the `Test::More` suite.
 
 ## Modules
 
-###`Bio::EnsEMBL::DataTest::BaseTest`
+###`Bio::EnsEMBL::DataCheck::BaseCheck`
 
-`BaseTest` defines the minimal code needed for a test. Tests instantiate this module and provide the following instance variables:
-* `name` - name of the test
-* `test` - reference to code run when the test is invoked. This should use `Test::More` style tests.
-* `test_predicate` - optional code reference run by `will_test` if the test should be run or not. Returns a hash reference with the keys `run` and `reason`. The default implementation returns `{run=>1}`
+`BaseCheck` defines the minimal code needed for a test. All datachecks inherit from this module and provide values for the following attributes:
+* `name` - (required) name of the test
+* `description` - (required) description of the test
+* `datacheck_type` - (required) datachecks are "critical" (default) or "advisory"
+* `groups` - (optional) list of groups to which the datacheck belongs
 
-Instances of this test are invoked by `run` which uses `Test::More` to capture test results which are returned as a hash with the keys:
-* `pass` - overall pass/fail as 1/0
-* `details` - array of individual test results
-* `log` - detailed output of test
-* `skipped` - 1 if test was skipped
-* `reason` - reasons for skipping (if skipped set)
+Instances of this test are invoked by `run` which uses `Test::More` to return test results in standard TAP format.
 
-###`Bio::EnsEMBL::DataTest::TypeAwareTest`
-`TypeAwareTest` supports tests that deal with Ensembl database adaptors. The following instance variables can be set:
-* `per_species` - whether this test runs on an individual species or a whole database
-* `db_types`  - list of Ensembl database types that the test applies to (core, variation, otherfeatures, compara, funcgen)
+###`Bio::EnsEMBL::DataCheck::DbCheck`
+`DbCheck` supports tests that deal with Ensembl database adaptors. The following variables can be set:
+* `db_types` - (optional) list of Ensembl database types that the test applies to (core, variation, otherfeatures, compara, funcgen)
+* `tables` - (optional) list of tables that are related to the datacheck
+* `per_db` - (optional) whether the datacheck runs on a whole database rather than individual species
 
-`will_test` checks the supplied database adaptor against the supported list to determine whether it will run. After the test runs, the database adaptor is disconnected to avoid connection leaks.
+After the test runs, the database adaptor is disconnected to avoid connection leaks.
 
-###`Bio::EnsEMBL::DataTest::TableAwareTest`
-`TableAwareTest` supports tests that only need to run if defined tables have changed. This requires a hash containing update dates for each table when the test was last run to be passed to `run` as the second argument. This can be generated using `Bio::EnsEMBL::DataTest::Utils::DBUtils::table_dates`.
+###`Bio::EnsEMBL::DataCheck::CompareDbCheck`
+`CompareDbCheck` is an extension of `DbCheck` that supports tests that take two DBAs for comparison (e.g. old and new databases, or master and slave databases). 
 
-###`Bio::EnsEMBL::DataTest::CompareDbTest`
-`CompareDbTest` is an extension of `TableAwareTest` that supports tests that take two DBAs for comparison (e.g. old and new databases, or master and slave databases). 
-
-###`Bio::EnsEMBL::DataTest::Utils::TestUtils`
-This module contains the code needed to load, run a `Test::More`-based test and capture output.
+###`Bio::EnsEMBL::DataCheck::Manager`
+The `Manager` module can be used to retrieve a set of datachecks, and optionally run them in a test harness. The history of datachecks' pass/fail status can be read from and written to a file, in order for datachecks to determine if the need to be run.
 
 ###`Bio::EnsEMBL::DataTest::Utils::DBUtils`
-This module contains helper methods for dealing with Ensembl databases, include `Test::More`-style tests for databases e.g. `is_rowcount` for checking the number of rows returned.
+This module contains `Test::More`-style methods for dealing with Ensembl databases, e.g. `rows` for checking the number of rows returned.
 
 ## Scripts
 
 ### `run_tests.pl`
-This is a basic script which reads a collection of tests from a location on the file system and applies them to the databases specified e.g.
+This script runs one or more datachecks for the specified database e.g.
 ```
-perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v 
+perl -I lib/ scripts/run_tests.pl
+  -groups core_handover 
+  -history_file /path/to/history/file
   -host localhost -port 3306 -user anonymous 
-  -dbname schizosaccharomyces_pombe_core_31_84_2
+  -dbname schizosaccharomyces_pombe_core_39_92_2
 ```
 
-### `run_compare_tests.pl`
-This is a basic script which reads a collection of tests from a location on the file system and applies them to pairs of databases (the second set is specified with arguments prefixed with `prev`) e.g.
+### `create_datacheck.pl`
+This script generates a datacheck file in a standard format, such that only the tests method (and optionally the skip_tests method) then need to be written e.g.
 ```
-perl -I lib/ bin/run_tests.pl -test ./t/integrity/core/assembly_exceptions.t -v 
-  -host localhost -port 3306 -user anonymous 
-  -dbname schizosaccharomyces_pombe_core_31_84_2
-  -prevhost localhost -prevport 3306 -prevuser anonymous 
-  -prevdbname schizosaccharomyces_pombe_core_30_83_2
+perl -I lib/ scripts/create_datacheck.pl 
+  -name AssemblyAccession 
+  -description 'Meta key "assembly.accession" is set.' 
+  -db_types core 
+  -tables 'meta'
 ```

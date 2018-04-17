@@ -1,4 +1,3 @@
 # ensembl-datacheck
-Code for checking Ensembl databases during release production
+Code for checking Ensembl data
 * [Framework details](framework.md)
-* [Current tests](tests.md)
