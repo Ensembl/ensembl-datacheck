@@ -1,56 +1,35 @@
-
 =head1 LICENSE
 
-Copyright [2016] EMBL-European Bioinformatics Institute
+Copyright [2018] EMBL-European Bioinformatics Institute
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
+distributed under the License is distributed on an 'AS IS' BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-=head1 CONTACT
-
-  Please email comments or questions to the public Ensembl
-  developers list at <http://lists.ensembl.org/mailman/listinfo/dev>.
-
-  Questions may also be sent to the Ensembl help desk at
-  <http://www.ensembl.org/Help/Contact>.
-
 =cut
 
 =head1 NAME
-
 Bio::EnsEMBL::DataCheck::Utils::DBUtils
 
-=head1 SYNOPSIS
-
-is_rowcount($dba, "select count(*) from gene where biotype='mango'", 100, 
-  "We need 100 mangoes");
-is_rowcount_zero($dba, "select count(*) from gene where biotype='banana'", 
-  "Yes, we have no bananas");
-is_same_counts($dba, $dba2, "select biotype,count(*) from gene group by biotype",
-  1,"Checking for the same number of biotypes");
-
 =head1 DESCRIPTION
-
 Collection of utilities for testing Ensembl MySQL databases, including a set of 
 Test::More style tests.
-
-=head1 METHODS
 
 =cut
 
 package Bio::EnsEMBL::DataCheck::Utils::DBUtils;
+
 use warnings;
 use strict;
-use Carp qw/croak/;
+use feature 'say';
 
 use Test::More;
 
@@ -60,29 +39,7 @@ BEGIN {
   our @ISA     = qw(Exporter);
   our @EXPORT =
     qw(rowcount is_rowcount is_rowcount_zero is_rowcount_nonzero
-    ok_foreignkeys get_species_ids is_query is_same_counts is_same_result);
-}
-
-=head2 get_species_ids
-
-  Arg [1]    : Bio::EnsEMBL::DBSQL::DBConnection or DBAdaptor
-  Example    : my $sids = get_species_ids($dbc);
-  Description: Get species_ids for a core database
-  Returntype : Arrayref of integers
-  Exceptions : None
-  Caller     : general
-  Status     : Stable
-
-=cut
-
-sub get_species_ids {
-  my ($dbc) = @_;
-  if ( $dbc->can('dbc') ) {
-    $dbc = $dbc->dbc();
-  }
-  return $dbc->sql_helper()
-    ->execute( -SQL =>
-          'select distinct species_id from meta where species_id is not null' );
+    ok_foreignkeys is_query is_same_counts is_same_result);
 }
 
 =head2 rowcount
