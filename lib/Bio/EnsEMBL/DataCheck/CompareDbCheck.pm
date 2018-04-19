@@ -33,12 +33,26 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 =head1 METHODS
 
-=head2 compare_dba
+=head2 second_dba
   Description: DBAdaptor object for database used for comparison.
 =cut
-has 'compare_dba' => (
+has 'second_dba' => (
   is  => 'rw',
-  isa => 'DBAdaptor',
+  isa => 'DBAdaptor | Undef',
 );
+
+before 'run' => sub {
+  my ($self) = @_;
+
+  if (!defined $self->second_dba) {
+    die "DBAdaptor must be set as 'second_dba' attribute";
+  }
+};
+
+after 'run' => sub {
+  my ($self) = @_;
+
+  $self->second_dba->dbc && $self->second_dba->dbc->disconnect_if_idle();
+};
 
 1;
