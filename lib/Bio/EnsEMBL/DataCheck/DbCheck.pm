@@ -81,8 +81,8 @@ has 'per_db' => (
   Description: DBAdaptor object for database on which to run tests.
 =cut
 has 'dba' => (
-  is       => 'rw',
-  isa      => 'DBAdaptor | Undef',
+  is  => 'rw',
+  isa => 'DBAdaptor | Undef',
 );
 
 # Set the read-only parameters just before 'new' method is called.
@@ -225,6 +225,21 @@ sub table_dates {
   /;
 
   return $helper->execute_into_hash(-SQL =>$sql);
+}
+
+sub sql_count {
+  my $self = shift;
+  my ($dbc, $sql, $params) = @_;
+
+  $dbc = $dbc->dbc() if $dbc->can('dbc');
+
+  if ( index( uc($sql), "SELECT COUNT" ) != -1 &&
+       index( uc($sql), "GROUP BY" ) == -1 )
+  {
+    return $dbc->sql_helper()->execute_single_result( -SQL => $sql, -PARAMS => $params );
+  } else {
+    return scalar @{ $dbc->sql_helper()->execute( -SQL => $sql, -PARAMS => $params ) };
+  }
 }
 
 sub skip_tests {
