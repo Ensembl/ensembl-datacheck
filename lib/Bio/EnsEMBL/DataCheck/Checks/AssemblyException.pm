@@ -23,10 +23,9 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
-
-use Bio::EnsEMBL::DataCheck::Utils::DBUtils qw/rowcount is_rowcount_nonzero is_rowcount_zero/;
 
 use constant {
   NAME        => 'AssemblyException',
@@ -39,6 +38,16 @@ use constant {
 
 # Todo: Check if there are any assembly_exceptions; skip all tests if not.
 
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = 'SELECT COUNT(*) FROM assembly_exception';
+
+  if (! $self->sql_count( $self->dba, $sql ) ) {
+    return (1, 'No assembly exceptions.');
+  }
+}
+
 sub tests {
   my ($self) = @_;
   my $dba = $self->dba;
@@ -49,14 +58,14 @@ sub tests {
     SELECT COUNT(*) FROM assembly_exception
     WHERE seq_region_start > seq_region_end
   /;
-  is_rowcount_zero($dba, $sql_1, $desc_1);
+  is_rows_zero($dba, $sql_1, $desc_1);
 
   my $desc_2 = 'assembly_exception: exc_seq_region_start > exc_seq_region_end';
   my $sql_2  = q/
     SELECT COUNT(*) FROM assembly_exception
     WHERE exc_seq_region_start > exc_seq_region_end
   /;
-  is_rowcount_zero($dba, $sql_2, $desc_2);
+  is_rows_zero($dba, $sql_2, $desc_2);
 
   my $desc_3 = 'if assembly_exception contains exception of type "HAP", '.
     'then there are seq_region_attrib rows with type "non-reference"';
@@ -69,8 +78,8 @@ sub tests {
       attrib_type USING (attrib_type_id)
     WHERE code = "non_ref"
   /;
-  if (rowcount( $dba->dbc(), $sql_3a ) > 0) {
-    is_rowcount_nonzero($dba, $sql_3b, $desc_3);
+  if ($self->sql_count( $dba, $sql_3a )) {
+    is_rows_nonzero($dba, $sql_3b, $desc_3);
   }
 
   my $desc_4 = 'Non-PAR assembly exceptions have "alt_seq_mapping" dna_align_features';
@@ -109,7 +118,7 @@ sub tests {
       analysis a ON daf.analysis_id = a.analysis_id
     WHERE ax.exc_type <> 'PAR' AND a.logic_name = 'alt_seq_mapping' AND sr2.name <> daf.hit_name
   /;
-  is_rowcount_zero($dba, $sql_5, $desc_5);
+  is_rows_zero($dba, $sql_5, $desc_5);
 
   my $desc_6 = 'Assembly exceptions only have mappings for "GRC_primary_assembly"';
   my $sql_6  = q/
@@ -121,7 +130,7 @@ sub tests {
       external_db e ON daf.external_db_id = e.external_db_id
     WHERE ax.exc_type <> 'PAR' AND a.logic_name = 'alt_seq_mapping' AND e.db_name <> 'GRC_primary_assembly'
   /;
-  is_rowcount_zero($dba, $sql_6, $desc_6);
+  is_rows_zero($dba, $sql_6, $desc_6);
 }
 
 1;

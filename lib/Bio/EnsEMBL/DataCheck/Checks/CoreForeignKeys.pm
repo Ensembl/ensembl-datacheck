@@ -23,11 +23,9 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
-
-use Bio::EnsEMBL::DataCheck::Utils::DBUtils
-  qw/ok_foreignkeys/;
   
 use Bio::EnsEMBL::DataCheck::Utils::TableSets
   qw/get_tables_with_analysis_id get_object_xref_tables get_core_foreign_keys/;
@@ -46,7 +44,7 @@ sub tests {
 
   while ( my ( $table, $keys_list ) = each %{ get_core_foreign_keys() } ) {
     for my $keys ( @{$keys_list} ) {
-      ok_foreignkeys( $dba, $table, $keys->{col1}, $keys->{table2},
+      fk( $dba, $table, $keys->{col1}, $keys->{table2},
                       $keys->{col2}, $keys->{both_ways},
                       $keys->{constraint} );
     }

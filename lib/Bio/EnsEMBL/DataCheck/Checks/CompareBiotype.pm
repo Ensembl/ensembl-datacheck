@@ -23,10 +23,9 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::CompareDbCheck';
-
-use Bio::EnsEMBL::DataCheck::Utils::DBUtils qw/is_same_counts/;
 
 use constant {
   NAME        => 'CompareBiotype',
@@ -35,18 +34,15 @@ use constant {
   DB_TYPES    => ['core'],
   TABLES      => ['gene'],
   GROUPS      => ['handover'],
+  PER_DB      => 1,
 };
 
 sub tests {
   my ($self) = @_;
-  my $dba  = $self->dba;
-  my $dba2 = $self->compare_dba;
 
   my $desc_1 = 'Consistent gene counts';
-  my $sql_1  = q/
-    SELECT biotype, COUNT(*) FROM gene GROUP BY biotype
-  /;
-  is_same_counts($dba, $dba2, $sql_1, 0.75, $desc_1);
+  my $sql_1  = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
+  row_subtotals($self->dba, $self->second_dba, $sql_1, 0.75, $desc_1);
 }
 
 1;

@@ -23,10 +23,10 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
-use Bio::EnsEMBL::DataCheck::Utils::DBUtils qw/is_query/;
 
 use constant {
   NAME           => 'XrefTypes',
@@ -35,15 +35,15 @@ use constant {
   TABLES         => ['external_db', 'object_xref', 'xref'],
   GROUPS         => ['handover'],
   DATACHECK_TYPE => 'advisory',
-  PER_SPECIES    => 1,
+  PER_DB         => 1,
 };
 
 sub tests {
   my ($self) = @_;
-  my $dba = $self->dba;
 
-  my $desc_1 = 'No xrefs are associated with multiple object types';
-  my $sql_1  = q/
+  my $desc = 'No xrefs are associated with multiple object types';
+  my $diag = 'Xrefs are associated with multiple object types';
+  my $sql  = q/
     SELECT db_name FROM
       external_db INNER JOIN
       xref USING (external_db_id) INNER JOIN
@@ -52,12 +52,7 @@ sub tests {
     HAVING COUNT(DISTINCT ensembl_object_type) > 1
   /;
 
-  my $db_names = $dba->dbc->sql_helper->execute_simple(-SQL => $sql_1);
-  is(@$db_names, 0, $desc_1);
-  
-  foreach (@$db_names) {
-    diag("$_ xrefs are associated with multiple object types");
-  }
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 
 1;

@@ -23,10 +23,9 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
-
-use Bio::EnsEMBL::DataCheck::Utils::DBUtils qw/is_query/;
 
 use constant {
   NAME        => 'SequenceLevel',
@@ -38,29 +37,26 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $dba = $self->dba;
+  my $species_id = $self->dba->species_id;
 
   my $desc_1 = 'Contig coord_systems have non-null versions';
   my $sql_1  = q/
     SELECT COUNT(*) FROM coord_system
     WHERE name = 'contig' AND version is not NULL
   /;
-  is_query($dba, 0, $sql_1, $desc_1);
+  is_rows_zero($self->dba, $sql_1, $desc_1);
 
   my $desc_2 = 'Coordinate systems with sequence have sequence_level attribute';
-  my $sql_2  = q/
+  my $diag_2 = 'Coordinate system has seq_regions with sequence but no sequence_level attribute';
+  my $sql_2  = qq/
     SELECT DISTINCT cs.name FROM
       coord_system cs INNER JOIN
       seq_region s USING (coord_system_id) INNER JOIN
       dna d USING (seq_region_id) 
     WHERE cs.attrib NOT RLIKE 'sequence_level'
+    AND cs.species_id = $species_id
   /;
-  my $coord_systems = $dba->dbc->sql_helper->execute_simple(-SQL => $sql_2);
-  is(@$coord_systems, 0, $desc_2);
-  
-  foreach (@$coord_systems) {
-    diag("Coordinate system $_ has seq_regions with sequence but no sequence_level attribute");
-  }
+  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
 }
 
 1;

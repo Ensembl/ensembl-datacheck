@@ -23,10 +23,9 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
-
-use Bio::EnsEMBL::DataCheck::Utils::DBUtils qw/get_species_ids is_rowcount_zero/;
 
 use constant {
   NAME        => 'AssemblyMapping',
@@ -38,43 +37,28 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $dba = $self->dba;
-  my $helper = $dba->dbc->sql_helper;
+
+  my $csa = $self->dba->get_adaptor("CoordSystem");
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+  my $mappings = $mca->list_value_by_key('assembly.mapping');
 
   my $assembly_pattern = qr/([^:]+)(:(.+))?/;
-  my $default_version  = 'NONE';
 
-  my $mappings_sql  = q/
-    SELECT meta_value FROM meta
-    WHERE meta_key = 'assembly.mapping' AND meta_value IS NOT NULL AND meta_value <> ''
-  /;
-  my $mappings = $helper->execute_simple(-SQL => $mappings_sql);
-
-  my $coord_systems_sql  = qq/
-    SELECT name, IFNULL(version,'$default_version') FROM coord_system
-  /;
-  my $coord_systems = $helper->execute_into_hash(-SQL => $coord_systems_sql);
-
-  my $desc_1 = 'No null or empty assembly.mapping values';
-  my $sql_1  = q/
-    SELECT COUNT(*) FROM meta
-    WHERE meta_key = 'assembly.mapping' AND (meta_value IS NULL OR meta_value = '')
-  /;
-  is_rowcount_zero($dba, $sql_1, $desc_1);
-
+  my $desc_1 = 'assembly.mapping defined and not an empty string';
   my $desc_2 = 'assembly.mapping element matches expected pattern';
   my $desc_3 = 'assembly.mapping element has valid coordinate system';
-  my $desc_4 = 'assembly.mapping element matches coordinate system version';
-  foreach my $mapping (@$mappings) {
-    foreach my $map_element (split(/[|#]/, $mapping)) {
-      my ($name, undef, $version) = $map_element =~ $assembly_pattern;
-      $version ||= $default_version;
 
+  foreach my $mapping (@$mappings) {
+    ok(defined $mapping && $mapping ne '', $desc_1);
+
+    foreach my $map_element (split(/[|#]/, $mapping)) {
       like($map_element, $assembly_pattern, $desc_2);
-      ok(exists $$coord_systems{$name}, $desc_3);
-      if (exists $$coord_systems{$name}) {
-        is($$coord_systems{$name}, $version, $desc_4);
-      }
+
+      my ($name, undef, $version) = $map_element =~ $assembly_pattern;
+
+      my $cs = $csa->fetch_by_name($name, $version);
+
+      ok(defined $cs, $desc_3);
     }
   }
 }
