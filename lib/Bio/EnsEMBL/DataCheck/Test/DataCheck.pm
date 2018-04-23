@@ -223,8 +223,6 @@ will be provided in a diagnostic message.
 
 =cut
 
-# flip logic, assume first dbc is always primary or new...
-
 sub row_totals {
   my ( $dbc1, $dbc2, $sql, $min_proportion, $name ) = @_;
   $min_proportion = 1 if ! defined $min_proportion;
