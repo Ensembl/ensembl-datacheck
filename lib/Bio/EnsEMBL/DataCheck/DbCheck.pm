@@ -106,7 +106,7 @@ around BUILDARGS => sub {
 };
 
 before 'run' => sub {
-  my ($self) = @_;
+  my $self = shift;
 
   if (!defined $self->dba) {
     die "DBAdaptor must be set as 'dba' attribute";
@@ -114,7 +114,7 @@ before 'run' => sub {
 };
 
 after 'run' => sub {
-  my ($self) = @_;
+  my $self = shift;
 
   $self->dba->dbc && $self->dba->dbc->disconnect_if_idle();
 };
@@ -225,21 +225,6 @@ sub table_dates {
   /;
 
   return $helper->execute_into_hash(-SQL =>$sql);
-}
-
-sub sql_count {
-  my $self = shift;
-  my ($dbc, $sql, $params) = @_;
-
-  $dbc = $dbc->dbc() if $dbc->can('dbc');
-
-  if ( index( uc($sql), "SELECT COUNT" ) != -1 &&
-       index( uc($sql), "GROUP BY" ) == -1 )
-  {
-    return $dbc->sql_helper()->execute_single_result( -SQL => $sql, -PARAMS => $params );
-  } else {
-    return scalar @{ $dbc->sql_helper()->execute( -SQL => $sql, -PARAMS => $params ) };
-  }
 }
 
 sub skip_tests {
