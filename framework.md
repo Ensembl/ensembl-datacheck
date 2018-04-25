@@ -21,8 +21,8 @@ Instances of this test are invoked by `run` which uses `Test::More` to return te
 
 After the test runs, the database adaptor is disconnected to avoid connection leaks.
 
-###`Bio::EnsEMBL::DataCheck::CompareDbCheck`
-`CompareDbCheck` is an extension of `DbCheck` that supports tests that take two DBAs for comparison (e.g. old and new databases, or master and slave databases). 
+###`Bio::EnsEMBL::DataCheck::DbDbCheck`
+`DbDbCheck` is an extension of `DbCheck` that supports tests that take two DBAs for comparison (e.g. old and new databases, or master and slave databases). 
 
 ###`Bio::EnsEMBL::DataCheck::Manager`
 The `Manager` module can be used to retrieve a set of datachecks, and optionally run them in a test harness. The history of datachecks' pass/fail status can be read from and written to a file, in order for datachecks to determine if the need to be run.

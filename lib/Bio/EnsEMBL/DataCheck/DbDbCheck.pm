@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =head1 NAME
-Bio::EnsEMBL::DataCheck::CompareDbCheck
+Bio::EnsEMBL::DataCheck::DbDbCheck
 
 =head1 DESCRIPTION
 Test that accepts two database adaptors for comparison
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::CompareDbCheck;
+package Bio::EnsEMBL::DataCheck::DbDbCheck;
 
 use strict;
 use warnings;
@@ -42,7 +42,7 @@ has 'second_dba' => (
 );
 
 before 'run' => sub {
-  my ($self) = @_;
+  my $self = shift;
 
   if (!defined $self->second_dba) {
     die "DBAdaptor must be set as 'second_dba' attribute";
@@ -50,7 +50,7 @@ before 'run' => sub {
 };
 
 after 'run' => sub {
-  my ($self) = @_;
+  my $self = shift;
 
   $self->second_dba->dbc && $self->second_dba->dbc->disconnect_if_idle();
 };

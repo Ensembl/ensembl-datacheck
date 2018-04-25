@@ -15,18 +15,12 @@
 use strict;
 use warnings;
 
-use Bio::EnsEMBL::DataCheck::CompareDbCheck;
+use Bio::EnsEMBL::DataCheck::DbDbCheck;
 use Test::More;
 
-# Note that you cannot, by design, create a BaseCheck object; datachecks
-# must inherit from it and define mandatory, read-only parameters that
-# are specific to that particular datacheck. So there's a limited amount
-# of testing that we can do on the base class, the functionality is
-# tested on a subclass.
-
-my $module = 'Bio::EnsEMBL::DataCheck::CompareDbCheck';
+my $module = 'Bio::EnsEMBL::DataCheck::DbDbCheck';
 
 diag('Attributes');
-can_ok($module, qw(compare_dba));
+can_ok($module, qw(second_dba));
 
 done_testing();

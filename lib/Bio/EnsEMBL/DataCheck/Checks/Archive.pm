@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -41,7 +42,7 @@ sub skip_tests {
 
   my $sql = 'SELECT COUNT(*) FROM mapping_session';
 
-  if (! $self->sql_count( $self->dba, $sql ) ) {
+  if (! sql_count($self->dba, $sql) ) {
     return (1, 'No stable ID mappings.');
   }
 }

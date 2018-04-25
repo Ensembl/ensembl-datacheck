@@ -25,6 +25,7 @@ use feature 'say';
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -47,7 +48,7 @@ sub skip_tests {
     WHERE cs.name = 'lrg'
   /;
 
-  if (! $self->sql_count( $self->dba, $sql ) ) {
+  if (! sql_count($self->dba, $sql) ) {
     return (1, 'No LRG regions.');
   }
 }

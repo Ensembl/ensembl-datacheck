@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -43,7 +44,7 @@ sub skip_tests {
 
   my $sql = 'SELECT COUNT(*) FROM assembly_exception';
 
-  if (! $self->sql_count( $self->dba, $sql ) ) {
+  if (! sql_count($self->dba, $sql) ) {
     return (1, 'No assembly exceptions.');
   }
 }
@@ -78,7 +79,7 @@ sub tests {
       attrib_type USING (attrib_type_id)
     WHERE code = "non_ref"
   /;
-  if ($self->sql_count( $dba, $sql_3a )) {
+  if (sql_count($dba, $sql_3a)) {
     is_rows_nonzero($dba, $sql_3b, $desc_3);
   }
 

@@ -40,7 +40,7 @@ GetOptions(
 );
 
 $class = 'DbCheck' unless defined $class;
-die "class '$class' not recognised" unless $class =~ /^BaseCheck|DbCheck|CompareDbCheck$/;
+die "class '$class' not recognised" unless $class =~ /^BaseCheck|DbCheck|DbDbCheck$/;
 die 'name required' unless defined $name;
 die 'description required' unless defined $description;
 

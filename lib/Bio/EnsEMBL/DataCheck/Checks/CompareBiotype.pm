@@ -25,7 +25,7 @@ use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
-extends 'Bio::EnsEMBL::DataCheck::CompareDbCheck';
+extends 'Bio::EnsEMBL::DataCheck::DbDbCheck';
 
 use constant {
   NAME        => 'CompareBiotype',
