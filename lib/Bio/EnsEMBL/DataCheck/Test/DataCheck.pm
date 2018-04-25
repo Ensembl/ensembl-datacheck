@@ -89,9 +89,9 @@ out; it is optional, but we B<very> strongly encourage its use.
 sub is_rows {
   my ( $dbc, $sql, $expected, $name ) = @_;
 
-  my ( $count, undef ) = _query( $dbc, $sql );
-
   my $tb = $CLASS->builder;
+
+  my ( $count, undef ) = _query( $dbc, $sql );
 
   return $tb->is_eq( $count, $expected, $name );
 }
@@ -115,9 +115,9 @@ out; it is optional, but we B<very> strongly encourage its use.
 sub cmp_rows {
   my ( $dbc, $sql, $operator, $expected, $name ) = @_;
 
-  my ( $count, undef ) = _query( $dbc, $sql );
-
   my $tb = $CLASS->builder;
+
+  my ( $count, undef ) = _query( $dbc, $sql );
 
   return $tb->cmp_ok( $count, $operator, $expected, $name );
 }
@@ -143,9 +143,9 @@ out; it is optional, but we B<very> strongly encourage its use.
 sub is_rows_zero {
   my ( $dbc, $sql, $name, $diag_msg ) = @_;
 
-  my ( $count, $rows ) = _query( $dbc, $sql );
-
   my $tb = $CLASS->builder;
+
+  my ( $count, $rows ) = _query( $dbc, $sql );
 
   if (defined $rows) {
     $diag_msg ||= 'Unexpected data';
@@ -178,9 +178,9 @@ Convenience method, equivalent to cmp_rows($dbc, $sql, '>', 0, $test_name).
 sub is_rows_nonzero {
   my ( $dbc, $sql, $name ) = @_;
 
-  my ( $count, undef ) = _query( $dbc, $sql );
-
   my $tb = $CLASS->builder;
+
+  my ( $count, undef ) = _query( $dbc, $sql );
 
   return $tb->cmp_ok( $count, '>', 0, $name );
 }
@@ -225,18 +225,22 @@ will be provided in a diagnostic message.
 
 sub row_totals {
   my ( $dbc1, $dbc2, $sql, $min_proportion, $name ) = @_;
+
+  my $tb = $CLASS->builder;
+
   $min_proportion = 1 if ! defined $min_proportion;
 
   my ( $count1, undef ) = _query( $dbc1, $sql );
   my ( $count2, undef ) = _query( $dbc2, $sql );
-
-  my $tb = $CLASS->builder;
 
   return $tb->cmp_ok( $count2 * $min_proportion, '<=', $count1, $name );
 }
 
 sub row_subtotals {
   my ( $dbc1, $dbc2, $sql, $min_proportion, $name ) = @_;
+
+  my $tb = $CLASS->builder;
+
   $min_proportion = 1 if ! defined $min_proportion;
 
   unless ($sql =~ /^SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/) {
@@ -245,8 +249,6 @@ sub row_subtotals {
 
   my ( undef, $rows1 ) = _query( $dbc1, $sql );
   my ( undef, $rows2 ) = _query( $dbc2, $sql );
-
-  my $tb = $CLASS->builder;
 
   my %subtotals1 = map { $_->[0] => $_->[1] } @$rows1;
   my %subtotals2 = map { $_->[0] => $_->[1] } @$rows2;
@@ -272,68 +274,52 @@ sub row_subtotals {
   return $tb->ok( $ok, $name );
 }
 
+=head2 Testing Referential Integrity 
 
-=head2 fk
+=item B<fk>
 
-  Arg [1]    : Bio::EnsEMBL::DBSQL::DBConnection or DBAdaptor
-  Arg [2]    : "from" table
-  Arg [3]    : "from" column
-  Arg [4]    : "to" table
-  Arg [5]    : "to" column
-  Arg [6]    : (optional) set to 1 to check in both directions
-  Arg [7]    : (optional) SQL constraint
-  Arg [8]    : (optional) name for test
-  Example    : fk($dba,"gene","canonical_transcript_id",
-                 "transcript","transcript_id",0,"",
-                 "Check if canonical transcripts exist");
-  Description: Check for foreign keys between 2 tables 
-  Returntype : none
-  Exceptions : none
-  Caller     : general
-  Status     : Stable
+Referential integrity is not enforced by the MyISAM tables that we
+currently use. InnoDB might come in to play in the future, but for
+now it needs to be checked.
+
+  fk($dbc, $table1, $col1, $table2, $col2, $constraint, $test_name);
+
+For the database connection C<$dbc> this checks that every instance of
+C<$table1.$col1> exists in C<$table2.$col2>, i.e. there are no "orphan"
+rows in C<$table1>. Note that the reciprocal is not done automatically;
+if you also want to check that every instance of C<$table2.$col2> exists
+in C<$table1.$col1>, you'll need to call the function again.
+
+An optional C<$constraint> can be provided to restrict the rows that
+are checked.
+
+C<$test_name> is a very short description of the test that will be printed
+out; if not provided, a descriptive name will be generated.
 
 =cut
 
 sub fk {
-  my ( $dba, $table1, $col1, $table2, $col2, $both_ways, $constraint, $name ) =
-    @_;
+  my ( $dbc, $table1, $col1, $table2, $col2, $constraint, $name) =  @_;
 
-  $col2 ||= $col1;
-  $both_ways ||= 0;
-  my $sql_left =
+  my $tb = $CLASS->builder;
+
+  $col2 = $col1 unless defined $col2;
+  $name = "All $table1.$col1 rows linked to $table2.$col2 rows" unless defined $name;
+
+  my $sql =
     qq/SELECT COUNT(*) FROM $table1 
     LEFT JOIN $table2 ON $table1.$col1 = $table2.$col2 
-    WHERE $table2.$col2 IS NULL/;
+    WHERE $table1.$col1 IS NOT NULL AND $table2.$col2 IS NULL/;
+  $sql .= " AND $constraint" if $constraint;
 
-  if ($constraint) {
-    $sql_left .= " AND $constraint";
+  my ( $count, undef ) = _query( $dbc, $sql );
+
+  if ( $count > 0 ) {
+    my $diag_msg = "Broken referential integrity found with SQL: $sql";
+    $tb->diag( $diag_msg );
   }
 
-  rows_zero( $dba,
-                    $sql_left, (
-                      $name ||
-"Checking for values in ${table1}.${col1} not found in ${table2}.${col2}" ) );
-
-  if ($both_ways) {
-
-    my $sql_right =
-      qq/SELECT COUNT(*) FROM $table2 
-      LEFT JOIN $table1 
-      ON $table2.$col2 = $table1.$col1 
-      WHERE $table1.$col1 IS NULL/;
-
-    if ($constraint) {
-      $sql_right .= " AND $constraint";
-    }
-
-    rows_zero( $dba,
-                      $sql_right, (
-                        $name ||
-"Checking for values in ${table2}.${col2} not found in ${table1}.${col1}" ) );
-
-  }
-
-  return;
-} ## end sub fk
+  return $tb->is_eq( $count, 0, $name );
+}
 
 1;
