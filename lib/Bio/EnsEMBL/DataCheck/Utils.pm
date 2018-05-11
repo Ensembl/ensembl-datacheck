@@ -34,7 +34,6 @@ our @EXPORT_OK = qw( repo_location sql_count );
 use File::Spec::Functions qw/catdir splitdir/;
 
 sub repo_location {
-  my $self = shift;
   my ($repo_name) = @_;
 
   foreach my $location (@INC) {
@@ -51,7 +50,6 @@ sub repo_location {
 }
 
 sub sql_count {
-  my $self = shift;
   my ($dbc, $sql, $params) = @_;
 
   $dbc = $dbc->dbc() if $dbc->can('dbc');
