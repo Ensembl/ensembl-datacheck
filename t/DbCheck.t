@@ -81,16 +81,18 @@ subtest 'Minimal DbCheck with passing tests', sub {
   # is a bit confusing. To simulate a proper test of the tests, need to reset
   # the Test::More framework.
   Test::More->builder->reset();
-  my $output = $dbcheck->run;
+  my $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($result, 0, 'test passes');
 
   my $started = $dbcheck->_started;
   sleep(2);
 
-  like($output, qr/# Subtest\: $name/m, 'tests ran as subtests');
-  like($output, qr/^\s+1\.\.2/m,         '2 subtests ran successfully');
-  like($output, qr/^\s+ok 1 - $name/m,  'test ran successfully');
-  like($output, qr/^\s+1\.\.1/m,         'test ran with a plan');
+  like($dbcheck->output, qr/# Subtest\: $name/m, 'tests ran as subtests');
+  like($dbcheck->output, qr/^\s+1\.\.2/m,         '2 subtests ran successfully');
+  like($dbcheck->output, qr/^\s+ok 1 - $name/m,  'test ran successfully');
+  like($dbcheck->output, qr/^\s+1\.\.1/m,         'test ran with a plan');
 
   like($dbcheck->_started,  qr/^\d+$/, '_started attribute has numeric value');
   like($dbcheck->_finished, qr/^\d+$/, '_finished attribute has numeric value');
@@ -108,8 +110,10 @@ subtest 'Minimal DbCheck with passing tests', sub {
   is($skip_reason, 'Database tables not updated since last run', 'Correct skip reason');
 
   Test::More->builder->reset();
-  $output = $dbcheck->run;
+  $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($result, 0, 'skipped test passes');
 
   cmp_ok($dbcheck->_started, '>', $started, '_started attribute changed when datacheck skipped');
   is($dbcheck->_finished,    undef,         '_finished attribute undefined when datacheck skipped');
@@ -128,16 +132,18 @@ subtest 'DbCheck with failing test', sub {
   # is a bit confusing. To simulate a proper test of the tests, need to reset
   # the Test::More framework.
   Test::More->builder->reset();
-  my $output = $dbcheck->run;
+  my $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($result, 1, 'test fails');
 
   my ($started, $finished) = ($dbcheck->_started, $dbcheck->_finished);
   sleep(2);
 
-  like($output, qr/# Subtest\: $name/m,    'tests ran as subtests');
-  like($output, qr/^\s+not ok 1/m,         '1 subtest failed');
-  like($output, qr/^\s+not ok 1 - $name/m, 'test failed');
-  like($output, qr/^\s+1\.\.1/m,           'test ran with a plan');
+  like($dbcheck->output, qr/# Subtest\: $name/m,    'tests ran as subtests');
+  like($dbcheck->output, qr/^\s+not ok 1/m,         '1 subtest failed');
+  like($dbcheck->output, qr/^\s+not ok 1 - $name/m, 'test failed');
+  like($dbcheck->output, qr/^\s+1\.\.1/m,           'test ran with a plan');
 
   like($dbcheck->_started,  qr/^\d+$/, '_started attribute has numeric value');
   like($dbcheck->_finished, qr/^\d+$/, '_finished attribute has numeric value');
@@ -150,13 +156,15 @@ subtest 'DbCheck with failing test', sub {
   is($dbcheck->skip_datacheck(), undef, 'skip_datacheck method undefined');
 
   Test::More->builder->reset();
-  $output = $dbcheck->run;
+  $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
 
-  like($output, qr/# Subtest\: $name/m,    'tests ran as subtests');
-  like($output, qr/^\s+not ok 1/m,         '1 subtest failed');
-  like($output, qr/^\s+not ok 1 - $name/m, 'test failed');
-  like($output, qr/^\s+1\.\.1/m,           'test ran with a plan');
+  is($result, 1, 'test fails');
+
+  like($dbcheck->output, qr/# Subtest\: $name/m,    'tests ran as subtests');
+  like($dbcheck->output, qr/^\s+not ok 1/m,         '1 subtest failed');
+  like($dbcheck->output, qr/^\s+not ok 1 - $name/m, 'test failed');
+  like($dbcheck->output, qr/^\s+1\.\.1/m,           'test ran with a plan');
 
   cmp_ok($dbcheck->_started,  '>', $started,  '_started attribute changed when failed datacheck re-run');
   cmp_ok($dbcheck->_finished, '>', $finished, '_finished attribute changed when failed datacheck re-run');
@@ -199,7 +207,7 @@ subtest 'DbCheck with db_type and tables', sub {
   # is a bit confusing. To simulate a proper test of the tests, need to reset
   # the Test::More framework.
   Test::More->builder->reset();
-  my $output = $dbcheck->run;
+  my $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
 
   sleep(2);
@@ -214,7 +222,7 @@ subtest 'DbCheck with db_type and tables', sub {
   is($skip, 1, 'History used to skip datacheck after no table updates');
 
   Test::More->builder->reset();
-  $output = $dbcheck->run;
+  $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
 
   sleep(2);
@@ -227,7 +235,7 @@ subtest 'DbCheck with db_type and tables', sub {
   is($skip, 1, 'History used to skip datacheck after irrelevant table update');
 
   Test::More->builder->reset();
-  $output = $dbcheck->run;
+  $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
 
   my $started = $dbcheck->_started;
@@ -241,7 +249,7 @@ subtest 'DbCheck with db_type and tables', sub {
   is($skip, undef, 'History not used to skip datacheck after relevant table update');
 
   Test::More->builder->reset();
-  $output = $dbcheck->run;
+  $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
 
   cmp_ok($dbcheck->_started, '>', $started, '_started attribute changed after relevant table update');
@@ -294,7 +302,7 @@ subtest 'DbCheck with and without dba attribute', sub {
   # is a bit confusing. To simulate a proper test of the tests, need to reset
   # the Test::More framework.
   Test::More->builder->reset();
-  my $output = $dbcheck->run;
+  my $result = $dbcheck->run;
   diag("Test enumeration reset by the datacheck object ($name)");
 
   is($dbcheck->_passed, 1, '_passed attribute is true');

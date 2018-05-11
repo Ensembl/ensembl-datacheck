@@ -33,14 +33,14 @@ use BaseCheck_3;
 
 my $module = 'Bio::EnsEMBL::DataCheck::BaseCheck';
 
-diag('Fixed attributes');
-can_ok($module, qw(name description groups datacheck_type));
+diag('External attributes');
+can_ok($module, qw(name description groups datacheck_type output));
 
 diag('Internal attributes');
 can_ok($module, qw(_started _finished _passed));
 
 diag('Methods');
-can_ok($module, qw(skip_datacheck tests run));
+can_ok($module, qw(skip_datacheck run tests run_tests));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
@@ -64,15 +64,17 @@ subtest 'Minimal DataCheck with passing tests', sub {
   # is a bit confusing. To simulate a proper test of the tests, need to reset
   # the Test::More framework.
   Test::More->builder->reset();
-  my $output = $basecheck->run;
+  my $result = $basecheck->run;
 
   my $name = $basecheck->name;
   diag("Test enumeration reset by the datacheck object ($name)");
 
-  like($output, qr/# Subtest\: $name/m, 'tests ran as subtests');
-  like($output, qr/^\s+1\.\.2/m,        '2 subtests ran successfully');
-  like($output, qr/^\s+ok 1 - $name/m,  'test ran successfully');
-  like($output, qr/^\s+1\.\.1/m,        'test ran with a plan');
+  is($result, 0, 'test passes');
+
+  like($basecheck->output, qr/# Subtest\: $name/m, 'tests ran as subtests');
+  like($basecheck->output, qr/^\s+1\.\.2/m,        '2 subtests ran successfully');
+  like($basecheck->output, qr/^\s+ok 1 - $name/m,  'test ran successfully');
+  like($basecheck->output, qr/^\s+1\.\.1/m,        'test ran with a plan');
 
   like($basecheck->_started,  qr/^\d+$/, '_started attribute has numeric value');
   like($basecheck->_finished, qr/^\d+$/, '_finished attribute has numeric value');
@@ -92,15 +94,17 @@ subtest 'DataCheck with non-default attributes and failing test', sub {
   # is a bit confusing. To simulate a proper test of the tests, need to reset
   # the Test::More framework.
   Test::More->builder->reset();
-  my $output = $basecheck->run;
+  my $result = $basecheck->run;
 
   my $name = $basecheck->name;
   diag("Test enumeration reset by the datacheck object ($name)");
 
-  like($output, qr/# Subtest\: $name/m,    'tests ran as subtests');
-  like($output, qr/^\s+not ok 1/m,         '1 subtest failed');
-  like($output, qr/^\s+not ok 1 - $name/m, 'test failed');
-  like($output, qr/^\s+1\.\.1/m,           'test ran with a plan');
+  is($result, 1, 'test fails');
+
+  like($basecheck->output, qr/# Subtest\: $name/m,    'tests ran as subtests');
+  like($basecheck->output, qr/^\s+not ok 1/m,         '1 subtest failed');
+  like($basecheck->output, qr/^\s+not ok 1 - $name/m, 'test failed');
+  like($basecheck->output, qr/^\s+1\.\.1/m,           'test ran with a plan');
 
   like($basecheck->_started,  qr/^\d+$/, '_started attribute has numeric value');
   like($basecheck->_finished, qr/^\d+$/, '_finished attribute has numeric value');
@@ -115,15 +119,17 @@ subtest 'DataCheck with skipping test', sub {
   # is a bit confusing. To simulate a proper test of the tests, need to reset
   # the Test::More framework.
   Test::More->builder->reset();
-  my $output = $basecheck->run;
+  my $result = $basecheck->run;
 
   my $name = $basecheck->name;
   diag("Test enumeration reset by the datacheck object ($name)");
 
-  like($output, qr/# Subtest\: $name/m,   'tests ran as subtests');
-  like($output, qr/\s+1\.\.0 # SKIP .+/m, 'All subtests skipped');
-  like($output, qr/^\s+ok 1 # skip .+/m,  'test skipped');
-  like($output, qr/^\s+1\.\.1/m,          'test ran with a plan');
+  is($result, 0, 'test passes');
+
+  like($basecheck->output, qr/# Subtest\: $name/m,   'tests ran as subtests');
+  like($basecheck->output, qr/\s+1\.\.0 # SKIP .+/m, 'All subtests skipped');
+  like($basecheck->output, qr/^\s+ok 1 # skip .+/m,  'test skipped');
+  like($basecheck->output, qr/^\s+1\.\.1/m,          'test ran with a plan');
 
   like($basecheck->_started, qr/^\d+$/, '_started attribute has numeric value');
   is($basecheck->_finished,  undef,     '_finished attribute is undefined');

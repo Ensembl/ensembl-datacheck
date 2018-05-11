@@ -77,6 +77,14 @@ has 'datacheck_type' => (
   default => 'critical'
 );
 
+=head2 output
+  Description: Once a datacheck has been run, TAP-formatted results are stored.
+=cut
+has 'output' => (
+  is      => 'rw',
+  isa     => 'Str | Undef',
+);
+
 has '_started' => (
   is  => 'rw',
   isa => 'Int | Undef',
@@ -156,6 +164,10 @@ sub run {
   # merge results with subsequent tests when run in a test harness.
   Test::More->builder->reset();
 
+  # Store the output in the datacheck itself; this makes it easier to
+  # get at later, without having to worry about if/where it's saved.
+  $self->output($output);
+
   # Because all the tests associated with this datacheck are run as
   # subtests, there will always be a single test result in the TAP output.
   # It will be at the same level of indentation as the 'Subtest' header.
@@ -163,7 +175,8 @@ sub run {
   my $passed = $output =~ /^${indent}ok 1/m;
   $self->_passed($passed || 0);
 
-  return $output;
+  # Return value indicates failure, like a program exit code, i.e. 0 is fine.
+  return $self->_passed ? 0 : 1;
 }
 
 1;

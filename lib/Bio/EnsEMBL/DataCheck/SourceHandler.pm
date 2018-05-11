@@ -42,7 +42,9 @@ sub can_handle {
 sub make_iterator {
   my ($class, $source) = @_;
 
-  return TAP::Parser::Iterator::Array->new([split("\n", $source->raw->run)]);
+  $source->raw->run();
+
+  return TAP::Parser::Iterator::Array->new([split("\n", $source->raw->output)]);
 }
 
 1;
