@@ -34,14 +34,15 @@ my $testdb   = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
 my $dba      = $testdb->get_DBAdaptor($db_type);
 
 my $datacheck_dir = "$FindBin::Bin/TestChecks";
+my $index_file    = "$FindBin::Bin/index.json";
 
 my $module = 'Bio::EnsEMBL::DataCheck::Manager';
 
 diag('Attributes');
-can_ok($module, qw(datacheck_dir names patterns groups datacheck_types history_file));
+can_ok($module, qw(datacheck_dir index_file names patterns groups datacheck_types history_file output_file));
 
 diag('Methods');
-can_ok($module, qw(run_checks load_checks filter read_history write_history));
+can_ok($module, qw(load_checks filter run_checks read_index write_index read_history write_history));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
@@ -51,17 +52,35 @@ can_ok($module, qw(run_checks load_checks filter read_history write_history));
 subtest 'Default attributes', sub {
   my $manager = $module->new();
 
-  like($manager->datacheck_dir, qr!lib/Bio/EnsEMBL/DataCheck/Checks!, 'Default datacheck_dir correct');
-  is_deeply($manager->names,  [], 'Default names correct (empty list)');
-  is_deeply($manager->patterns,        [], 'Default patterns correct (empty list)');
-  is_deeply($manager->groups, [], 'Default groups correct (empty list)');
+  like($manager->datacheck_dir, qr!lib/Bio/EnsEMBL/DataCheck/Checks!,     'Default datacheck_dir correct');
+  like($manager->index_file,    qr!lib/Bio/EnsEMBL/DataCheck/index.json!, 'Default index_file correct');
+  is($manager->history_file,    undef, 'Default history_file correct (undefined)');
+  is($manager->output_file,     undef, 'Default output_file correct (undefined)');
+  is_deeply($manager->names,    [], 'Default names correct (empty list)');
+  is_deeply($manager->patterns, [], 'Default patterns correct (empty list)');
+  is_deeply($manager->groups,   [], 'Default groups correct (empty list)');
   is_deeply($manager->datacheck_types, [], 'Default datacheck_types correct (empty list)');
-  is($manager->history_file,        undef, 'Default history_file correct (undefined)');
+};
+
+subtest 'Datacheck index', sub {
+  my $manager = $module->new();
+  my $index_1 = $manager->read_index();
+
+  my $tmp_index_file = Path::Tiny->tempfile();
+  $manager = $module->new(index_file => "$tmp_index_file");
+  my $index_2 = $manager->write_index();
+
+  is_deeply($index_1, $index_2, 'Index file is up-to-date');
 };
 
 subtest 'TestChecks directory', sub {
-  my $manager = $module->new(datacheck_dir => $datacheck_dir);
+  my $manager = $module->new(
+    datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
+  );
+
   like($manager->datacheck_dir, qr!t/TestChecks!, 'TestChecks datacheck_dir correct');
+  like($manager->index_file,    qr!t/index.json!, 'TestChecks index_file correct');
 
   my $datachecks = $manager->load_checks();
 
@@ -78,6 +97,7 @@ subtest 'Filter names', sub {
   my @names = ('BaseCheck_1', 'BaseCheck_3');
   my $manager = $module->new(
     datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
     names         => \@names,
   );
 
@@ -93,6 +113,7 @@ subtest 'Filter patterns', sub {
   my $pattern = 'BaseCheck';
   my $manager = $module->new(
     datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
     patterns      => [$pattern],
   );
 
@@ -116,6 +137,7 @@ subtest 'Filter groups', sub {
   my @groups = ('skipped');
   my $manager = $module->new(
     datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
     groups        => \@groups,
   );
 
@@ -147,6 +169,7 @@ subtest 'Filter datacheck type', sub {
   my $datacheck_type = 'critical';
   my $manager = $module->new(
     datacheck_dir   => $datacheck_dir,
+    index_file      => $index_file,
     datacheck_types => [$datacheck_type],
   );
 
@@ -186,6 +209,7 @@ subtest 'Read history file (BaseCheck)', sub {
 
   my $manager = $module->new(
     datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
     history_file  => $history_file->stringify,
     names         => ['BaseCheck_1', 'BaseCheck_2', 'BaseCheck_3'],
   );
@@ -214,6 +238,7 @@ subtest 'Write history file (BaseCheck)', sub {
   my $history_file = Path::Tiny->tempfile();
   my $manager = $module->new(
     datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
     patterns      => ['BaseCheck'],
   );
 
@@ -230,7 +255,10 @@ subtest 'Write history file (BaseCheck)', sub {
   sleep(2);
   my $after = time();
 
-  $manager->write_history($datachecks, $history_file->stringify);
+  $manager->history_file($history_file->stringify);
+
+  $manager->write_history($datachecks);
+
   my $json = $history_file->slurp;
   my $history = JSON->new->decode($json);
 
@@ -282,14 +310,15 @@ subtest 'Read and write history file', sub {
 
   # We need to redirect test output to a file, otherwise it gets muddled
   # with the output from this .t file, and confuses the test harness.
-  my $test_output_file = Path::Tiny->tempfile();
+  my $output_file = Path::Tiny->tempfile();
 
   my $manager = $module->new(
-    datacheck_dir    => $datacheck_dir,
-    history_file     => $history_file->stringify,
-    test_output_file => $test_output_file->stringify,
-    overwrite_files  => 0,
-    names            => ['BaseCheck_1', 'BaseCheck_3'],
+    datacheck_dir   => $datacheck_dir,
+    index_file      => $index_file,
+    history_file    => $history_file->stringify,
+    output_file     => $output_file->stringify,
+    overwrite_files => 0,
+    names           => ['BaseCheck_1', 'BaseCheck_3'],
   );
 
   my $datachecks = $manager->load_checks();
@@ -298,11 +327,11 @@ subtest 'Read and write history file', sub {
   }
 
   throws_ok(
-    sub { $manager->write_history($datachecks, $history_file->stringify) },
+    sub { $manager->write_history($datachecks) },
     qr/exists, and will not be overwritten/, 'history_file not overwritten');
 
   $manager->overwrite_files(1);
-  my $history = $manager->write_history($datachecks, $history_file->stringify);
+  my $history = $manager->write_history($datachecks);
 
   # We want to have the same details for BaseCheck_0 and BaseCheck_2,
   # because we have not run those tests. BaseCheck_1 details should now
@@ -317,15 +346,16 @@ subtest 'Read and write history file', sub {
 subtest 'Run datachecks (BaseCheck)', sub {
   # We need to redirect test output to a file, otherwise it gets muddled
   # with the output from this .t file, and confuses the test harness.
-  my $test_output_file = Path::Tiny->tempfile();
+  my $output_file = Path::Tiny->tempfile();
 
   my $before = time();
   sleep(2);
 
   my $manager = $module->new(
-    datacheck_dir    => $datacheck_dir,
-    test_output_file => $test_output_file->stringify,
-    names            => ['BaseCheck_1', 'BaseCheck_3'],
+    datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
+    output_file   => $output_file->stringify,
+    names         => ['BaseCheck_1', 'BaseCheck_3'],
   );
 
   my ($datachecks, $aggregator) = $manager->run_checks();
@@ -345,18 +375,23 @@ subtest 'Run datachecks (BaseCheck)', sub {
 subtest 'Run datachecks (DbCheck)', sub {
   # We need to redirect test output to a file, otherwise it gets muddled
   # with the output from this .t file, and confuses the test harness.
-  my $test_output_file = Path::Tiny->tempfile();
+  my $output_file = Path::Tiny->tempfile();
 
   my $before = time();
   sleep(2);
 
   my $manager = $module->new(
-    datacheck_dir    => $datacheck_dir,
-    test_output_file => $test_output_file->stringify,
-    names            => ['DbCheck_1', 'DbCheck_3'],
+    datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
+    output_file   => $output_file->stringify,
+    names         => ['DbCheck_1', 'DbCheck_3'],
   );
 
-  my ($datachecks, $aggregator) = $manager->run_checks(dba => $dba);
+  my %params = (
+    'Bio::EnsEMBL::DataCheck::DbCheck' => {dba => $dba},
+  );
+
+  my ($datachecks, $aggregator) = $manager->run_checks(\%params);
 
   sleep(2);
   my $after = time();
@@ -371,14 +406,15 @@ subtest 'Run datachecks (DbCheck)', sub {
 };
 
 subtest 'Read and write history file (DbCheck)', sub {
-  my $history_file     = Path::Tiny->tempfile();
-  my $test_output_file = Path::Tiny->tempfile();
+  my $history_file = Path::Tiny->tempfile();
+  my $output_file  = Path::Tiny->tempfile();
 
   my $manager = $module->new(
-    datacheck_dir     => $datacheck_dir,
-    history_file      => $history_file->stringify,
-    test_output_file  => $test_output_file->stringify,
-    patterns          => ['DbCheck'],
+    datacheck_dir => $datacheck_dir,
+    index_file    => $index_file,
+    history_file  => $history_file->stringify,
+    output_file   => $output_file->stringify,
+    patterns      => ['DbCheck'],
   );
 
   my @attributes = sort ('passed', 'started', 'finished');
@@ -386,7 +422,11 @@ subtest 'Read and write history file (DbCheck)', sub {
   my $before = time();
   sleep(2);
 
-  my ($datachecks, undef) = $manager->run_checks(dba => $dba);
+  my %params = (
+    'Bio::EnsEMBL::DataCheck::DbCheck' => {dba => $dba},
+  );
+
+  my ($datachecks, undef) = $manager->run_checks(\%params);
 
   sleep(2);
   my $after = time();
@@ -396,11 +436,9 @@ subtest 'Read and write history file (DbCheck)', sub {
 
   my $dbserver   = $dba->dbc->host . ':' . $dba->dbc->port;
   my $dbname     = $dba->dbc->dbname;
-  my $db_history = $$history{$dbserver}{$dbname}{'all'};
+  my $db_history = $$history{$dbserver}{$dbname}{'1'};
 
   foreach (@$datachecks) {
-    diag($_->name.' => '.$_->_passed);
-    diag($$db_history{$_->name}{passed});
     ok(exists $$db_history{$_->name}, 'Results written for '.$_->name);
 
     my @datacheck_attributes = sort keys %{$$db_history{$_->name}};
@@ -424,13 +462,12 @@ subtest 'Read and write history file (DbCheck)', sub {
   # the Test::More framework.
   Test::More->builder->reset();
 
-  ($datachecks, undef) = $manager->run_checks(dba => $dba);
+  ($datachecks, undef) = $manager->run_checks(\%params);
 
   # Should have 4 skipped checks and one failed one,
   # if the history file was read correctly.
   my ($skipped, $failed) = (0, 0);
   foreach (@$datachecks) {
-    diag($_->name.' => '.$_->_passed);
     $skipped++ if $_->_passed && ! defined $_->_finished;
     $failed++  if ! $_->_passed;
   }

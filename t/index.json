@@ -1,0 +1,63 @@
+{
+   "DbCheck_1" : {
+      "datacheck_type" : "critical",
+      "groups" : [],
+      "name" : "DbCheck_1",
+      "package_name" : "TestChecks::DbCheck_1",
+      "description" : "Passing DbCheck example."
+   },
+   "BaseCheck_1" : {
+      "datacheck_type" : "critical",
+      "groups" : [],
+      "name" : "BaseCheck_1",
+      "package_name" : "TestChecks::BaseCheck_1",
+      "description" : "Passing BaseCheck example."
+   },
+   "BaseCheck_3" : {
+      "datacheck_type" : "critical",
+      "groups" : [
+         "base",
+         "skipped"
+      ],
+      "name" : "BaseCheck_3",
+      "package_name" : "TestChecks::BaseCheck_3",
+      "description" : "Skipping BaseCheck example."
+   },
+   "DbCheck_5" : {
+      "datacheck_type" : "critical",
+      "groups" : [],
+      "name" : "DbCheck_5",
+      "package_name" : "TestChecks::DbCheck_5",
+      "description" : "Skipping DbCheck example."
+   },
+   "DbCheck_2" : {
+      "datacheck_type" : "critical",
+      "groups" : [],
+      "name" : "DbCheck_2",
+      "package_name" : "TestChecks::DbCheck_2",
+      "description" : "Failing DbCheck example."
+   },
+   "DbCheck_3" : {
+      "datacheck_type" : "critical",
+      "groups" : [],
+      "name" : "DbCheck_3",
+      "package_name" : "TestChecks::DbCheck_3",
+      "description" : "Skipping DbCheck example."
+   },
+   "BaseCheck_2" : {
+      "datacheck_type" : "advisory",
+      "groups" : [
+         "base"
+      ],
+      "name" : "BaseCheck_2",
+      "package_name" : "TestChecks::BaseCheck_2",
+      "description" : "Failing BaseCheck example."
+   },
+   "DbCheck_4" : {
+      "datacheck_type" : "critical",
+      "groups" : [],
+      "name" : "DbCheck_4",
+      "package_name" : "TestChecks::DbCheck_4",
+      "description" : "Passing DbCheck example, with table names."
+   }
+}

@@ -55,6 +55,27 @@ sub _datacheck_dir_default {
   return $dir;
 }
 
+=head2 index_file
+  Description: Path to a file with datacheck meta data
+=cut
+has 'index_file' => (
+  is       => 'ro',
+  isa      => 'Str',
+  required => 1,
+  builder  => '_index_file_default',
+);
+
+sub _index_file_default {
+  (my $module_name = __PACKAGE__) =~ s!::!/!g;
+  my $file = $INC{"$module_name.pm"};
+
+  $file =~ s![\w\.]+$!index.json!;
+
+  die "Cannot find index_file: $file" unless -e $file;
+
+  return $file;
+}
+
 =head2 names
   Description: List of datacheck names
 =cut
@@ -99,16 +120,16 @@ has 'history_file' => (
   isa => 'Str | Undef',
 );
 
-=head2 test_output_file
+=head2 output_file
   Description: Path to a file in which to store TAP format output from tests
 =cut
-has 'test_output_file' => (
+has 'output_file' => (
   is  => 'rw',
   isa => 'Str | Undef',
 );
 
 =head2 overwrite_files
-  Description: By default, history_file and test_output_file will be overwritten
+  Description: By default, index_file, history_file and output_file will be overwritten
 =cut
 has 'overwrite_files' => (
   is      => 'rw',
@@ -116,72 +137,43 @@ has 'overwrite_files' => (
   default => 1
 );
 
-sub run_checks {
-  my $self = shift;
-
-  my $datachecks = $self->load_checks(@_);
-
-  # Copy STDOUT to another filehandle
-  open (my $STDOUT_COPY, '>&', STDOUT);
-
-  my $test_output_file = $self->test_output_file;
-  if (defined $test_output_file) {
-    if (-s $test_output_file) {
-      unless ($self->overwrite_files) {
-        die "'$test_output_file' exists, and will not be overwritten";
-      }
-    } else {
-      path($test_output_file)->parent->mkpath;
-    }
-
-    open(STDOUT, '>', $test_output_file);
-  }
-
-  my $harness = TAP::Harness->new( { verbosity => 1 } );
-  my $aggregator = $harness->runtests(map { [ $_, $_->name ] } @$datachecks);
-
-  if (defined $test_output_file) {
-    # Restore STDOUT
-    open(STDOUT, '>&', $STDOUT_COPY);
-  }
-
-  if (defined $self->history_file) {
-    $self->write_history($datachecks, $self->history_file, 1);
-  }
-
-  return ($datachecks, $aggregator);
-}
-
 sub load_checks {
   my $self = shift;
-  my @params = @_;
+  my ($params) = @_;
 
-  my $dir = path($self->datacheck_dir);
-
-  my @datacheck_files = $dir->children( qr/\.pm$/ );
+  my %index = %{ $self->read_index() };
 
   my $filters =
-    scalar(@{$self->names}) ||
-    scalar(@{$self->patterns}) ||
-    scalar(@{$self->groups}) ||
-    scalar(@{$self->datacheck_types});
+    scalar( @{$self->names}           ) ||
+    scalar( @{$self->patterns}        ) ||
+    scalar( @{$self->groups}          ) ||
+    scalar( @{$self->datacheck_types} );
 
   my @datachecks;
 
-  foreach (@datacheck_files) {
-    eval { require $_ };
-    die $@ if $@;
+  foreach my $name (keys %index) {
+    if (!$filters || $self->filter($index{$name})) {
+      my $module = path($self->datacheck_dir, "$name.pm");
 
-    my ($package_name) = $_->slurp =~ /^package\s*([^;]+)/m;
-    my $datacheck = $package_name->new(@params);
+      eval { require $module };
+      die $@ if $@;
 
-    if (!$filters || $self->filter($datacheck)) {
+      my $datacheck = $index{$name}{package_name}->new();
+
+      foreach my $class (keys %{$params}) {
+        if ($datacheck->isa($class)) {
+          foreach my $param (keys $$params{$class}) {
+            $datacheck->$param($$params{$class}{$param});
+          }
+        }
+      }
+
       push @datachecks, $datacheck;
     }
   }
 
   if (defined $self->history_file) {
-    $self->read_history(\@datachecks, $self->history_file);
+    $self->read_history(\@datachecks);
   }
 
   return \@datachecks;
@@ -189,40 +181,137 @@ sub load_checks {
 
 sub filter {
   my $self = shift;
-  my ($datacheck) = @_;
+  my ($meta_data) = @_;
 
-  if (any { $datacheck->name eq $_ } @{$self->names}) {
+  if (any { $$meta_data{name} eq $_ } @{$self->names}) {
     return 1;
   }
 
-  if (any { $datacheck->name =~ /$_/ } @{$self->patterns}) {
+  if (any { $$meta_data{name} =~ /$_/ } @{$self->patterns}) {
     return 1;
   }
 
-  if (any { $datacheck->description =~ /$_/i } @{$self->patterns}) {
+  if (any { $$meta_data{description} =~ /$_/i } @{$self->patterns}) {
     return 1;
   }
 
-  foreach my $group (@{$datacheck->groups}) {
+  foreach my $group ( @{$$meta_data{groups}} ) {
     if (any { $group eq $_ } @{$self->groups}) {
       return 1;
     }
   }
 
-  if (any { $datacheck->datacheck_type eq $_ } @{$self->datacheck_types}) {
+  if (any { $$meta_data{datacheck_type} eq $_ } @{$self->datacheck_types}) {
     return 1;
   }
 }
 
+sub run_checks {
+  my $self = shift;
+  my @params = @_;
+
+  my $datachecks = $self->load_checks(@params);
+
+  # Copy STDOUT to another filehandle
+  open (my $STDOUT_COPY, '>&', STDOUT);
+
+  my $output_file = $self->output_file;
+  if (defined $output_file) {
+    if (-s $output_file) {
+      unless ($self->overwrite_files) {
+        die "'$output_file' exists, and will not be overwritten";
+      }
+    } else {
+      path($output_file)->parent->mkpath;
+    }
+
+    open(STDOUT, '>', $output_file);
+  }
+
+  my $harness = TAP::Harness->new( { verbosity => 1 } );
+  my $aggregator = $harness->runtests(map { [ $_, $_->name ] } @$datachecks);
+
+  if (defined $output_file) {
+    # Restore STDOUT
+    open(STDOUT, '>&', $STDOUT_COPY);
+  }
+
+  if (defined $self->history_file) {
+    $self->write_history($datachecks);
+  }
+
+  return ($datachecks, $aggregator);
+}
+
+sub read_index {
+  my $self = shift;
+
+  my %index = ();
+
+  if (-s $self->index_file) {
+    my $json = path($self->index_file)->slurp;
+    %index = %{ JSON->new->decode($json) };
+  }
+
+  return \%index;
+}
+
+sub write_index {
+  my $self = shift;
+
+  if (!defined $self->index_file) {
+    die "Path to index file not specified";
+  }
+
+  my %index;
+  if (-s $self->index_file) {
+    unless ($self->overwrite_files) {
+      die $self->index_file . " exists, and will not be overwritten";
+    }
+  } else {
+    path($self->index_file)->parent->mkpath;
+  }
+
+  my $dir = path($self->datacheck_dir);
+
+  my @datacheck_files = $dir->children( qr/\.pm$/ );
+
+  foreach (@datacheck_files) {
+    eval { require $_ };
+    die $@ if $@;
+
+    my ($package_name) = $_->slurp =~ /^package\s*([^;]+)/m;
+    my $datacheck = $package_name->new();
+
+    if (exists $index{$datacheck->name}) {
+      die "Datacheck named ".$datacheck->name." already exists in index";
+    }
+
+    $index{$datacheck->name} = {
+      package_name   => $package_name,
+      name           => $datacheck->name,
+      description    => $datacheck->description,
+      groups         => $datacheck->groups,
+      datacheck_type => $datacheck->datacheck_type,
+    };
+  }
+
+  my $json = JSON->new->pretty->encode(\%index);
+  path($self->index_file)->spew($json);
+
+  return \%index;
+}
+
 sub read_history {
   my $self = shift;
-  my ($datachecks, $history_file) = @_;
+  my ($datachecks) = @_;
+  $datachecks = [] unless defined $datachecks;
 
   my %history = ();
 
-  if (-s $history_file) {
+  if (-s $self->history_file) {
     # slurp gets an exclusive lock on the file before reading it.
-    my $json = path($history_file)->slurp;
+    my $json = path($self->history_file)->slurp;
     %history = %{ JSON->new->decode($json) };
 
     foreach (@$datachecks) {
@@ -255,24 +344,25 @@ sub read_history {
 
 sub write_history {
   my $self = shift;
-  my ($datachecks, $history_file) = @_;
+  my ($datachecks) = @_;
+  $datachecks = [] unless defined $datachecks;
 
-  if (!defined $history_file) {
+  if (!defined $self->history_file) {
     die "Path to history file not specified";
   }
 
   my %history;
-  if (-s $history_file) {
+  if (-s $self->history_file) {
     unless ($self->overwrite_files) {
-      die "'$history_file' exists, and will not be overwritten";
+      die $self->history_file . " exists, and will not be overwritten";
     }
 
     # We read the data from file again, which will pick up and thus
     # preserve any changes that have been written by other Managers
     # that finished running after the current Manager instance was created.
-    %history = %{ $self->read_history([], $history_file) };
+    %history = %{ $self->read_history() };
   } else {
-    path($history_file)->parent->mkpath;
+    path($self->history_file)->parent->mkpath;
   }
 
   foreach my $datacheck (@$datachecks) {
@@ -301,7 +391,7 @@ sub write_history {
 
   # spew gets an exclusive lock on the file before reading it.
   my $json = JSON->new->pretty->encode(\%history);
-  path($history_file)->spew($json);
+  path($self->history_file)->spew($json);
 
   return \%history;
 }
