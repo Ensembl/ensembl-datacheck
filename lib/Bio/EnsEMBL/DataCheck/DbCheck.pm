@@ -85,6 +85,16 @@ has 'dba' => (
   isa => 'DBAdaptor | Undef',
 );
 
+=head2 dba_species_only
+  Description: Forces the datacheck to only run for a single species in a
+               collection db, even if per_db is zero.
+=cut
+has 'dba_species_only' => (
+  is      => 'rw',
+  isa     => 'Bool',
+  default => 0
+);
+
 # Set the read-only parameters just before 'new' method is called.
 # This ensures that these values can be constants in the subclasses,
 # while avoiding the need to overwrite the 'new' method (which would
@@ -122,7 +132,7 @@ after 'run' => sub {
 sub run_tests {
   my $self = shift;
 
-  if (!$self->per_db && $self->dba->is_multispecies) {
+  if (!$self->per_db && !$self->dba_species_only && $self->dba->is_multispecies) {
     # We cannot change the species of an established DBA; but we
     # can get it to give us a list of species, and then create
     # a new DBA (reusing the same connection) for each species in turn.
