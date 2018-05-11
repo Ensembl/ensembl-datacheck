@@ -1,0 +1,231 @@
+=head1 LICENSE
+Copyright [2018] EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+=head1 NAME
+Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks
+
+=head1 DESCRIPTION
+A Hive module that runs a set of datachecks.
+
+=cut
+
+package Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks;
+
+use strict;
+use warnings;
+use feature 'say';
+
+use Bio::EnsEMBL::DataCheck::Manager;
+use Path::Tiny;
+
+use base ('Bio::EnsEMBL::Hive::Process');
+
+sub param_defaults {
+  my ($self) = @_;
+
+  my %manager_params = (
+    datacheck_dir      => undef,
+    index_file         => undef,
+    history_file       => undef,
+    output_dir         => undef,
+    output_filename    => undef,
+    overwrite_files    => 1,
+    datacheck_names    => [],
+    datacheck_patterns => [],
+    datacheck_groups   => [],
+    datacheck_types    => [],
+  );
+
+  my %dbcheck_params = (
+    dba     => undef,
+    dbname  => undef,
+    species => undef,
+    group   => undef,
+  );
+
+  my %dbdbcheck_params = (
+    second_dba     => undef,
+    second_dbname  => undef,
+    second_species => undef,
+    second_group   => undef,
+  );
+
+  return {
+    %manager_params,
+    %dbcheck_params,
+    %dbdbcheck_params,
+    failures_fatal => 1,
+  };
+}
+
+sub fetch_input {
+  my $self = shift;
+
+  my $output_file;
+  if ($self->param_is_defined('output_dir') && $self->param_is_defined('output_filename')) {
+    $output_file = $self->param('output_dir') . '/' . $self->param('output_filename') . '.txt';
+  }
+
+  my %manager_params;
+  $manager_params{names}           = $self->param('datacheck_names');
+  $manager_params{patterns}        = $self->param('datacheck_patterns');
+  $manager_params{groups}          = $self->param('datacheck_groups');
+  $manager_params{datacheck_types} = $self->param('datacheck_types');
+
+  $manager_params{datacheck_dir} = $self->param('datacheck_dir') if $self->param_is_defined('datacheck_dir');
+  $manager_params{index_file}    = $self->param('index_file')    if $self->param_is_defined('index_file');
+  $manager_params{history_file}  = $self->param('history_file')  if $self->param_is_defined('history_file');
+  $manager_params{output_file}   = $output_file                  if defined $output_file;
+
+  my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
+  $self->param('manager', $manager);
+
+  my $datacheck_params = $self->datacheck_params();
+  $self->param('datacheck_params', $datacheck_params);
+}
+
+sub run {
+  my $self = shift;
+
+  my $manager          = $self->param_required('manager');
+  my $datacheck_params = $self->param_required('datacheck_params');
+
+  my ($datachecks, $aggregator) = $manager->run_checks($datacheck_params);
+
+  if ($aggregator->has_errors) {
+    my %datachecks = map { $_->name => $_ } @$datachecks;
+
+    my $failed_names = join(", ", $aggregator->failed);
+    my $msg = "Datachecks failed: $failed_names";
+
+    foreach my $failed ($aggregator->failed) {
+      $msg .= "\n" . $datachecks{$failed}->output;
+    }
+
+    if ($self->param_required('failures_fatal')) {
+      die $msg;
+    } else {
+      $self->warning($msg);
+    }
+  }
+
+  # Force scalar context (and therefore counts) by multiplying by one.
+  $self->param('passed',  $aggregator->passed  * 1);
+  $self->param('failed',  $aggregator->failed  * 1);
+  $self->param('skipped', $aggregator->skipped * 1);
+
+  $self->param('datachecks', $datachecks);
+}
+
+sub write_output {
+  my $self = shift;
+
+  my $summary = {
+    datachecks_passed  => $self->param('passed'),
+    datachecks_failed  => $self->param('failed'),
+    datachecks_skipped => $self->param('skipped'),
+  };
+
+  $self->dataflow_output_id($summary, 1);
+
+  foreach my $datacheck ( @{$self->param('datachecks')} ) { 
+    my $output = {
+      datacheck_name   => $datacheck->name,
+      datacheck_params => $self->param('datacheck_params'),
+      datacheck_output => $datacheck->output,
+    };
+
+    if ($datacheck->_passed) {
+      $self->dataflow_output_id($output, 3);
+    } else {
+      $self->dataflow_output_id($output, 4);
+    }
+  }
+}
+
+sub datacheck_params {
+  my $self = shift;
+
+  my $datacheck_params = {};
+
+  $self->set_dba_param(
+    'Bio::EnsEMBL::DataCheck::DbCheck',
+    $self->param('dba'),
+    $self->param('dbname'),
+    $self->param('species'),
+    $self->param('group'),
+    $datacheck_params,
+  );
+
+  $self->set_dba_param(
+    'Bio::EnsEMBL::DataCheck::DbDbCheck',
+    $self->param('second_dba'),
+    $self->param('second_dbname'),
+    $self->param('second_species'),
+    $self->param('second_group'),
+    $datacheck_params,
+  );
+
+  return $datacheck_params;
+}
+
+sub set_dba_param {
+  my $self = shift;
+  my ($class, $dba, $dbname, $species, $group, $params) = @_;
+
+  my $dba_species_only = 0;
+
+  unless (defined $dba) {
+    if (defined $dbname) {
+      my $dbas = Bio::EnsEMBL::Registry->get_all_DBAdaptors_by_dbname($dbname);
+      if (scalar(@$dbas) == 1) {
+        $dba = $$dbas[0];
+      } elsif (scalar(@$dbas) == 0) {
+        $self->throw("No databases matching '$dbname' in registry");
+      } elsif (scalar(@$dbas) > 1) {
+        # This seems like a ropey way to detect a multispecies database,
+        # but it's how the registry does it...
+        if ($dbname =~ /_collection_/) {
+          # The get_all_DBAdaptors_by_dbname method gives us a DBA for
+          # each species in the collection. Which is nice, but not what
+          # we want. The datacheck code will take of species-specific
+          # stuff, if necessary.
+          $dba = $$dbas[0];
+        } else {
+          $self->throw("Multiple databases matching '$dbname' in registry");
+        }
+      }
+    } elsif (defined $species && defined $group) {
+      $dba = Bio::EnsEMBL::Registry->get_DBAdaptor($species, $group);
+      if (defined $dba) {
+        $dba_species_only = 1;
+      } else {
+        # Need to change this, so we end up executing 'run_checks' for all groups?
+        $self->throw("No $group database for $species in registry");
+      }
+    }
+  }
+
+  if (defined $dba) {
+    if ($class =~ /::DbCheck$/) {
+      $$params{$class}{dba} = $dba;
+      $$params{$class}{dba_species_only} = $dba_species_only;
+    } elsif ($class =~ /::DbDbCheck$/) {
+      $$params{$class}{second_dba} = $dba;
+    }
+  }
+}
+
+1;
