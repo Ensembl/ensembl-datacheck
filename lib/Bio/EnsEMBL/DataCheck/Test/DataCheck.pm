@@ -194,19 +194,26 @@ Rather than compare a row count with an expected value, we might want to
 compare with a count from another database. The simplest scenario is when
 there's a single total to compare.
 
-  row_totals($dbc1, $dbc2, $sql, $min_proportion, $test_name);
+  row_totals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
 
-This runs an SQL statement C<$sql> against both database connections C<$dbc1>
-and C<$dbc2>. The SQL statement can be an explicit C<COUNT(*)> (recommended
-for speed) or a C<SELECT> statement whose rows will be counted.
-The database connection can be a Bio::EnsEMBL::DBSQL::DBConnection or
-DBAdaptor object. It is assumed that C<$dbc1> is the connection for the new or
-'primary' database, and that C<$dbc2> is for the old, or 'secondary' database.
+This runs an SQL statement C<$sql1> against database connection C<$dbc1>,
+and C<$sql2> against C<$dbc2>. In most cases one of these parameters will
+be undefined: if C<$dbc2> is undefined, then both SQL statements will be
+executed against C<$dbc1>; if C<$sql2> is undefined, then C<$sql1> will
+be run against both database connections.
+
+The SQL statements can have an explicit C<COUNT(*)> (recommended
+for speed) or can be a C<SELECT> statement whose rows will be counted.
+The database connections can be a Bio::EnsEMBL::DBSQL::DBConnection or
+DBAdaptor object. It is assumed that C<$dbc1> is the connection for a new or
+'primary' database, and that C<$dbc2> is for an old, or 'secondary' database.
 
 By default, the test only fails if the counts are exactly the same. To allow
 for some wiggle room, C<$min_proportion> can be used to define the minimum
 acceptable difference between the counts. For example, a value of 0.75 means
-that the count for C<$dbc2> must not be less that 75% of the count for C<$dbc1>.
+that the count for C<$dbc2> must not be less than 75% of the count for C<$dbc1>.
+If two SQL statements are given, a value of 0.75 means that the count for
+C<$sql1> must not be less than 75% of the count for C<$sql2>.
 
 C<$test_name> is a very short description of the test that will be printed
 out; it is optional, but we B<very> strongly encourage its use.
@@ -214,9 +221,9 @@ out; it is optional, but we B<very> strongly encourage its use.
 A slightly more complex case is when you want to compare counts within
 categories, i.e. with an SQL query that uses a GROUP BY statement.
 
-  row_subtotals($dbc1, $dbc2, $sql, $min_proportion, $test_name);
+  row_subtotals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
 
-In this case the SQL statement must return only two columns, the subtotal
+In this case the SQL statements must return only two columns, the subtotal
 category and the count, e.g. C<SELECT biotype, COUNT(*) FROM gene GROUP BY biotype>.
 If any subtotals are lower than expected the test will fail, and the details
 will be provided in a diagnostic message.
@@ -224,31 +231,38 @@ will be provided in a diagnostic message.
 =cut
 
 sub row_totals {
-  my ( $dbc1, $dbc2, $sql, $min_proportion, $name ) = @_;
+  my ( $dbc1, $dbc2, $sql1, $sql2, $min_proportion, $name ) = @_;
 
   my $tb = $CLASS->builder;
 
+  $dbc2 = $dbc1 if ! defined $dbc2;
+  $sql2 = $sql1 if ! defined $sql2;
   $min_proportion = 1 if ! defined $min_proportion;
 
-  my ( $count1, undef ) = _query( $dbc1, $sql );
-  my ( $count2, undef ) = _query( $dbc2, $sql );
+  my ( $count1, undef ) = _query( $dbc1, $sql1 );
+  my ( $count2, undef ) = _query( $dbc2, $sql2 );
 
   return $tb->cmp_ok( $count2 * $min_proportion, '<=', $count1, $name );
 }
 
 sub row_subtotals {
-  my ( $dbc1, $dbc2, $sql, $min_proportion, $name ) = @_;
+  my ( $dbc1, $dbc2, $sql1, $sql2, $min_proportion, $name ) = @_;
 
   my $tb = $CLASS->builder;
 
+  $dbc2 = $dbc1 if ! defined $dbc2;
+  $sql2 = $sql1 if ! defined $sql2;
   $min_proportion = 1 if ! defined $min_proportion;
 
-  unless ($sql =~ /^SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/) {
-    die "Invalid SQL statement for subtotals. Must select a single column first, then a count.\n($sql)";
+  if ($sql1 !~ /^\s*SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/ms) {
+    die "Invalid SQL statement for subtotals. Must select a single column first, then a count.\n($sql1)";
+  }
+  if ($sql2 !~ /^\s*SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/ms) {
+    die "Invalid SQL statement for subtotals. Must select a single column first, then a count.\n($sql2)";
   }
 
-  my ( undef, $rows1 ) = _query( $dbc1, $sql );
-  my ( undef, $rows2 ) = _query( $dbc2, $sql );
+  my ( undef, $rows1 ) = _query( $dbc1, $sql1 );
+  my ( undef, $rows2 ) = _query( $dbc2, $sql2 );
 
   my %subtotals1 = map { $_->[0] => $_->[1] } @$rows1;
   my %subtotals2 = map { $_->[0] => $_->[1] } @$rows2;
@@ -256,8 +270,8 @@ sub row_subtotals {
   my $ok = 1;
 
   # Note that there may be categories in %subtotals1 that aren't in
-  # %subtotals2; but we don't care about them, we only need to know if
-  # things have disappeared or changed, new stuff is fine.
+  # %subtotals2; that's usually not an issue, but if that's important
+  # the test can be called again with dbc/sql parameters flipped.
   foreach my $category (keys %subtotals2) {
     $subtotals1{$category} = 0 unless exists $subtotals1{$category};
 

@@ -59,8 +59,8 @@ subtest 'Comparing Database Rows', sub {
   my $sql_1 = 'SELECT COUNT(*) FROM gene';
   my $sql_2 = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
 
-  row_totals($dba, $dba2, $sql_1, 1, 'Counts are the same');
-  row_subtotals($dba, $dba2, $sql_2, 1, 'Biotype counts are the same');
+  row_totals($dba, $dba2, $sql_1, undef, 1, 'Counts are the same');
+  row_subtotals($dba, $dba2, $sql_2, undef, 1, 'Biotype counts are the same');
 };
 
 done_testing();
