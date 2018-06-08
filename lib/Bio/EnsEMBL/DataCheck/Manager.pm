@@ -139,7 +139,7 @@ has 'overwrite_files' => (
 
 sub load_checks {
   my $self = shift;
-  my ($params) = @_;
+  my @params = @_;
 
   my %index = %{ $self->read_index() };
 
@@ -158,15 +158,7 @@ sub load_checks {
       eval { require $module };
       die $@ if $@;
 
-      my $datacheck = $index{$name}{package_name}->new();
-
-      foreach my $class (keys %{$params}) {
-        if ($datacheck->isa($class)) {
-          foreach my $param (keys $$params{$class}) {
-            $datacheck->$param($$params{$class}{$param});
-          }
-        }
-      }
+      my $datacheck = $index{$name}{package_name}->new(@params);
 
       push @datachecks, $datacheck;
     }
