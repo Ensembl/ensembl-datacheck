@@ -39,7 +39,7 @@ sub run {
   my $datacheck_params  = $self->param_required('datacheck_params');
   my $results           = $self->param_required('results');
 
-  my $datachecks = $manager->load_checks($datacheck_params);
+  my $datachecks = $manager->load_checks(%$datacheck_params);
 
   my ($passed, $failed, $skipped) = (0, 0, 0);
   my $output = '';

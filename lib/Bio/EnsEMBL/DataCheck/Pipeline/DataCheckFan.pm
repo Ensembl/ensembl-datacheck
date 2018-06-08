@@ -35,7 +35,7 @@ sub run {
   my $manager          = $self->param_required('manager');
   my $datacheck_params = $self->param_required('datacheck_params');
 
-  my $datachecks = $manager->load_checks($datacheck_params);
+  my $datachecks = $manager->load_checks(%$datacheck_params);
 
   my $datacheck;
   if (scalar @$datachecks == 1) {

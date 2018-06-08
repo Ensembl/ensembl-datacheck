@@ -56,10 +56,10 @@ sub param_defaults {
   );
 
   my %dbdbcheck_params = (
-    second_dba     => undef,
-    second_dbname  => undef,
-    second_species => undef,
-    second_group   => undef,
+    registry_file     => undef,
+    server_uri        => undef,
+    old_registry_file => undef,
+    old_server_uri    => undef,
   );
 
   return {
@@ -102,7 +102,7 @@ sub run {
   my $manager          = $self->param_required('manager');
   my $datacheck_params = $self->param_required('datacheck_params');
 
-  my ($datachecks, $aggregator) = $manager->run_checks($datacheck_params);
+  my ($datachecks, $aggregator) = $manager->run_checks(%$datacheck_params);
 
   if ($aggregator->has_errors) {
     my %datachecks = map { $_->name => $_ } @$datachecks;
@@ -160,30 +160,21 @@ sub datacheck_params {
 
   my $datacheck_params = {};
 
-  $self->set_dba_param(
-    'Bio::EnsEMBL::DataCheck::DbCheck',
-    $self->param('dba'),
-    $self->param('dbname'),
-    $self->param('species'),
-    $self->param('group'),
-    $datacheck_params,
-  );
+  $self->set_dba_param($datacheck_params);
 
-  $self->set_dba_param(
-    'Bio::EnsEMBL::DataCheck::DbDbCheck',
-    $self->param('second_dba'),
-    $self->param('second_dbname'),
-    $self->param('second_species'),
-    $self->param('second_group'),
-    $datacheck_params,
-  );
+  $self->set_registry_param($datacheck_params);
 
   return $datacheck_params;
 }
 
 sub set_dba_param {
   my $self = shift;
-  my ($class, $dba, $dbname, $species, $group, $params) = @_;
+  my ($params) = @_;
+
+  my $dba     = $self->param('dba');
+  my $dbname  = $self->param('dbname');
+  my $species = $self->param('species');
+  my $group   = $self->param('group');
 
   my $dba_species_only = 0;
 
@@ -195,7 +186,7 @@ sub set_dba_param {
       } elsif (scalar(@$dbas) == 0) {
         $self->throw("No databases matching '$dbname' in registry");
       } elsif (scalar(@$dbas) > 1) {
-        # This seems like a ropey way to detect a multispecies database,
+        # This seems like a fragile way to detect a multispecies database,
         # but it's how the registry does it...
         if ($dbname =~ /_collection_/) {
           # The get_all_DBAdaptors_by_dbname method gives us a DBA for
@@ -219,13 +210,22 @@ sub set_dba_param {
   }
 
   if (defined $dba) {
-    if ($class =~ /::DbCheck$/) {
-      $$params{$class}{dba} = $dba;
-      $$params{$class}{dba_species_only} = $dba_species_only;
-    } elsif ($class =~ /::DbDbCheck$/) {
-      $$params{$class}{second_dba} = $dba;
-    }
+    $$params{dba} = $dba;
+    $$params{dba_species_only} = $dba_species_only;
   }
+}
+
+sub set_registry_param {
+  my $self = shift;
+  my ($params) = @_;
+
+  my $registry_file  = $self->param('registry_file');
+  my $server_uri     = $self->param('server_uri');
+  my $old_server_uri = $self->param('old_server_uri');
+
+  $params{registry_file}  = $registry_file  if defined $registry_file;
+  $params{server_uri}     = $server_uri     if defined $server_uri;
+  $params{old_server_uri} = $old_server_uri if defined $old_server_uri;
 }
 
 1;
