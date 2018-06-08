@@ -25,7 +25,7 @@ use Path::Tiny;
 use Getopt::Long qw(:config no_ignore_case);
 
 my ($class, $name, $description, @groups, $datacheck_type,
-    @db_types, @tables, $per_species,
+    @db_types, @tables, $per_db,
 );
 
 GetOptions(
@@ -36,11 +36,11 @@ GetOptions(
   "datacheck_type:s", \$datacheck_type,
   "db_types:s",       \@db_types,
   "tables:s",         \@tables,
-  "per_species:i",    \$per_species,
+  "per_db:i",         \$per_db,
 );
 
 $class = 'DbCheck' unless defined $class;
-die "class '$class' not recognised" unless $class =~ /^BaseCheck|DbCheck|DbDbCheck|DbFileCheck$/;
+die "class '$class' not recognised" unless $class =~ /^BaseCheck|DbCheck$/;
 die 'name required' unless defined $name;
 die 'description required' unless defined $description;
 
@@ -65,7 +65,7 @@ if (@tables) {
   push @parameters, "TABLES     $padding => [" . join(", ", map {"'$_'"} @tables) . "]";
 }
 if (defined $per_species) {
-  push @parameters, "PER_SPECIES$padding => $per_species";
+  push @parameters, "PER_DB$padding => $per_db";
 }
 
 my $parameters = '';
