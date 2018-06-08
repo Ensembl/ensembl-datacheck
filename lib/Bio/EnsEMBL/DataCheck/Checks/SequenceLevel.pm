@@ -39,10 +39,13 @@ sub tests {
   my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
-  my $desc_1 = 'Contig coord_systems have non-null versions';
-  my $sql_1  = q/
+  my $desc_1 = 'Contig coord_systems have null versions';
+  my $sql_1  = qq/
     SELECT COUNT(*) FROM coord_system
-    WHERE name = 'contig' AND version is not NULL
+    WHERE
+      name = 'contig' AND
+      version IS NOT NULL AND 
+      species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_1, $desc_1);
 
@@ -53,8 +56,9 @@ sub tests {
       coord_system cs INNER JOIN
       seq_region s USING (coord_system_id) INNER JOIN
       dna d USING (seq_region_id) 
-    WHERE cs.attrib NOT RLIKE 'sequence_level'
-    AND cs.species_id = $species_id
+    WHERE
+      cs.attrib NOT RLIKE 'sequence_level' AND
+      cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
 }

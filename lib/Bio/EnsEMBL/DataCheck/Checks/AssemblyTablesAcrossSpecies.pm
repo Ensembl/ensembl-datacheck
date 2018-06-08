@@ -23,8 +23,9 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
-extends 'Bio::EnsEMBL::DataCheck::DbDbCheck';
+extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'AssemblyTablesAcrossSpecies',
@@ -37,6 +38,24 @@ use constant {
 sub tests {
   my ($self) = @_;
 
+  my @core_like = qw/ cdna otherfeatures rnaseq /;
+
+  foreach my $db_type (@core_like) {
+    diag("Looking for ".$self->species." $db_type database");
+    my $core_like_dba = $self->get_dba($self->species, $db_type);
+    if (defined $core_like_dba) {
+      my $desc = "assembly table has same number of rows in core and $db_type databases";
+      my $sql  = q/
+        SELECT cs.name, COUNT(*) FROM
+          assembly a INNER JOIN
+          seq_region sr ON a.asm_seq_region_id = sr.seq_region_id INNER JOIN
+          coord_system cs USING (coord_system_id)
+        WHERE sr.name NOT LIKE 'LRG%'
+        GROUP BY cs.name
+      /;
+      row_subtotals($self->dba, $core_like_dba, $sql, undef, 1, $desc);
+    }
+  }
 }
 
 1;

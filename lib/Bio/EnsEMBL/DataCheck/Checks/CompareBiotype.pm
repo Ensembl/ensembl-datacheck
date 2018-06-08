@@ -25,7 +25,7 @@ use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
-extends 'Bio::EnsEMBL::DataCheck::DbDbCheck';
+extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'CompareBiotype',
@@ -34,15 +34,33 @@ use constant {
   DB_TYPES    => ['core'],
   TABLES      => ['gene'],
   GROUPS      => ['handover'],
-  PER_DB      => 1,
 };
 
 sub tests {
   my ($self) = @_;
 
-  my $desc_1 = 'Consistent gene counts';
-  my $sql_1  = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
-  row_subtotals($self->dba, $self->second_dba, $sql_1, 0.75, $desc_1);
+  SKIP: {
+    my $old_dba = $self->get_old_dba();
+
+    skip 'No old version of database', 1 unless defined $old_dba;
+
+    diag('Comparing '.$self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname);
+    diag('Species '.$self->species.', '.$self->dba->species);
+    my $desc = 'Consistent gene counts';
+    my $sql  = q/
+      SELECT biotype, COUNT(*) FROM
+        gene INNER JOIN
+        seq_region USING (seq_region_id) INNER JOIN
+        coord_system USING (coord_system_id)
+      WHERE species_id = %d
+      GROUP BY biotype
+    /;
+    my $sql1 = sprintf($sql, $self->dba->species_id);
+    my $sql2 = sprintf($sql, $old_dba->species_id);
+    diag($sql1);
+    diag($sql2);
+    row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.75, $desc);
+  }
 }
 
 1;

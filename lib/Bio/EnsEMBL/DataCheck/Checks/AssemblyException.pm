@@ -37,8 +37,6 @@ use constant {
                   'external_db', 'seq_region',],
 };
 
-# Todo: Check if there are any assembly_exceptions; skip all tests if not.
-
 sub skip_tests {
   my ($self) = @_;
 
