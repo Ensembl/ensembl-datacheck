@@ -27,6 +27,9 @@ use strict;
 use warnings;
 use feature 'say';
 
+use Bio::EnsEMBL::Registry;
+use Bio::EnsEMBL::Utils::URI qw/parse_uri/;
+use DBI;
 use List::Util qw/any/;
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -45,6 +48,10 @@ subtype 'DBAdaptor', as 'Object', where {
    $_->isa('Bio::EnsEMBL::Compara::DBSQL::DBAdaptor') || 
    $_->isa('Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor') || 
    $_->isa('Bio::EnsEMBL::Variation::DBSQL::DBAdaptor')
+};
+
+subtype 'Registry', as 'Str', where {
+   $_ eq 'Bio::EnsEMBL::Registry'
 };
 
 =head1 METHODS
@@ -90,10 +97,81 @@ has 'dba' => (
                collection db, even if per_db is zero.
 =cut
 has 'dba_species_only' => (
-  is      => 'rw',
+  is      => 'ro',
   isa     => 'Bool',
   default => 0
 );
+
+=head2 registry_file
+  Description: Registry file used for finding databases that are needed
+               for comparisons with the dba.
+=cut
+has 'registry_file' => (
+  is  => 'ro',
+  isa => 'Str | Undef',
+);
+
+=head2 server_uri
+  Description: URI for a mysql server with databases that are needed for
+               comparisons with the dba. Not used if registry_file is given.
+=cut
+has 'server_uri' => (
+  is  => 'ro',
+  isa => 'Str | Undef',
+);
+
+=head2 registry
+  Description: Registry object, not instantiated unless necessary.
+=cut
+has 'registry' => (
+  is      => 'rw',
+  isa     => 'Registry | Undef',
+  lazy    => 1,
+  builder => '_registry_default',
+);
+
+sub _registry_default {
+  my $self = shift;
+
+  my $registry = 'Bio::EnsEMBL::Registry';
+
+  if (defined $self->registry_file) {
+    $registry->load_all($self->registry_file);
+  } elsif (defined $self->server_uri) {
+    $registry->load_registry_from_url($self->server_uri);
+  } else {
+    die "Registry requires a 'registry_file' or 'server_uri' attribute";
+  }
+
+  return $registry;
+}
+
+=head2 old_server_uri
+  Description: URI for a mysql server with old versions of databases for
+               comparisons with the dba. Not used if old_registry_file is given.
+=cut
+has 'old_server_uri' => (
+  is  => 'ro',
+  isa => 'Str | Undef',
+);
+
+=head2 dba_list
+  Description: List of DBAdaptor objects that get created by the datacheck.
+               (They're tracked so that we can close the connections nicely.)
+=cut
+has 'dba_list' => (
+  is      => 'rw',
+  isa     => 'ArrayRef[DBAdaptor]',
+  default => sub { [] }
+);
+
+after 'run' => sub {
+  my $self = shift;
+
+  foreach my $dba (@{ $self->dba_list }) {
+    $dba->dbc && $dba->dbc->disconnect_if_idle();
+  }
+};
 
 # Set the read-only parameters just before 'new' method is called.
 # This ensures that these values can be constants in the subclasses,
@@ -129,6 +207,118 @@ after 'run' => sub {
   $self->dba->dbc && $self->dba->dbc->disconnect_if_idle();
 };
 
+sub species {
+  my $self = shift;
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+
+  my $species;
+  if ($self->dba->is_multispecies) {
+    $species = $mca->single_value_by_key('species.db_name');
+  } else {
+    $species = $mca->get_production_name();
+    $species =~ s/_old$//;
+  }
+
+  return $species;
+}
+
+sub get_dba {
+  my $self = shift;
+  my ($species, $group) = @_;
+
+  $species = $self->species    unless defined $species;
+  $group   = $self->dba->group unless defined $group;
+
+  my $dba = $self->registry->get_DBAdaptor($species, $group);
+
+  push @{$self->dba_list}, $dba if defined $dba;
+
+  return $dba;
+}
+
+sub get_old_dba {
+  my $self = shift;
+  my ($species, $group) = @_;
+
+  if (!defined $self->old_server_uri) {
+    die "Old server details must be set as 'old_server_uri' attribute";
+  }
+
+  # At a minimum, old_server_uri will have server details. But it can
+  # also define a db_version or a dbname. So, we check for a dbname first;
+  # if we have one then we are more-or-less done; any parameters passed to
+  # this method are irrelevant and are ignored. If there is a db_version,
+  # use that, otherwise assume that it's the previous release.
+  my $uri = parse_uri($self->old_server_uri);
+  my %params = $uri->generate_dbsql_params();
+
+  my $db_version;
+  if (exists $params{'-DBNAME'}) {
+    if ($params{'-DBNAME'} =~ /^(\d+)$/) {
+      $db_version = $1;
+      delete $params{'-DBNAME'};
+    }
+  } else {
+    my $mca = $self->dba->get_adaptor("MetaContainer");
+    $db_version = ($mca->schema_version) - 1;
+  }
+
+  if (! exists $params{'-DBNAME'}) {
+    $species = $self->species    unless defined $species;
+    $group   = $self->dba->group unless defined $group;
+
+    my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
+    die "No metadata database found in the registry" unless defined $meta_dba;
+
+    my $helper = $meta_dba->dbc->sql_helper;
+    my $sql = q/
+      SELECT gd.dbname FROM 
+        genome_database gd INNER JOIN
+        genome g USING (genome_id) INNER JOIN
+        organism o USING (organism_id) INNER JOIN
+        data_release dr USING (data_release_id)
+      WHERE gd.type = ? and o.name = ? and dr.ensembl_version = ?
+    /;
+    my $params = [$group, $species, $db_version];
+
+    my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
+
+    if (scalar(@dbnames) == 1) {
+      # We need to suffix the species name to comply with uniqueness rules
+      # (whenvever you create a dba, it adds itself to the registry...)
+      # This subsequently means that add_species_id functionality doesn't
+      # work, so we'll need to work out the species_id ourselves.
+      my $species_id = 'xxx';
+
+      $params{'-SPECIES'} = $species.'_old';
+      $params{'-GROUP'}   = $group;
+      $params{'-DBNAME'}  = $dbnames[0];
+      if ($self->dba->is_multispecies) {
+        $params{'-SPECIES_ID'}      = $species_id;
+        $params{'-MULTISPECIES_DB'} = 1;
+      }
+    } elsif (scalar(@dbnames) == 0) {
+      warn "No release $db_version $group database for $species";
+    } else {
+      die "Multiple release $db_version $group databases for $species";
+    }
+  }
+
+  # We allow $old_dba to be undefined if there is no entry in the metadata db;
+  # a datacheck could use the undefined-ness to skip tests in this case.
+  my $old_dba;
+  if (exists $params{'-DBNAME'}) {
+    $old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
+    unless (defined $old_dba) {
+      die "Release $db_version of $species $group database not found";
+    }
+
+    push @{$self->dba_list}, $old_dba;
+  }
+
+  return $old_dba;
+}
+
 sub run_tests {
   my $self = shift;
 
@@ -140,13 +330,14 @@ sub run_tests {
 
     foreach my $species (@{$self->dba->all_species}) {
       my $dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(
-        -dbconn         => $original_dba->dbc,
-        -species        => $species,
-        -add_species_id => 1,
+        -dbconn          => $original_dba->dbc,
+        -multispecies_db => 1,
+        -species         => $species,
+        -add_species_id  => 1,
       );
       $self->dba($dba);
 
-      subtest $self->dba->species => sub {
+      subtest $species => sub {
         $self->tests(@_);
       };
     }
@@ -154,6 +345,7 @@ sub run_tests {
     # It really shouldn't matter if we don't reset to the original
     # DBA. But it can't hurt either, and seems the right thing to do.
     $self->dba($original_dba);
+
   } else {
     $self->tests(@_);
   }

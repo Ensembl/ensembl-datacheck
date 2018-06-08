@@ -49,10 +49,10 @@ diag('Fixed attributes');
 can_ok($module, qw(db_types tables per_db));
 
 diag('Runtime attributes');
-can_ok($module, qw(dba));
+can_ok($module, qw(dba dba_species_only registry_file server_uri registry old_server_uri dba_list));
 
 diag('Methods');
-can_ok($module, qw(skip_datacheck verify_db_type check_history table_dates skip_tests));
+can_ok($module, qw(species get_dba get_old_dba run_tests skip_datacheck verify_db_type check_history table_dates skip_tests));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
@@ -290,7 +290,8 @@ subtest 'DbCheck with and without dba attribute', sub {
 
   throws_ok(
     sub { $dbcheck->run },
-    qr/DBAdaptor must be set as 'dba' attribute/, 'DbCheck->run fails without dba');
+    qr/DBAdaptor must be set as 'dba' attribute/,
+    'DbCheck->run fails without dba');
 
   is($dbcheck->_passed, undef, '_passed attribute is undefined');
 
@@ -308,6 +309,68 @@ subtest 'DbCheck with and without dba attribute', sub {
   is($dbcheck->_passed, 1, '_passed attribute is true');
 
   is($dba->dbc->connected, undef, 'No DB connection');
+};
+
+subtest 'Registry instantiation', sub {
+  # We generally don't know what servers are available, in order to
+  # test registry functionality. But we do know about one server,
+  # the one with the $test_db, so extract that information.
+  my %conf = %{$$testdb{conf}{$db_type}};
+  my $driver = $conf{driver};
+  my $host   = $conf{host};
+  my $port   = $conf{port};
+  my $user   = $conf{user};
+  my $pass   = $conf{pass};
+
+  my $registry_file = Path::Tiny->tempfile();
+  my $registry_text = qq/
+    use Bio::EnsEMBL::Registry;
+
+    {
+      Bio::EnsEMBL::Registry->load_registry_from_db(
+        -driver => '$driver',
+        -host   => '$host',
+        -port   =>  $port,
+        -user   => '$user',
+        -pass   => '$pass',
+      );
+    }
+  /;
+  $registry_file->spew($registry_text);
+
+  my $server_uri = "$driver://$user:$pass\@$host:$port/";
+
+  my $check = TestChecks::DbCheck_1->new(
+    dba => $dba,
+  );
+
+  throws_ok(
+    sub { $check->registry },
+    qr/Registry requires a 'registry_file' or 'server_uri' attribute/,
+    'DbDbCheck->registry fails if a file or uri is not set');
+
+  $check = TestChecks::DbCheck_1->new(
+    dba        => $dba,
+    server_uri => $server_uri,
+  );
+
+  # The registry object is a bit weird, the return value is a string,
+  # so check that it actually is a working registry by using it.
+  is($check->registry, 'Bio::EnsEMBL::Registry', 'registry attribute set via server_uri');
+  my $species = $check->registry->get_all_species;
+  ok(scalar(@$species), 'registry works when set via server_uri');
+
+  # Check both that registry_file works,
+  # and that it has precedence over server_uri.
+  $check = TestChecks::DbCheck_1->new(
+    dba           => $dba,
+    server_uri    => 'unconnectable rubbish',
+    registry_file => $registry_file->stringify,
+  );
+
+  is($check->registry, 'Bio::EnsEMBL::Registry', 'registry attribute set via registry_file');
+  $species = $check->registry->get_all_species;
+  ok(scalar(@$species), 'registry works when set via registry_file');
 };
 
 done_testing();
