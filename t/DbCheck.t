@@ -19,6 +19,7 @@ use Bio::EnsEMBL::DataCheck::DbCheck;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
+use Path::Tiny;
 use Test::Exception;
 use Test::More;
 
@@ -335,6 +336,8 @@ subtest 'Registry instantiation', sub {
         -pass   => '$pass',
       );
     }
+    
+    1;
   /;
   $registry_file->spew($registry_text);
 
