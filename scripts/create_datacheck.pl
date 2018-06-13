@@ -64,7 +64,7 @@ if (@tables) {
   @tables = sort map { split(/[,\s]+/, $_) } @tables;
   push @parameters, "TABLES     $padding => [" . join(", ", map {"'$_'"} @tables) . "]";
 }
-if (defined $per_species) {
+if (defined $per_db) {
   push @parameters, "PER_DB$padding => $per_db";
 }
 
