@@ -3,7 +3,7 @@
 
 ## Modules
 
-###`Bio::EnsEMBL::DataCheck::BaseCheck`
+### `Bio::EnsEMBL::DataCheck::BaseCheck`
 
 `BaseCheck` defines the minimal code needed for a test. All datachecks inherit from this module and provide values for the following attributes:
 * `name` - (required) name of the test
@@ -13,7 +13,7 @@
 
 Instances of this test are invoked by `run` which uses `Test::More` to return test results in standard TAP format.
 
-###`Bio::EnsEMBL::DataCheck::DbCheck`
+### `Bio::EnsEMBL::DataCheck::DbCheck`
 `DbCheck` supports tests that deal with Ensembl database adaptors. The following variables can be set:
 * `db_types` - (optional) list of Ensembl database types that the test applies to (core, variation, otherfeatures, compara, funcgen)
 * `tables` - (optional) list of tables that are related to the datacheck
@@ -21,21 +21,18 @@ Instances of this test are invoked by `run` which uses `Test::More` to return te
 
 After the test runs, the database adaptor is disconnected to avoid connection leaks.
 
-###`Bio::EnsEMBL::DataCheck::DbDbCheck`
-`DbDbCheck` is an extension of `DbCheck` that supports tests that take two DBAs for comparison (e.g. old and new databases, or master and slave databases). 
+### `Bio::EnsEMBL::DataCheck::Manager`
+The `Manager` module can be used to retrieve a set of datachecks, and optionally run them in a test harness. The history of datachecks' pass/fail status can be read from and written to a file, in order for datachecks to determine if they need to be run.
 
-###`Bio::EnsEMBL::DataCheck::Manager`
-The `Manager` module can be used to retrieve a set of datachecks, and optionally run them in a test harness. The history of datachecks' pass/fail status can be read from and written to a file, in order for datachecks to determine if the need to be run.
-
-###`Bio::EnsEMBL::DataTest::Utils::DBUtils`
-This module contains `Test::More`-style methods for dealing with Ensembl databases, e.g. `rows` for checking the number of rows returned.
+### `Bio::EnsEMBL::DataCheck::Test::DataCheck`
+This module contains `Test::More`-style methods for dealing with Ensembl databases, e.g. `is_rows` for checking the number of rows returned.
 
 ## Scripts
 
-### `run_tests.pl`
+### `run_datachecks.pl`
 This script runs one or more datachecks for the specified database e.g.
 ```
-perl -I lib/ scripts/run_tests.pl
+perl -I lib/ scripts/run_datachecks.pl
   -groups core_handover 
   -history_file /path/to/history/file
   -host localhost -port 3306 -user anonymous 
