@@ -387,11 +387,7 @@ subtest 'Run datachecks (DbCheck)', sub {
     names         => ['DbCheck_1', 'DbCheck_3'],
   );
 
-  my %params = (
-    'Bio::EnsEMBL::DataCheck::DbCheck' => {dba => $dba},
-  );
-
-  my ($datachecks, $aggregator) = $manager->run_checks(\%params);
+  my ($datachecks, $aggregator) = $manager->run_checks(dba => $dba);
 
   sleep(2);
   my $after = time();
@@ -422,11 +418,7 @@ subtest 'Read and write history file (DbCheck)', sub {
   my $before = time();
   sleep(2);
 
-  my %params = (
-    'Bio::EnsEMBL::DataCheck::DbCheck' => {dba => $dba},
-  );
-
-  my ($datachecks, undef) = $manager->run_checks(\%params);
+  my ($datachecks, undef) = $manager->run_checks(dba => $dba);
 
   sleep(2);
   my $after = time();
@@ -462,7 +454,7 @@ subtest 'Read and write history file (DbCheck)', sub {
   # the Test::More framework.
   Test::More->builder->reset();
 
-  ($datachecks, undef) = $manager->run_checks(\%params);
+  ($datachecks, undef) = $manager->run_checks(dba => $dba);
 
   # Should have 4 skipped checks and one failed one,
   # if the history file was read correctly.
