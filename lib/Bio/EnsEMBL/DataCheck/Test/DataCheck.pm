@@ -321,9 +321,9 @@ sub fk {
   $name = "All $table1.$col1 rows linked to $table2.$col2 rows" unless defined $name;
 
   my $sql =
-    qq/SELECT COUNT(*) FROM $table1 
-    LEFT JOIN $table2 ON $table1.$col1 = $table2.$col2 
-    WHERE $table1.$col1 IS NOT NULL AND $table2.$col2 IS NULL/;
+    qq/SELECT COUNT(*) FROM $table1 t1
+    LEFT JOIN $table2 t2 ON t1.$col1 = t2.$col2 
+    WHERE t1.$col1 IS NOT NULL AND t2.$col2 IS NULL/;
   $sql .= " AND $constraint" if $constraint;
 
   my ( $count, undef ) = _query( $dbc, $sql );
