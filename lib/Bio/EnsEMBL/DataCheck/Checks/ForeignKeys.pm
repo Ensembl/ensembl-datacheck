@@ -46,7 +46,7 @@ sub tests {
     next unless $line =~ /FOREIGN KEY/;
 
     my ($table1, $col1, $table2, $col2) = $line =~
-      /ALTER\s+TABLE\s+(\S+)\s+ADD\s+FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s+\((\S+)\)/i;
+      /ALTER\s+TABLE\s+(\S+)\s+ADD\s+FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
 
     if (defined $table1 && defined $col1 && defined $table2 && defined $col2) {
       # In theory, need exceptions for gene_archive.peptide_archive_id and object_xref.analysis_id

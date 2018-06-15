@@ -18,6 +18,9 @@ use feature 'say';
 
 use Bio::EnsEMBL::DataCheck::Manager;
 use Bio::EnsEMBL::DBSQL::DBAdaptor;
+use Bio::EnsEMBL::Compara::DBSQL::DBAdaptor;
+use Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor;
+use Bio::EnsEMBL::Variation::DBSQL::DBAdaptor;
 use Bio::EnsEMBL::Registry;
 
 use Getopt::Long qw(:config no_ignore_case);
@@ -47,14 +50,16 @@ GetOptions(
   "output_file:s",       \$output_file,
 );
 
-# This will only work with core dbs at the minute...
-# Pick up group from $dbname and adjust class accordingly?
-
 my $dba;
 if ($dbname) {
+  my $adaptor = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
+  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbname =~ /_compara_/;
+  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbname =~ /_funcgen_/;
+  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbname =~ /_variation_/;
+
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
 
-  $dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(
+  $dba = $adaptor->new(
     -host            => $host,
     -port            => $port,
     -user            => $user,
