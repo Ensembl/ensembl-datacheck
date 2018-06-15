@@ -115,6 +115,9 @@ my $error = 0;
 $manager->names([$name]);
 
 my $datachecks;
+
+$manager->write_index();
+
 eval { $datachecks = $manager->load_checks() };
 if ($@) {
   say $@;
