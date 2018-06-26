@@ -30,8 +30,9 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SchemaVersion',
   DESCRIPTION => 'make sure the schema version is the same as the DB name',
-  GROUPS      => ['EGCoreHandover'],
-  DB_TYPES    => ['core']
+  GROUPS      => ['EGCoreHandover','EGVariationHandover', 'EGOtherFeaturesHandover', 'EGFuncgen'],
+  DB_TYPES    => ['core', 'variation', 'funcgen', 'otherfeatures']
+
 };
 
 sub tests {
