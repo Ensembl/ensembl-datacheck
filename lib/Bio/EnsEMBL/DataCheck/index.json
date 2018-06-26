@@ -11,7 +11,10 @@
    "SchemaVersion" : {
       "datacheck_type" : "critical",
       "groups" : [
-         "EGCoreHandover"
+         "EGCoreHandover",
+         "EGVariationHandover",
+         "EGOtherFeaturesHandover", 
+         "EGFuncgen"
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion",
