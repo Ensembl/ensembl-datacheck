@@ -8,6 +8,15 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype."
    },
+   "SchemaVersion" : {
+      "datacheck_type" : "critical",
+      "groups" : [
+         "EGCoreHandover"
+      ],
+      "name" : "SchemaVersion",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion",
+      "description" : "make sure the schema version is the same as the DB name"
+   },
    "SequenceLevel" : {
       "datacheck_type" : "critical",
       "groups" : [
@@ -47,6 +56,15 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ArraysHaveProbes",
       "description" : "All arrays are associated with probes."
    },
+   "CoreForeignKeys" : {
+      "datacheck_type" : "critical",
+      "groups" : [
+         "handover"
+      ],
+      "name" : "CoreForeignKeys",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys",
+      "description" : "Check for incorrect foreign key relationships that are not defined by a \"foreign_keys.sql\" file.."
+   },
    "AssemblyException" : {
       "datacheck_type" : "critical",
       "groups" : [
@@ -56,15 +74,6 @@
       "name" : "AssemblyException",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyException",
       "description" : "Check if assembly_exceptions are present and correct."
-   },
-   "CoreForeignKeys" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "handover"
-      ],
-      "name" : "CoreForeignKeys",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys",
-      "description" : "Check for incorrect foreign key relationships that are not defined by a \"foreign_keys.sql\" file.."
    },
    "Archive" : {
       "datacheck_type" : "critical",
@@ -77,6 +86,15 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Archive",
       "description" : "Gene archive table is up to date."
    },
+   "LRG" : {
+      "datacheck_type" : "critical",
+      "groups" : [
+         "handover"
+      ],
+      "name" : "LRG",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG",
+      "description" : "Check that LRG features and seq_regions are correctly associated."
+   },
    "AssemblyTablesAcrossSpecies" : {
       "datacheck_type" : "critical",
       "groups" : [
@@ -86,15 +104,6 @@
       "name" : "AssemblyTablesAcrossSpecies",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyTablesAcrossSpecies",
       "description" : "Assembly is the same in core and core-like databases"
-   },
-   "LRG" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "handover"
-      ],
-      "name" : "LRG",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG",
-      "description" : "Check that LRG features and seq_regions are correctly associated."
    },
    "AssemblyMapping" : {
       "datacheck_type" : "critical",
@@ -106,6 +115,13 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyMapping",
       "description" : "Check validity of assembly mappings."
    },
+   "ForeignKeys" : {
+      "datacheck_type" : "critical",
+      "groups" : [],
+      "name" : "ForeignKeys",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys",
+      "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file."
+   },
    "AttribValues" : {
       "datacheck_type" : "advisory",
       "groups" : [
@@ -114,13 +130,6 @@
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues",
       "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist"
-   },
-   "ForeignKeys" : {
-      "datacheck_type" : "critical",
-      "groups" : [],
-      "name" : "ForeignKeys",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys",
-      "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file."
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
