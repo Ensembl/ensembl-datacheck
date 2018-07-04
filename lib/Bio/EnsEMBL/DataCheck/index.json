@@ -1,134 +1,134 @@
 {
-   "CompareBiotype" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "handover"
-      ],
-      "name" : "CompareBiotype",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype",
-      "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype."
-   },
-   "SequenceLevel" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "handover"
-      ],
-      "name" : "SequenceLevel",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel",
-      "description" : "Check that DNA is attached and only attached to sequence-level seq_regions."
-   },
-   "AssemblySeqregion" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "assembly",
-         "core_handover"
-      ],
-      "name" : "AssemblySeqregion",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion",
-      "description" : "assembly and seq_region table are consistent."
-   },
-   "AssemblyAccession" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "assembly",
-         "core_handover"
-      ],
-      "name" : "AssemblyAccession",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyAccession",
-      "description" : "Meta key \"assembly.accession\" is set."
-   },
-   "ArraysHaveProbes" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "funcgen_release",
-         "probe_mapping"
-      ],
-      "name" : "ArraysHaveProbes",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ArraysHaveProbes",
-      "description" : "All arrays are associated with probes."
-   },
-   "AssemblyException" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "assembly",
-         "handover"
-      ],
-      "name" : "AssemblyException",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyException",
-      "description" : "Check if assembly_exceptions are present and correct."
-   },
-   "CoreForeignKeys" : {
-      "datacheck_type" : "critical",
-      "groups" : [
-         "handover"
-      ],
-      "name" : "CoreForeignKeys",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys",
-      "description" : "Check for incorrect foreign key relationships that are not defined by a \"foreign_keys.sql\" file.."
-   },
    "Archive" : {
       "datacheck_type" : "critical",
+      "description" : "Gene archive table is up to date.",
       "groups" : [
          "core_handover",
          "post_projection",
          "stable_id_mapping"
       ],
       "name" : "Archive",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Archive",
-      "description" : "Gene archive table is up to date."
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Archive"
    },
-   "AssemblyTablesAcrossSpecies" : {
+   "ArraysHaveProbes" : {
       "datacheck_type" : "critical",
+      "description" : "All arrays are associated with probes.",
+      "groups" : [
+         "funcgen_release",
+         "probe_mapping"
+      ],
+      "name" : "ArraysHaveProbes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ArraysHaveProbes"
+   },
+   "AssemblyAccession" : {
+      "datacheck_type" : "critical",
+      "description" : "Meta key \"assembly.accession\" is set.",
       "groups" : [
          "assembly",
          "core_handover"
       ],
-      "name" : "AssemblyTablesAcrossSpecies",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyTablesAcrossSpecies",
-      "description" : "Assembly is the same in core and core-like databases"
+      "name" : "AssemblyAccession",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyAccession"
    },
-   "LRG" : {
+   "AssemblyException" : {
       "datacheck_type" : "critical",
+      "description" : "Check if assembly_exceptions are present and correct.",
       "groups" : [
+         "assembly",
          "handover"
       ],
-      "name" : "LRG",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG",
-      "description" : "Check that LRG features and seq_regions are correctly associated."
+      "name" : "AssemblyException",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyException"
    },
    "AssemblyMapping" : {
       "datacheck_type" : "critical",
+      "description" : "Check validity of assembly mappings.",
       "groups" : [
          "assembly",
          "handover"
       ],
       "name" : "AssemblyMapping",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyMapping",
-      "description" : "Check validity of assembly mappings."
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyMapping"
+   },
+   "AssemblySeqregion" : {
+      "datacheck_type" : "critical",
+      "description" : "assembly and seq_region table are consistent.",
+      "groups" : [
+         "assembly",
+         "core_handover"
+      ],
+      "name" : "AssemblySeqregion",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
+   },
+   "AssemblyTablesAcrossSpecies" : {
+      "datacheck_type" : "critical",
+      "description" : "Assembly is the same in core and core-like databases",
+      "groups" : [
+         "assembly",
+         "core_handover"
+      ],
+      "name" : "AssemblyTablesAcrossSpecies",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyTablesAcrossSpecies"
    },
    "AttribValues" : {
       "datacheck_type" : "advisory",
+      "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist",
       "groups" : [
          "core_handover"
       ],
       "name" : "AttribValues",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues",
-      "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist"
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
+   },
+   "CompareBiotype" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
+      "groups" : [
+         "handover"
+      ],
+      "name" : "CompareBiotype",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype"
+   },
+   "CoreForeignKeys" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for incorrect foreign key relationships that are not defined by a \"foreign_keys.sql\" file..",
+      "groups" : [
+         "handover"
+      ],
+      "name" : "CoreForeignKeys",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys"
    },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
+      "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file.",
       "groups" : [],
       "name" : "ForeignKeys",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys",
-      "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file."
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
+   },
+   "LRG" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that LRG features and seq_regions are correctly associated.",
+      "groups" : [
+         "handover"
+      ],
+      "name" : "LRG",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
+   },
+   "SequenceLevel" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that DNA is attached and only attached to sequence-level seq_regions.",
+      "groups" : [
+         "handover"
+      ],
+      "name" : "SequenceLevel",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
+      "description" : "Check that xrefs are only attached to one feature type.",
       "groups" : [
          "handover"
       ],
       "name" : "XrefTypes",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefTypes",
-      "description" : "Check that xrefs are only attached to one feature type."
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefTypes"
    }
 }

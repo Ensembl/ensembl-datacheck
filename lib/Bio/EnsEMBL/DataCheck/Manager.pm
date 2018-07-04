@@ -288,7 +288,7 @@ sub write_index {
     };
   }
 
-  my $json = JSON->new->pretty->encode(\%index);
+  my $json = JSON->new->canonical->pretty->encode(\%index);
   path($self->index_file)->spew($json);
 
   return \%index;
