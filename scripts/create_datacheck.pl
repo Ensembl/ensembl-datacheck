@@ -116,6 +116,7 @@ $manager->names([$name]);
 
 my $datachecks;
 
+# Update the index, since this is required to load the datacheck.
 $manager->write_index();
 
 eval { $datachecks = $manager->load_checks() };
@@ -124,6 +125,7 @@ if ($@) {
   $error = 1;
 } else {
   my $datacheck = $$datachecks[0];
+  $error = 1 unless defined $datacheck;
   $error = 1 unless $datacheck->isa('Bio::EnsEMBL::DataCheck::BaseCheck');
   $error = 1 unless $datacheck->name eq $name;
 }
@@ -131,6 +133,10 @@ if ($@) {
 if ($error) {
   my $tmp_file = catdir('/tmp', $ENV{'USER'}."_$name.pm");
   move $datacheck_file, $tmp_file;
+
+  # Remove the datacheck from the index.
+  $manager->write_index();
+
   die "Datacheck '$name' cannot be loaded. File moved to: $tmp_file";
 } else {
   say "Created datacheck '$datacheck_file'";
