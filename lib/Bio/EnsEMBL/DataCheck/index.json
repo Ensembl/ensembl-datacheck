@@ -113,6 +113,15 @@
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
    },
+   "MetaKeyCardinality" : {
+      "datacheck_type" : "critical",
+      "description" : "For meta data that must be either single- or list-valued, check cardinality",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyCardinality",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
+   },
    "SequenceLevel" : {
       "datacheck_type" : "critical",
       "description" : "Check that DNA is attached and only attached to sequence-level seq_regions.",
