@@ -39,9 +39,9 @@ sub tests {
   my ($self) = @_;
 
   # Cases in which we want to check for the reverse direction of the FK constraint
-  fk($self->dba, 'exon_transcript', 'exon_id',            'exon');
-  fk($self->dba, 'exon_transcript', 'transcript_id',      'transcript');
-  fk($self->dba, 'transcript',      'gene_id',            'gene');
+  fk($self->dba, 'exon',            'exon_id',            'exon_transcript');
+  fk($self->dba, 'transcript',      'transcript_id',      'exon_transcript');
+  fk($self->dba, 'gene',            'gene_id',            'transcript');
   fk($self->dba, 'mapping_session', 'mapping_session_id', 'stable_id_event');
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
