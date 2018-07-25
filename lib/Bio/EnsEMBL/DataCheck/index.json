@@ -104,6 +104,15 @@
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
    },
+   "GeneBounds" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that genes are within the bounds of their seq_region",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "GeneBounds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneBounds"
+   },
    "LRG" : {
       "datacheck_type" : "critical",
       "description" : "Check that LRG features and seq_regions are correctly associated.",
@@ -115,7 +124,7 @@
    },
    "MetaKeyCardinality" : {
       "datacheck_type" : "critical",
-      "description" : "For meta data that must be either single- or list-valued, check cardinality",
+      "description" : "Check cardinality of meta data that must be single-valued",
       "groups" : [
          "core_handover"
       ],
