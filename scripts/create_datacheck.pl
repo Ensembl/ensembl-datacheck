@@ -35,13 +35,25 @@ Mandatory. Short description of datacheck.
 The Perl class for the datacheck. It is extremely unlikely that you will 
 need anything other than the default, 'DbCheck'.
 
+=item B<-datacheck_d[ir]> <datacheck_dir>
+
+The directory in which to save the datacheck module. Defaults to the 
+repository's default value (lib/Bio/EnsEMBL/DataCheck/Checks). 
+Mandatory if -index_file is specified.
+
+=item B<-i[ndex_file]> <index_file>
+
+The path to the index_file that will be created/updated. Defaults to the
+repository's default value (lib/Bio/EnsEMBL/DataCheck/index.json). 
+Mandatory if -datacheck_dir is specified.
+
 =item B<-g[roups]> <groups>
 
 The groups to which the datacheck belongs, in lower case with underscores, 
 e.g. core_handover. Multiple groups can be given as separate -groups, 
 or as a single comma-separated string.
 
-=item B<-da[tacheck_type]> ['critical'|'advisory']
+=item B<-datacheck_t[ype]> ['critical'|'advisory']
 
 The type of the datacheck. The default in the datacheck framework is 
 'critical', so you only really need to set this for advisory datachecks.
@@ -87,7 +99,7 @@ use Pod::Usage;
     
 my (
     $help,
-    $name, $description, $class,
+    $name, $description, $class, $datacheck_dir, $index_file,
     @groups, $datacheck_type, @db_types, @tables, $per_db,
 );
 
@@ -96,6 +108,8 @@ GetOptions(
   "name=s",           \$name,
   "description=s",    \$description,
   "class:s",          \$class,
+  "datacheck_dir:s",  \$datacheck_dir,
+  "index_file:s",     \$index_file,
   "groups:s",         \@groups,
   "datacheck_type:s", \$datacheck_type,
   "db_types:s",       \@db_types,
@@ -109,6 +123,16 @@ die 'name required' unless defined $name;
 die 'description required' unless defined $description;
 $class = 'DbCheck' unless defined $class;
 die "class '$class' not recognised" unless $class =~ /^BaseCheck|DbCheck$/;
+
+# It doesn't make sense to update the default index file if a datacheck_dir
+# is specified (and vice versa); one wants the default directory and index
+# to remain in sync.
+if (defined $datacheck_dir && ! defined $index_file) {
+  die "index_file is mandatory if datacheck_dir is specified";
+}
+if (! defined $datacheck_dir && defined $index_file) {
+  die "datacheck_dir is mandatory if index_file is specified";
+}
 
 $name = ucfirst($name);
 
@@ -164,9 +188,12 @@ sub tests {
 
 END_TEMPLATE
 
-my $manager = Bio::EnsEMBL::DataCheck::Manager->new();
-my $datacheck_dir  = $manager->datacheck_dir;
-my $datacheck_file = catdir($datacheck_dir, "$name.pm");
+my %manager_params;
+$manager_params{datacheck_dir} = $datacheck_dir if defined $datacheck_dir;
+$manager_params{index_file}    = $index_file    if defined $index_file;
+
+my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
+my $datacheck_file = catdir($manager->datacheck_dir, "$name.pm");
 
 if (-s $datacheck_file) {
   die "A datacheck named '$name' already exists: $datacheck_file";
