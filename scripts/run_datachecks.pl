@@ -25,7 +25,7 @@ use Bio::EnsEMBL::Registry;
 
 use Getopt::Long qw(:config no_ignore_case);
 
-my ($host, $port, $user, $pass, $dbname,
+my ($host, $port, $user, $pass, $dbname, $dbtype,
     $registry_file, $server_uri, $old_server_uri,
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_file,
@@ -37,6 +37,7 @@ GetOptions(
   "user=s",              \$user,
   "p|pass=s",            \$pass,
   "dbname=s",            \$dbname,
+  "dbtype=s",            \$dbtype,
   "registry_file=s",     \$registry_file,
   "server_uri=s",        \$server_uri,
   "old_server_uri=s",    \$old_server_uri,
@@ -52,10 +53,16 @@ GetOptions(
 
 my $dba;
 if ($dbname) {
+  if (! defined $dbtype) {
+    $dbtype = 'compara'   if $dbname =~ /_compara_/;
+    $dbtype = 'funcgen'   if $dbname =~ /_funcgen_/;
+    $dbtype = 'variation' if $dbname =~ /_variation_/;
+  }
+  
   my $adaptor = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbname =~ /_compara_/;
-  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbname =~ /_funcgen_/;
-  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbname =~ /_variation_/;
+  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbtype eq 'compara';
+  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbtype eq 'funcgen';
+  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbtype eq 'variation';
 
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
 
