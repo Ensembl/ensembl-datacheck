@@ -69,6 +69,15 @@ if ($dbname) {
   );
 }
 
+# It doesn't make sense to use the default index file if a datacheck_dir
+# is specified (and vice versa).
+if (defined $datacheck_dir && ! defined $index_file) {
+  die "index_file is mandatory if datacheck_dir is specified";
+}
+if (! defined $datacheck_dir && defined $index_file) {
+  die "datacheck_dir is mandatory if index_file is specified";
+}
+
 my %manager_params;
 $manager_params{names}           = \@names           if scalar @names;
 $manager_params{patterns}        = \@patterns        if scalar @patterns;
