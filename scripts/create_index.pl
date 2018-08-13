@@ -25,12 +25,14 @@ perl create_index.pl [options]
 =item B<-d[atacheck_dir]> <datacheck_dir>
 
 The directory containing the datacheck modules. Defaults to the repository's
-default value (lib/Bio/EnsEMBL/DataCheck/Checks).
+default value (lib/Bio/EnsEMBL/DataCheck/Checks). 
+Mandatory if -index_file is specified.
 
 =item B<-i[ndex_file]> <index_file>
 
 The path to the index_file that will be created/updated. Defaults to the
-repository's default value (lib/Bio/EnsEMBL/DataCheck/index.json).
+repository's default value (lib/Bio/EnsEMBL/DataCheck/index.json). 
+Mandatory if -datacheck_dir is specified.
 
 =item B<-h[elp]>
 
@@ -58,6 +60,16 @@ GetOptions(
 );
 
 pod2usage(1) if $help;
+
+# It doesn't make sense to update the default index file if a datacheck_dir
+# is specified (and vice versa); one wants the default directory and index
+# to remain in sync.
+if (defined $datacheck_dir && ! defined $index_file) {
+  die "index_file is mandatory if datacheck_dir is specified";
+}
+if (! defined $datacheck_dir && defined $index_file) {
+  die "datacheck_dir is mandatory if index_file is specified";
+}
 
 my %manager_params;
 $manager_params{datacheck_dir} = $datacheck_dir if defined $datacheck_dir;
