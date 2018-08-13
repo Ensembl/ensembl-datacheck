@@ -1,16 +1,77 @@
-# Copyright [2018] EMBL-European Bioinformatics Institute
-#
-# Licensed under the Apache License, Version 2.0 (the 'License');
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an 'AS IS' BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+=head1 LICENSE
+
+Copyright [2018] EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the 'License');
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an 'AS IS' BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+=head1 SYNOPSIS
+
+perl create_datacheck.pl [options]
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-n[ame]> <name>
+
+Mandatory. The name of the datacheck, in 'camel case', e.g. ForeignKeys.
+
+=item B<-de[scription]> <description>
+
+Mandatory. Short description of datacheck.
+
+=item B<-c[lass]> ['BaseCheck'|'DbCheck']
+
+The Perl class for the datacheck. It is extremely unlikely that you will 
+need anything other than the default, 'DbCheck'.
+
+=item B<-g[roups]> <groups>
+
+The groups to which the datacheck belongs, in lower case with underscores, 
+e.g. core_handover. Multiple groups can be given as separate -groups, 
+or as a single comma-separated string.
+
+=item B<-da[tacheck_type]> ['critical'|'advisory']
+
+The type of the datacheck. The default in the datacheck framework is 
+'critical', so you only really need to set this for advisory datachecks.
+
+=item B<-db[_types]> <db_types>
+
+Only relevant for 'DbCheck' class datachecks. The types of database for 
+which the datacheck is appropriate, e.g. 'core', 'compara'. Multiple db_types
+can be given as separate -db_types, or as a single comma-separated string.
+
+=item B<-t[ables]> <tables>
+
+Only relevant for 'DbCheck' class datachecks. The database tables that 
+contain data used by the datacheck, e.g. 'gene', 'object_xref'. Multiple tables
+can be given as separate -tables, or as a single comma-separated string.
+
+=item B<-p[er_db]> [0|1]
+
+Only relevant for 'DbCheck' class datachecks. The default in the datacheck 
+framework is to run once per species (per_db = 0). For collection 
+databases it may be appropriate for the datacheck to run once per database 
+instead.
+
+=item B<-h[elp]>
+
+Print usage information.
+
+=back
+
+=cut
 
 use warnings;
 use strict;
@@ -20,18 +81,21 @@ use Bio::EnsEMBL::DataCheck::Manager;
 
 use File::Copy qw(move);
 use File::Spec::Functions qw(catdir);
-use Path::Tiny;
-
 use Getopt::Long qw(:config no_ignore_case);
-
-my ($class, $name, $description, @groups, $datacheck_type,
-    @db_types, @tables, $per_db,
+use Path::Tiny;
+use Pod::Usage;
+    
+my (
+    $help,
+    $name, $description, $class,
+    @groups, $datacheck_type, @db_types, @tables, $per_db,
 );
 
 GetOptions(
-  "class:s",          \$class,
+  "help!",            \$help,
   "name=s",           \$name,
   "description=s",    \$description,
+  "class:s",          \$class,
   "groups:s",         \@groups,
   "datacheck_type:s", \$datacheck_type,
   "db_types:s",       \@db_types,
@@ -39,10 +103,12 @@ GetOptions(
   "per_db:i",         \$per_db,
 );
 
-$class = 'DbCheck' unless defined $class;
-die "class '$class' not recognised" unless $class =~ /^BaseCheck|DbCheck$/;
+pod2usage(1) if $help;
+
 die 'name required' unless defined $name;
 die 'description required' unless defined $description;
+$class = 'DbCheck' unless defined $class;
+die "class '$class' not recognised" unless $class =~ /^BaseCheck|DbCheck$/;
 
 $name = ucfirst($name);
 
@@ -56,15 +122,15 @@ if (@groups) {
 if (defined $datacheck_type) {
   push @parameters, "DATACHECK_TYPE => '$datacheck_type'";
 }
-if (@db_types) {
+if ($class eq 'DbCheck' && @db_types) {
   @db_types = sort map { split(/[,\s]+/, $_) } @db_types;
   push @parameters, "DB_TYPES   $padding => [" . join(", ", map {"'$_'"} @db_types) . "]";
 }
-if (@tables) {
+if ($class eq 'DbCheck' && @tables) {
   @tables = sort map { split(/[,\s]+/, $_) } @tables;
   push @parameters, "TABLES     $padding => [" . join(", ", map {"'$_'"} @tables) . "]";
 }
-if (defined $per_db) {
+if ($class eq 'DbCheck' && defined $per_db) {
   push @parameters, "PER_DB$padding => $per_db";
 }
 
