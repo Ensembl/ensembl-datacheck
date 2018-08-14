@@ -148,7 +148,7 @@ sub _registry_default {
 
 =head2 old_server_uri
   Description: URI for a mysql server with old versions of databases for
-               comparisons with the dba. Not used if old_registry_file is given.
+               comparisons with the dba.
 =cut
 has 'old_server_uri' => (
   is  => 'ro',
