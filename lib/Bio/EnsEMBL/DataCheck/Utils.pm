@@ -14,9 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =head1 NAME
+
 Bio::EnsEMBL::DataCheck::Utils
 
 =head1 DESCRIPTION
+
 General purpose functions for datachecks.
 
 =cut
@@ -33,6 +35,20 @@ our @EXPORT_OK = qw( repo_location sql_count );
 
 use File::Spec::Functions qw/catdir splitdir/;
 
+=head2 Utility functions
+
+=over 4
+
+=item B<repo_location>
+
+repo_location($repo_name);
+
+Finds the path to an Ensembl repository C<$repo_name> in your Perl environment.
+E.g. C<repo_location(ensembl-variation)> might return
+C</homes/superstar/work/repositories/ensembl-variation>.
+
+=cut
+
 sub repo_location {
   my ($repo_name) = @_;
 
@@ -48,6 +64,21 @@ sub repo_location {
 
   die "$repo_name was not found in \@INC:\n" . join("\n", @INC);
 }
+
+=item B<sql_count>
+
+sql_count($dbc, $sql, $params);
+
+This runs an SQL statement C<$sql> against the database connection C<$dbc>.
+An arrayref of parameters specified via C<$params> are substituted in for '?'
+symbols inthe SQL statement in the usual DBI-ish way. The SQL statement can
+be an explicit C<COUNT(*)> (recommended for speed) or a C<SELECT> statement
+whose rows will be counted. The database connection can be a
+Bio::EnsEMBL::DBSQL::DBConnection or DBAdaptor object.
+
+=back
+
+=cut
 
 sub sql_count {
   my ($dbc, $sql, $params) = @_;

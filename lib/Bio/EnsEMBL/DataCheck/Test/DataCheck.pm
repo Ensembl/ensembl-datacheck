@@ -17,9 +17,11 @@ limitations under the License.
 =cut
 
 =head1 NAME
+
 Bio::EnsEMBL::DataCheck::Test::DataCheck
 
 =head1 DESCRIPTION
+
 Collection of Test::More style tests for Ensembl data.
 
 =cut
@@ -31,7 +33,6 @@ use strict;
 use feature 'say';
 
 use Test::Builder::Module;
-# use Test::Deep::NoTest;
 
 our $VERSION = 1.00;
 our @ISA     = qw(Test::Builder::Module);
@@ -73,7 +74,7 @@ to check whether data is as expected.
 
 =item B<is_rows>
 
-  is_rows($dbc, $sql, $expected, $test_name);
+is_rows($dbc, $sql, $expected, $test_name);
 
 This runs an SQL statement C<$sql> against the database connection C<$dbc>.
 If the number of rows matches C<$expected>, the test will pass. The SQL
@@ -98,7 +99,7 @@ sub is_rows {
 
 =item B<cmp_rows>
 
-  cmp_rows($dbc, $sql, $operator, $expected, $test_name);
+cmp_rows($dbc, $sql, $operator, $expected, $test_name);
 
 This runs an SQL statement C<$sql> against the database connection C<$dbc>.
 If the number of rows is C<$operator $expected>, the test will pass. The
@@ -124,7 +125,7 @@ sub cmp_rows {
 
 =item B<is_rows_zero>
 
-  is_rows_zero($dbc, $sql, $test_name, $diag_msg);
+is_rows_zero($dbc, $sql, $test_name, $diag_msg);
 
 This runs an SQL statement C<$sql> against the database connection C<$dbc>.
 If the number of rows is zero, the test will pass. The SQL statement can be
@@ -169,9 +170,11 @@ sub is_rows_zero {
 
 =item B<is_rows_nonzero>
 
-  is_rows_nonzero($dbc, $sql, $test_name);
+is_rows_nonzero($dbc, $sql, $test_name);
 
 Convenience method, equivalent to cmp_rows($dbc, $sql, '>', 0, $test_name).
+
+=back
 
 =cut
 
@@ -187,14 +190,17 @@ sub is_rows_nonzero {
 
 =head2 Comparing Database Rows
 
+=over 4
+
 =item B<row_totals>
+
 =item B<row_subtotals>
 
 Rather than compare a row count with an expected value, we might want to
 compare with a count from another database. The simplest scenario is when
 there's a single total to compare.
 
-  row_totals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
+row_totals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
 
 This runs an SQL statement C<$sql1> against database connection C<$dbc1>,
 and C<$sql2> against C<$dbc2>. In most cases one of these parameters will
@@ -221,12 +227,14 @@ out; it is optional, but we B<very> strongly encourage its use.
 A slightly more complex case is when you want to compare counts within
 categories, i.e. with an SQL query that uses a GROUP BY statement.
 
-  row_subtotals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
+row_subtotals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
 
 In this case the SQL statements must return only two columns, the subtotal
 category and the count, e.g. C<SELECT biotype, COUNT(*) FROM gene GROUP BY biotype>.
 If any subtotals are lower than expected the test will fail, and the details
 will be provided in a diagnostic message.
+
+=back
 
 =cut
 
@@ -290,13 +298,15 @@ sub row_subtotals {
 
 =head2 Testing Referential Integrity 
 
+=over 4
+
 =item B<fk>
 
 Referential integrity is not enforced by the MyISAM tables that we
 currently use. InnoDB might come in to play in the future, but for
 now it needs to be checked.
 
-  fk($dbc, $table1, $col1, $table2, $col2, $constraint, $test_name);
+fk($dbc, $table1, $col1, $table2, $col2, $constraint, $test_name);
 
 For the database connection C<$dbc> this checks that every instance of
 C<$table1.$col1> exists in C<$table2.$col2>, i.e. there are no "orphan"
@@ -309,6 +319,8 @@ are checked.
 
 C<$test_name> is a very short description of the test that will be printed
 out; if not provided, a descriptive name will be generated.
+
+=back
 
 =cut
 
