@@ -75,7 +75,7 @@ sub fetch_input {
 
   my $output_file;
   if ($self->param_is_defined('output_dir') && $self->param_is_defined('output_filename')) {
-    $output_file = $self->param('output_dir') . '/' . $self->param('output_filename') . '.txt';
+    $self->param('output_file', $self->param('output_dir') . '/' . $self->param('output_filename') . '.txt');
   }
 
   my %manager_params;
@@ -87,7 +87,7 @@ sub fetch_input {
   $manager_params{datacheck_dir} = $self->param('datacheck_dir') if $self->param_is_defined('datacheck_dir');
   $manager_params{index_file}    = $self->param('index_file')    if $self->param_is_defined('index_file');
   $manager_params{history_file}  = $self->param('history_file')  if $self->param_is_defined('history_file');
-  $manager_params{output_file}   = $output_file                  if defined $output_file;
+  $manager_params{output_file}   = $self->param('output_file')   if $self->param_is_defined('output_file');
 
   my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
   $self->param('manager', $manager);
@@ -136,6 +136,8 @@ sub write_output {
     datachecks_passed  => $self->param('passed'),
     datachecks_failed  => $self->param('failed'),
     datachecks_skipped => $self->param('skipped'),
+    history_file       => $self->param('history_file'),
+    output_file        => $self->param('output_file'),
   };
 
   $self->dataflow_output_id($summary, 1);
@@ -223,9 +225,9 @@ sub set_registry_param {
   my $server_uri     = $self->param('server_uri');
   my $old_server_uri = $self->param('old_server_uri');
 
-  $params{registry_file}  = $registry_file  if defined $registry_file;
-  $params{server_uri}     = $server_uri     if defined $server_uri;
-  $params{old_server_uri} = $old_server_uri if defined $old_server_uri;
+  $$params{registry_file}  = $registry_file  if defined $registry_file;
+  $$params{server_uri}     = $server_uri     if defined $server_uri;
+  $$params{old_server_uri} = $old_server_uri if defined $old_server_uri;
 }
 
 1;
