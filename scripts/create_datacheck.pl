@@ -134,7 +134,10 @@ if (! defined $datacheck_dir && defined $index_file) {
   die "datacheck_dir is mandatory if index_file is specified";
 }
 
+# We want camel case names; it would be too much effort to make this foolproof,
+# but there are some obvious things we can tackle with a simple regex.
 $name = ucfirst($name);
+$name =~ s/[_\-]+(\w)/\u$1/g;
 
 my @parameters;
 my $padding = defined $datacheck_type ? '   ' : '';
