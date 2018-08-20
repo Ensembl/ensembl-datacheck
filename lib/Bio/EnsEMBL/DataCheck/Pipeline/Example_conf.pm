@@ -98,7 +98,7 @@ sub pipeline_analyses {
                                         'RunDataChecks', 'DataCheckFactory',
                                      ],
                             },
-      -rc_name           => 'normal',
+      -rc_name           => 'default',
     },
 
     {
@@ -119,7 +119,7 @@ sub pipeline_analyses {
       -flow_into         => {
                               '2' => ['RunDataChecks'],
                             },
-      -rc_name           => 'normal',
+      -rc_name           => 'default',
     },
 
     {
@@ -140,7 +140,7 @@ sub pipeline_analyses {
                               datacheck_types    => $self->o('datacheck_types'),
                               failures_fatal     => $self->o('failures_fatal'),
                             },
-      -rc_name           => 'normal',
+      -rc_name           => 'default',
     },
 
     {
@@ -161,7 +161,7 @@ sub pipeline_analyses {
                               datacheck_types    => $self->o('datacheck_types'),
                               failures_fatal     => $self->o('failures_fatal'),
                             },
-      -rc_name           => 'normal',
+      -rc_name           => 'default',
       -flow_into         => {
                               '2->A' => {'DataCheckFan'    => INPUT_PLUS()},
                               'A->1' => {'DataCheckFunnel' => INPUT_PLUS()},
@@ -186,7 +186,7 @@ sub pipeline_analyses {
                               datacheck_types    => $self->o('datacheck_types'),
                               failures_fatal     => $self->o('failures_fatal'),
                             },
-      -rc_name           => 'normal',
+      -rc_name           => 'default',
       -flow_into         => {
                               '1' => ['?accu_name=results&accu_address=[]'],
                             },
@@ -211,7 +211,7 @@ sub pipeline_analyses {
                               datacheck_types    => $self->o('datacheck_types'),
                               failures_fatal     => $self->o('failures_fatal'),
                             },
-      -rc_name           => 'normal',
+      -rc_name           => 'default',
     },
 
   ];
@@ -220,7 +220,7 @@ sub pipeline_analyses {
 sub resource_classes {
   my ($self) = @_;
   return {
-    'normal' => {'LSF' => '-q production-rh7 -M 1000 -R "rusage[mem=1000]"'},
+    'default' => {'LSF' => '-q production-rh7 -M 500 -R "rusage[mem=500]"'},
   }
 }
 
