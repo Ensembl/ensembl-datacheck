@@ -164,9 +164,9 @@ if ($dbname) {
   }
   
   my $adaptor = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbtype eq 'compara';
-  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbtype eq 'funcgen';
-  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbtype eq 'variation';
+  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbtype && $dbtype eq 'compara';
+  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbtype && $dbtype eq 'funcgen';
+  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbtype && $dbtype eq 'variation';
 
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
 
