@@ -49,23 +49,18 @@ sub param_defaults {
   );
 
   my %dbcheck_params = (
-    dba     => undef,
-    dbname  => undef,
-    species => undef,
-    group   => undef,
-  );
-
-  my %dbdbcheck_params = (
-    registry_file     => undef,
-    server_uri        => undef,
-    old_registry_file => undef,
-    old_server_uri    => undef,
+    dba            => undef,
+    dbname         => undef,
+    species        => undef,
+    group          => undef,
+    registry_file  => undef,
+    server_uri     => undef,
+    old_server_uri => undef,
   );
 
   return {
     %manager_params,
     %dbcheck_params,
-    %dbdbcheck_params,
     failures_fatal => 1,
   };
 }
