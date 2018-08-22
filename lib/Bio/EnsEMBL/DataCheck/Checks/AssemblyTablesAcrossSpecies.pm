@@ -32,18 +32,22 @@ use constant {
   DESCRIPTION => 'Assembly is the same in core and core-like databases',
   GROUPS      => ['assembly', 'core_handover'],
   DB_TYPES    => ['core'],
-  TABLES      => ['assembly', 'seq_region']
+  TABLES      => ['assembly', 'seq_region'],
+  PER_DB      => 1,
 };
 
 sub tests {
   my ($self) = @_;
 
   my @core_like = qw/ cdna otherfeatures rnaseq /;
+  my $core_like_count = 0;
 
   foreach my $db_type (@core_like) {
-    diag("Looking for ".$self->species." $db_type database");
     my $core_like_dba = $self->get_dba($self->species, $db_type);
+
     if (defined $core_like_dba) {
+      $core_like_count++;
+
       my $desc = "assembly table has same number of rows in core and $db_type databases";
       my $sql  = q/
         SELECT cs.name, COUNT(*) FROM
@@ -55,6 +59,10 @@ sub tests {
       /;
       row_subtotals($self->dba, $core_like_dba, $sql, undef, 1, $desc);
     }
+  }
+  
+  if ($core_like_count == 0) {
+    skip("No core-like databases found in registry");
   }
 }
 
