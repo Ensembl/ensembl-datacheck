@@ -30,14 +30,14 @@
       "name" : "AssemblyAccession",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyAccession"
    },
-   "AssemblyException" : {
+   "AssemblyExceptions" : {
       "datacheck_type" : "critical",
       "description" : "Check if assembly_exceptions are present and correct.",
       "groups" : [
          "assembly",
          "handover"
       ],
-      "name" : "AssemblyException",
+      "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
    },
    "AssemblyMapping" : {
