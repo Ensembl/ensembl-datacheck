@@ -214,7 +214,7 @@ The database connections can be a Bio::EnsEMBL::DBSQL::DBConnection or
 DBAdaptor object. It is assumed that C<$dbc1> is the connection for a new or
 'primary' database, and that C<$dbc2> is for an old, or 'secondary' database.
 
-By default, the test only fails if the counts are exactly the same. To allow
+By default, the test only passes if the counts are exactly the same. To allow
 for some wiggle room, C<$min_proportion> can be used to define the minimum
 acceptable difference between the counts. For example, a value of 0.75 means
 that the count for C<$dbc2> must not be less than 75% of the count for C<$dbc1>.
@@ -249,8 +249,12 @@ sub row_totals {
 
   my ( $count1, undef ) = _query( $dbc1, $sql1 );
   my ( $count2, undef ) = _query( $dbc2, $sql2 );
-
-  return $tb->cmp_ok( $count2 * $min_proportion, '<=', $count1, $name );
+  
+  if ($min_proportion == 1) {
+    return $tb->is_eq( $count2, $count1, $name );
+  } else {
+    return $tb->cmp_ok( $count2 * $min_proportion, '<=', $count1, $name );
+  }
 }
 
 sub row_subtotals {

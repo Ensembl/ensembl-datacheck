@@ -38,7 +38,7 @@
          "handover"
       ],
       "name" : "AssemblyException",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyException"
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
    },
    "AssemblyMapping" : {
       "datacheck_type" : "critical",
@@ -113,6 +113,33 @@
       "name" : "GeneBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneBounds"
    },
+   "GeneCounts" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that gene counts are correct",
+      "groups" : [
+         "genes"
+      ],
+      "name" : "GeneCounts",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneCounts"
+   },
+   "GeneGC" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every gene has a GC statistic",
+      "groups" : [
+         "genes"
+      ],
+      "name" : "GeneGC",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneGC"
+   },
+   "GenomeStatistics" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that genome statistics are present and correct",
+      "groups" : [
+         "genes"
+      ],
+      "name" : "GenomeStatistics",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
+   },
    "LRG" : {
       "datacheck_type" : "critical",
       "description" : "Check that LRG features and seq_regions are correctly associated.",
@@ -130,6 +157,15 @@
       ],
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
+   },
+   "PepstatsAttributes" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every translation has pepstats statistics",
+      "groups" : [
+         "genes"
+      ],
+      "name" : "PepstatsAttributes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PepstatsAttributes"
    },
    "SequenceLevel" : {
       "datacheck_type" : "critical",

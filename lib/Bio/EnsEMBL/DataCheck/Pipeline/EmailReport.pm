@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =head1 NAME
-Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFactory
+Bio::EnsEMBL::DataCheck::Pipeline::EmailReport
 
 =head1 DESCRIPTION
-A Hive module that uses the Manager to load a set of datachecks.
+Send an email with the overall result of the datachecks,
+and links to output files, if they were created.
 
 =cut
 

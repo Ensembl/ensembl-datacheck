@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AssemblyException;
+package Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions;
 
 use warnings;
 use strict;
@@ -35,6 +35,7 @@ use constant {
   DB_TYPES    => ['core'],
   TABLES      => ['analysis', 'assembly_exception', 'dna_align_feature',
                   'external_db', 'seq_region',],
+  PER_DB      => 1,
 };
 
 sub skip_tests {
