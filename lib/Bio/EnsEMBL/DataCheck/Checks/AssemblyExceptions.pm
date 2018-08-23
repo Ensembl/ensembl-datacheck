@@ -29,7 +29,7 @@ use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'AssemblyException',
+  NAME        => 'AssemblyExceptions',
   DESCRIPTION => 'Check if assembly_exceptions are present and correct.',
   GROUPS      => ['assembly', 'handover'],
   DB_TYPES    => ['core'],
