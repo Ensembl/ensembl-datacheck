@@ -37,6 +37,7 @@ use constant {
 
 sub tests {
   my ($self) = @_;
+  my $helper = $self->dba->dbc->sql_helper;
   my $species_id = $self->dba->species_id;
 
   # The names of the count attributes aren't consistently derivable
@@ -53,6 +54,19 @@ sub tests {
     my $desc = "Counts match for $biotype_group biotypes";
 
     my $sql_a = qq/
+      SELECT SUM(seq_region_attrib.value) FROM
+        seq_region INNER JOIN
+        seq_region_attrib USING (seq_region_id) INNER JOIN
+        attrib_type USING (attrib_type_id) INNER JOIN
+        coord_system USING (coord_system_id)
+      WHERE
+        attrib_type.code = '$attrib_code' AND
+        coord_system.species_id = $species_id
+    /;
+    my $sum = $helper->execute_single_result(-SQL => $sql_a, -NO_ERROR => 1);
+    $sum = 0 unless defined $sum;
+
+    my $sql_b = qq/
       SELECT COUNT(*) FROM
         gene INNER JOIN
         biotype ON gene.biotype = biotype.name INNER JOIN
@@ -60,21 +74,12 @@ sub tests {
         coord_system USING (coord_system_id)
       WHERE
         biotype.biotype_group = '$biotype_group' AND
+        biotype.object_type = 'gene' AND
+        FIND_IN_SET( 'core', biotype.db_type ) > 0 AND
         coord_system.species_id = $species_id
     /;
 
-    my $sql_b = qq/
-      SELECT COUNT(*) FROM
-        seq_region INNER JOIN
-        seq_region_attrib  USING (seq_region_id) INNER JOIN
-        attrib_type USING (attrib_type_id) INNER JOIN
-        coord_system USING (coord_system_id)
-      WHERE
-        attrib_type.code = '$attrib_code' AND
-        coord_system.species_id = $species_id
-    /;
-
-    row_totals($self->dba, undef, $sql_a, $sql_b, 1, $desc);
+    is_rows($self->dba, $sql_b, $sum, $desc);
   }
 }
 
