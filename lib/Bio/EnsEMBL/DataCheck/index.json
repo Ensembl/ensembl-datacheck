@@ -97,6 +97,13 @@
       "name" : "CoreForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys"
    },
+   "CurrentRegulatoryBuildHasEpigenomes" : {
+      "datacheck_type" : "critical",
+      "description" : "Check if the current regulatory build has epigenomes data",
+      "groups" : [],
+      "name" : "CurrentRegulatoryBuildHasEpigenomes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes"
+   },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file.",
