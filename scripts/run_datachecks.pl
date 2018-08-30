@@ -143,7 +143,7 @@ GetOptions(
   "registry_file=s",   \$registry_file,
   "server_uri=s",      \$server_uri,
   "old_server_uri=s",  \$old_server_uri,
-  "names:s",           \@names,
+  "names|n:s",         \@names,
   "patterns:s",        \@patterns,
   "groups:s",          \@groups,
   "datacheck_types:s", \@datacheck_types,
