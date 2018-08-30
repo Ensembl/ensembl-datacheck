@@ -34,18 +34,16 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $helper = $self->dba->dbc->sql_helper;
   my $database_name = $self->dba->dbc->dbname;
   my $engine = 'MyISAM';
-  # The test should pass is a database schema match the given MySQL storage engine
-  # It should fail and report tables that are not on the given MySQL storage engine
+  my $diag = "Non-$engine table:";
   my $desc = "All tables are using MySQL $engine storage engine";
   my $sql = qq/ SELECT TABLE_NAME FROM 
                  information_schema.tables WHERE 
                  table_schema = '$database_name' AND
                  engine <> '$engine'
   /;
-  is_rows_zero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 1;
 
