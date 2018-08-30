@@ -165,6 +165,13 @@
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
    },
+   "MySQLStorageEngine" : {
+      "datacheck_type" : "critical",
+      "description" : "check if database schema uses non-myisam storage engines",
+      "groups" : [],
+      "name" : "MySQLStorageEngine",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MySQLStorageEngine"
+   },
    "PepstatsAttributes" : {
       "datacheck_type" : "critical",
       "description" : "Check that every translation has pepstats statistics",
