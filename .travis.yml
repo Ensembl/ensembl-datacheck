@@ -28,10 +28,6 @@ install:
 
 script: "./travisci/harness.sh"
 
-matrix:
-  exclude:
-    - perl: "5.14"
-      env: COVERALLS=true  DB=mysql
 
 notifications:
   email:
