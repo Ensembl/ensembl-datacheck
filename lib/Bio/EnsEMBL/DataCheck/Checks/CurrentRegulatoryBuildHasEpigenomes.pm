@@ -52,8 +52,8 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
     
-    my $desc = "Current Regulatory build has Epigenomes";
-    my $sql  = qq/
+  my $desc = "Current regulatory build has epigenomes";
+  my $sql  = qq/
     SELECT DISTINCT epigenome.name FROM
       regulatory_build JOIN
       regulatory_build_epigenome USING (regulatory_build_id) JOIN
