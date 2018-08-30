@@ -1,7 +1,6 @@
 #!/bin/bash
 
-
-export PERL5LIB=$PWD/bioperl-live:$PWD/ensembl-test/modules:$PWD/lib:$PWD/ensembl/modules:$PWD/ensembl-variation/modules
+export PERL5LIB=$PWD/bioperl-live-bioperl-release-1-2-3:$PWD/ensembl-test/modules:$PWD/lib:$PWD/ensembl/modules:$PWD/ensembl-variation/modules
 
 if [ "$DB" = 'mysql' ]; then
     (cd t && ln -sf MultiTestDB.conf.mysql MultiTestDB.conf)
