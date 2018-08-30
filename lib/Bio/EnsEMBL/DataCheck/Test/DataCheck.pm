@@ -217,7 +217,7 @@ DBAdaptor object. It is assumed that C<$dbc1> is the connection for a new or
 By default, the test only passes if the counts are exactly the same. To allow
 for some wiggle room, C<$min_proportion> can be used to define the minimum
 acceptable difference between the counts. For example, a value of 0.75 means
-that the count for C<$dbc2> must not be less than 75% of the count for C<$dbc1>.
+that the count for C<$dbc1> must not be less than 75% of the count for C<$dbc2>.
 If two SQL statements are given, a value of 0.75 means that the count for
 C<$sql1> must not be less than 75% of the count for C<$sql2>.
 
