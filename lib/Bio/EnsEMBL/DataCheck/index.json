@@ -100,7 +100,10 @@
    "CurrentRegulatoryBuildHasEpigenomes" : {
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has epigenomes data",
-      "groups" : [],
+      "groups" : [
+         "funcgen_integrity",
+         "funcgen_Post_regulatory_build."
+      ],
       "name" : "CurrentRegulatoryBuildHasEpigenomes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes"
    },
@@ -167,7 +170,7 @@
    },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
-      "description" : "check if database schema uses non-myisam storage engines",
+      "description" : "Check if database schema does not match the given MySQL storage engine",
       "groups" : [],
       "name" : "MySQLStorageEngine",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MySQLStorageEngine"
@@ -180,6 +183,15 @@
       ],
       "name" : "PepstatsAttributes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PepstatsAttributes"
+   },
+   "SchemaVersion" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the schema version meta_key matches the DB name",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "SchemaVersion",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
    },
    "SequenceLevel" : {
       "datacheck_type" : "critical",
