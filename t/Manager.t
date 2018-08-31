@@ -426,11 +426,19 @@ subtest 'Read and write history file (DbCheck)', sub {
   my $json = $history_file->slurp;
   my $history = JSON->new->decode($json);
 
-  my $dbserver   = $dba->dbc->host . ':' . $dba->dbc->port;
-  my $dbname     = $dba->dbc->dbname;
-  my $db_history = $$history{$dbserver}{$dbname}{'1'};
+  my $dbserver = $dba->dbc->host . ':' . $dba->dbc->port;
+  my $dbname   = $dba->dbc->dbname;
+  my $db_history_species = $$history{$dbserver}{$dbname}{'1'};
+  my $db_history_all     = $$history{$dbserver}{$dbname}{'all'};
 
   foreach (@$datachecks) {
+    my $db_history;
+    if ($_->name eq 'DbCheck_4') {
+      $db_history = $db_history_all;
+    } else {
+      $db_history = $db_history_species;
+    }
+
     ok(exists $$db_history{$_->name}, 'Results written for '.$_->name);
 
     my @datacheck_attributes = sort keys %{$$db_history{$_->name}};
