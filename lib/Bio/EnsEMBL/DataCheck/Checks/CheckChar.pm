@@ -24,6 +24,8 @@ use strict;
 use Moose;
 use Test::More;
 
+use 'Bio::EnsEMBL::DataCheck::Test::DataCheck';
+
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
