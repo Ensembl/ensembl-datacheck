@@ -37,7 +37,7 @@ sub tests {
 
     # Test description length
     my $sql_length = qq/
-        SELECT name
+        SELECT *
         FROM phenotype
         WHERE description IS NOT NULL
         AND LENGTH(description) < 4
@@ -48,7 +48,7 @@ sub tests {
 
     # Test description new line character
     my $sql_newline = qq/
-        SELECT name
+        SELECT *
         FROM phenotype
         WHERE description IS NOT NULL
         AND description LIKE '%\n%'
@@ -59,10 +59,11 @@ sub tests {
 
     # Test ASCII vars
     my $sql_ascii = qq/
-        SELECT name, description
+        SELECT *
         FROM phenotype
-        WHERE description NOT REGEXP '[ -~]'
-        OR description REGEXP '.*\<.*\>.*'
+        WHERE description REGEXP '[^ -;=\?-~]'
+        OR LEFT(description, 1) REGEXP '[^A-Za-z0-9]'
+
     /;
     my $desc_ascii = 'Phenotype description with unsupported character';
     my $diag_ascii = "Phenotype has suspect start or unsupported characters";
@@ -70,7 +71,7 @@ sub tests {
 
     # Check non terms in description
     my $sql_non_term = qq/
-        SELECT name, description
+        SELECT *
         FROM phenotype
         WHERE lower(description) in ("none", "not provided", "not specified", "not in omim", "variant of unknown significance", "not_provided", "?", ".")
     /;
