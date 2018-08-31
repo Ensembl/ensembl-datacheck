@@ -1,12 +1,9 @@
 #!/bin/bash
 
-ENSDIR="${ENSDIR:-$PWD}"
-
-export PERL5LIB=$ENSDIR/bioperl-live:$ENSDIR/ensembl-test/modules:$PWD/lib:$ENSDIR/ensembl/modules:$ENSDIR/ensembl-variation/modules
-export TEST_AUTHOR=$USER
+export PERL5LIB=$PWD/bioperl-live-bioperl-release-1-2-3:$PWD/ensembl-test/modules:$PWD/lib:$PWD/ensembl/modules:$PWD/ensembl-variation/modules
 
 if [ "$DB" = 'mysql' ]; then
-    (cd modules/t && ln -sf MultiTestDB.conf.mysql MultiTestDB.conf)
+    (cd t && ln -sf MultiTestDB.conf.mysql MultiTestDB.conf)
 else
     echo "Don't know about DB '$DB'"
     exit 1;
@@ -14,9 +11,9 @@ fi
 
 echo "Running test suite"
 if [ "$COVERALLS" = 'true' ]; then
-  PERL5OPT='-MDevel::Cover=+ignore,bioperl,+ignore,ensembl-test,+ignore,ensembl' perl $ENSDIR/ensembl-test/scripts/runtests.pl -verbose lib/t $SKIP_TESTS
+  PERL5OPT='-MDevel::Cover=+ignore,bioperl,+ignore,ensembl-test,+ignore,ensembl' perl $PWD/ensembl-test/scripts/runtests.pl -verbose t $SKIP_TESTS
 else
-  perl $ENSDIR/ensembl-test/scripts/runtests.pl lib/t $SKIP_TESTS
+  perl $PWD/ensembl-test/scripts/runtests.pl t $SKIP_TESTS
 fi
 
 rt=$?
