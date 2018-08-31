@@ -42,6 +42,8 @@ sub tests {
   
   my $fk_sql_file = $self->fk_sql_file();
 
+  # Extract the list of foreign keys
+  my %foreign_keys;
   foreach my $line ( path($fk_sql_file)->lines ) {
     next unless $line =~ /FOREIGN KEY/;
 
@@ -49,12 +51,25 @@ sub tests {
       /ALTER\s+TABLE\s+(\S+)\s+ADD\s+FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
 
     if (defined $table1 && defined $col1 && defined $table2 && defined $col2) {
+      my $fk_id = "$table1.$col1";
+      push @{$foreign_keys{$fk_id}}, [ $table1, $col1, $table2, $col2 ];
+    } else {
+      die "Failed to parse foreign key relationship from $line";
+    }
+  }
+  
+  # Check each FK
+  foreach my $fk_id (keys %foreign_keys) {
+    my $values = $foreign_keys{$fk_id};
+
+    SKIP: {
+      skip "several foreign keys for the same field in $fk_id", 1 unless @$values == 1;
+      my $fk_values = $values->[0];
+
       # In theory, need exceptions for gene_archive.peptide_archive_id and object_xref.analysis_id
       # which can be zero. But really, they should be null. And if they're not supposed
       # to be null, then they shouldn't be zero either.
-       fk($self->dba, $table1, $col1, $table2, $col2);
-    } else {
-      die "Failed to parse foreign key relationship from $line";
+      fk($self->dba, @$fk_values);
     }
   }
 }
