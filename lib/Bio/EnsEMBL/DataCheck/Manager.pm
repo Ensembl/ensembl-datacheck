@@ -271,10 +271,6 @@ sub write_index {
     my ($package_name) = $_->slurp =~ /^package\s*([^;]+)/m;
     my $datacheck = $package_name->new();
 
-    if (exists $index{$datacheck->name}) {
-      die "Datacheck named ".$datacheck->name." already exists in index";
-    }
-
     $index{$datacheck->name} = {
       package_name   => $package_name,
       name           => $datacheck->name,
