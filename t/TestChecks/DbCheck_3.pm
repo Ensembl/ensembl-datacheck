@@ -33,8 +33,6 @@ use constant {
 };
 
 sub tests {
-  pass();
-  pass();
 }
 
 1;
