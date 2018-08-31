@@ -251,10 +251,6 @@ sub read_index {
 sub write_index {
   my $self = shift;
 
-  if (!defined $self->index_file) {
-    die "Path to index file not specified";
-  }
-
   my %index;
   if (-s $self->index_file) {
     unless ($self->overwrite_files) {
