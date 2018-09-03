@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckChar;
+package Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription;
 
 use warnings;
 use strict;
@@ -28,36 +28,37 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-    NAME        => 'CheckChar',
-    DESCRIPTION => 'Check that imported names/descriptions contains only supported characters',
+    NAME        => 'PhenotypeDescription',
+    DESCRIPTION => 'Check that imported description contains only supported characters',
+    DB_TYPES    => [ 'variation' ],
+    TABLES      => [ 'phenotype' ]
 };
 
 sub tests {
     my ($self) = @_;
 
-    # Test description length
+    my $desc_length = 'Phenotype description length';
+    my $diag_length = "Row with suspiciously short description";
     my $sql_length = qq/
         SELECT *
         FROM phenotype
         WHERE description IS NOT NULL
         AND LENGTH(description) < 4
     /;
-    my $desc_length = 'Phenotype description length';
-    my $diag_length = "Phenotype is suspiciously short";
     is_rows_zero($self->dba, $sql_length, $desc_length, $diag_length);
 
-    # Test description new line character
+    my $desc_newline = 'Phenotype description with new line';
+    my $diag_newline = "Row with unsupported new line";
     my $sql_newline = qq/
         SELECT *
         FROM phenotype
         WHERE description IS NOT NULL
         AND description LIKE '%\n%'
     /;
-    my $desc_newline = 'Phenotype description with new line';
-    my $diag_newline = "Phenotype is suspiciously short";
     is_rows_zero($self->dba, $sql_newline, $desc_newline, $diag_newline);
 
-    # Test ASCII vars
+    my $desc_ascii = 'ASCII chars printable in description';
+    my $diag_ascii = "Row with unsupported ASCII chars";
     my $sql_ascii = qq/
         SELECT *
         FROM phenotype
@@ -65,18 +66,15 @@ sub tests {
         OR LEFT(description, 1) REGEXP '[^A-Za-z0-9]'
 
     /;
-    my $desc_ascii = 'Phenotype description with unsupported character';
-    my $diag_ascii = "Phenotype has suspect start or unsupported characters";
     is_rows_zero($self->dba, $sql_ascii, $desc_ascii, $diag_ascii);
 
-    # Check non terms in description
+    my $desc_non_term = 'Meaningful phenotype description';
+    my $diag_non_term = 'Row description is not useful';
     my $sql_non_term = qq/
         SELECT *
         FROM phenotype
         WHERE lower(description) in ("none", "not provided", "not specified", "not in omim", "variant of unknown significance", "not_provided", "?", ".")
     /;
-    my $desc_non_term = 'Phenotype description suggests no phenotype';
-    my $diag_non_term = 'Phenotype is not useful';
     is_rows_zero($self->dba, $sql_non_term, $desc_non_term, $diag_non_term);
 
 }

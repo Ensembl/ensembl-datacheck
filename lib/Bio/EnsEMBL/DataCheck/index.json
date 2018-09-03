@@ -79,12 +79,12 @@
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
    },
-   "CheckChar" : {
+   "PhenotypeDescription" : {
       "datacheck_type" : "critical",
       "description" : "Check that imported names/descriptions contains only supported characters",
       "groups" : [],
-      "name" : "CheckChar",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckChar"
+      "name" : "PhenotypeDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
    },
    "CompareBiotype" : {
       "datacheck_type" : "critical",
