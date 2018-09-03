@@ -97,6 +97,13 @@
       "name" : "CoreForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys"
    },
+   "EpigenomeHasSegmentationFile" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every epigenome which is part of the current Regulatory Build has a segmentation_file",
+      "groups" : [],
+      "name" : "EpigenomeHasSegmentationFile",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
+   },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file.",
