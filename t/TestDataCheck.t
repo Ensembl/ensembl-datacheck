@@ -15,6 +15,9 @@
 use strict;
 use warnings;
 
+# Quis custodiet ipsos custodes?
+use Test::Tester;
+
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
@@ -39,28 +42,131 @@ subtest 'Counting Database Rows', sub {
   my $sql_2 = 'SELECT stable_id FROM gene';
   my $sql_3 = 'SELECT COUNT(*) FROM gene WHERE stable_id = "banana"';
   my $sql_4 = 'SELECT stable_id FROM gene WHERE stable_id = "banana"';
+  
+  subtest 'is_rows', sub {
+    check_tests(
+      sub {
+        is_rows($dba, $sql_1, 354, 'pass: SQL statement with COUNT');
+        is_rows($dba, $sql_1, 355, 'fail: SQL statement with COUNT');
+        is_rows($dba, $sql_2, 354, 'pass: SQL statement without COUNT');
+        is_rows($dba, $sql_2, 355, 'fail: SQL statement without COUNT');
+        is_rows($dba->dbc, $sql_1, 354, 'pass: Use DBConnection instead of DBAdaptor');
+        is_rows($dba->dbc, $sql_1, 355, 'fail: Use DBConnection instead of DBAdaptor');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'is_rows method'
+    );
+  };
 
-  is_rows($dba, $sql_1, 354, 'SQL statement with COUNT');
-  is_rows($dba, $sql_2, 354, 'SQL statement without COUNT');
-  is_rows($dba->dbc, $sql_1, 354, 'Use DBConnection instead of DBAdaptor');
+  subtest 'cmp_rows', sub {
+    check_tests(
+      sub {
+        cmp_rows($dba, $sql_1, '>',  100, 'pass: Greater than comparison');
+        cmp_rows($dba, $sql_1, '>',  500, 'fail: Greater than comparison');
+        cmp_rows($dba, $sql_1, '!=',  25, 'pass: Not equals comparison');
+        cmp_rows($dba, $sql_1, '!=', 354, 'fail: Not equals comparison');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'cmp_rows method'
+    );
+  };
 
-  cmp_rows($dba, $sql_1, '>', 100, 'Greater than comparison');
-  cmp_rows($dba, $sql_1, '!=', 25, 'Not equals comparison');
+  subtest 'is_rows_nonzero', sub {
+    check_tests(
+      sub {
+        is_rows_nonzero($dba, $sql_1, 'pass: Non-zero count');
+        is_rows_nonzero($dba, $sql_3, 'fail: Non-zero count');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'is_rows_nonzero method'
+    );
+  };
 
-  is_rows_nonzero($dba, $sql_1, 'Non-zero count');
-
-  is_rows_zero($dba, $sql_3, 'SQL statement with COUNT');
-  is_rows_zero($dba, $sql_4, 'SQL statement without COUNT');
+  subtest 'is_rows_zero', sub {
+    check_tests(
+      sub {
+        is_rows_zero($dba, $sql_3, 'pass: SQL statement with COUNT');
+        is_rows_zero($dba, $sql_1, 'fail: SQL statement with COUNT');
+        is_rows_zero($dba, $sql_4, 'pass: SQL statement without COUNT');
+        is_rows_zero($dba, $sql_2, 'fail: SQL statement without COUNT');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'is_rows_zero method'
+    );
+  };
 };
 
 subtest 'Comparing Database Rows', sub {
-  my $dba2 = $testdb->get_DBAdaptor($db_type);
+  my $sql_1 = 'SELECT stable_id FROM gene';
+  my $sql_2 = 'SELECT stable_id FROM gene LIMIT 250';
+  my $sql_3 = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
+  my $sql_4 = 'SELECT biotype, COUNT(*) FROM gene WHERE biotype <> "protein_coding" GROUP BY biotype';
 
-  my $sql_1 = 'SELECT COUNT(*) FROM gene';
-  my $sql_2 = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
+  subtest 'row_totals', sub {
+    check_tests(
+      sub {
+        row_totals($dba, undef, $sql_1, $sql_1, 1, 'pass: Exact row totals');
+        row_totals($dba, undef, $sql_1, $sql_2, 1, 'fail: Exact row totals');
+        row_totals($dba, undef, $sql_1, $sql_2, 0.5, 'pass: Row totals with min_proportion');
+        row_totals($dba, undef, $sql_1, $sql_2, 0.9, 'pass: Row totals with min_proportion');
+        row_totals($dba, undef, $sql_2, $sql_1, 0.5, 'pass: Row totals with min_proportion');
+        row_totals($dba, undef, $sql_2, $sql_1, 0.9, 'fail: Row totals with min_proportion');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'row_totals method'
+    );
+  };
 
-  row_totals($dba, $dba2, $sql_1, undef, 1, 'Counts are the same');
-  row_subtotals($dba, $dba2, $sql_2, undef, 1, 'Biotype counts are the same');
+  subtest 'row_subtotals', sub {
+    check_tests(
+      sub {
+        row_subtotals($dba, undef, $sql_3, $sql_3, 1, 'pass: Row subtotals identical');
+        row_subtotals($dba, undef, $sql_3, $sql_4, 1, 'pass: Row subtotals asymmetry');
+        row_subtotals($dba, undef, $sql_4, $sql_3, 1, 'fail: Row subtotals asymmetry');
+        row_subtotals($dba, undef, $sql_3, $sql_4, 0,   'pass: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_3, $sql_4, 0.5, 'pass: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_4, $sql_3, 0,   'pass: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_4, $sql_3, 0.5, 'fail: Row subtotals with min_proportion');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'row_subtotals method'
+    );
+  };
 };
 
 done_testing();
