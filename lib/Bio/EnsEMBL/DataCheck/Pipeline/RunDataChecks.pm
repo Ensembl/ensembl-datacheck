@@ -52,7 +52,7 @@ sub param_defaults {
     dba            => undef,
     dbname         => undef,
     species        => undef,
-    group          => undef,
+    group          => 'core',
     registry_file  => undef,
     server_uri     => undef,
     old_server_uri => undef,
@@ -74,15 +74,17 @@ sub fetch_input {
   }
 
   my %manager_params;
-  $manager_params{names}           = $self->param('datacheck_names');
-  $manager_params{patterns}        = $self->param('datacheck_patterns');
-  $manager_params{groups}          = $self->param('datacheck_groups');
-  $manager_params{datacheck_types} = $self->param('datacheck_types');
-
   $manager_params{datacheck_dir} = $self->param('datacheck_dir') if $self->param_is_defined('datacheck_dir');
   $manager_params{index_file}    = $self->param('index_file')    if $self->param_is_defined('index_file');
   $manager_params{history_file}  = $self->param('history_file')  if $self->param_is_defined('history_file');
   $manager_params{output_file}   = $self->param('output_file')   if $self->param_is_defined('output_file');
+
+  $manager_params{overwrite_files} = $self->param('overwrite_files');
+
+  $manager_params{names}           = $self->param('datacheck_names');
+  $manager_params{patterns}        = $self->param('datacheck_patterns');
+  $manager_params{groups}          = $self->param('datacheck_groups');
+  $manager_params{datacheck_types} = $self->param('datacheck_types');
 
   my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
   $self->param('manager', $manager);
@@ -200,9 +202,10 @@ sub set_dba_param {
       if (defined $dba) {
         $dba_species_only = 1;
       } else {
-        # Need to change this, so we end up executing 'run_checks' for all groups?
         $self->throw("No $group database for $species in registry");
       }
+    } elsif (defined $species) {
+      $self->throw("Missing database group for $species");
     }
   }
 
@@ -210,6 +213,9 @@ sub set_dba_param {
     $$params{dba} = $dba;
     $$params{dba_species_only} = $dba_species_only;
   }
+
+  # Note that it's not an error to not define $dba; it's not a mandatory
+  # parameter for datachecks, because databases aren't necessarily needed.
 }
 
 sub set_registry_param {

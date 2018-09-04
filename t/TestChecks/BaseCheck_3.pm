@@ -37,8 +37,6 @@ sub skip_datacheck {
 }
 
 sub tests {
-  pass();
-  pass();
 }
 
 1;

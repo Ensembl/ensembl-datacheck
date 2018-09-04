@@ -26,7 +26,7 @@ perl create_datacheck.pl [options]
 
 Mandatory. The name of the datacheck, in 'camel case', e.g. ForeignKeys.
 
-=item B<-de[scription]> <description>
+=item B<-d[escription]> <description>
 
 Mandatory. Short description of datacheck.
 

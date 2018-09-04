@@ -31,6 +31,7 @@ use constant {
   DESCRIPTION => 'Passing DbCheck example, with table names.',
   DB_TYPES    => ['core'],
   TABLES      => ['gene', 'transcript'],
+  PER_DB      => 1,
 };
 
 sub tests {
