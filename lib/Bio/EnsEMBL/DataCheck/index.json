@@ -79,6 +79,13 @@
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
    },
+   "PhenotypeDescription" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that imported names/descriptions contains only supported characters",
+      "groups" : [],
+      "name" : "PhenotypeDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
    "CompareBiotype" : {
       "datacheck_type" : "critical",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
