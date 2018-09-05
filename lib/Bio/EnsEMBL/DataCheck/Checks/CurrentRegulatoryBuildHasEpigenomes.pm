@@ -41,7 +41,7 @@ sub skip_tests {
 
   my $sql = q/
     SELECT COUNT(name) FROM regulatory_build 
-    WHERE is_current=true
+    WHERE is_current=1
   /;
 
   if (! sql_count($self->dba, $sql) ) {
