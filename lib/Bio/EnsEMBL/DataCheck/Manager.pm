@@ -251,10 +251,6 @@ sub read_index {
 sub write_index {
   my $self = shift;
 
-  if (!defined $self->index_file) {
-    die "Path to index file not specified";
-  }
-
   my %index;
   if (-s $self->index_file) {
     unless ($self->overwrite_files) {
@@ -274,10 +270,6 @@ sub write_index {
 
     my ($package_name) = $_->slurp =~ /^package\s*([^;]+)/m;
     my $datacheck = $package_name->new();
-
-    if (exists $index{$datacheck->name}) {
-      die "Datacheck named ".$datacheck->name." already exists in index";
-    }
 
     $index{$datacheck->name} = {
       package_name   => $package_name,

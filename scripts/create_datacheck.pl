@@ -26,7 +26,7 @@ perl create_datacheck.pl [options]
 
 Mandatory. The name of the datacheck, in 'camel case', e.g. ForeignKeys.
 
-=item B<-de[scription]> <description>
+=item B<-d[escription]> <description>
 
 Mandatory. Short description of datacheck.
 
@@ -105,8 +105,8 @@ my (
 
 GetOptions(
   "help!",            \$help,
-  "name=s",           \$name,
-  "description=s",    \$description,
+  "name|n=s",         \$name,
+  "description|d=s",  \$description,
   "class:s",          \$class,
   "datacheck_dir:s",  \$datacheck_dir,
   "index_file:s",     \$index_file,
@@ -158,7 +158,7 @@ if ($class eq 'DbCheck' && @tables) {
   push @parameters, "TABLES     $padding => [" . join(", ", map {"'$_'"} @tables) . "]";
 }
 if ($class eq 'DbCheck' && defined $per_db) {
-  push @parameters, "PER_DB$padding => $per_db";
+  push @parameters, "PER_DB     $padding => $per_db";
 }
 
 my $parameters = '';
