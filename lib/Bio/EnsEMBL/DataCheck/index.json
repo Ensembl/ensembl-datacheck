@@ -97,16 +97,6 @@
       "name" : "CoreForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys"
    },
-   "EpigenomeHasSegmentationFile" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that every epigenome which is part of the current Regulatory Build has a segmentation_file",
-      "groups" : [
-          "funcgen_integrity",
-          "funcgen_Post_regulatory_build"
-      ],
-      "name" : "EpigenomeHasSegmentationFile",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
-   },
    "CurrentRegulatoryBuildHasEpigenomes" : {
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has epigenomes data",
@@ -116,6 +106,16 @@
       ],
       "name" : "CurrentRegulatoryBuildHasEpigenomes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes"
+   },
+   "EpigenomeHasSegmentationFile" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every epigenome which is part of the current Regulatory Build has a segmentation file in the segmentation_file table",
+      "groups" : [
+         "funcgen_integrity",
+         "funcgen_Post_regulatory_build"
+      ],
+      "name" : "EpigenomeHasSegmentationFile",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
    },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
