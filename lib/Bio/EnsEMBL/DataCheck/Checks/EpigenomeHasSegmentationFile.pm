@@ -41,7 +41,7 @@ sub skip_tests {
 
   my $sql = q/
     SELECT COUNT(name) FROM regulatory_build 
-    WHERE is_current=true
+    WHERE is_current=1
   /;
 
   if (! sql_count($self->dba, $sql) ) {
@@ -51,52 +51,17 @@ sub skip_tests {
 
 sub tests {
   my ($self) = @_;
-    my $regulatory_build_adaptor = $self->dba->get_adaptor('RegulatoryBuild');
-    my $regulatory_build = $regulatory_build_adaptor->fetch_current_regulatory_build;
-    my $epigenomes_in_regulatory_build = $regulatory_build->get_all_Epigenomes;
-    my $helper = $self->dba->dbc->sql_helper;
-    my $pass = 1;
-    my $desc = "All the epigenomes of the current Regulatory build have a segmentation file in the segmentation_file table";
-    foreach my $epigenome (@$epigenomes_in_regulatory_build){
-      my $sql  = q/
-        SELECT segmentation_file_id FROM
-          segmentation_file
-        WHERE epigenome_id=? AND regulatory_build_id=?
-        /;
-      my $segmentation_file = $helper->execute_simple(-SQL => $sql, -PARAMS => [$epigenome->dbID(),$regulatory_build->dbID()])->[0];
-      if (!defined $segmentation_file){
-        diag('Epigenome '.$epigenome->display_label().' has no segmentation file in the segmentation_file table');
-        $pass = 0;
-      }
-    }
-    ok($pass == 1, $desc);
-
-    # I think the code above is nicer when using the API but the MySQL access below is slightly faster (1-2s)
-    #my $helper = $self->dba->dbc->sql_helper;
-    #my $sql1 = q/SELECT regulatory_build_id FROM 
-    #               regulatory_build 
-    #            WHERE is_current=1/;
-    #my $regulatory_build_id = $helper->execute_single_result(-SQL => $sql1);
-    #my $sql2 = q/SELECT regulatory_build_epigenome_id, epigenome_id, ep.display_label FROM
-    #                      regulatory_build_epigenome rbe JOIN
-    #                      epigenome ep USING (epigenome_id) 
-    #                    WHERE rbe.regulatory_build_id=?/;
-    #my $epigenomes = $helper->execute(-SQL => $sql2, -USE_HASHREFS => 1, -PARAMS => [$regulatory_build_id] );
-    #my $pass = 1;
-    #my $desc = "All the epigenomes of the current Regulatory build have segmentation files";
-    #foreach my $epigenome (@$epigenomes){
-    #  my $sql3  = q/
-    #    SELECT segmentation_file_id FROM
-    #      segmentation_file
-    #    WHERE epigenome_id=? AND regulatory_build_id=?
-    #    /;
-    #  my $segmentation_file = $helper->execute_simple(-SQL => $sql3, -PARAMS => [$epigenome->{epigenome_id},$regulatory_build_id])->[0];
-    #  if (!defined $segmentation_file){
-    #    diag('Epigenome '.$epigenome->{display_label}.' has no segmentation file in the segmentation_file table');
-    #    $pass = 0;
-    #  }
-    #}
-    #ok($pass == 1, $desc);
+  my $desc = "All the epigenomes of the current regulatory build have a segmentation file";
+  my $diag = "Segmentation file missing for epigenome_id";
+  my $sql = q/
+    SELECT e.epigenome_id FROM
+      regulatory_build rb INNER JOIN
+      regulatory_build_epigenome rbe ON rb.regulatory_build_id = rbe.regulatory_build_id INNER JOIN
+      epigenome e ON rbe.epigenome_id = e.epigenome_id LEFT OUTER JOIN
+      segmentation_file sf ON e.epigenome_id = sf.epigenome_id
+    WHERE rb.is_current = 1 AND sf.epigenome_id is null
+  /;
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 
 1;
