@@ -201,6 +201,16 @@
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
    },
+   "SampleRegulatoryFeatureExists" : {
+      "datacheck_type" : "critical",
+      "description" : "Check if the current regulatory build has a sample regulatory feature",
+      "groups" : [
+         "funcgen_integrity",
+         "funcgen_Post_regulatory_build"
+      ],
+      "name" : "SampleRegulatoryFeatureExists",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists"
+   },
    "SchemaVersion" : {
       "datacheck_type" : "critical",
       "description" : "Check that the schema version meta_key matches the DB name",
