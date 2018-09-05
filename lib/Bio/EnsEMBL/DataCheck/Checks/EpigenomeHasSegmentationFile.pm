@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes;
+package Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile;
 
 use warnings;
 use strict;
@@ -29,9 +29,9 @@ use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'CurrentRegulatoryBuildHasEpigenomes',
-  DESCRIPTION => 'Check if the current regulatory build has epigenomes data',
-  GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build.'],
+  NAME        => 'EpigenomeHasSegmentationFile',
+  DESCRIPTION => 'Check that every epigenome which is part of the current Regulatory Build has a segmentation file in the segmentation_file table',
+  GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_build','regulatory_build_epigenome','epigenome'],
 };
@@ -51,16 +51,18 @@ sub skip_tests {
 
 sub tests {
   my ($self) = @_;
-    
-  my $desc = "Current regulatory build has epigenomes";
-  my $sql  = qq/
-    SELECT DISTINCT epigenome.name FROM
-      regulatory_build JOIN
-      regulatory_build_epigenome USING (regulatory_build_id) JOIN
-      epigenome USING (epigenome_id)
-    WHERE is_current=true
+  my $desc = "All the epigenomes of the current regulatory build have a segmentation file";
+  my $diag = "Segmentation file missing for epigenome_id";
+  my $sql = q/
+    SELECT e.epigenome_id FROM
+      regulatory_build rb INNER JOIN
+      regulatory_build_epigenome rbe ON rb.regulatory_build_id = rbe.regulatory_build_id INNER JOIN
+      epigenome e ON rbe.epigenome_id = e.epigenome_id LEFT OUTER JOIN
+      segmentation_file sf ON e.epigenome_id = sf.epigenome_id
+    WHERE rb.is_current = 1 AND sf.epigenome_id is null
   /;
-  is_rows_nonzero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
+
 1;
 
