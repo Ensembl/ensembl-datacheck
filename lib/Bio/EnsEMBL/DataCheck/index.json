@@ -191,6 +191,13 @@
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
    },
+   "RegulatoryFeatureIsActive" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every regulatory_feature of the current Regulatory Build has a valid activity value in at least one epigenome.",
+      "groups" : [],
+      "name" : "RegulatoryFeatureIsActive",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive"
+   },
    "SchemaVersion" : {
       "datacheck_type" : "critical",
       "description" : "Check that the schema version meta_key matches the DB name",
