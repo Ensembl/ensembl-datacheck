@@ -102,7 +102,7 @@
       "description" : "Check if the current regulatory build has epigenomes data",
       "groups" : [
          "funcgen_integrity",
-         "funcgen_Post_regulatory_build."
+         "funcgen_Post_regulatory_build"
       ],
       "name" : "CurrentRegulatoryBuildHasEpigenomes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes"
@@ -193,8 +193,11 @@
    },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every regulatory_feature of the current Regulatory Build has a valid activity value in at least one epigenome.",
-      "groups" : [],
+      "description" : "Check that every regulatory_feature of the current Regulatory Build have a valid activity value in at least one epigenome.",
+      "groups" : [
+         "funcgen_integrity",
+         "funcgen_Post_regulatory_build"
+      ],
       "name" : "RegulatoryFeatureIsActive",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive"
    },
