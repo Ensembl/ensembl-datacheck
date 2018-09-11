@@ -203,13 +203,24 @@
    },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every regulatory_feature of the current Regulatory Build have a valid activity value in at least one epigenome.",
+      "description" : "Check that every regulatory feature has a valid activity value in at least one epigenome.",
       "groups" : [
          "funcgen_integrity",
          "funcgen_Post_regulatory_build"
       ],
       "name" : "RegulatoryFeatureIsActive",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive"
+   },
+   "SampleRegulatoryFeatureExists" : {
+      "datacheck_type" : "critical",
+      "description" : "Check if the current regulatory build has a sample regulatory feature",
+      "groups" : [
+         "funcgen_integrity",
+         "funcgen_Post_regulatory_build"
+      ],
+      "name" : "SampleRegulatoryFeatureExists",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists"
+   },
    },
    "SchemaVersion" : {
       "datacheck_type" : "critical",
