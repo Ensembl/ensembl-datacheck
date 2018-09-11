@@ -53,10 +53,12 @@ sub tests {
   my ($self) = @_;
   my $desc = "Current regulatory build has a sample regulatory feature";
   my $sql  = qq/
-    SELECT regulatory_build.name FROM
-      regulatory_build JOIN 
-      regulatory_feature ON (regulatory_build.sample_regulatory_feature_id=regulatory_feature.regulatory_feature_id and regulatory_build.regulatory_build_id=regulatory_feature.regulatory_build_id) 
-    WHERE regulatory_feature.stable_id is not null
+    SELECT COUNT(*) FROM
+      regulatory_build rb JOIN 
+      regulatory_feature rf ON rb.sample_regulatory_feature_id = rf.regulatory_feature_id 
+    WHERE
+      rb.regulatory_build_id = rf.regulatory_build_id AND
+      rf.stable_id IS NOT NULL
   /;
   is_rows_nonzero($self->dba, $sql, $desc);
 }
