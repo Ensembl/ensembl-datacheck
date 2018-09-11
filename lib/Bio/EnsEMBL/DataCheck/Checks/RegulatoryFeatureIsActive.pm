@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'RegulatoryFeatureIsActive',
-  DESCRIPTION => 'Check that every regulatory_feature of the current Regulatory Build have a valid activity value in at least one epigenome.',
+  DESCRIPTION => 'Check that every regulatory feature has a valid activity value in at least one epigenome.',
   GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_build','regulatory_feature','regulatory_activity'],
@@ -51,15 +51,18 @@ sub skip_tests {
 
 sub tests {
   my ($self) = @_;
-  my $desc = "All epigenomes of regulatory_feature for current regulatory build have a valid activity";
+  my $desc = "Regulatory features have a valid activity value in at least one epigenome";
+  my $diag = "regulatory_feature_id";
   my $sql  = qq/
-    SELECT regulatory_feature.regulatory_feature_id FROM 
-      regulatory_build JOIN 
-      regulatory_feature USING (regulatory_build_id) LEFT JOIN 
-      regulatory_activity ON (regulatory_feature.regulatory_feature_id=regulatory_activity.regulatory_feature_id AND activity!='NA')
-    WHERE regulatory_activity.regulatory_activity_id IS NULL AND regulatory_build.is_current=1
+    SELECT rf.regulatory_feature_id FROM 
+      regulatory_build rb JOIN 
+      regulatory_feature rf USING (regulatory_build_id) LEFT JOIN 
+      regulatory_activity ra ON (rf.regulatory_feature_id = ra.regulatory_feature_id AND ra.activity <> 'NA')
+    WHERE
+      ra.regulatory_activity_id IS NULL AND
+      rb.is_current = 1
   /;
-  is_rows_zero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 1;
 
