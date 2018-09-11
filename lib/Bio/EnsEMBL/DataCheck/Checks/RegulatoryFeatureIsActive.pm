@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes;
+package Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive;
 
 use warnings;
 use strict;
@@ -29,11 +29,11 @@ use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'CurrentRegulatoryBuildHasEpigenomes',
-  DESCRIPTION => 'Check if the current regulatory build has epigenomes data',
+  NAME        => 'RegulatoryFeatureIsActive',
+  DESCRIPTION => 'Check that every regulatory feature has a valid activity value in at least one epigenome.',
   GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build'],
   DB_TYPES    => ['funcgen'],
-  TABLES      => ['regulatory_build','regulatory_build_epigenome','epigenome'],
+  TABLES      => ['regulatory_build','regulatory_feature','regulatory_activity'],
 };
 
 sub skip_tests {
@@ -51,16 +51,18 @@ sub skip_tests {
 
 sub tests {
   my ($self) = @_;
-    
-  my $desc = "Current regulatory build has epigenomes";
+  my $desc = "Regulatory features have a valid activity value in at least one epigenome";
+  my $diag = "regulatory_feature_id";
   my $sql  = qq/
-    SELECT DISTINCT epigenome.name FROM
-      regulatory_build JOIN
-      regulatory_build_epigenome USING (regulatory_build_id) JOIN
-      epigenome USING (epigenome_id)
-    WHERE is_current=true
+    SELECT rf.regulatory_feature_id FROM 
+      regulatory_build rb JOIN 
+      regulatory_feature rf USING (regulatory_build_id) LEFT JOIN 
+      regulatory_activity ra ON (rf.regulatory_feature_id = ra.regulatory_feature_id AND ra.activity <> 'NA')
+    WHERE
+      ra.regulatory_activity_id IS NULL AND
+      rb.is_current = 1
   /;
-  is_rows_nonzero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 1;
 

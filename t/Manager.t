@@ -62,17 +62,6 @@ subtest 'Default attributes', sub {
   is_deeply($manager->datacheck_types, [], 'Default datacheck_types correct (empty list)');
 };
 
-subtest 'Datacheck index', sub {
-  my $manager = $module->new();
-  my $index_1 = $manager->read_index();
-
-  my $tmp_index_file = Path::Tiny->tempfile();
-  $manager = $module->new(index_file => "$tmp_index_file");
-  my $index_2 = $manager->write_index();
-
-  is_deeply($index_1, $index_2, 'Index file is up-to-date');
-};
-
 subtest 'TestChecks directory', sub {
   my $manager = $module->new(
     datacheck_dir => $datacheck_dir,
