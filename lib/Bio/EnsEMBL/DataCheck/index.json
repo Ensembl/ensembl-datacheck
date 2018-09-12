@@ -117,6 +117,16 @@
       "name" : "EpigenomeHasSegmentationFile",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
    },
+   "ExperimentHasFeatureSet" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every distinct experiment, epigenome and feature_type combination is linked to a feature_set",
+      "groups" : [
+         "funcgen_integrity",
+         "funcgen_Post_regulatory_build"
+      ],
+      "name" : "ExperimentHasFeatureSet",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExperimentHasFeatureSet"
+   },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file.",
