@@ -45,15 +45,20 @@ sub tests {
 sub biotypes {
   my ($self, $feature) = @_;
   my $species_id = $self->dba->species_id;
+  my $db_type = $self->dba->group;
   
   my $desc = ucfirst($feature)."s have valid biotypes";
-  my $diag = "Invalid biotype";
+  my $diag = "Invalid biotype for $db_type $feature";
   my $sql = qq/
     SELECT t1.stable_id FROM
       $feature t1 INNER JOIN
       seq_region USING (seq_region_id) INNER JOIN
       coord_system USING (coord_system_id) LEFT OUTER JOIN
-      biotype t2 ON (t1.biotype = t2.name AND t2.object_type = '$feature')
+      biotype t2 ON (
+        t1.biotype = t2.name AND
+        t2.object_type = '$feature' AND
+        FIND_IN_SET('$db_type', db_type)
+      )
     WHERE
       t1.biotype IS NOT NULL AND
       t2.name IS NULL AND
