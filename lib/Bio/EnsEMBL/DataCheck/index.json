@@ -88,6 +88,24 @@
       "name" : "CompareBiotype",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype"
    },
+   "ControlledTablesCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that controlled tables are consistent with production database",
+      "groups" : [
+         "production_db"
+      ],
+      "name" : "ControlledTablesCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCore"
+   },
+   "ControlledTablesVariation" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that controlled tables are consistent with production database",
+      "groups" : [
+         "production_db"
+      ],
+      "name" : "ControlledTablesVariation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
+   },
    "CoreForeignKeys" : {
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships that are not defined by a \"foreign_keys.sql\" file..",
