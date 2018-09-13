@@ -134,6 +134,15 @@
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
    },
+   "GeneBiotypes" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that genes and transcripts have valid biotypes",
+      "groups" : [
+         "gene"
+      ],
+      "name" : "GeneBiotypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneBiotypes"
+   },
    "GeneBounds" : {
       "datacheck_type" : "critical",
       "description" : "Ensure that genes are within the bounds of their seq_region",
@@ -230,7 +239,6 @@
       ],
       "name" : "SampleRegulatoryFeatureExists",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists"
-   },
    },
    "SchemaVersion" : {
       "datacheck_type" : "critical",
