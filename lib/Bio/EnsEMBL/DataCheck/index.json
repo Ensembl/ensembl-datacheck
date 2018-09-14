@@ -70,16 +70,6 @@
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
    },
-   "AssemblyTablesAcrossSpecies" : {
-      "datacheck_type" : "critical",
-      "description" : "Assembly is the same in core and core-like databases",
-      "groups" : [
-         "assembly",
-         "core_handover"
-      ],
-      "name" : "AssemblyTablesAcrossSpecies",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyTablesAcrossSpecies"
-   },
    "AttribValues" : {
       "datacheck_type" : "advisory",
       "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist",
