@@ -70,16 +70,6 @@
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
    },
-   "AssemblyTablesAcrossSpecies" : {
-      "datacheck_type" : "critical",
-      "description" : "Assembly is the same in core and core-like databases",
-      "groups" : [
-         "assembly",
-         "core_handover"
-      ],
-      "name" : "AssemblyTablesAcrossSpecies",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyTablesAcrossSpecies"
-   },
    "AttribValues" : {
       "datacheck_type" : "advisory",
       "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist",
@@ -97,6 +87,24 @@
       ],
       "name" : "CompareBiotype",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype"
+   },
+   "ControlledTablesCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that controlled tables are consistent with production database",
+      "groups" : [
+         "production_db"
+      ],
+      "name" : "ControlledTablesCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCore"
+   },
+   "ControlledTablesVariation" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that controlled tables are consistent with production database",
+      "groups" : [
+         "production_db"
+      ],
+      "name" : "ControlledTablesVariation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
    },
    "CoreForeignKeys" : {
       "datacheck_type" : "critical",
