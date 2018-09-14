@@ -158,15 +158,18 @@ pod2usage(1) if $help;
 my $dba;
 if ($dbname) {
   if (! defined $dbtype) {
-    $dbtype = 'compara'   if $dbname =~ /_compara_/;
-    $dbtype = 'funcgen'   if $dbname =~ /_funcgen_/;
-    $dbtype = 'variation' if $dbname =~ /_variation_/;
+    if ($dbname =~ /_compara_/) {
+      $dbtype = 'compara';
+    } else {
+      ($dbtype) = $dbname =~ /_([a-z]+)[\d_]+$/;
+    }
   }
-  
+  die "Could not derive database type from dbname" unless defined $dbtype;
+
   my $adaptor = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbtype && $dbtype eq 'compara';
-  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbtype && $dbtype eq 'funcgen';
-  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbtype && $dbtype eq 'variation';
+  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbtype eq 'compara';
+  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbtype eq 'funcgen';
+  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbtype eq 'variation';
 
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
 
@@ -176,6 +179,7 @@ if ($dbname) {
     -user            => $user,
     -pass            => $pass,
     -dbname          => $dbname,
+    -group           => $dbtype,
     -multispecies_db => $multispecies_db,
   );
 }
