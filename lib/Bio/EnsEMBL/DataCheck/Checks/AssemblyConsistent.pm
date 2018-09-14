@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AssemblyTablesAcrossSpecies;
+package Bio::EnsEMBL::DataCheck::Checks::AssemblyConsistent;
 
 use warnings;
 use strict;
@@ -28,43 +28,33 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'AssemblyTablesAcrossSpecies',
+  NAME        => 'AssemblyConsistent',
   DESCRIPTION => 'Assembly is the same in core and core-like databases',
   GROUPS      => ['assembly', 'core_handover'],
-  DB_TYPES    => ['core'],
+  DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
   TABLES      => ['assembly', 'seq_region'],
   PER_DB      => 1,
 };
 
 sub tests {
   my ($self) = @_;
+  my $core_dba = $self->get_dba($self->species, 'core');
 
-  my @core_like = qw/ cdna otherfeatures rnaseq /;
-  my $core_like_count = 0;
-
-  foreach my $db_type (@core_like) {
-    my $core_like_dba = $self->get_dba($self->species, $db_type);
-
-    if (defined $core_like_dba) {
-      $core_like_count++;
-
-      my $desc = "assembly table has same number of rows in core and $db_type databases";
-      my $sql  = q/
-        SELECT cs.name, COUNT(*) FROM
-          assembly a INNER JOIN
-          seq_region sr ON a.asm_seq_region_id = sr.seq_region_id INNER JOIN
-          coord_system cs USING (coord_system_id)
-        WHERE sr.name NOT LIKE 'LRG%'
-        GROUP BY cs.name
-      /;
-      row_subtotals($self->dba, $core_like_dba, $sql, undef, 1, $desc);
-    }
-  }
-  
-  if ($core_like_count == 0) {
-    skip("No core-like databases found in registry");
+  if (! defined $core_dba) {
+    fail("Core database found in registry");
+  } else {
+    my $db_type = $self->dba->group;
+    my $desc = "assembly table has same number of rows in core and $db_type databases";
+    my $sql  = q/
+      SELECT cs.name, COUNT(*) FROM
+        assembly a INNER JOIN
+        seq_region sr ON a.asm_seq_region_id = sr.seq_region_id INNER JOIN
+        coord_system cs USING (coord_system_id)
+      WHERE sr.name NOT LIKE 'LRG%'
+      GROUP BY cs.name
+    /;
+    row_subtotals($self->dba, $core_dba, $sql, undef, 1, $desc);
   }
 }
 
 1;
-

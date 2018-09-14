@@ -30,6 +30,16 @@
       "name" : "AssemblyAccession",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyAccession"
    },
+   "AssemblyConsistent" : {
+      "datacheck_type" : "critical",
+      "description" : "Assembly is the same in core and core-like databases",
+      "groups" : [
+         "assembly",
+         "core_handover"
+      ],
+      "name" : "AssemblyConsistent",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyConsistent"
+   },
    "AssemblyExceptions" : {
       "datacheck_type" : "critical",
       "description" : "Check if assembly_exceptions are present and correct.",
