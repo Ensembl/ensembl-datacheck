@@ -236,6 +236,11 @@ sub get_dba {
   return $dba;
 }
 
+sub get_prod_dba {
+  my $self = shift;
+   return $self->get_dba('multi', 'production');
+}
+
 sub get_old_dba {
   my $self = shift;
   my ($species, $group) = @_;
