@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AssemblyTablesAcrossSpecies;
+package Bio::EnsEMBL::DataCheck::Checks::AssemblyConsistent;
 
 use warnings;
 use strict;
@@ -28,7 +28,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'AssemblyTablesAcrossSpecies',
+  NAME        => 'AssemblyConsistent',
   DESCRIPTION => 'Assembly is the same in core and core-like databases',
   GROUPS      => ['assembly', 'core_handover'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
