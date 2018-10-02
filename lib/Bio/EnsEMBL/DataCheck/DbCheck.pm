@@ -135,13 +135,37 @@ sub _registry_default {
 
   my $registry = 'Bio::EnsEMBL::Registry';
 
+  # Our $self->dba is already in the registry; if we reload from a file or
+  # uri that also has it, we'll get two copies. We can remove one, but
+  # since they would have exactly the same details we rename the one we've
+  # already got, so that we know not to delete that one. We rename it back
+  # when we're finished with this chicanery.
+  my $species = $self->dba->species;
+  $self->dba->species($species.'_main');
+
+  # Just in case the production_name is repeated as an alias.
+  $registry->remove_alias($species, $species);
+
   if (defined $self->registry_file) {
     $registry->load_all($self->registry_file);
   } elsif (defined $self->server_uri) {
+    # We need species and group if dbname is given, to make sure
+    # the registry manipulations we're about to do are valid.
+    my $uri = parse_uri($self->server_uri);
+    if ( $uri->db_params->{dbname} && $uri->db_params->{dbname} !~ /^(\d+)$/ ) {
+      unless ($uri->param_exists_ci('species') && $uri->param_exists_ci('group')) {
+        die "species and group parameters are required if the URI includes a database name";
+      }
+    }
     $registry->load_registry_from_url($self->server_uri);
   } else {
     die "Registry requires a 'registry_file' or 'server_uri' attribute";
   }
+
+  if ($registry->alias_exists($species)) {
+	$registry->remove_DBAdaptor($species, $self->dba->group);
+  }
+  $self->dba->species($species);
 
   return $registry;
 }
@@ -164,14 +188,6 @@ has 'dba_list' => (
   isa     => 'ArrayRef[DBAdaptor]',
   default => sub { [] }
 );
-
-after 'run' => sub {
-  my $self = shift;
-
-  foreach my $dba (@{ $self->dba_list }) {
-    $dba->dbc && $dba->dbc->disconnect_if_idle();
-  }
-};
 
 # Set the read-only parameters just before 'new' method is called.
 # This ensures that these values can be constants in the subclasses,
@@ -196,7 +212,10 @@ around BUILDARGS => sub {
 before 'run' => sub {
   my $self = shift;
 
-  if (!defined $self->dba) {
+  if (defined $self->dba) {
+    $self->dba->species($self->species);
+    push @{$self->dba_list}, $self->dba;
+  } else {
     die "DBAdaptor must be set as 'dba' attribute";
   }
 };
@@ -204,7 +223,9 @@ before 'run' => sub {
 after 'run' => sub {
   my $self = shift;
 
-  $self->dba->dbc && $self->dba->dbc->disconnect_if_idle();
+  foreach my $dba (@{ $self->dba_list }) {
+    $dba->dbc && $dba->dbc->disconnect_if_idle();
+  }
 };
 
 sub species {
@@ -226,8 +247,8 @@ sub get_dba {
   my $self = shift;
   my ($species, $group) = @_;
 
-  $species = $self->species    unless defined $species;
-  $group   = $self->dba->group unless defined $group;
+  $species = $self->dba->species unless defined $species;
+  $group   = $self->dba->group   unless defined $group;
 
   my $dba = $self->registry->get_DBAdaptor($species, $group);
 
