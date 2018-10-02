@@ -22,6 +22,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
+use Test::Exception;
 use Test::More;
 
 my $test_db_dir = $FindBin::Bin;
@@ -121,6 +122,7 @@ subtest 'Comparing Database Rows', sub {
   my $sql_2 = 'SELECT stable_id FROM gene LIMIT 250';
   my $sql_3 = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
   my $sql_4 = 'SELECT biotype, COUNT(*) FROM gene WHERE biotype <> "protein_coding" GROUP BY biotype';
+  my $sql_5 = 'SELECT COUNT(*) FROM gene';
 
   subtest 'row_totals', sub {
     check_tests(
@@ -166,7 +168,66 @@ subtest 'Comparing Database Rows', sub {
       ],
       'row_subtotals method'
     );
+
+    throws_ok(
+      sub { row_subtotals($dba, undef, $sql_5, $sql_3) },
+      qr/Invalid SQL statement for subtotals/, 'SQL statement format');
+
+    throws_ok(
+      sub { row_subtotals($dba, undef, $sql_3, $sql_5) },
+      qr/Invalid SQL statement for subtotals/, 'SQL statement format');
   };
+};
+
+subtest 'Foreign Keys', sub {
+  my $table_1 = 'transcript';
+  my $table_2 = 'gene';
+  my $table_3 = 'object_xref';
+  my $col     = 'gene_id';
+
+  subtest 'fk fine', sub {
+    check_tests(
+      sub {
+        fk($dba, $table_1, $col, $table_2);
+        fk($dba, $table_2, $col, $table_1, $col, undef, 'pass: transcript.gene_id => gene.gene_id');
+        fk($dba, $table_3, 'ensembl_id', $table_2, $col, 'ensembl_object_type = "Gene"', 'pass: additional constraint');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+      ],
+      'fk method'
+    );
+  };
+
+  my $sql_break = qq/
+	UPDATE gene SET gene_id = gene_id + 1
+	WHERE gene_id IN (SELECT MAX(gene_id) FROM transcript)
+  /;
+  $dba->dbc->sql_helper->execute_update($sql_break);
+
+  subtest 'fk broken', sub {
+    check_tests(
+      sub {
+        fk($dba, $table_1, $col, $table_2, undef, undef, 'fail: gene.gene_id => transcript.gene_id');
+        fk($dba, $table_2, $col, $table_1, $col, undef, 'fail: transcript.gene_id => gene.gene_id');
+        fk($dba, $table_3, 'ensembl_id', $table_2, $col, 'ensembl_object_type = "Gene"', 'fail: additional constraint');
+      },
+      [
+        { ok => 0, depth => undef },
+        { ok => 0, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'fk method'
+    );
+  };
+
+  my $sql_fix = qq/
+	UPDATE gene SET gene_id = gene_id - 1
+	WHERE gene_id IN (SELECT MAX(gene_id) FROM transcript)
+  /;
+  $dba->dbc->sql_helper->execute_update($sql_fix);
 };
 
 done_testing();

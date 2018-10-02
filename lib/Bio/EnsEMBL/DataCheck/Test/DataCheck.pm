@@ -343,13 +343,14 @@ sub fk {
   $sql .= " AND $constraint" if $constraint;
 
   my ( $count, undef ) = _query( $dbc, $sql );
+  my $result = $tb->is_eq( $count, 0, $name );
 
   if ( $count > 0 ) {
     my $diag_msg = "Broken referential integrity found with SQL: $sql";
     $tb->diag( $diag_msg );
   }
 
-  return $tb->is_eq( $count, 0, $name );
+  return $result;
 }
 
 1;
