@@ -137,6 +137,8 @@ has 'overwrite_files' => (
   default => 1
 );
 
+__PACKAGE__->meta->make_immutable;
+
 sub load_checks {
   my $self = shift;
   my @params = @_;

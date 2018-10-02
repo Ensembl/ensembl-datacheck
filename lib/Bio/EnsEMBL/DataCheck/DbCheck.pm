@@ -228,6 +228,8 @@ after 'run' => sub {
   }
 };
 
+__PACKAGE__->meta->make_immutable;
+
 sub species {
   my $self = shift;
   my $mca = $self->dba->get_adaptor("MetaContainer");
