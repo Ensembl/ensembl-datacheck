@@ -155,6 +155,15 @@
       "name" : "ExperimentHasFeatureSet",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExperimentHasFeatureSet"
    },
+   "FeatureBounds" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that features are within the bounds of their seq_region",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "FeatureBounds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeatureBounds"
+   },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file.",
