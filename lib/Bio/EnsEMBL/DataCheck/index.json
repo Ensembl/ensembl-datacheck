@@ -234,6 +234,13 @@
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
    },
+   "MetaTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that meta table has valid meta_keys",
+      "groups" : [],
+      "name" : "MetaTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaTable"
+   },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
       "description" : "Check if database schema does not match the given MySQL storage engine",
