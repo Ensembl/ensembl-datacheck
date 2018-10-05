@@ -276,6 +276,15 @@
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
    },
+   "SpeciesNameUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that production_name and alias are unique across all species",
+      "groups" : [
+         "meta"
+      ],
+      "name" : "SpeciesNameUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
+   },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
       "description" : "Check that xrefs are only attached to one feature type.",
