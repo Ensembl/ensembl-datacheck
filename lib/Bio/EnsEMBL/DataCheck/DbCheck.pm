@@ -163,7 +163,7 @@ sub _registry_default {
   }
 
   if ($registry->alias_exists($species)) {
-	$registry->remove_DBAdaptor($species, $self->dba->group);
+	   $registry->remove_DBAdaptor($species, $self->dba->group);
   }
   $self->dba->species($species);
 
@@ -213,7 +213,7 @@ before 'run' => sub {
   my $self = shift;
 
   if (defined $self->dba) {
-    $self->dba->species($self->species);
+    $self->dba->species($self->_species);
     push @{$self->dba_list}, $self->dba;
   } else {
     die "DBAdaptor must be set as 'dba' attribute";
@@ -230,7 +230,7 @@ after 'run' => sub {
 
 __PACKAGE__->meta->make_immutable;
 
-sub species {
+sub _species {
   my $self = shift;
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
@@ -292,7 +292,7 @@ sub get_old_dba {
   }
 
   if (! exists $params{'-DBNAME'}) {
-    $species = $self->species    unless defined $species;
+    $species = $self->dba->species    unless defined $species;
     $group   = $self->dba->group unless defined $group;
 
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");

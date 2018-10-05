@@ -35,7 +35,7 @@
       "description" : "Assembly is the same in core and core-like databases",
       "groups" : [
          "assembly",
-         "core_handover"
+         "corelike_handover"
       ],
       "name" : "AssemblyConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyConsistent"
@@ -105,6 +105,16 @@
       ],
       "name" : "ControlledTablesVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
+   },
+   "CoordSystemConsistent" : {
+      "datacheck_type" : "critical",
+      "description" : "Coord system is the same in core and core-like databases",
+      "groups" : [
+         "assembly",
+         "corelike_handover"
+      ],
+      "name" : "CoordSystemConsistent",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent"
    },
    "CoreForeignKeys" : {
       "datacheck_type" : "critical",

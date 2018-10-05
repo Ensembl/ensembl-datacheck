@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AssemblyConsistent;
+package Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent;
 
 use warnings;
 use strict;
@@ -28,12 +28,11 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'AssemblyConsistent',
-  DESCRIPTION => 'Assembly is the same in core and core-like databases',
+  NAME        => 'CoordSystemConsistent',
+  DESCRIPTION => 'Coord system is the same in core and core-like databases',
   GROUPS      => ['assembly', 'corelike_handover'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
-  TABLES      => ['assembly', 'seq_region'],
-  PER_DB      => 1,
+  TABLES      => ['coord_system']
 };
 
 sub tests {
@@ -44,14 +43,12 @@ sub tests {
     fail("Core database found in registry");
   } else {
     my $db_type = $self->dba->group;
-    my $desc = "assembly table has same number of rows in core and $db_type databases";
+    my $desc = "coord_system table has same number of rows in core and $db_type databases";
     my $sql  = q/
-      SELECT cs.name, COUNT(*) FROM
-        assembly a INNER JOIN
-        seq_region sr ON a.asm_seq_region_id = sr.seq_region_id INNER JOIN
-        coord_system cs USING (coord_system_id)
-      WHERE cs.name <> 'lrg'
-      GROUP BY cs.name
+      SELECT name, COUNT(*) FROM
+        coord_system
+      WHERE name <> 'lrg'
+      GROUP BY name
     /;
     row_subtotals($self->dba, $core_dba, $sql, undef, 1, $desc);
   }
