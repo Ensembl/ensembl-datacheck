@@ -85,12 +85,10 @@ sub sql_count {
 
   $dbc = $dbc->dbc() if $dbc->can('dbc');
 
-  if ( index( uc($sql), "SELECT COUNT" ) != -1 &&
-       index( uc($sql), "GROUP BY" ) == -1 )
-  {
-    return $dbc->sql_helper()->execute_single_result( -SQL => $sql, -PARAMS => $params );
+  if ($sql =~ /^SELECT COUNT/i && $sql !~ /GROUP BY/i) {
+    return $dbc->sql_helper->execute_single_result(-SQL => $sql, -PARAMS => $params);
   } else {
-    return scalar @{ $dbc->sql_helper()->execute( -SQL => $sql, -PARAMS => $params ) };
+    return scalar @{ $dbc->sql_helper->execute(-SQL => $sql, -PARAMS => $params) };
   }
 }
 

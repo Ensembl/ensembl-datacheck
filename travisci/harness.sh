@@ -11,7 +11,7 @@ fi
 
 echo "Running test suite"
 if [ "$COVERALLS" = 'true' ]; then
-  PERL5OPT='-MDevel::Cover=+ignore,bioperl,+ignore,ensembl-test,+ignore,ensembl' perl $PWD/ensembl-test/scripts/runtests.pl -verbose t $SKIP_TESTS
+  PERL5OPT='-MDevel::Cover=+ignore,bioperl,^ensembl,Bio/EnsEMBL/DataCheck/Checks/' perl $PWD/ensembl-test/scripts/runtests.pl -verbose t $SKIP_TESTS
 else
   perl $PWD/ensembl-test/scripts/runtests.pl t $SKIP_TESTS
 fi

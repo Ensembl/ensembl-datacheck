@@ -170,6 +170,18 @@ subtest 'Filter datacheck type', sub {
   }
 };
 
+subtest 'Write index (BaseCheck)', sub {
+  my $manager = $module->new(
+    datacheck_dir   => $datacheck_dir,
+    index_file      => $index_file,
+    overwrite_files => 0,
+  );
+
+  throws_ok(
+    sub { $manager->write_index() },
+    qr/exists, and will not be overwritten/, 'index_file not overwritten');
+};
+
 subtest 'Read history file (BaseCheck)', sub {
   # Note that the $test_history hash does not include details for all
   # test datachecks, and also has a superfluous result, in order to
@@ -244,6 +256,10 @@ subtest 'Write history file (BaseCheck)', sub {
   sleep(2);
   my $after = time();
 
+  throws_ok(
+    sub { $manager->write_history($datachecks) },
+    qr/Path to history file not specified/, 'check for history file path');
+
   $manager->history_file($history_file->stringify);
 
   $manager->write_history($datachecks);
@@ -314,6 +330,10 @@ subtest 'Read and write history file', sub {
   foreach (@$datachecks) {
     $_->run;
   }
+
+  throws_ok(
+    sub { $manager->run_checks() },
+    qr/exists, and will not be overwritten/, 'output_file not overwritten');
 
   throws_ok(
     sub { $manager->write_history($datachecks) },

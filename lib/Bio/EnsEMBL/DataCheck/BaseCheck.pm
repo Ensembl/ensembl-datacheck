@@ -122,6 +122,8 @@ around BUILDARGS => sub {
   return $class->$orig(%param);
 };
 
+__PACKAGE__->meta->make_immutable;
+
 sub skip_datacheck {
   # Method to be overridden by a subclass, if required.
 }

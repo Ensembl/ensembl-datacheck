@@ -18,9 +18,11 @@ use warnings;
 use Bio::EnsEMBL::DataCheck::BaseCheck;
 
 use FindBin; FindBin::again();
+use Test::Exception;
 use Test::More;
 
 use lib "$FindBin::Bin/TestChecks";
+use BaseCheck_0;
 use BaseCheck_1;
 use BaseCheck_2;
 use BaseCheck_3;
@@ -46,6 +48,21 @@ can_ok($module, qw(skip_datacheck run tests run_tests));
 # subtests here is necessary, because the behaviour we are testing
 # involves running tests, and we need to isolate that from the reports
 # of this test (i.e. BaseCheck.t).
+
+subtest 'Datacheck fundamentals', sub {
+  throws_ok(
+    sub { $module->new(name => 'dummy') },
+    qr/cannot be overridden/, "name cannot be initialised");
+
+  my $basecheck = TestChecks::BaseCheck_0->new();
+  throws_ok(
+    sub { $basecheck->name('dummy') },
+    qr/read-only accessor/, "name cannot be changed");
+
+  throws_ok(
+    sub { $basecheck->tests() },
+    qr/method must be overridden by a subclass/, "tests method");
+};
 
 subtest 'Minimal DataCheck with passing tests', sub {
   my $basecheck = TestChecks::BaseCheck_1->new();

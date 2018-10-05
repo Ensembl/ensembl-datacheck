@@ -21,7 +21,6 @@ use Bio::EnsEMBL::Hive::AnalysisJob;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
-use JSON;
 use Path::Tiny;
 use Test::Exception;
 use Test::More;
@@ -36,6 +35,7 @@ my $dba      = $testdb->get_DBAdaptor($db_type);
 
 my $datacheck_dir = "$FindBin::Bin/TestChecks";
 my $index_file    = "$FindBin::Bin/index.json";
+my $output_file   = Path::Tiny->tempfile->stringify;
 
 my $module = 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks';
 
@@ -81,16 +81,8 @@ subtest 'Parameter instantiation: Manager', sub {
   is_deeply($manager->groups, ['base'], 'Datacheck groups are set correctly');
   is_deeply($manager->datacheck_types, ['advisory'], 'Datacheck types are set correctly');
 
-  $obj->param('datacheck_dir', undef);
-  $obj->param('index_file', undef);
-  $obj->param('history_file', undef);
-  $obj->param('output_dir', undef);
-  $obj->param('output_filename', undef);
-  $obj->param('overwrite_files', 1);
-  $obj->param('datacheck_names', []);
-  $obj->param('datacheck_patterns', []);
-  $obj->param('datacheck_groups', []);
-  $obj->param('datacheck_types', []);
+  my $param_defaults = $obj->param_defaults();
+  $obj->input_job->param_init($param_defaults);
 };
 
 subtest 'Parameter instantiation: DbCheck with DBA', sub {
@@ -119,7 +111,7 @@ subtest 'Parameter instantiation: DbCheck with dbname', sub {
 
 subtest 'Parameter instantiation: DbCheck with non-existent dbname', sub {
   $obj->param('dbname', 'rhubarb_and_custard');
-  
+
   throws_ok(
     sub { $obj->fetch_input() },
     qr/No databases matching/, "Fail if database doesn't exist");
@@ -182,5 +174,57 @@ subtest 'Parameter instantiation: DbCheck registry parameters', sub {
   $obj->param('server_uri', undef);
   $obj->param('old_server_uri', undef);
 };
+
+# Point at the test datachecks. Output file is needed to prevent the
+# results of those datacheck tests methods from polluting this test.
+$obj->param('datacheck_dir', $datacheck_dir);
+$obj->param('index_file', $index_file);
+$obj->param('output_file', $output_file);
+
+TODO: {
+  local $TODO = 
+    "Test output from the datachecks is a not quite right, ".
+    "because a harness is being run from a harness and it gets mangled. ".
+    "Haven't yet figured out how to manage this...";
+  subtest 'Running datachecks: BaseCheck', sub {
+    $obj->param('datacheck_names', ['BaseCheck_1']);
+    $obj->param('datacheck_groups', ['base']);
+    $obj->param('failures_fatal', 0);
+
+    $obj->fetch_input();
+    #$obj->run();
+
+    is($obj->param('passed'),  1, "Pass count correct");
+    is($obj->param('failed'),  1, "Fail count correct");
+    is($obj->param('skipped'), 1, "Skip count correct");
+  };
+
+  subtest 'Running datachecks: DbCheck', sub {
+    $obj->param('dba', $dba);
+    $obj->param('datacheck_names', ['DbCheck_1', 'DbCheck_2', 'DbCheck_3']);
+    $obj->param('datacheck_groups', []);
+    $obj->param('failures_fatal', 0);
+
+    $obj->fetch_input();
+    #$obj->run();
+
+    is($obj->param('passed'),  1, "Pass count correct");
+    is($obj->param('failed'),  1, "Fail count correct");
+    is($obj->param('skipped'), 1, "Skip count correct");
+  };
+
+  subtest 'Running datachecks: Fail', sub {
+    $obj->param('dba', $dba);
+    $obj->param('datacheck_names', ['DbCheck_2']);
+    $obj->param('datacheck_groups', []);
+    $obj->param('failures_fatal', 1);
+
+    $obj->fetch_input();
+
+    #throws_ok(
+    #  sub { $obj->run() },
+    #  qr/Datachecks failed: DbCheck_2/, "Fail if datacheck fails");
+  };
+}
 
 done_testing();
