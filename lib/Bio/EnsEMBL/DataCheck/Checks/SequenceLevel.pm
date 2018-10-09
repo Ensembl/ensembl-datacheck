@@ -39,15 +39,20 @@ sub tests {
   my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
-  my $desc_1 = 'Contig coord_systems have null versions';
-  my $sql_1  = qq/
-    SELECT COUNT(*) FROM coord_system
-    WHERE
-      name = 'contig' AND
-      version IS NOT NULL AND 
-      species_id = $species_id
-  /;
-  is_rows_zero($self->dba, $sql_1, $desc_1);
+  SKIP: {
+    # ENSCORESW-2719: contig can be not null if only one assembly is stored
+    skip "no more than one assembly in coord_system" unless $self->several_assemblies();
+    
+    my $desc_1 = 'Contig coord_systems have null versions';
+    my $sql_1  = qq/
+      SELECT COUNT(*) FROM coord_system
+      WHERE
+        name = 'contig' AND
+        version IS NOT NULL AND 
+        species_id = $species_id
+    /;
+    is_rows_zero($self->dba, $sql_1, $desc_1);
+  }
 
   my $desc_2 = 'Coordinate systems with sequence have sequence_level attribute';
   my $diag_2 = 'Coordinate system has seq_regions with sequence but no sequence_level attribute';
@@ -61,6 +66,20 @@ sub tests {
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
+}
+
+sub several_assemblies {
+  my ($self) = @_;
+  
+  my $helper = $self->dba->dbc->sql_helper;
+  my $sql  = qq/
+    SELECT COUNT(*) FROM coord_system
+    WHERE
+      name = 'chromosome'
+  /;
+  my $count = $helper->execute_single_result( -SQL => $sql );
+  
+  return $count > 1;
 }
 
 1;
