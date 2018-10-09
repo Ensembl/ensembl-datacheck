@@ -35,17 +35,22 @@ sub run {
   my $manager          = $self->param_required('manager');
   my $datacheck_params = $self->param_required('datacheck_params');
 
+  # Filter datacheck to run
+  my %datacheck_name = map { $_ => 1 } @{ $self->param('datacheck_names') };
   my $datachecks = $manager->load_checks(%$datacheck_params);
+  @$datachecks = grep { exists $datacheck_name{$_->name} } @$datachecks;
 
+  # Check that we only run one datacheck
   my $datacheck;
-  if (scalar @$datachecks == 1) {
+  my $n_checks = scalar @$datachecks;
+  if ($n_checks == 1) {
     $datacheck = $$datachecks[0];
-  } elsif (scalar @$datachecks == 0) {
+  } elsif ($n_checks == 0) {
     my $names = join(", ", @{ $self->param('datacheck_names') });
     $self->throw("No datacheck found: $names");
   } else {
     my $names = join(", ", @{ $self->param('datacheck_names') });
-    $self->throw("Multiple datachecks found: $names");
+    $self->throw("Multiple ($n_checks) datachecks found: $names");
   }
 
   my $result = $datacheck->run();
