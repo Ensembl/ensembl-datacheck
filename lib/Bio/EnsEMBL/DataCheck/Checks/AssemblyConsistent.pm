@@ -38,7 +38,7 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $core_dba = $self->get_dba($self->dba->species, 'core');
+  my $core_dba = $self->get_dba($self->species, 'core');
 
   if (! defined $core_dba) {
     fail("Core database found in registry");
