@@ -155,7 +155,7 @@ sub _registry_default {
 
   $self->dba->dbc->disconnect_if_idle();
 
-	$registry->clear;
+  $registry->clear;
 
   if (defined $self->registry_file) {
     $registry->load_all($self->registry_file);
