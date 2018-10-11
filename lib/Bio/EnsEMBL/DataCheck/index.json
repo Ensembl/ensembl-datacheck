@@ -88,6 +88,13 @@
       "name" : "CompareBiotype",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype"
    },
+   "CompareSchema" : {
+      "datacheck_type" : "critical",
+      "description" : "Compare database schema to definition in SQL file",
+      "groups" : [],
+      "name" : "CompareSchema",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
+   },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
