@@ -36,7 +36,7 @@ sub tests {
   my ($self) = @_;
   my $database_name = $self->dba->dbc->dbname;
   my $engine = 'MyISAM';
-  my $diag = "Non-$engine table:";
+  my $diag = "Non-$engine table";
   my $desc = "All tables are using MySQL $engine storage engine";
   my $sql = qq/ SELECT TABLE_NAME FROM 
                  information_schema.tables WHERE 

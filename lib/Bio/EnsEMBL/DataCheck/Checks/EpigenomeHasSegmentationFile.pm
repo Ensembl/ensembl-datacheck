@@ -52,7 +52,7 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
   my $desc = "All the epigenomes of the current regulatory build have a segmentation file";
-  my $diag = "Segmentation file missing for epigenome_id";
+  my $diag = "Segmentation file missing";
   my $sql = q/
     SELECT e.epigenome_id FROM
       regulatory_build rb INNER JOIN
