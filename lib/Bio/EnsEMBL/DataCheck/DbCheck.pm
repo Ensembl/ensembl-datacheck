@@ -135,16 +135,27 @@ sub _registry_default {
 
   my $registry = 'Bio::EnsEMBL::Registry';
 
-  # Our $self->dba is already in the registry; if we reload from a file or
-  # uri that also has it, we'll get two copies. We can remove one, but
-  # since they would have exactly the same details we rename the one we've
-  # already got, so that we know not to delete that one. We rename it back
-  # when we're finished with this chicanery.
-  my $species = $self->dba->species;
-  $self->dba->species($species.'_main');
+  # Our $self->dba is already in the registry; if we load from a file or
+  # uri that also has it, we'll get two copies. So, we store the details of
+  # the one we've already got, then remove it from the registry. Then, we
+  # load the registry file/url, delete that species if it exists, then add
+  # the original back, using the stored details. Easy (!)
+  my $species = $self->species;
 
-  # Just in case the production_name is repeated as an alias.
-  $registry->remove_alias($species, $species);
+  my $uri = Bio::EnsEMBL::Utils::URI->new('mysql');
+  $uri->host($self->dba->dbc->host);
+  $uri->port($self->dba->dbc->port);
+  $uri->user($self->dba->dbc->user);
+  $uri->pass($self->dba->dbc->pass);
+  $uri->db_params->{dbname} = $self->dba->dbc->dbname;
+  $uri->add_param('group', $self->dba->group);
+  $uri->add_param('species', $species);
+
+  my $dba_url = $uri->generate_uri;
+
+  $self->dba->dbc->disconnect_if_idle();
+
+	$registry->clear;
 
   if (defined $self->registry_file) {
     $registry->load_all($self->registry_file);
@@ -163,9 +174,14 @@ sub _registry_default {
   }
 
   if ($registry->alias_exists($species)) {
-	   $registry->remove_DBAdaptor($species, $self->dba->group);
+	  $registry->remove_DBAdaptor($species, $self->dba->group);
   }
-  $self->dba->species($species);
+
+  $registry->load_registry_from_url($dba_url);
+  $self->dba($registry->get_DBAdaptor($species, $self->dba->group));
+
+  # Just in case the production_name is repeated as an alias.
+  $registry->remove_alias($species, $species);
 
   return $registry;
 }
@@ -213,7 +229,6 @@ before 'run' => sub {
   my $self = shift;
 
   if (defined $self->dba) {
-    $self->dba->species($self->_species);
     push @{$self->dba_list}, $self->dba;
   } else {
     die "DBAdaptor must be set as 'dba' attribute";
@@ -230,7 +245,7 @@ after 'run' => sub {
 
 __PACKAGE__->meta->make_immutable;
 
-sub _species {
+sub species {
   my $self = shift;
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
@@ -238,7 +253,12 @@ sub _species {
   if ($self->dba->is_multispecies) {
     $species = $mca->single_value_by_key('species.db_name');
   } else {
-    $species = $mca->get_production_name();
+    my $production_name = $mca->single_value_by_key('species.production_name');
+    if (defined $production_name) {
+      $species = $production_name;
+    } else {
+      $species = $self->dba->species;
+    }
     $species =~ s/_old$//;
   }
 
@@ -249,8 +269,8 @@ sub get_dba {
   my $self = shift;
   my ($species, $group) = @_;
 
-  $species = $self->dba->species unless defined $species;
-  $group   = $self->dba->group   unless defined $group;
+  $species = $self->species    unless defined $species;
+  $group   = $self->dba->group unless defined $group;
 
   my $dba = $self->registry->get_DBAdaptor($species, $group);
 
@@ -292,7 +312,7 @@ sub get_old_dba {
   }
 
   if (! exists $params{'-DBNAME'}) {
-    $species = $self->dba->species    unless defined $species;
+    $species = $self->species    unless defined $species;
     $group   = $self->dba->group unless defined $group;
 
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
