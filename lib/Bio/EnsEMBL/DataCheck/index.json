@@ -35,7 +35,7 @@
       "description" : "Assembly is the same in core and core-like databases",
       "groups" : [
          "assembly",
-         "core_handover"
+         "corelike_handover"
       ],
       "name" : "AssemblyConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyConsistent"
@@ -88,6 +88,13 @@
       "name" : "CompareBiotype",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype"
    },
+   "CompareSchema" : {
+      "datacheck_type" : "critical",
+      "description" : "Compare database schema to definition in SQL file",
+      "groups" : [],
+      "name" : "CompareSchema",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
+   },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
@@ -105,6 +112,16 @@
       ],
       "name" : "ControlledTablesVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
+   },
+   "CoordSystemConsistent" : {
+      "datacheck_type" : "critical",
+      "description" : "Coord system is the same in core and core-like databases",
+      "groups" : [
+         "assembly",
+         "corelike_handover"
+      ],
+      "name" : "CoordSystemConsistent",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent"
    },
    "CoreForeignKeys" : {
       "datacheck_type" : "critical",
@@ -144,6 +161,15 @@
       ],
       "name" : "ExperimentHasFeatureSet",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExperimentHasFeatureSet"
+   },
+   "FeatureBounds" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that features are within the bounds of their seq_region",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "FeatureBounds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeatureBounds"
    },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
@@ -215,6 +241,13 @@
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
    },
+   "MetaTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that meta table has valid meta_keys",
+      "groups" : [],
+      "name" : "MetaTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaTable"
+   },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
       "description" : "Check if database schema does not match the given MySQL storage engine",
@@ -275,6 +308,15 @@
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
+   },
+   "SpeciesNameUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that production_name and alias are unique across all species",
+      "groups" : [
+         "meta"
+      ],
+      "name" : "SpeciesNameUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
