@@ -39,25 +39,10 @@ sub tests {
   my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
-  SKIP: {
-    # ENSCORESW-2719: contig can be not null if only one assembly is stored
-    skip "no more than one assembly in coord_system" unless $self->several_assemblies();
-    
-    my $desc_1 = 'Contig coord_systems have null versions';
-    my $sql_1  = qq/
-      SELECT COUNT(*) FROM coord_system
-      WHERE
-        name = 'contig' AND
-        version IS NOT NULL AND 
-        species_id = $species_id
-    /;
-    is_rows_zero($self->dba, $sql_1, $desc_1);
-  }
-
-  my $desc_2 = 'Coordinate systems with sequence have sequence_level attribute';
-  my $diag_2 = 'Coordinate system has seq_regions with sequence but no sequence_level attribute';
-  my $sql_2  = qq/
-    SELECT DISTINCT cs.name FROM
+  my $desc_1 = 'Coordinate systems with sequence have sequence_level attribute';
+  my $diag_1 = 'No sequence_level attribute for coord_system';
+  my $sql_1  = qq/
+    SELECT DISTINCT cs.coord_system_id, cs.name FROM
       coord_system cs INNER JOIN
       seq_region s USING (coord_system_id) INNER JOIN
       dna d USING (seq_region_id) 
@@ -65,21 +50,22 @@ sub tests {
       cs.attrib NOT RLIKE 'sequence_level' AND
       cs.species_id = $species_id
   /;
-  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
-}
+  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
 
-sub several_assemblies {
-  my ($self) = @_;
-  
-  my $helper = $self->dba->dbc->sql_helper;
-  my $sql  = qq/
-    SELECT COUNT(*) FROM coord_system
+  my $desc_2 = 'Contigs shared between assemblies have null versions';
+  my $sql_2  = qq/
+    SELECT COUNT(*) FROM
+      assembly a INNER JOIN
+      seq_region sr1 on a.cmp_seq_region_id = sr1.seq_region_id INNER JOIN
+      seq_region sr2 on a.asm_seq_region_id = sr2.seq_region_id INNER JOIN
+      coord_system cs1 on sr1.coord_system_id = cs1.coord_system_id
     WHERE
-      name = 'chromosome'
+      cs1.name = 'contig' AND
+      cs1.version IS NOT NULL AND
+      species_id = $species_id
+    GROUP BY sr2.coord_system_id
   /;
-  my $count = $helper->execute_single_result( -SQL => $sql );
-  
-  return $count > 1;
+  is_rows_zero($self->dba, $sql_2, $desc_2);
 }
 
 1;
