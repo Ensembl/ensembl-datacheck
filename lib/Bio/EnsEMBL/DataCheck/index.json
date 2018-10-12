@@ -271,6 +271,15 @@
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
    },
+   "ProteinTranslation" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every protein-coding gene has a valid translation",
+      "groups" : [
+         "core"
+      ],
+      "name" : "ProteinTranslation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinTranslation"
+   },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
       "description" : "Check that every regulatory feature has a valid activity value in at least one epigenome.",
