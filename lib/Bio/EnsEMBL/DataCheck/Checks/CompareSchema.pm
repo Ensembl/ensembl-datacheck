@@ -45,6 +45,9 @@ sub tests {
   my $table_sql_file = $self->table_sql_file();
   my $table_sql = path($table_sql_file)->slurp;
 
+  # Capitalise create table statements
+  $table_sql =~ s/(create table)/\U$1/gm;
+
   my @file_tables = $table_sql =~ /(CREATE TABLE[^;]+;)/gms;
   foreach (@file_tables) {
     my ($table_name, $table, $keys) = $self->normalise_table_def($_);
@@ -57,6 +60,7 @@ sub tests {
   my $db_table_names = $helper->execute_simple(-SQL => 'show tables;');
 
   foreach my $table_name (@$db_table_names) {
+    next if $table_name =~ /^MTMP/;
     my $sql = "show create table $table_name";
     my $db_table = $helper->execute_into_hash(-SQL => $sql);
 
@@ -87,7 +91,7 @@ sub normalise_table_def {
 
   # Remove whitespace.
   $table =~ s/^\s+//gm;
-  $table =~ s/ +/ /gm;
+  $table =~ s/[ \t]+/ /gm;
   $table =~ s/, +/,/gm;
   $table =~ s/ +,/,/gm;
   $table =~ s/\( /\(/gm;
@@ -95,7 +99,18 @@ sub normalise_table_def {
   $table =~ s/\n+/\n/gm;
 
   # Put ENUMs all on one line.
-  $table =~ s/\n('.*)/$1/gm;
+  $table =~ s/\n(['].*)/$1/gm;
+  $table =~ s/\n\s*(\).*,)/$1/gm;
+
+  # Closing parenthesis on its own line.
+  $table =~ s/(\S*)(\);)/$1\n$2/gm;
+
+  # Use standard name for key
+  $table =~ s/INDEX/KEY/gm;
+
+  # Add KEY keyword for UNIQUE indexes for consistency
+  $table =~ s/UNIQUE/UNIQUE KEY/gm;
+  $table =~ s/UNIQUE KEY KEY/UNIQUE KEY/gm;
 
   # Capitalise KEY keywords
   $table =~ s/^((?:primary |unique )*key)/\U$1/gm;
@@ -109,11 +124,11 @@ sub normalise_table_def {
   # Add space after table name
   $table =~ s/(CREATE TABLE \w+)\(/$1 \(/gm;
 
+  # Remove space before SET and ENUM keywords
+  $table =~ s/(SET|ENUM)\s+/$1/gm;
+
   # Use standard abbreviation for integer
   $table =~ s/INTEGER/INT/gm;
-
-  # Use standard name for key
-  $table =~ s/INDEX/KEY/gm;
 
   # Add space after KEY keyword
   $table =~ s/KEY(\S)/KEY $1/gm;
@@ -134,6 +149,7 @@ sub normalise_table_def {
   # Having default NULL is, er, the default; sometimes it's explicit,
   # other times implicit, so remove it to be consistent.
   $table =~ s/\sDEFAULT NULL//gm;
+  $table =~ s/\sUNSIGNED NULL/ UNSIGNED/gm;
 
   # Auto-increment fields are not null by default.
   $table =~ s/NOT NULL AUTO_INCREMENT/AUTO_INCREMENT/gm; 
@@ -147,6 +163,7 @@ sub normalise_table_def {
   # Remove comments.
   $table =~ s/#.*//gm;
   $table =~ s/^\-\-.*//gm;
+  $table =~ s/\n+/\n/gm;
 
   # Remove things like collation and checksum status.
   $table =~ s/[^\)]+\Z//gm;

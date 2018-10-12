@@ -155,11 +155,11 @@ sub _registry_default {
 
   $self->dba->dbc->disconnect_if_idle();
 
-  $registry->clear;
-
   if (defined $self->registry_file) {
+    $registry->clear;
     $registry->load_all($self->registry_file);
   } elsif (defined $self->server_uri) {
+    $registry->clear;
     # We need species and group if dbname is given, to make sure
     # the registry manipulations we're about to do are valid.
     my $uri = parse_uri($self->server_uri);
