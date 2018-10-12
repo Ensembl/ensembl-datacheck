@@ -50,9 +50,9 @@ sub tests {
   is_rows_zero($self->dba, $sql_1, $desc_1);
 
   my $desc_2 = 'Coordinate systems with sequence have sequence_level attribute';
-  my $diag_2 = 'Coordinate system has seq_regions with sequence but no sequence_level attribute';
+  my $diag_2 = 'No sequence_level attribute for coord_system';
   my $sql_2  = qq/
-    SELECT DISTINCT cs.name FROM
+    SELECT DISTINCT cs.coord_system_id, cs.name FROM
       coord_system cs INNER JOIN
       seq_region s USING (coord_system_id) INNER JOIN
       dna d USING (seq_region_id) 

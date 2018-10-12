@@ -52,7 +52,7 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
   my $desc = "Regulatory features have a valid activity value in at least one epigenome";
-  my $diag = "regulatory_feature_id";
+  my $diag = "Regulatory feature";
   my $sql  = qq/
     SELECT rf.regulatory_feature_id FROM 
       regulatory_build rb JOIN 

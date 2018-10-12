@@ -44,7 +44,7 @@ sub tests {
   my $desc = 'No xrefs are associated with multiple object types';
   my $diag = 'Xrefs are associated with multiple object types';
   my $sql  = q/
-    SELECT db_name FROM
+    SELECT external_db_id, db_name FROM
       external_db INNER JOIN
       xref USING (external_db_id) INNER JOIN
       object_xref USING (xref_id)

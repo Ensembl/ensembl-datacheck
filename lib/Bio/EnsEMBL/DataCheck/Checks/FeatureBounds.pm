@@ -57,7 +57,7 @@ sub bounds_check {
   # so we would miss any problems.
 
   my $desc = $table.'s within seq_region bounds';
-  my $diag = "Out-of-bounds $table";
+  my $diag = "Out-of-bounds features in $table";
   my $sql  = qq/
     SELECT $table\_id FROM
       $table INNER JOIN

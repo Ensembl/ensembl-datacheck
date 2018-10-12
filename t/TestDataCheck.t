@@ -55,7 +55,7 @@ subtest 'Counting Database Rows', sub {
         is_rows($dba->dbc, $sql_1, 355, 'fail: Use DBConnection instead of DBAdaptor');
       },
       [
-        { ok => 1, depth => undef },
+        { ok => 1, depth => undef, name => 'pass: SQL statement with COUNT' },
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
@@ -75,7 +75,7 @@ subtest 'Counting Database Rows', sub {
         cmp_rows($dba, $sql_1, '!=', 354, 'fail: Not equals comparison');
       },
       [
-        { ok => 1, depth => undef },
+        { ok => 1, depth => undef, name => 'pass: Greater than comparison' },
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
@@ -91,7 +91,7 @@ subtest 'Counting Database Rows', sub {
         is_rows_nonzero($dba, $sql_3, 'fail: Non-zero count');
       },
       [
-        { ok => 1, depth => undef },
+        { ok => 1, depth => undef, name => 'pass: Non-zero count' },
         { ok => 0, depth => undef },
       ],
       'is_rows_nonzero method'
@@ -107,7 +107,7 @@ subtest 'Counting Database Rows', sub {
         is_rows_zero($dba, $sql_2, 'fail: SQL statement without COUNT');
       },
       [
-        { ok => 1, depth => undef },
+        { ok => 1, depth => undef, name => 'pass: SQL statement with COUNT' },
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
@@ -135,7 +135,7 @@ subtest 'Comparing Database Rows', sub {
         row_totals($dba, undef, $sql_2, $sql_1, 0.9, 'fail: Row totals with min_proportion');
       },
       [
-        { ok => 1, depth => undef },
+        { ok => 1, depth => undef, name => 'pass: Exact row totals' },
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 1, depth => undef },
@@ -158,7 +158,7 @@ subtest 'Comparing Database Rows', sub {
         row_subtotals($dba, undef, $sql_4, $sql_3, 0.5, 'fail: Row subtotals with min_proportion');
       },
       [
-        { ok => 1, depth => undef },
+        { ok => 1, depth => undef, name => 'pass: Row subtotals identical' },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
@@ -193,8 +193,8 @@ subtest 'Foreign Keys', sub {
         fk($dba, $table_3, 'ensembl_id', $table_2, $col, 'ensembl_object_type = "Gene"', 'pass: additional constraint');
       },
       [
-        { ok => 1, depth => undef },
-        { ok => 1, depth => undef },
+        { ok => 1, depth => undef, name => 'All transcript.gene_id rows linked to gene.gene_id rows' },
+        { ok => 1, depth => undef, name => 'pass: transcript.gene_id => gene.gene_id' },
         { ok => 1, depth => undef },
       ],
       'fk method'
@@ -215,7 +215,7 @@ subtest 'Foreign Keys', sub {
         fk($dba, $table_3, 'ensembl_id', $table_2, $col, 'ensembl_object_type = "Gene"', 'fail: additional constraint');
       },
       [
-        { ok => 0, depth => undef },
+        { ok => 0, depth => undef, name => 'fail: gene.gene_id => transcript.gene_id' },
         { ok => 0, depth => undef },
         { ok => 0, depth => undef },
       ],
