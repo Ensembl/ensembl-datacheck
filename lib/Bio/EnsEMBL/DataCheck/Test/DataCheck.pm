@@ -152,7 +152,7 @@ sub is_rows_zero {
     }
 
     my ($columns) = $sql =~ /SELECT(?: DISTINCT) (.*) FROM/m;
-    if ($columns ne '*') {
+    if ($columns && $columns ne '*') {
       $diag_msg .= ": (".$columns.") =";
     }
 
