@@ -153,7 +153,7 @@ sub load_checks {
 
   my @datachecks;
 
-  foreach my $name (keys %index) {
+  foreach my $name (sort keys %index) {
     if (!$filters || $self->filter($index{$name})) {
       my $module = path($self->datacheck_dir, "$name.pm");
 
