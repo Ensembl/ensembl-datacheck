@@ -53,7 +53,7 @@ sub _query {
 
   my ($count, $rows);
 
-  if ($sql =~ /^SELECT COUNT/i && $sql !~ /GROUP BY/i) {
+  if ($sql =~ /^\s*SELECT COUNT/i && $sql !~ /GROUP BY/i) {
     $count = $dbc->sql_helper()->execute_single_result( -SQL => $sql );
   } else {
     $rows  = $dbc->sql_helper()->execute( -SQL => $sql );
@@ -151,7 +151,7 @@ sub is_rows_zero {
       $diag_msg = "Unexpected data";
     }
 
-    my ($columns) = $sql =~ /SELECT(?: DISTINCT) (.*) FROM/m;
+    my ($columns) = $sql =~ /SELECT(?: DISTINCT)? (.*)\s+FROM/m;
     if ($columns && $columns ne '*') {
       $diag_msg .= ": (".$columns.") =";
     }
