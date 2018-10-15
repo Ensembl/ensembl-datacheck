@@ -65,7 +65,11 @@ sub tests {
       species_id = $species_id
     GROUP BY sr2.coord_system_id
   /;
-  is_rows_zero($self->dba, $sql_2, $desc_2);
+  # 2 acceptable cases:
+  # contig version is NULL     -> 0 rows
+  # contig version is not NULL -> 1 row for one assembly
+  # any more means that the versioned contigs are used in several assemblies
+  cmp_rows($self->dba, $sql_2, '<=', 1, $desc_2);
 }
 
 1;
