@@ -159,7 +159,6 @@ sub _registry_default {
     $registry->clear;
     $registry->load_all($self->registry_file);
   } elsif (defined $self->server_uri) {
-    $registry->clear;
     # We need species and group if dbname is given, to make sure
     # the registry manipulations we're about to do are valid.
     my $uri = parse_uri($self->server_uri);
@@ -168,6 +167,7 @@ sub _registry_default {
         die "species and group parameters are required if the URI includes a database name";
       }
     }
+    $registry->clear;
     $registry->load_registry_from_url($self->server_uri);
   } else {
     die "Registry requires a 'registry_file' or 'server_uri' attribute";
