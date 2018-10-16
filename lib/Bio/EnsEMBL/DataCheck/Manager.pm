@@ -206,8 +206,7 @@ sub run_checks {
 
   my $datachecks = $self->load_checks(@params);
 
-  # Copy STDOUT to another filehandle
-  open (my $STDOUT_COPY, '>&', STDOUT);
+  my $STDOUT_COPY;
 
   my $output_file = $self->output_file;
   if (defined $output_file) {
@@ -219,6 +218,8 @@ sub run_checks {
       path($output_file)->parent->mkpath;
     }
 
+	# Copy STDOUT to another filehandle
+	open($STDOUT_COPY, '>&', STDOUT);
     open(STDOUT, '>', $output_file);
   }
 
