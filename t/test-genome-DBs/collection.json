@@ -1,0 +1,44 @@
+{
+  "giardia_intestinalis" : {
+    "core" : {
+      "regions" : [
+        ["GS_B_0009", 100000, 200000],
+        ["GS_B_0036", 100000, 200000],
+      ],
+      "adaptors" : [
+        { "name" : "gene"},
+        { "name" : "dnaalignfeature"},
+        { "name" : "repeatfeature"},
+        { "name" : "simplefeature"},
+      ]
+    }
+  },
+  "giardia_lamblia_p15" : {
+    "core" : {
+      "regions" : [
+        ["contig88", 50000, 150000],
+        ["contig818", 50000, 150000],
+      ],
+      "adaptors" : [
+        { "name" : "gene"},
+        { "name" : "dnaalignfeature"},
+        { "name" : "repeatfeature"},
+        { "name" : "simplefeature"},
+      ]
+    }
+  },
+  "spironucleus_salmonicida" : {
+    "core" : {
+      "regions" : [
+        ["scf7180000020683", 200000, 300000],
+        ["scf7180000020606", 200000, 300000],
+      ],
+      "adaptors" : [
+        { "name" : "gene"},
+        { "name" : "dnaalignfeature"},
+        { "name" : "repeatfeature"},
+        { "name" : "simplefeature"},
+      ]
+    }
+  }
+}

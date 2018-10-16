@@ -1,0 +1,176 @@
+1	\N	schema_type	core
+2	\N	schema_version	95
+3	\N	patch	patch_88_89_a.sql|schema_version
+4	1	schema.load_started	2017-05-08 19:14:41
+5	1	schema.load_started	2017-05-08 19:14:45
+6	1	assembly.default	ASM49873v1
+7	1	assembly.accession	GCA_000498735.1
+8	1	assembly.name	ASM49873v1
+9	1	assembly.date	2015-10
+10	1	assembly.description	Giardia intestinalis strain:GS Genome sequencing and assembly
+11	1	genebuild.version	2015-10-ENA
+12	1	genebuild.start_date	2013-05-ENA
+13	1	genebuild.initial_release_date	2013-05-ENA
+14	1	genebuild.last_geneset_update	2015-10
+15	1	genebuild.method	Generated from ENA annotation
+16	1	assembly.master_accession	AHHH01000543
+17	1	species.classification	Giardia intestinalis
+18	1	species.classification	Giardia
+19	1	species.classification	Giardiinae
+20	1	species.classification	Hexamitidae
+21	1	species.classification	Diplomonadida
+22	1	species.classification	Fornicata
+23	1	species.classification	Eukaryota
+24	1	species.classification	cellular organisms
+25	1	species.production_name	giardia_intestinalis
+26	1	species.url	Giardia_intestinalis
+27	1	species.scientific_name	Giardia intestinalis
+28	1	species.display_name	Giardia intestinalis
+29	1	species.strain	GS
+30	1	species.alias	giardia_intestinalis
+31	1	species.alias	Giardia intestinalis str. GS
+405	\N	patch	patch_89_90_b.sql|remove_status
+36	1	species.alias	Giardia intestinalis
+37	1	species.db_name	giardia_intestinalis
+38	1	species.taxonomy_id	5741
+39	1	species.division	EnsemblProtists
+40	1	provider.name	European Nucleotide Archive
+41	1	provider.url	http://www.ebi.ac.uk/ena/data/view/GCA_000498735
+42	1	assembly.mapping	supercontig:ASM49873v1#contig
+43	1	sample.location_param	GS_B_0016:3948-5294
+44	1	sample.location_text	GS_B_0016:3948-5294
+45	1	sample.gene_param	GSB_150356
+46	1	sample.gene_text	GSB_150356
+47	1	sample.transcript_param	ESU40275
+48	1	sample.transcript_text	ESU40275
+49	1	sample.search_text	synthetase
+50	1	genebuild.hash	302b14abc131a2f71a81a4c9322cc4fb
+506	1	genebuild.level	toplevel
+507	1	transcriptbuild.level	toplevel
+508	1	exonbuild.level	toplevel
+57	1	species.species_name	Giardia intestinalis
+58	1	species.species_taxonomy_id	5741
+59	1	species.wikipedia_url	http://en.wikipedia.org/wiki/Giardia_intestinalis
+60	1	species.wikipedia_name	Giardia intestinalis
+61	1	schema.load_complete	2017-05-08 19:19:00
+62	2	schema.load_started	2017-05-08 19:19:04
+63	2	assembly.default	ASM18266v1
+64	2	assembly.accession	GCA_000182665.1
+65	2	assembly.name	ASM18266v1
+66	2	assembly.date	2014-08
+67	2	assembly.description	Giardia lamblia P15 genome sequencing
+68	2	genebuild.version	2014-08-ENA
+69	2	genebuild.start_date	2010-10-ENA
+70	2	genebuild.initial_release_date	2010-10-ENA
+71	2	genebuild.last_geneset_update	2014-08
+72	2	genebuild.method	Generated from ENA annotation
+73	2	assembly.master_accession	ACVC01000292
+74	2	species.classification	Giardia lamblia P15
+75	2	species.classification	Giardia intestinalis
+76	2	species.classification	Giardia
+77	2	species.classification	Giardiinae
+78	2	species.classification	Hexamitidae
+79	2	species.classification	Diplomonadida
+80	2	species.classification	Fornicata
+81	2	species.classification	Eukaryota
+82	2	species.classification	cellular organisms
+83	2	species.production_name	giardia_lamblia_p15
+84	2	species.url	Giardia_lamblia_p15
+85	2	species.scientific_name	Giardia lamblia P15
+86	2	species.display_name	Giardia lamblia P15
+87	2	species.strain	P15
+88	2	species.alias	Giardia lamblia P15
+89	2	species.alias	giardia_lamblia_p15
+90	2	species.db_name	giardia_lamblia_p15
+91	2	species.taxonomy_id	658858
+92	2	species.division	EnsemblProtists
+93	2	provider.name	European Nucleotide Archive
+94	2	provider.url	http://www.ebi.ac.uk/ena/data/view/GCA_000182665
+95	2	assembly.mapping	supercontig:ASM18266v1#contig
+96	2	sample.location_param	contig78:31840-32703
+97	2	sample.location_text	contig78:31840-32703
+98	2	sample.gene_param	GLP15_2066
+99	2	sample.gene_text	GLP15_2066
+100	2	sample.transcript_param	EFO64190
+101	2	sample.transcript_text	EFO64190
+102	2	sample.search_text	synthetase
+103	2	genebuild.hash	03fbb7c51b95a04de6bf13c25fb3fba6
+526	2	genebuild.level	toplevel
+527	2	transcriptbuild.level	toplevel
+528	2	exonbuild.level	toplevel
+110	2	species.species_name	Giardia intestinalis
+111	2	species.species_taxonomy_id	5741
+112	2	species.wikipedia_url	http://en.wikipedia.org/wiki/Giardia_intestinalis
+113	2	species.wikipedia_name	Giardia intestinalis
+114	2	schema.load_complete	2017-05-08 19:22:51
+115	3	schema.load_started	2017-05-08 19:22:55
+116	3	assembly.default	SSK3.0
+117	3	assembly.accession	GCA_000497125.1
+118	3	assembly.name	SSK3.0
+119	3	assembly.date	2013-11
+120	3	assembly.description	Spironucleus salmonicida ATCC 50377 genome sequencing project
+121	3	genebuild.version	2013-11-ENA
+122	3	genebuild.start_date	2013-11-ENA
+123	3	genebuild.initial_release_date	2013-11-ENA
+124	3	genebuild.last_geneset_update	2013-11
+125	3	genebuild.method	Generated from ENA annotation
+126	3	assembly.master_accession	KI545942
+127	3	species.classification	Spironucleus salmonicida
+128	3	species.classification	Spironucleus
+129	3	species.classification	Hexamitinae
+130	3	species.classification	Hexamitidae
+131	3	species.classification	Diplomonadida
+132	3	species.classification	Fornicata
+133	3	species.classification	Eukaryota
+134	3	species.classification	cellular organisms
+135	3	species.production_name	spironucleus_salmonicida
+136	3	species.url	Spironucleus_salmonicida
+137	3	species.scientific_name	Spironucleus salmonicida
+138	3	species.display_name	Spironucleus salmonicida
+139	3	species.alias	spironucleus_salmonicida
+140	3	species.alias	Spironucleus salmonicida
+141	3	species.db_name	spironucleus_salmonicida
+142	3	species.taxonomy_id	348837
+143	3	species.division	EnsemblProtists
+144	3	provider.name	European Nucleotide Archive
+145	3	provider.url	http://www.ebi.ac.uk/ena/data/view/GCA_000497125
+146	3	assembly.mapping	supercontig:SSK3.0#contig
+147	3	sample.location_param	scf7180000020552:141501-143024
+148	3	sample.location_text	scf7180000020552:141501-143024
+149	3	sample.gene_param	SS50377_12191
+150	3	sample.gene_text	SS50377_12191
+151	3	sample.transcript_param	EST47791
+152	3	sample.transcript_text	EST47791
+153	3	sample.search_text	synthetase
+154	3	genebuild.hash	0aeb3f5f856f8a23fa53abb00a3eb2de
+531	3	genebuild.level	toplevel
+532	3	transcriptbuild.level	toplevel
+533	3	exonbuild.level	toplevel
+535	3	simple_featurebuild.level	toplevel
+163	3	species.species_name	Spironucleus salmonicida
+164	3	species.species_taxonomy_id	348837
+165	3	species.wikipedia_url	http://en.wikipedia.org/wiki/Spironucleus_salmonicida
+166	3	species.wikipedia_name	Spironucleus salmonicida
+167	3	schema.load_complete	2017-05-08 19:28:05
+404	\N	patch	patch_89_90_a.sql|schema_version
+403	1	schema.load_complete	2017-05-08 19:44:58
+406	\N	patch	patch_89_90_c.sql|pf_hit_name_case_sensitive
+529	2	dna_align_featurebuild.level	toplevel
+530	2	simple_featurebuild.level	toplevel
+509	1	dna_align_featurebuild.level	toplevel
+510	1	simple_featurebuild.level	toplevel
+534	3	dna_align_featurebuild.level	toplevel
+502	\N	patch	patch_90_91_a.sql|schema_version
+503	\N	patch	patch_90_91_b.sql|align_type
+504	\N	patch	patch_90_91_c.sql|protein_align_type
+505	\N	patch	patch_90_91_d.sql|remove_external_data
+536	\N	patch	patch_91_92_a.sql|schema_version
+537	\N	patch	patch_91_92_b.sql|add_cigar_line_align_type
+538	\N	patch	patch_92_93_a.sql|schema_version
+539	\N	patch	patch_92_93_b.sql|biotype_table
+540	\N	patch	patch_92_93_c.sql|collate_index_interpro
+546	\N	patch	patch_93_94_c.sql|default_aln_type
+545	\N	patch	patch_93_94_b.sql|nullable_ox_analysis
+544	\N	patch	patch_93_94_a.sql|schema_version
+547	\N	patch	patch_94_95_a.sql|schema_version
+548	\N	patch	patch_94_95_b.sql|vertebrate_division_rename

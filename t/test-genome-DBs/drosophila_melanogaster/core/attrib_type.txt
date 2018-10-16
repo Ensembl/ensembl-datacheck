@@ -311,3 +311,13 @@
 522	vectorbase_adar	VectorBase gene predictions	Number of prediction genes generated with MAKER, by VectorBase.
 524	_transl_end	Translation end	The end position for translation within a transcript-level seq_edit.
 523	_transl_start	Translation start	The start position for translation within a transcript-level seq_edit.
+527	submitter_id	Submitter_ID	ID for data submitter
+525	submitter	submitter	A group submitting data to a major repository eg. ClinVar
+526	DateLastEvaluated	EvalDate	The most recent date on which evidence was evaluated and this conclusion drawn.
+529	qtaro_parent_a	Q-TARO Parent A	Parent A in the <a href="http://qtaro.abr.affrc.go.jp">Q-TARO (QTL Annotation Rice Online) database</a> QTL Information Table. 
+530	qtaro_parent_b	Q-TARO Parent B	Parent B in the <a href="http://qtaro.abr.affrc.go.jp">Q-TARO (QTL Annotation Rice Online) database</a> QTL Information Table. 
+528	qtaro_category	Q-TARO Category	The phenotype "Category of Object Character" in the <a href="http://qtaro.abr.affrc.go.jp">Q-TARO (QTL Annotation Rice Online) database</a>
+532	dbnsfp_revel_pred	dbNSFP REVEL prediction	dbNSFP REVEL prediction
+534	dbnsfp_ma_pred	dbNSFP mutation assessor prediction	dbNSFP mutation assessor prediction
+531	cadd_pred	CADD prediction	CADD prediction
+533	dbnsfp_meta_lr_pred	dbNSFP MetaLR prediction	dbNSFP MetaLR prediction

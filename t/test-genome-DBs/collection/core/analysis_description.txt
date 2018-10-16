@@ -1,0 +1,28 @@
+407	Protein coding genes annotated in <a href="http://www.ebi.ac.uk/ena/">ENA</a>	Genes	1	\N
+408	Cross-references attached by GenomeLoader	GenomeLoader cross-references	1	\N
+409	Prediction of intrinsically disordered regions in proteins by <a href="http://protein.bio.unipd.it/mobidblite/">MobiDB lite</a>.	MobiDB lite	1	\N
+410	Prediction of coiled-coil regions in proteins is by <a rel="external" href="http://www.sciencemag.org/cgi/reprint/252/5009/1162">Ncoils</a>.	Coiled-coils (Ncoils)	1	\N
+411	Identification of peptide low complexity sequences by <a rel="external" href="http://www.biology.wustl.edu/gcg/seg.html">Seg</a>.	Low complexity (Seg)	1	\N
+412	InterPro2Pathway mapping is obtained from interproScan results.	InterPro2Pathway mapping	1	\N
+413	Protein domains and motifs from the <a rel="external" href="http://pir.georgetown.edu">PIR (Protein Information Resource)</a> Superfamily database.	PIRSF	1	\N
+414	<a href="https://www.ncbi.nlm.nih.gov/Structure/cdd/cdd.shtml">Conserved Domain Database</a> models.	CDD	1	\N
+415	Protein families from <a href="http://www.pantherdb.org/">PANTHER</a>.	PANTHER	1	\N
+416	<a href="http://www.cathdb.info/">CATH/Gene3D</a> families.	Gene3D	1	\N
+417	Protein domains and motifs in the <a rel="external" href="http://pfam.xfam.org">Pfam</a> database.	Pfam	1	\N
+418	Protein domains and motifs in the <a rel="external" href="http://supfam.org/SUPERFAMILY">SUPERFAMILY</a> database.	Superfamily	1	\N
+419	Protein domains and motifs from the <a rel="external" href="http://prosite.expasy.org">PROSITE</a> profiles database.	PROSITE profiles	1	\N
+420	InterPro2GO file is generated manually by the InterPro team at the EBI.	InterPro2GO mapping	1	\N
+421	Gene Ontology xrefs data from GOA	GO xrefs from GOA	0	\N
+422	Protein domains and motifs in the <a rel="external" href="http://smart.embl-heidelberg.de">SMART</a> database.	SMART	1	\N
+423	Prediction of signal peptide cleavage sites by <a rel="external" href="http://www.cbs.dtu.dk/services/SignalP">SignalP</a>.	Cleavage site (Signalp)	1	\N
+424	Prediction of transmembrane helices in proteins by <a rel="external" href="http://www.cbs.dtu.dk/~krogh/TMHMM">TMHMM</a>.	Transmembrane helices	1	\N
+425	Protein domains and motifs from the <a rel="external" href="http://prosite.expasy.org">PROSITE</a> patterns database.	PROSITE patterns	1	\N
+426	Protein fingerprints (groups of conserved motifs) from the <a href="http://www.bioinf.manchester.ac.uk/dbbrowser/PRINTS/index.php">PRINTS</a> database.	Prints	1	\N
+427	<a href="http://hamap.expasy.org/">HAMAP</a> is a system, based on manual protein annotation, that identifies and semi-automatically annotates proteins that are part of well-conserved families or subfamilies: the HAMAP families.	HAMAP	1	\N
+428	Protein domains and motifs in the <a rel="external" href="http://www.jcvi.org/cgi-bin/tigrfams/index.cgi">TIGRFAM</a> database.	TIGRFAM	1	\N
+429	<a href="http://sfld.rbvi.ucsf.edu/">Structure-Function Linkage Database</a> families.	SFLD	1	\N
+430	Covariance models from <a href='http://rfam.xfam.org'>Rfam</a> (release 12.2), aligned to the genome with 'cmscan' from the <a href='http://eddylab.org/infernal'>Infernal</a> suite of programs.	Rfam Models	1	\N
+431	Non-coding RNA gene models based on alignment by of RFAM families to genomic sequences (alignments provided by RFAM)	RFAM	1	\N
+432	Cross-references attached by GenomeLoader to provide names	GenomeLoader name cross-references	1	\N
+433	ncRNA genes annotated in <a href="http://www.ebi.ac.uk/ena/">ENA</a>	ncRNA genes (ENA)	1	\N
+434	tRNA models predicted with <a href="http://lowelab.ucsc.edu/tRNAscan-SE">tRNAscan-SE</a> (release 1.3.1).	tRNA Models	1	\N

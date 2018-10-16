@@ -37,18 +37,18 @@
 1700	protein_id	1	KNOWNXREF	5	INSDC protein ID	MISC	\N	\N	\N
 1701	protein_id_predicted	1	PRED	4	Predicted INSDC Protein ID	MISC	\N	\N	\N
 1800	RefSeq_dna	1	KNOWN	200	RefSeq DNA	MISC	\N	\N	\N
-1801	RefSeq_mRNA	NCBI Reference Sequence (RefSeq) Database Release 86, January 8, 2018	KNOWN	200	RefSeq mRNA	MISC	\N	\N	\N
-1803	RefSeq_ncRNA	NCBI Reference Sequence (RefSeq) Database Release 86, January 8, 2018	KNOWN	200	RefSeq ncRNA	MISC	\N	\N	\N
+1801	RefSeq_mRNA	NCBI Reference Sequence (RefSeq) Database Release 90, September 10, 2018	KNOWN	200	RefSeq mRNA	MISC	\N	\N	\N
+1803	RefSeq_ncRNA	NCBI Reference Sequence (RefSeq) Database Release 90, September 10, 2018	KNOWN	200	RefSeq ncRNA	MISC	\N	\N	\N
 1805	RefSeq_dna_predicted	1	PRED	199	RefSeq DNA predicted	MISC	\N	\N	\N
-1806	RefSeq_mRNA_predicted	NCBI Reference Sequence (RefSeq) Database Release 86, January 8, 2018	PRED	199	RefSeq mRNA predicted	MISC	\N	\N	\N
-1808	RefSeq_ncRNA_predicted	NCBI Reference Sequence (RefSeq) Database Release 86, January 8, 2018	PRED	199	RefSeq ncRNA predicted	MISC	\N	\N	\N
-1810	RefSeq_peptide	NCBI Reference Sequence (RefSeq) Database Release 86, January 8, 2018	KNOWN	210	RefSeq peptide	MISC	\N	\N	\N
-1815	RefSeq_peptide_predicted	NCBI Reference Sequence (RefSeq) Database Release 86, January 8, 2018	PRED	197	RefSeq peptide predicted	MISC	\N	\N	\N
+1806	RefSeq_mRNA_predicted	NCBI Reference Sequence (RefSeq) Database Release 90, September 10, 2018	PRED	199	RefSeq mRNA predicted	MISC	\N	\N	\N
+1808	RefSeq_ncRNA_predicted	NCBI Reference Sequence (RefSeq) Database Release 90, September 10, 2018	PRED	199	RefSeq ncRNA predicted	MISC	\N	\N	\N
+1810	RefSeq_peptide	NCBI Reference Sequence (RefSeq) Database Release 90, September 10, 2018	KNOWN	210	RefSeq peptide	MISC	\N	\N	\N
+1815	RefSeq_peptide_predicted	NCBI Reference Sequence (RefSeq) Database Release 90, September 10, 2018	PRED	197	RefSeq peptide predicted	MISC	\N	\N	\N
 1820	RefSeq_rna	1	KNOWN	230	RefSeq RNA	MISC	\N	\N	\N
 1825	RefSeq_rna_predicted	1	PRED	195	RefSeq RNA predicted	MISC	\N	\N	\N
 1830	RefSeq_genomic	1	KNOWN	193	RefSeq Genomic	MISC	\N	\N	This external_db_id can be used in the seq_region_synonym table. For species such as human, cow, dog we store chromosome names (1-22, X,Y) in the name column of the seq_region table. The RefSeq_genomic is stored as a synonym. eg. NC_000011.10, NT_187365.1
-2000	Uniprot/SPTREMBL	UniProtKB/TrEMBL Release 2017_12 of 20-Dec-2017	KNOWN	119	UniProtKB/TrEMBL	MISC	\N	\N	\N
-2200	Uniprot/SWISSPROT	UniProtKB/Swiss-Prot Release 2017_12 of 20-Dec-2017	KNOWN	220	UniProtKB/Swiss-Prot	MISC	\N	\N	\N
+2000	Uniprot/SPTREMBL	UniProtKB/TrEMBL Release 2018_08 of 12-Sep-2018	KNOWN	119	UniProtKB/TrEMBL	MISC	\N	\N	\N
+2200	Uniprot/SWISSPROT	UniProtKB/Swiss-Prot Release 2018_08 of 12-Sep-2018	KNOWN	220	UniProtKB/Swiss-Prot	MISC	\N	\N	\N
 2202	Uniprot/Varsplic	1	KNOWN	15	UniProtKB/SpliceVariant	MISC	\N	\N	\N
 2250	UniProtKB_all	1	XREF	40	UniProtKB generic accession number (TrEMBL or SwissProt not differentiated)	MISC	\N	\N	\N
 2300	Vega_gene	1	KNOWNXREF	5	Vega gene	MISC	\N	\N	\N
@@ -413,7 +413,6 @@ The main requirement behind this entry, is to be able to link TAIR GO annotation
 50827	GEO	\N	XREF	0	Gene Expression Omnibus	MISC	\N	\N	\N
 50828	GigaDB_A_tauschii	1	KNOWNXREF	1	Aegilops tauschii GigaDB identifier	MISC	\N	\N	Aegilops tauschii GigaDB gene identifier
 20350	RegulonDb_Operon	\N	KNOWNXREF	0	RegulonDb	PRIMARY_DB_SYNONYM	\N	\N	\N
-50830	Gramene_Plant_Reactome	\N	XREF	0	Plant Reactome (Gramene)	MISC	\N	\N	Plant Reactome is a database of plant metabolic and regulatory pathways
 50831	EFO	\N	KNOWNXREF	0	Experimental Factor Ontology	MISC	\N	\N	The Experimental Factor Ontology provides a systematic description of many experimental variables available in EBI databases, and for external projects such as the NHGRI GWAS catalog. It combines parts of several biological ontologies, such as UBERON anatomy, ChEBI chemical compounds, and Cell Ontology.
 50832	EpiRR	\N	KNOWN	0	EpiRR	MISC	\N	\N	EpiRR is a registry of reference epigenomes.
 50833	VGNC	\N	KNOWNXREF	100	VGNC Symbol	PRIMARY_DB_SYNONYM	\N	\N	\N
@@ -431,3 +430,11 @@ The main requirement behind this entry, is to be able to link TAIR GO annotation
 50845	Botrytis_community_symbol	\N	KNOWN	50	Botrytis community symbol	MISC	\N	\N	\N
 50846	BARLEX	\N	KNOWN	1	BARLEX: The Barley Genome Explorer 	MISC	\N	\N	The <A HREF="http://barlex.barleysequence.org/">barley genome explorer</A> allows a visual inspection of BAC overlaps. In addition to a graph view the user can access dotplots and fingerprints to compare two individual BACs with each other. Information to genes and markers is available as well. 
 50847	Ngyuen_et_al_2012	\N	PRED	0	PMID 23153364	MISC	\N	\N	The complete swine olfactory subgenome: expansion of the olfactory gene repertoire in the pig genome. BMC Genomics201213:584 PMID: 23153364
+50848	Plant_Reactome_Reaction	\N	KNOWNXREF	0	Plant Reactome Reaction ID	MISC	\N	\N	Plant Reactome is a database of plant metabolic and regulatory pathways maintained by Gramene. This ID links to a Reaction in Plant Reactome.
+50849	Plant_Reactome_Pathway	\N	KNOWNXREF	0	Plant Reactome Pathway ID	MISC	\N	\N	Plant Reactome is a database of plant metabolic and regulatory pathways maintained by Gramene. This ID links to a Pathway in Plant Reactome.
+50850	CGSNL	\N	KNOWNXREF	0	Committee on Gene Symbolization, Nomenclature and Linkage of the Rice Genetics Cooperative	MISC	\N	\N	The Committee on Gene Symbolization, Nomenclature and Linkage (CGSNL) of the Rice Genetics Cooperative has revised the gene nomenclature system for rice (Oryza) to take advantage of the completion of the rice genome sequence and the emergence of new methods for detecting, characterizing, and describing genes in the biological community (<A HREF="https://doi.org/10.1007/s12284-008-9004-9">McCouch 2008</A>).
+50851	Oryzabase	\N	KNOWNXREF	0	Integrated Rice Science Database	MISC	\N	\N	The aim of Oryzabase is to create a comprehensive view of rice (Oryza sativa) as a model monocot plant by integrating biological data with molecular genomic information (<a href="https://doi.org/10.1104/pp.105.063008">Yamazaki 2006</a>).
+50852	RAP-DB	\N	KNOWNXREF	0	Rice Annotation Project Database	MISC	\N	\N	The Rice Annotation Project Database (RAP-DB) provides a comprehensive set of gene annotations for the genome sequence of rice, Oryza sativa (japonica group) cv. Nipponbare (<A HREF="https://dx.doi.org/10.1093%2Fpcp%2Fpcs183">Itoh 2013</A>).
+50853	Gasser_lab	\N	KNOWNXREF	5	Gene names assigned by Gasser Lab	MISC	\N	\N	\N
+50854	Schisto_previous_id	\N	KNOWNXREF	5	Related identifier from previous versions of S. mansoni annotation	MISC	\N	\N	\N
+50855	wormbase_cds	\N	KNOWNXREF	5	WormBase CDS	MISC	\N	\N	\N
