@@ -31,12 +31,12 @@ use DbCheck_4;
 use DbCheck_5;
 
 my $test_db_dir = $FindBin::Bin;
+my $db_type     = 'core';
+my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
-my $species  = 'drosophila_melanogaster';
-my $db_type  = 'core';
-my $dba_type = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-my $testdb   = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-my $dba      = $testdb->get_DBAdaptor($db_type);
+my $species = 'drosophila_melanogaster';
+my $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+my $dba     = $testdb->get_DBAdaptor($db_type);
 
 # Note that you cannot, by design, create a DbCheck object; datachecks
 # must inherit from it and define mandatory, read-only parameters that
@@ -336,7 +336,7 @@ subtest 'Registry instantiation', sub {
         -pass   => '$pass',
       );
     }
-    
+
     1;
   /;
   $registry_file->spew($registry_text);
@@ -360,8 +360,32 @@ subtest 'Registry instantiation', sub {
   # The registry object is a bit weird, the return value is a string,
   # so check that it actually is a working registry by using it.
   is($check->registry, 'Bio::EnsEMBL::Registry', 'registry attribute set via server_uri');
-  my $species = $check->registry->get_all_species;
-  ok(scalar(@$species), 'registry works when set via server_uri');
+  my $species_list = $check->registry->get_all_species;
+  ok(scalar(@$species_list), 'registry works when set via server_uri');
+
+  $check = TestChecks::DbCheck_1->new(
+    dba        => $dba,
+    server_uri => $server_uri.$dba->dbc->dbname,
+  );
+
+  throws_ok(
+    sub { $check->registry },
+    qr/species and group parameters are required/,
+    'DbCheck->registry fails if uri has dbname but no species attrib');
+
+  $server_uri .=
+	$dba->dbc->dbname.
+	'?species='.$dba->species.
+	';group='.$dba->group;
+
+  $check = TestChecks::DbCheck_1->new(
+    dba        => $dba,
+    server_uri => $server_uri,
+  );
+
+  is($check->registry, 'Bio::EnsEMBL::Registry', 'registry attribute set via server_uri with dbname');
+  $species_list = $check->registry->get_all_species;
+  ok(scalar(@$species_list), 'registry works when set via server_uri with dbname');
 
   # Check both that registry_file works,
   # and that it has precedence over server_uri.
@@ -372,8 +396,95 @@ subtest 'Registry instantiation', sub {
   );
 
   is($check->registry, 'Bio::EnsEMBL::Registry', 'registry attribute set via registry_file');
-  $species = $check->registry->get_all_species;
-  ok(scalar(@$species), 'registry works when set via registry_file');
+  $species_list = $check->registry->get_all_species;
+  ok(scalar(@$species_list), 'registry works when set via registry_file');
+};
+
+subtest 'Fetch DBA from registry', sub {
+  my %conf = %{$$testdb{conf}{$db_type}};
+  my $driver = $conf{driver};
+  my $host   = $conf{host};
+  my $port   = $conf{port};
+  my $user   = $conf{user};
+  my $pass   = $conf{pass};
+
+  my $server_uri = "$driver://$user:$pass\@$host:$port/";
+
+  my $check = TestChecks::DbCheck_1->new(
+    dba        => $dba,
+    server_uri => $server_uri,
+  );
+
+  my $dba2 = $check->get_dba();
+
+  isa_ok($dba2, $dba_type, 'Return value of "get_dba"');
+  is($dba2->species, $dba->species, 'Species name matches');
+  is($dba2->group,   $dba->group,   'Group matches');
+};
+
+$species = 'collection';
+$testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+$dba     = $testdb->get_DBAdaptor($db_type);
+$dba->is_multispecies(1);
+
+subtest 'DbCheck with collection database', sub {
+  my $dbcheck = TestChecks::DbCheck_1->new(
+    dba => $dba,
+  );
+  isa_ok($dbcheck, $module);
+
+  my $name = $dbcheck->name;
+
+  is($dbcheck->species, 'giardia_intestinalis', 'Species name correct for collection db');
+
+  Test::More->builder->reset();
+  my $result = $dbcheck->run;
+  diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($result, 0, 'test passes');
+
+  like($dbcheck->output, qr/\s*1\.\.3/, 'Tests run for three species');
+  like($dbcheck->output, qr/Subtest: giardia_intestinalis/,     'Test run for first collection species');
+  like($dbcheck->output, qr/Subtest: giardia_lamblia_p15/,      'Test run for second collection species');
+  like($dbcheck->output, qr/Subtest: spironucleus_salmonicida/, 'Test run for third collection species');
+};
+
+subtest 'DbCheck with collection database, single species', sub {
+  my $dbcheck = TestChecks::DbCheck_1->new(
+    dba => $dba,
+    dba_species_only => 1,
+  );
+  isa_ok($dbcheck, $module);
+
+  my $name = $dbcheck->name;
+
+  Test::More->builder->reset();
+  my $result = $dbcheck->run;
+  diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($result, 0, 'test passes');
+
+  unlike($dbcheck->output, qr/\s*1\.\.3/, 'Tests not run for three species');
+  unlike($dbcheck->output, qr/Subtest: giardia_intestinalis/, 'Test not run in "collection" context');
+  like($dbcheck->output, qr/Subtest: DbCheck_1/, 'Test run for single species in collection');
+};
+
+subtest 'DbCheck with collection database, per_db', sub {
+  my $dbcheck = TestChecks::DbCheck_4->new(
+    dba => $dba,
+  );
+  isa_ok($dbcheck, $module);
+
+  my $name = $dbcheck->name;
+
+  Test::More->builder->reset();
+  my $result = $dbcheck->run;
+  diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($result, 0, 'test passes');
+
+  unlike($dbcheck->output, qr/\s*1\.\.3/, 'Test not run for three species');
+  like($dbcheck->output, qr/Subtest: DbCheck_4/, 'Test run for whole collection database');
 };
 
 done_testing();

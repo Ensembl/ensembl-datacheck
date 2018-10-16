@@ -23,12 +23,9 @@ use Test::Exception;
 use Test::More;
 
 my $test_db_dir = $FindBin::Bin;
-
-my $species  = 'drosophila_melanogaster';
-my $db_type  = 'core';
-my $dba_type = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-my $testdb   = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-my $dba      = $testdb->get_DBAdaptor($db_type);
+my @species     = qw(collection drosophila_melanogaster homo_sapiens);
+my $db_type     = 'core';
+my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
 subtest 'Repository Location', sub {
   my $repo = repo_location('ensembl-datacheck');
@@ -40,19 +37,24 @@ subtest 'Repository Location', sub {
     qr/was not found/, 'non-existent repository not located');
 };
 
-subtest 'Count Database Rows', sub {
-  my $sql_1 = 'SELECT COUNT(*) FROM gene';
-  my $sql_2 = 'SELECT * FROM gene';
-  my $sql_3 = 'SELECT * FROM gene WHERE gene_id > ?';
+foreach my $species (@species) {
+  my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+  my $dba    = $testdb->get_DBAdaptor($db_type);
 
-  my $sql_count_1 = sql_count($dba, $sql_1);
-  my $sql_count_2 = sql_count($dba, $sql_2);
-  my $sql_count_3 = sql_count($dba, $sql_3, 0);
+  subtest 'Count Database Rows', sub {
+    my $sql_1 = 'SELECT COUNT(*) FROM gene';
+    my $sql_2 = 'SELECT * FROM gene';
+    my $sql_3 = 'SELECT * FROM gene WHERE gene_id > ?';
 
-  like($sql_count_1, qr/^\d+$/, 'With COUNT');
-  like($sql_count_2, qr/^\d+$/, 'Without COUNT');
-  is($sql_count_1, $sql_count_2, 'Counts match');
-  like($sql_count_3, qr/^\d+$/, 'With parameters');
-};
+    my $sql_count_1 = sql_count($dba, $sql_1);
+    my $sql_count_2 = sql_count($dba, $sql_2);
+    my $sql_count_3 = sql_count($dba, $sql_3, 0);
+
+    like($sql_count_1, qr/^\d+$/, 'With COUNT');
+    like($sql_count_2, qr/^\d+$/, 'Without COUNT');
+    is($sql_count_1, $sql_count_2, 'Counts match');
+    like($sql_count_3, qr/^\d+$/, 'With parameters');
+  };
+}
 
 done_testing();

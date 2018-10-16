@@ -26,12 +26,9 @@ use Test::Exception;
 use Test::More;
 
 my $test_db_dir = $FindBin::Bin;
-
-my $species  = 'drosophila_melanogaster';
-my $db_type  = 'core';
-my $dba_type = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-my $testdb   = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-my $dba      = $testdb->get_DBAdaptor($db_type);
+my @species     = qw(collection drosophila_melanogaster);
+my $db_type     = 'core';
+my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
 my $datacheck_dir = "$FindBin::Bin/TestChecks";
 my $index_file    = "$FindBin::Bin/index.json";
@@ -85,146 +82,151 @@ subtest 'Parameter instantiation: Manager', sub {
   $obj->input_job->param_init($param_defaults);
 };
 
-subtest 'Parameter instantiation: DbCheck with DBA', sub {
-  $obj->param('dba', $dba);
+foreach my $species (@species) {
+  my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+  my $dba    = $testdb->get_DBAdaptor($db_type);
 
-  $obj->fetch_input();
-  my $datacheck_params = $obj->param('datacheck_params');
-
-  is($$datacheck_params{dba}, $dba, 'DBA set correctly');
-  is($$datacheck_params{dba_species_only}, 0, 'DBA species flag set correctly');
-
-  $obj->param('dba', undef);
-};
-
-subtest 'Parameter instantiation: DbCheck with dbname', sub {
-  $obj->param('dbname', $dba->dbc->dbname);
-
-  $obj->fetch_input();
-  my $datacheck_params = $obj->param('datacheck_params');
-
-  is($$datacheck_params{dba}, $dba, 'DBA set correctly');
-  is($$datacheck_params{dba_species_only}, 0, 'DBA species flag set correctly');
-
-  $obj->param('dbname', undef);
-};
-
-subtest 'Parameter instantiation: DbCheck with non-existent dbname', sub {
-  $obj->param('dbname', 'rhubarb_and_custard');
-
-  throws_ok(
-    sub { $obj->fetch_input() },
-    qr/No databases matching/, "Fail if database doesn't exist");
-
-  $obj->param('dbname', undef);
-};
-
-subtest 'Parameter instantiation: DbCheck with species only', sub {
-  $obj->param('species', $species);
-  # Default group is 'core'
-
-  $obj->fetch_input();
-  my $datacheck_params = $obj->param('datacheck_params');
-
-  is($$datacheck_params{dba}, $dba, 'DBA set correctly');
-  is($$datacheck_params{dba_species_only}, 1, 'DBA species flag set correctly');
-
-  $obj->param('species', undef);
-};
-
-subtest 'Parameter instantiation: DbCheck with species and group', sub {
-  $obj->param('species', $species);
-  $obj->param('group', $db_type);
-
-  $obj->fetch_input();
-  my $datacheck_params = $obj->param('datacheck_params');
-
-  is($$datacheck_params{dba}, $dba, 'DBA set correctly');
-  is($$datacheck_params{dba_species_only}, 1, 'DBA species flag set correctly');
-
-  $obj->param('species', undef);
-  $obj->param('group', 'core');
-};
-
-subtest 'Parameter instantiation: DbCheck with species and wrong group', sub {
-  $obj->param('species', $species);
-  $obj->param('group', 'otherfeatures');
-
-  throws_ok(
-    sub { $obj->fetch_input() },
-    qr/No otherfeatures database for $species/, "Fail if group doesn't exist");
-
-  $obj->param('species', undef);
-  $obj->param('group', 'core');
-};
-
-subtest 'Parameter instantiation: DbCheck registry parameters', sub {
-  $obj->param('registry_file', '/path/to/registry');
-  $obj->param('server_uri', 'mysql_uri_1');
-  $obj->param('old_server_uri', 'mysql_uri_2');
-
-  $obj->fetch_input();
-  my $datacheck_params = $obj->param('datacheck_params');
-
-  is($$datacheck_params{registry_file}, '/path/to/registry', 'Registry file is set correctly');
-  is($$datacheck_params{server_uri}, 'mysql_uri_1', 'Server URI is set correctly');
-  is($$datacheck_params{old_server_uri}, 'mysql_uri_2', 'Old server URI is set correctly');
-
-  $obj->param('registry_file', undef);
-  $obj->param('server_uri', undef);
-  $obj->param('old_server_uri', undef);
-};
-
-# Point at the test datachecks. Output file is needed to prevent the
-# results of those datacheck tests methods from polluting this test.
-$obj->param('datacheck_dir', $datacheck_dir);
-$obj->param('index_file', $index_file);
-$obj->param('output_file', $output_file);
-
-TODO: {
-  local $TODO = 
-    "Test output from the datachecks is a not quite right, ".
-    "because a harness is being run from a harness and it gets mangled. ".
-    "Haven't yet figured out how to manage this...";
-  subtest 'Running datachecks: BaseCheck', sub {
-    $obj->param('datacheck_names', ['BaseCheck_1']);
-    $obj->param('datacheck_groups', ['base']);
-    $obj->param('failures_fatal', 0);
-
-    $obj->fetch_input();
-    #$obj->run();
-
-    is($obj->param('passed'),  1, "Pass count correct");
-    is($obj->param('failed'),  1, "Fail count correct");
-    is($obj->param('skipped'), 1, "Skip count correct");
-  };
-
-  subtest 'Running datachecks: DbCheck', sub {
+  subtest 'Parameter instantiation: DbCheck with DBA', sub {
     $obj->param('dba', $dba);
-    $obj->param('datacheck_names', ['DbCheck_1', 'DbCheck_2', 'DbCheck_3']);
-    $obj->param('datacheck_groups', []);
-    $obj->param('failures_fatal', 0);
 
     $obj->fetch_input();
-    #$obj->run();
+    my $datacheck_params = $obj->param('datacheck_params');
 
-    is($obj->param('passed'),  1, "Pass count correct");
-    is($obj->param('failed'),  1, "Fail count correct");
-    is($obj->param('skipped'), 1, "Skip count correct");
+    is($$datacheck_params{dba}, $dba, 'DBA set correctly');
+    is($$datacheck_params{dba_species_only}, 0, 'DBA species flag set correctly');
+
+    $obj->param('dba', undef);
   };
 
-  subtest 'Running datachecks: Fail', sub {
-    $obj->param('dba', $dba);
-    $obj->param('datacheck_names', ['DbCheck_2']);
-    $obj->param('datacheck_groups', []);
-    $obj->param('failures_fatal', 1);
+  subtest 'Parameter instantiation: DbCheck with dbname', sub {
+    $obj->param('dbname', $dba->dbc->dbname);
 
     $obj->fetch_input();
+    my $datacheck_params = $obj->param('datacheck_params');
 
-    #throws_ok(
-    #  sub { $obj->run() },
-    #  qr/Datachecks failed: DbCheck_2/, "Fail if datacheck fails");
+    is($$datacheck_params{dba}, $dba, 'DBA set correctly');
+    is($$datacheck_params{dba_species_only}, 0, 'DBA species flag set correctly');
+
+    $obj->param('dbname', undef);
   };
+
+  subtest 'Parameter instantiation: DbCheck with non-existent dbname', sub {
+    $obj->param('dbname', 'rhubarb_and_custard');
+
+    throws_ok(
+      sub { $obj->fetch_input() },
+      qr/No databases matching/, "Fail if database doesn't exist");
+
+    $obj->param('dbname', undef);
+  };
+
+  subtest 'Parameter instantiation: DbCheck with species only', sub {
+    $obj->param('species', $species);
+    # Default group is 'core'
+
+    $obj->fetch_input();
+    my $datacheck_params = $obj->param('datacheck_params');
+
+    is($$datacheck_params{dba}, $dba, 'DBA set correctly');
+    is($$datacheck_params{dba_species_only}, 1, 'DBA species flag set correctly');
+
+    $obj->param('species', undef);
+  };
+
+  subtest 'Parameter instantiation: DbCheck with species and group', sub {
+    $obj->param('species', $species);
+    $obj->param('group', $db_type);
+
+    $obj->fetch_input();
+    my $datacheck_params = $obj->param('datacheck_params');
+
+    is($$datacheck_params{dba}, $dba, 'DBA set correctly');
+    is($$datacheck_params{dba_species_only}, 1, 'DBA species flag set correctly');
+
+    $obj->param('species', undef);
+    $obj->param('group', 'core');
+  };
+
+  subtest 'Parameter instantiation: DbCheck with species and wrong group', sub {
+    $obj->param('species', $species);
+    $obj->param('group', 'otherfeatures');
+
+    throws_ok(
+      sub { $obj->fetch_input() },
+      qr/No otherfeatures database for $species/, "Fail if group doesn't exist");
+
+    $obj->param('species', undef);
+    $obj->param('group', 'core');
+  };
+
+  subtest 'Parameter instantiation: DbCheck registry parameters', sub {
+    $obj->param('registry_file', '/path/to/registry');
+    $obj->param('server_uri', 'mysql_uri_1');
+    $obj->param('old_server_uri', 'mysql_uri_2');
+
+    $obj->fetch_input();
+    my $datacheck_params = $obj->param('datacheck_params');
+
+    is($$datacheck_params{registry_file}, '/path/to/registry', 'Registry file is set correctly');
+    is($$datacheck_params{server_uri}, 'mysql_uri_1', 'Server URI is set correctly');
+    is($$datacheck_params{old_server_uri}, 'mysql_uri_2', 'Old server URI is set correctly');
+
+    $obj->param('registry_file', undef);
+    $obj->param('server_uri', undef);
+    $obj->param('old_server_uri', undef);
+  };
+
+  # Point at the test datachecks. Output file is needed to prevent the
+  # results of those datacheck tests methods from polluting this test.
+  $obj->param('datacheck_dir', $datacheck_dir);
+  $obj->param('index_file', $index_file);
+  $obj->param('output_file', $output_file);
+
+  TODO: {
+    local $TODO = 
+      "Test output from the datachecks is a not quite right, ".
+      "because a harness is being run from a harness and it gets mangled. ".
+      "Haven't yet figured out how to manage this...";
+    subtest 'Running datachecks: BaseCheck', sub {
+      $obj->param('datacheck_names', ['BaseCheck_1']);
+      $obj->param('datacheck_groups', ['base']);
+      $obj->param('failures_fatal', 0);
+
+      $obj->fetch_input();
+      #$obj->run();
+
+      is($obj->param('passed'),  1, "Pass count correct");
+      is($obj->param('failed'),  1, "Fail count correct");
+      is($obj->param('skipped'), 1, "Skip count correct");
+    };
+
+    subtest 'Running datachecks: DbCheck', sub {
+      $obj->param('dba', $dba);
+      $obj->param('datacheck_names', ['DbCheck_1', 'DbCheck_2', 'DbCheck_3']);
+      $obj->param('datacheck_groups', []);
+      $obj->param('failures_fatal', 0);
+
+      $obj->fetch_input();
+      #$obj->run();
+
+      is($obj->param('passed'),  1, "Pass count correct");
+      is($obj->param('failed'),  1, "Fail count correct");
+      is($obj->param('skipped'), 1, "Skip count correct");
+    };
+
+    subtest 'Running datachecks: Fail', sub {
+      $obj->param('dba', $dba);
+      $obj->param('datacheck_names', ['DbCheck_2']);
+      $obj->param('datacheck_groups', []);
+      $obj->param('failures_fatal', 1);
+
+      $obj->fetch_input();
+
+      #throws_ok(
+      #  sub { $obj->run() },
+      #  qr/Datachecks failed: DbCheck_2/, "Fail if datacheck fails");
+    };
+  }
 }
 
 done_testing();
