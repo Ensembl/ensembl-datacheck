@@ -1,0 +1,28 @@
+407	2017-05-08 19:14:57	ena	ena	\N	\N	\N	\N	\N	\N	\N	\N	ena	gene
+408	2017-05-08 19:14:57	gl_xref	gl_xref	\N	\N	\N	\N	\N	\N	\N	\N	gl_xref	\N
+409	2018-08-08 13:06:21	mobidblite	MobiDBLite	1.5	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+410	2018-08-08 13:06:22	ncoils	ncoils	2.2.1	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+411	2018-08-08 13:06:25	seg	Seg	\N	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+412	2018-08-08 13:06:25	interpro2pathway	InterPro2Pathway	\N	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+413	2018-08-08 13:06:19	pirsf	PIRSF	3.02	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+414	2018-08-08 13:06:16	cdd	CDD	3.16	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+415	2018-08-08 13:06:17	hmmpanther	PANTHER	12.0	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+416	2018-08-08 13:06:17	gene3d	Gene3D	4.2.0	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+417	2018-08-08 13:06:19	pfam	Pfam	31.0	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+418	2018-08-08 13:06:21	superfamily	SuperFamily	1.75	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+419	2018-08-08 13:06:18	pfscan	Prosite_profiles	2018_02	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+420	2018-08-08 13:06:24	interpro2go	InterPro2GO	\N	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+421	2018-08-24 12:07:12	goa_import	GO	\N	\N	goa_import	\N	\N	\N	\N	\N	\N	\N
+422	2018-08-08 13:06:20	smart	Smart	7.1	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+423	2018-08-08 13:06:22	signalp	SignalP	4.1	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+424	2018-08-08 13:06:23	tmhmm	TMHMM	2.0c	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+425	2018-08-08 13:06:19	scanprosite	Prosite_patterns	2018_02	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+426	2018-08-08 13:06:19	prints	PRINTS	42.0	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+427	2018-08-08 13:06:17	hamap	HAMAP	2018_03	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+428	2018-08-08 13:06:21	tigrfam	TIGRfam	15.0	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+429	2018-08-08 13:06:19	sfld	SFLD	3	\N	InterProScan	5.30-69.0	\N	\N	\N	\N	\N	\N
+430	2017-07-13 17:59:45	cmscan_rfam_12.2	Rfam	12.2	/nfs/panda/ensemblgenomes/external/Rfam/12.2/Rfam.cm	Infernal	1.1	/nfs/software/ensembl/RHEL7/linuxbrew/bin/cmscan		Bio::EnsEMBL::Analysis::Runnable::CMScan	\N	\N	\N
+431	2017-05-08 19:19:22	rfam_genes	rfam_genes	\N	\N	\N	\N	\N	\N	\N	\N	rfam_genes	gene
+432	2017-05-08 19:15:01	gl_name_xref	gl_name_xref	\N	\N	\N	\N	\N	\N	\N	\N	gl_name_xref	\N
+433	2017-05-08 19:15:01	ena_rna	ena	\N	\N	\N	\N	\N	\N	\N	\N	ena_rna	gene
+434	2017-07-13 17:59:45	trnascan_align	\N	\N	\N	tRNAscan-SE	1.23	/nfs/software/ensembl/RHEL7/linuxbrew/bin/tRNAscan-SE		Bio::EnsEMBL::Analysis::Runnable::tRNAscan	\N	\N	\N

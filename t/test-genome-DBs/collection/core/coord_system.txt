@@ -1,0 +1,12 @@
+1	1	contig	\N	4	default_version,sequence_level
+2	1	supercontig	ASM49873v1	3	default_version
+3	2	contig	\N	4	default_version,sequence_level
+4	2	supercontig	ASM18266v1	3	default_version
+5	3	contig	\N	4	default_version,sequence_level
+6	3	supercontig	SSK3.0	3	default_version
+7	4	supercontig	ASM49871v1	3	default_version
+8	4	contig	\N	4	default_version,sequence_level
+9	5	supercontig	ASM18240v1	3	default_version
+10	5	contig	\N	4	default_version,sequence_level
+13	7	contig	\N	4	default_version,sequence_level
+14	7	supercontig	G_duodenalis_AssB_BAH15c1	3	default_version

@@ -38,14 +38,14 @@
 50792	CL	\N	KNOWNXREF	0	Cell Type Ontology	MISC	\N	\N	Cell type ontology annotations (http://cellontology.org/)
 50733	Chicken_Genome_Consortium	\N	KNOWN	5	International Chicken Genome Consortium	MISC	\N	\N	\N
 50840	RefSeq	\N	KNOWNXREF	0	NCBI Reference Sequences	MISC	\N	\N	NCBI's reference sequence (RefSeq) database (http://www.ncbi.nlm.nih.gov/RefSeq/) is a curated non-redundant collection of sequences representing genomes, transcripts and proteins. The database includes 3774 organisms spanning prokaryotes, eukaryotes and viruses, and has records for 2,879,860 proteins (RefSeq release 19). RefSeq records integrate information from multiple sources, when additional data are available from those sources and therefore represent a current description of the sequence and its features. Annotations include coding regions, conserved domains, tRNAs, sequence tagged sites (STS), variation, references, gene and protein product names, and database cross-references. Sequence is reviewed and features are added using a combined approach of collaboration and other input from the scientific community, prediction, propagation from GenBank and curation by NCBI staff. The format of all RefSeq records is validated, and an increasing number of tests are being applied to evaluate the quality of sequence and annotation, especially in the context of complete genomic sequence.
-2000	Uniprot/SPTREMBL	EG Xref pipeline; 2017-09-18T18:22:54	KNOWN	119	UniProtKB/TrEMBL	MISC	\N	\N	\N
+2000	Uniprot/SPTREMBL	EG Xref pipeline; 2018-06-05T15:12:59	KNOWN	119	UniProtKB/TrEMBL	MISC	\N	\N	\N
 50835	VectorBase_Proteome	\N	KNOWN	50	VectorBase Proteome	MISC	\N	\N	\N
 20072	IntAct	\N	KNOWNXREF	0	IntAct	PRIMARY_DB_SYNONYM	\N	\N	\N
 20309	CADRE	\N	KNOWNXREF	0	CADRE	PRIMARY_DB_SYNONYM	\N	\N	\N
 20088	Reactome	\N	KNOWNXREF	0	Reactome	PRIMARY_DB_SYNONYM	\N	\N	\N
 5100	IMGT_HLA	\N	KNOWN	7	IMGT/HLA	MISC	\N	\N	\N
 7300	Ens_Mg_transcript	\N	XREF	40	Ensembl Turkey Transcript	MISC	\N	\N	\N
-1810	RefSeq_peptide	EG Xref pipeline; 2017-09-18T14:37:43	KNOWN	210	RefSeq peptide	MISC	\N	\N	\N
+1810	RefSeq_peptide	EG Xref pipeline; 2018-05-31T18:32:05	KNOWN	210	RefSeq peptide	MISC	\N	\N	\N
 20215	phatr_jgi_v2	\N	KNOWNXREF	0	JGI ID (JGI 2.0)	PRIMARY_DB_SYNONYM	\N	\N	\N
 2410	wormbase_transcript	\N	KNOWN	5	WormBase Transcript	MISC	\N	\N	\N
 211	VB_Community_Symbol	\N	KNOWN	50	VB Community Symbol	MISC	\N	\N	\N
@@ -70,7 +70,6 @@
 50744	EntrezGene_trans_name	\N	KNOWNXREF	250	EntrezGene transcript name	MISC	\N	\N	transcript name projected from EntrezGene gene name
 9600	Trace_archive	\N	XREF	40	Trace Archive id	MISC	\N	\N	\N
 4600	OTTG	\N	XREF	1	Havana gene	ALT_GENE	\N	\N	\N
-50830	Gramene_Plant_Reactome	\N	XREF	0	Plant Reactome (Gramene)	MISC	\N	\N	Plant Reactome is a database of plant metabolic and regulatory pathways
 20217	phatr_jgi_v2_gene	\N	KNOWNXREF	0	JGI Gene ID (JGI 2.0)	PRIMARY_DB_SYNONYM	\N	\N	\N
 10100	EPD	\N	KNOWNXREF	5	Eukaryotic Promoter Database (Bucher)	MISC	\N	\N	\N
 50643	PomBase_Systematic_ID	\N	KNOWNXREF	5	PomBase Systematic ID	MISC	\N	\N	\N
@@ -105,12 +104,12 @@
 50658	ToxoDB	\N	KNOWNXREF	1	ToxoDB	PRIMARY_DB_SYNONYM	\N	\N	Toxoplasma Genomic Resource Database.
 50180	TIGR_GeneIndex	\N	XREF	0	Gene Index	MISC	\N	\N	\N
 50823	MTGD	\N	KNOWNXREF	0	MTGD	PRIMARY_DB_SYNONYM	\N	\N	The Medicago truncatula Genome Database (MTGD), maintained by JCVI.
-1800	RefSeq_dna	EG Xref pipeline; 2017-09-18T15:17:51	KNOWN	200	RefSeq DNA	MISC	\N	\N	\N
+1800	RefSeq_dna	EG Xref pipeline; 2018-05-31T18:32:05	KNOWN	200	RefSeq DNA	MISC	\N	\N	\N
 6410	Ens_Gg_transcript	\N	XREF	40	Ensembl Chicken Transcript	MISC	\N	\N	\N
 20372	BROAD_P_NODORUM_GENE	\N	KNOWNXREF	0	Broad Institute	PRIMARY_DB_SYNONYM	\N	\N	\N
 50641	PomBase_Interaction_PHYSICAL	\N	KNOWNXREF	5	PomBase Interaction Physical	MISC	\N	\N	\N
 12500	DBASS3	\N	XREF	50	DataBase of Aberrant 3' Splice Sites	MISC	\N	\N	\N
-1000	GO	EG Xref pipeline; 2017-09-08T12:08:57	XREF	5	GO	MISC	\N	\N	\N
+1000	GO	EG Xref pipeline; 2018-05-31T17:45:14	XREF	5	GO	MISC	\N	\N	\N
 12510	HPA	\N	XREF	50	Human Protein Atlas	MISC	\N	\N	\N
 50748	Ensembl_Plants	\N	XREF	1	Ensembl Plants	ENSEMBL	\N	\N	Ensembl Plants identifiers serving GO projections from a reference species to other plants species.
 50818	Smar_Community_Annotation	\N	KNOWN	50	Strigamia maritima Community Annotation	MISC	\N	\N	\N
@@ -133,7 +132,7 @@
 12700	goslim_goa	\N	XREF	5	GOSlim GOA	MISC	\N	\N	\N
 50005	EC_NUMBER	\N	XREF	0	Enzyme EC Number	MISC	\N	\N	\N
 20220	thaps_jgi_v2_bd	\N	KNOWNXREF	0	JGI ID (JGI 2.0 unmapped sequence)	PRIMARY_DB_SYNONYM	\N	\N	\N
-50749	ChEMBL	EG Xref pipeline; 2017-09-08T12:13:59	KNOWNXREF	5	ChEMBL	MISC	\N	\N	ChEMBL external references imported via Uniprot mappings
+50749	ChEMBL	EG Xref pipeline; 2018-05-31T18:32:05	KNOWNXREF	5	ChEMBL	MISC	\N	\N	ChEMBL external references imported via Uniprot mappings
 9400	TetNig_mouse_econtig	\N	XREF	40	Genoscope mouse exofish econtig	MISC	\N	\N	\N
 6820	Ens_Tr_transcript	\N	XREF	40	Ensembl Fugu Transcript	MISC	\N	\N	\N
 8400	TetNig_cdna	\N	XREF	40	Genoscope tetraodon cDNA	MISC	\N	\N	\N
@@ -152,7 +151,7 @@
 20377	PomBase_TRANSCRIPT	\N	KNOWNXREF	0	PomBase	PRIMARY_DB_SYNONYM	\N	\N	\N
 20334	SCHISTODB	\N	KNOWNXREF	0	SchistoDB	MISC	\N	\N	\N
 50691	SGN	\N	KNOWNXREF	1	Sol Genomics Network	MISC	\N	\N	\N
-10300	MEROPS	EG Xref pipeline; 2017-09-08T12:13:59	KNOWNXREF	5	MEROPS - the Peptidase Database	MISC	\N	\N	\N
+10300	MEROPS	EG Xref pipeline; 2018-05-31T18:32:05	KNOWNXREF	5	MEROPS - the Peptidase Database	MISC	\N	\N	\N
 50110	PlantGDB_PUT	\N	XREF	1	PlantGDB Transcript	MISC	\N	\N	\N
 8900	CioInt_cdna	\N	XREF	40	Ciona intestinalis cDNA	MISC	\N	\N	\N
 6400	Ens_Gg_gene	\N	XREF	40	Ensembl Chicken Gene	MISC	\N	\N	\N
@@ -166,7 +165,7 @@
 50650	BGI Shenzhen	\N	KNOWN	5	Beijing Genomics Institute, Shenzhen	MISC	\N	\N	\N
 50647	BROAD_Magnaporthe_DB	\N	KNOWNXREF	0	Magnaporthe comparative DB	MISC	\N	\N	Broad Institute Magnaporthe comparative Database
 50819	RFAM_GENE	\N	KNOWN	0	Rfam Gene Name	MISC	\N	\N	Name for gene assigned from Rfam alignment
-50756	STRING	EG Xref pipeline; 2017-09-08T12:13:59	XREF	0	STRING	MISC	\N	\N	STRING - Known and Predicted Protein-Protein Interactions
+50756	STRING	EG Xref pipeline; 2018-05-31T18:32:05	XREF	0	STRING	MISC	\N	\N	STRING - Known and Predicted Protein-Protein Interactions
 20306	ASPGD	\N	KNOWNXREF	0	AspGD	PRIMARY_DB_SYNONYM	\N	\N	\N
 3800	CCDS	\N	KNOWN	240	CCDS	MISC	\N	\N	\N
 5400	Oxford_FGU_Oa_gene	\N	PRED	1	Oxford Ponting Group Platypus predictions gene id	MISC	\N	\N	Updated from alt_gene to misc due to user query
@@ -222,7 +221,7 @@
 50621	Uniprot_gn	\N	KNOWN	116	UniProtKB Gene Name	MISC	\N	\N	\N
 9700	CioSav_est	\N	XREF	40	Ciona savignyi EST	MISC	\N	\N	\N
 50788	SP_SL	\N	KNOWN	0	UniProtKB/SwissProt Subcellular Locatisation	MISC	\N	\N	UniProt Subcellular Location (http://www.uniprot.org/manual/subcellular_location)
-1700	protein_id	EG Xref pipeline; 2017-09-08T12:13:59	KNOWNXREF	5	INSDC protein ID	MISC	\N	\N	\N
+1700	protein_id	EG Xref pipeline; 2018-05-31T18:32:05	KNOWNXREF	5	INSDC protein ID	MISC	\N	\N	\N
 6420	Ens_Gg_translation	\N	XREF	40	Ensembl Chicken Translation	MISC	\N	\N	\N
 50833	VGNC	\N	KNOWNXREF	100	VGNC Symbol	PRIMARY_DB_SYNONYM	\N	\N	\N
 2400	wormbase_gene	\N	KNOWN	5	WormBase Gene	MISC	\N	\N	\N
@@ -246,7 +245,7 @@
 20082	PeroxiBase	\N	KNOWNXREF	0	PeroxiBase	PRIMARY_DB_SYNONYM	\N	\N	\N
 50668	JGI_GENE	\N	XREF	1	JGI Gene	MISC	\N	\N	gene ID/NAME in the JGI gff3 file
 4690	ENSG	\N	XREF	1	Ensembl gene	ALT_GENE	\N	\N	\N
-700	EMBL	EG Xref pipeline; 2017-09-08T12:13:59	KNOWNXREF	5	European Nucleotide Archive	MISC	\N	\N	\N
+700	EMBL	EG Xref pipeline; 2018-05-31T18:32:05	KNOWNXREF	5	European Nucleotide Archive	MISC	\N	\N	\N
 50627	SHSC	\N	KNOWNXREF	0	Tasmanian Devil Sequencing Consortium	MISC	\N	\N	Tasmanian Devil Genome Sequencing Consortium
 50651	ICGSC	\N	KNOWN	5	International Cat Genome Sequencing Consortium	MISC	\N	\N	\N
 50743	PFAM	\N	XREF	0	PFAM	MISC	\N	\N	Pfam release 27, from Vega
@@ -267,7 +266,7 @@
 50690	RefSeq_gene_name	\N	KNOWN	200	RefSeq gene name	MISC	\N	\N	This is read out of the *.gff files provided to us by the NCBI when we do a RefSeq import or a CCDS comparison. It has the key "gene_id" and is found at the start of the 9th field.
 12600	WikiGene	\N	XREF	50	WikiGene	MISC	\N	\N	\N
 1400	MGI	\N	KNOWNXREF	270	MGI Symbol	PRIMARY_DB_SYNONYM	\N	\N	\N
-1300	EntrezGene	EG Xref pipeline; 2017-09-08T12:13:59	KNOWNXREF	250	NCBI gene	PRIMARY_DB_SYNONYM	\N	\N	\N
+1300	EntrezGene	EG Xref pipeline; 2018-05-31T18:32:05	KNOWNXREF	250	NCBI gene	PRIMARY_DB_SYNONYM	\N	\N	\N
 50703	Uniprot_gn_trans_name	\N	KNOWNXREF	5	UniProt transcript name	MISC	\N	\N	transcript name projected from UniProt gene name
 50634	Ens_Ga_gene	\N	XREF	5	Ensembl Stickleback Gene	MISC	\N	\N	\N
 50753	LegioList	\N	XREF	0	LegioList	MISC	\N	\N	Database dedicated to the analysis of the genomes of Legionella
@@ -286,7 +285,7 @@
 20344	BROAD_G_moniliformis_GENE	\N	KNOWNXREF	0	Broad Institute	PRIMARY_DB_SYNONYM	\N	\N	\N
 50790	PUBMED_POMBASE	\N	KNOWN	1	PomBase PubMed ID	LIT	\N	\N	PomBase specific publications
 5010	Ens_Mm_transcript	\N	XREF	40	Ensembl Mouse Transcript	MISC	\N	\N	\N
-2202	Uniprot/Varsplic	EG Xref pipeline; 2017-09-08T11:55:30	KNOWN	15	UniProtKB/SpliceVariant	MISC	\N	\N	\N
+2202	Uniprot/Varsplic	EG Xref pipeline; 2018-05-31T16:42:06	KNOWN	15	UniProtKB/SpliceVariant	MISC	\N	\N	\N
 9450	TetNig_rat_econtig	\N	XREF	40	Genoscope rat exofish econtig	MISC	\N	\N	\N
 12620	Duck_consortium	\N	XREF	0	Duck consortium	MISC	\N	\N	\N
 50739	PHIP	\N	KNOWNXREF	1	PHI-base phenotype ontology	MISC	\N	\N	PHI-base phenotype ontology for genes proven to affect the outcome of pathogen-host interactions
@@ -407,7 +406,7 @@ The main requirement behind this entry, is to be able to link TAIR GO annotation
 20329	triad_jgi_v1.0_gene	\N	KNOWNXREF	0	JGI Gene ID (JGI Triad 1.0)	PRIMARY_DB_SYNONYM	\N	\N	\N
 826	FlyBaseCGID_gene	\N	XREF	5	FlyBase gene CGID	PRIMARY_DB_SYNONYM	\N	\N	\N
 50640	PomBase_Interaction_GENETIC	\N	KNOWNXREF	5	PomBase Interaction Genetic	MISC	\N	\N	\N
-20005	UniParc	EG Xref pipeline; 2017-09-07T17:40:42	KNOWNXREF	0	UniParc	PRIMARY_DB_SYNONYM	\N	\N	\N
+20005	UniParc	EG Xref pipeline; 2018-05-31T15:47:35	KNOWNXREF	0	UniParc	PRIMARY_DB_SYNONYM	\N	\N	\N
 50693	BROAD_monodelphis_transcriptome	\N	XREF	0	Broad Institute transcriptome data for monodelphis	MISC	\N	\N	\N
 50035	Gramene_MarkersDB	\N	XREF	0	Gramene	MISC	\N	\N	\N
 2300	Vega_gene	\N	KNOWNXREF	5	Vega gene	MISC	\N	\N	\N
@@ -416,11 +415,11 @@ The main requirement behind this entry, is to be able to link TAIR GO annotation
 1100	HGNC	\N	KNOWNXREF	100	HGNC Symbol	PRIMARY_DB_SYNONYM	\N	\N	\N
 50789	PR	\N	KNOWNXREF	0	Protein Ontology	MISC	\N	\N	Protein Ontology term (previously PR) - http://pir.georgetown.edu/pro/pro.shtml
 50721	BaylorCollege	\N	KNOWN	5	Baylor College of Medicine, Texas Medical Center	MISC	\N	\N	\N
-2200	Uniprot/SWISSPROT	EG Xref pipeline; 2017-09-18T13:33:12	KNOWN	220	UniProtKB/Swiss-Prot	MISC	\N	\N	\N
+2200	Uniprot/SWISSPROT	EG Xref pipeline; 2018-05-31T21:13:14	KNOWN	220	UniProtKB/Swiss-Prot	MISC	\N	\N	\N
 50674	Ens_Lc_gene	\N	XREF	5	Ensembl Coelacanth Gene	MISC	\N	\N	\N
 20381	COG	\N	KNOWNXREF	0	Cluster of Orthologous Groups (NCBI)	MISC	\N	\N	\N
 2720	Ens_Hs_translation	\N	XREF	5	Ensembl Human Translation	MISC	\N	\N	\N
-1600	PDB	EG Xref pipeline; 2017-09-08T12:13:59	KNOWNXREF	5	PDB	MISC	\N	\N	\N
+1600	PDB	EG Xref pipeline; 2018-05-31T18:32:05	KNOWNXREF	5	PDB	MISC	\N	\N	\N
 12505	DBASS5	\N	XREF	50	DataBase of Aberrant 5' Splice Sites	MISC	\N	\N	\N
 50010	FSTs	\N	XREF	0	Flanking Sequence Tag (FST)	MISC	\N	\N	\N
 50750	IBSC	\N	KNOWNXREF	50	IBSC Gene ID	MISC	\N	\N	International Barley Sequencing Consortium gene identifier
@@ -431,3 +430,11 @@ http://www.gramene.org/plant_ontology/ontology_browse.html#eo
 8700	TakRub_cdna	\N	XREF	40	Takifugu cDNA	MISC	\N	\N	\N
 20228	CADRE_Afum_A1163	\N	KNOWNXREF	0	CADRE	PRIMARY_DB_SYNONYM	\N	\N	\N
 50649	BROAD_Magnaporthe_DB_TRANSCRIPT	\N	KNOWNXREF	0	Magnaporthe comparative DB	PRIMARY_DB_SYNONYM	\N	\N	Broad Institute Magnaporthe comparative Database
+50849	Plant_Reactome_Pathway	\N	KNOWNXREF	0	Plant Reactome Pathway ID	MISC	\N	\N	Plant Reactome is a database of plant metabolic and regulatory pathways maintained by Gramene. This ID links to a Pathway in Plant Reactome.
+50848	Plant_Reactome_Reaction	\N	KNOWNXREF	0	Plant Reactome Reaction ID	MISC	\N	\N	Plant Reactome is a database of plant metabolic and regulatory pathways maintained by Gramene. This ID links to a Reaction in Plant Reactome.
+50852	RAP-DB	\N	KNOWNXREF	0	Rice Annotation Project Database	MISC	\N	\N	The Rice Annotation Project Database (RAP-DB) provides a comprehensive set of gene annotations for the genome sequence of rice, Oryza sativa (japonica group) cv. Nipponbare (<A HREF="https://dx.doi.org/10.1093%2Fpcp%2Fpcs183">Itoh 2013</A>).
+50850	CGSNL	\N	KNOWNXREF	0	Committee on Gene Symbolization, Nomenclature and Linkage of the Rice Genetics Cooperative	MISC	\N	\N	The Committee on Gene Symbolization, Nomenclature and Linkage (CGSNL) of the Rice Genetics Cooperative has revised the gene nomenclature system for rice (Oryza) to take advantage of the completion of the rice genome sequence and the emergence of new methods for detecting, characterizing, and describing genes in the biological community (<A HREF="https://doi.org/10.1007/s12284-008-9004-9">McCouch 2008</A>).
+50851	Oryzabase	\N	KNOWNXREF	0	Integrated Rice Science Database	MISC	\N	\N	The aim of Oryzabase is to create a comprehensive view of rice (Oryza sativa) as a model monocot plant by integrating biological data with molecular genomic information (<a href="https://doi.org/10.1104/pp.105.063008">Yamazaki 2006</a>).
+50854	Schisto_previous_id	\N	KNOWNXREF	5	Related identifier from previous versions of S. mansoni annotation	MISC	\N	\N	\N
+50853	Gasser_lab	\N	KNOWNXREF	5	Gene names assigned by Gasser Lab	MISC	\N	\N	\N
+50855	wormbase_cds	\N	KNOWNXREF	5	WormBase CDS	MISC	\N	\N	\N

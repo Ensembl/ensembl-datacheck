@@ -4,6 +4,9 @@
 
 {
   'databases' => {
+    'collection' => { 
+      'core'  => 'Bio::EnsEMBL::DBSQL::DBAdaptor',
+    },
     'drosophila_melanogaster' => { 
       'core'  => 'Bio::EnsEMBL::DBSQL::DBAdaptor',
     },

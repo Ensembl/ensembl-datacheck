@@ -24,12 +24,9 @@ use Test::Exception;
 use Test::More;
 
 my $test_db_dir = $FindBin::Bin;
-
-my $species  = 'drosophila_melanogaster';
-my $db_type  = 'core';
-my $dba_type = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-my $testdb   = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-my $dba      = $testdb->get_DBAdaptor($db_type);
+my @species     = qw(collection drosophila_melanogaster homo_sapiens);
+my $db_type     = 'core';
+my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
 # We don't run all datachecks in this test; it's complicated to
 # provide other databases (e.g. production, metadata), and would
@@ -46,22 +43,27 @@ subtest 'Load all datachecks', sub {
   ok(scalar(@$datachecks), 'Datachecks loaded');
 };
 
-subtest 'Run subset of datachecks', sub {
-  # Note that we don't care if the datachecks pass or fail; that's not
-  # meaningful for a test db, we just want to ensure that datachecks run.
+foreach my $species (@species) {
+  my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+  my $dba    = $testdb->get_DBAdaptor($db_type);
 
-  my @names = qw/
-    AssemblyAccession
-    CompareSchema
-    CoreForeignKeys
-    ForeignKeys
-    GeneBounds
-    SchemaVersion
-  /;
-  $manager->names(\@names);
+  subtest 'Run subset of datachecks', sub {
+    # Note that we don't care if the datachecks pass or fail; that's not
+    # meaningful for a test db, we just want to ensure that datachecks run.
 
-  my ($datachecks) = $manager->run_checks(dba => $dba);
-  is(scalar(@$datachecks), 6, 'Datachecks run');
-};
+    my @names = qw/
+      AssemblyAccession
+      CompareSchema
+      CoreForeignKeys
+      ForeignKeys
+      GeneBounds
+      SchemaVersion
+    /;
+    $manager->names(\@names);
+
+    my ($datachecks) = $manager->run_checks(dba => $dba);
+    is(scalar(@$datachecks), 6, 'Datachecks run');
+  };
+}
 
 done_testing();
