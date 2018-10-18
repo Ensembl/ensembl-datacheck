@@ -300,6 +300,15 @@
       "name" : "SampleRegulatoryFeatureExists",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists"
    },
+   "SchemaType" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the schema type meta key matches the DB name",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "SchemaType",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaType"
+   },
    "SchemaVersion" : {
       "datacheck_type" : "critical",
       "description" : "Check that the schema version meta_key matches the DB name",
