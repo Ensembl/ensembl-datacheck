@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SchemaVersion;
+package Bio::EnsEMBL::DataCheck::Checks::SchemaType;
 
 use warnings;
 use strict;
@@ -27,8 +27,8 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'SchemaVersion',
-  DESCRIPTION => 'Check that the schema version meta_key matches the DB name',
+  NAME        => 'SchemaType',
+  DESCRIPTION => 'Check that the schema type meta key matches the DB name',
   GROUPS      => ['core_handover'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   TABLES      => ['meta'],
@@ -39,17 +39,23 @@ sub tests {
   my ($self) = @_;
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
-  my $schema_version = $mca->schema_version;
+  my $schema_types = $mca->list_value_by_key('schema_type');
 
-  my $db_version;
-  if ($self->dba->group eq 'compara') {
-    ($db_version) = $self->dba->dbc->dbname =~ /(\d+)$/;
-  } else {
-    ($db_version) = $self->dba->dbc->dbname =~ /(\d+)_\d+$/;
+  # We don't use the 'single_value_by_key' method because that throws
+  # an error if more than one is found. Checking the count ourselves is
+  # cleaner, it avoids messy error capturing.
+  my $desc_1 = 'One schema_type meta key';
+  is(scalar(@$schema_types), 1, $desc_1);
+
+  if (scalar(@$schema_types) == 1) {
+    my $db_type = $self->dba->group;
+    if ($db_type =~ /(cdna|otherfeatures|rnaseq)/) {
+      $db_type = 'core';
+    }
+    my $desc_2 = "Meta key schema_type matches the type of database";
+    is($$schema_types[0], $db_type, $desc_2);
   }
-
-  my $desc = "Meta key schema_version matches version in database name";
-  is($schema_version, $db_version, $desc);
 }
 
 1;
+

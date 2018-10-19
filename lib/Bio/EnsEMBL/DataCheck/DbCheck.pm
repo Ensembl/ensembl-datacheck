@@ -245,6 +245,11 @@ after 'run' => sub {
 
 __PACKAGE__->meta->make_immutable;
 
+sub load_registry {
+  my $self = shift;
+  $self->registry;
+}
+
 sub species {
   my $self = shift;
   my $mca = $self->dba->get_adaptor("MetaContainer");

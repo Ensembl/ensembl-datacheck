@@ -1,0 +1,124 @@
+=head1 LICENSE
+
+Copyright [2018] EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the 'License');
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an 'AS IS' BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+=cut
+
+package Bio::EnsEMBL::DataCheck::Checks::MetaCoordVariation;
+
+use warnings;
+use strict;
+
+use Moose;
+use Test::More;
+
+extends 'Bio::EnsEMBL::DataCheck::DbCheck';
+
+use constant {
+  NAME        => 'MetaCoordVariation',
+  DESCRIPTION => 'Check that the meta_coord table is correctly populated',
+  GROUPS      => ['variation_handover'],
+  DB_TYPES    => ['variation'],
+};
+
+sub tests {
+  my ($self) = @_;
+  my $helper = $self->dba->dbc->sql_helper;
+
+  my $meta_coord_lengths = $self->meta_coord_lengths($helper);
+  my $feature_lengths    = $self->feature_lengths($helper);
+
+  my $desc_1 = 'Row in meta_coord for transcript_variation';
+  ok(exists $$meta_coord_lengths{'transcript_variation'}, $desc_1);
+  delete $$meta_coord_lengths{'transcript_variation'};
+
+  my $desc_2 = 'Contents of meta_coord table are correct';
+  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc_2);
+  if (!$pass) {
+    diag explain $meta_coord_lengths;
+    diag explain $feature_lengths;
+  }
+}
+
+sub meta_coord_lengths {
+  my ($self, $helper) = @_;
+
+  my $sql = 'SELECT table_name, coord_system_id, max_length FROM meta_coord';
+
+  my $meta_coord_lengths = $helper->execute(-SQL => $sql);
+
+  my %meta_coord_lengths;
+  foreach (@$meta_coord_lengths) {
+    $meta_coord_lengths{$_->[0]}{$_->[1]} = $_->[2];
+  }
+
+  return \%meta_coord_lengths;
+}
+
+sub feature_lengths {
+  my ($self, $helper,) = @_;
+  # The coord_system table is typically not populated in variation dbs,
+  # and the coord_system_id column in the seq_region table is set to zero.
+  # So get a seq_region_id <=> coord_system_id mapping from the core db.
+  # Then, find the longest feature on each seq_region from the variation
+  # db, iterate over them and use the mapping to find the longest per
+  # coord_system.
+
+  my @tables = $self->tables;
+
+  $self->load_registry();
+  my $dnadb = $self->dba->dnadb();
+
+  my $sr_sql = 'SELECT seq_region_id, coord_system_id FROM seq_region';
+  my $seq_regions = $dnadb->dbc->sql_helper->execute_into_hash(-SQL => $sr_sql);
+
+  my %feature_lengths;
+  foreach my $table (sort @tables) {
+    my $sql = qq/
+      SELECT
+        seq_region_id, 
+        MAX(CAST(seq_region_end AS SIGNED) - CAST(seq_region_start AS SIGNED)) + 1 AS max_length
+      FROM
+        $table INNER JOIN
+        seq_region USING (seq_region_id)
+      GROUP BY seq_region_id
+    /;
+    my $max_lengths = $helper->execute_into_hash(-SQL => $sql);
+    foreach my $sr_id (keys %$max_lengths) {
+      my $cs_id = $$seq_regions{$sr_id};
+      $feature_lengths{$table}{$cs_id} = 0 unless exists $feature_lengths{$table}{$cs_id};
+      if ($$max_lengths{$sr_id} > $feature_lengths{$table}{$cs_id}) {
+        $feature_lengths{$table}{$cs_id} = $$max_lengths{$sr_id};
+      }
+    }
+  }
+
+  return \%feature_lengths;
+}
+
+sub tables {
+  my ($self) = @_;
+
+  my @tables = qw/
+    compressed_genotype_region
+    phenotype_feature
+    read_coverage
+    structural_variation_feature
+    variation_feature
+  /;
+  return @tables;
+}
+
+1;
