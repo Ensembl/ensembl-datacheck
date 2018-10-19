@@ -232,6 +232,24 @@
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
    },
+   "MetaCoord" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the meta_coord table is correctly populated",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaCoord",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaCoord"
+   },
+   "MetaCoordVariation" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the meta_coord table is correctly populated",
+      "groups" : [
+         "variation_handover"
+      ],
+      "name" : "MetaCoordVariation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaCoordVariation"
+   },
    "MetaKeyCardinality" : {
       "datacheck_type" : "critical",
       "description" : "Check cardinality of meta data that must be single-valued",
