@@ -123,15 +123,6 @@
       "name" : "CoordSystemConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent"
    },
-   "CoreForeignKeys" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for incorrect foreign key relationships that are not defined by a \"foreign_keys.sql\" file..",
-      "groups" : [
-         "handover"
-      ],
-      "name" : "CoreForeignKeys",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreForeignKeys"
-   },
    "CurrentRegulatoryBuildHasEpigenomes" : {
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has epigenomes data",
@@ -141,6 +132,15 @@
       ],
       "name" : "CurrentRegulatoryBuildHasEpigenomes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes"
+   },
+   "Denormalized" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that denormalized columns are synchronised",
+      "groups" : [
+         "variation_handover"
+      ],
+      "name" : "Denormalized",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Denormalized"
    },
    "EpigenomeHasSegmentationFile" : {
       "datacheck_type" : "critical",
@@ -173,7 +173,7 @@
    },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
-      "description" : "Check for incorrect foreign key relationships, as defined by a \"foreign_keys.sql\" file.",
+      "description" : "Check for incorrect foreign key relationships",
       "groups" : [],
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
@@ -236,19 +236,12 @@
       "datacheck_type" : "critical",
       "description" : "Check that the meta_coord table is correctly populated",
       "groups" : [
-         "core_handover"
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
       ],
       "name" : "MetaCoord",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaCoord"
-   },
-   "MetaCoordVariation" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that the meta_coord table is correctly populated",
-      "groups" : [
-         "variation_handover"
-      ],
-      "name" : "MetaCoordVariation",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaCoordVariation"
    },
    "MetaKeyCardinality" : {
       "datacheck_type" : "critical",
@@ -317,6 +310,17 @@
       ],
       "name" : "SampleRegulatoryFeatureExists",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists"
+   },
+   "SchemaPatchesApplied" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that schema patches are up-to-date",
+      "groups" : [
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
+      ],
+      "name" : "SchemaPatchesApplied",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaPatchesApplied"
    },
    "SchemaType" : {
       "datacheck_type" : "critical",
