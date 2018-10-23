@@ -32,14 +32,14 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ForeignKeys',
-  DESCRIPTION => 'Check for incorrect foreign key relationships, as defined by a "foreign_keys.sql" file.',
+  DESCRIPTION => 'Check for incorrect foreign key relationships',
   DB_TYPES    => ['compara', 'core', 'funcgen', 'otherfeatures', 'variation'],
   PER_DB      => 1,
 };
 
 sub tests {
   my ($self) = @_;
-  
+
   my $fk_sql_file = $self->fk_sql_file();
 
   foreach my $line ( path($fk_sql_file)->lines ) {
@@ -57,24 +57,19 @@ sub tests {
       die "Failed to parse foreign key relationship from $line";
     }
   }
+
+  if ($self->dba->group =~ /(core|otherfeatures)/) {
+    $self->core_fk();
+  }
 }
 
 sub fk_sql_file {
   my ($self) = @_;
 
-  my %repo_names = (
-    'compara'       => 'ensembl-compara',
-    'core'          => 'ensembl',
-    'funcgen'       => 'ensembl-funcgen',
-    'otherfeatures' => 'ensembl',
-    'variation'     => 'ensembl-variation',
-  );
-
   # Don't need checking here, the DB_TYPES ensure we won't get
   # a $dba from a group that we can't handle, and the repo_location
   # method will die if the repo path isn't visible to Perl.
-  my $repo_name     = $repo_names{$self->dba->group};
-  my $repo_location = repo_location($repo_name);
+  my $repo_location = repo_location($self->dba->group);
   my $fk_sql_file   = "$repo_location/sql/foreign_keys.sql";
 
   if (! -e $fk_sql_file) {
@@ -82,6 +77,28 @@ sub fk_sql_file {
   }
 
   return $fk_sql_file;
+}
+
+sub core_fk {
+  my ($self) = @_;
+  # Check for incorrect foreign key relationships that are not defined
+  # in a "foreign_keys.sql" file..',
+
+  # Cases in which we want to check for the reverse direction of the FK constraint
+  fk($self->dba, 'exon',            'exon_id',            'exon_transcript');
+  fk($self->dba, 'transcript',      'transcript_id',      'exon_transcript');
+  fk($self->dba, 'gene',            'gene_id',            'transcript');
+  fk($self->dba, 'mapping_session', 'mapping_session_id', 'stable_id_event');
+
+  # Cases in which we need to restrict to a subset of rows, using a constraint
+  fk($self->dba, 'object_xref', 'ensembl_id', 'gene',        'gene_id',        'ensembl_object_type = "Gene"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'transcript',  'transcript_id',  'ensembl_object_type = "Transcript"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'translation', 'translation_id', 'ensembl_object_type = "Translation"');
+
+  fk($self->dba, 'supporting_feature',            'feature_id', 'dna_align_feature',     'dna_align_feature_id',     'feature_type = "dna_align_feature"');
+  fk($self->dba, 'supporting_feature',            'feature_id', 'protein_align_feature', 'protein_align_feature_id', 'feature_type = "protein_align_feature"');
+  fk($self->dba, 'transcript_supporting_feature', 'feature_id', 'dna_align_feature',     'dna_align_feature_id',     'feature_type = "dna_align_feature"');
+  fk($self->dba, 'transcript_supporting_feature', 'feature_id', 'protein_align_feature', 'protein_align_feature_id', 'feature_type = "protein_align_feature"');
 }
 
 1;

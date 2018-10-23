@@ -29,8 +29,8 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaCoord',
   DESCRIPTION => 'Check that the meta_coord table is correctly populated',
-  GROUPS      => ['core_handover'],
-  DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
+  GROUPS      => ['core_handover', 'funcgen_handover', 'variation_handover'],
+  DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
 };
 
 sub tests {
@@ -40,8 +40,14 @@ sub tests {
   my $meta_coord_lengths = $self->meta_coord_lengths($helper);
   my $feature_lengths    = $self->feature_lengths($helper);
 
-  my $desc = 'Contents of meta_coord table are correct';
-  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc);
+  if ($self->dba->group eq 'variation') {
+    my $desc = 'Row in meta_coord for transcript_variation';
+    ok(exists $$meta_coord_lengths{'transcript_variation'}, $desc);
+    delete $$meta_coord_lengths{'transcript_variation'};
+  }
+
+  my $desc_1 = 'Contents of meta_coord table are correct';
+  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc_1);
   if (!$pass) {
     diag explain $meta_coord_lengths;
     diag explain $feature_lengths;
@@ -50,13 +56,18 @@ sub tests {
 
 sub meta_coord_lengths {
   my ($self, $helper) = @_;
-  my $species_id = $self->dba->species_id;
 
-  my $sql = qq/
-    SELECT table_name, coord_system_id, max_length
-    FROM meta_coord INNER JOIN coord_system USING (coord_system_id)
-    WHERE species_id = $species_id;
-  /;
+  my $sql;
+  if ($self->dba->group =~ /(funcgen|variation)/) {
+    $sql = 'SELECT table_name, coord_system_id, max_length FROM meta_coord';
+  } else {
+    my $species_id = $self->dba->species_id;
+    $sql = qq/
+      SELECT table_name, coord_system_id, max_length
+      FROM meta_coord INNER JOIN coord_system USING (coord_system_id)
+      WHERE species_id = $species_id;
+    /;
+  }
 
   my $meta_coord_lengths = $helper->execute(-SQL => $sql);
 
@@ -69,6 +80,16 @@ sub meta_coord_lengths {
 }
 
 sub feature_lengths {
+  my ($self, $helper) = @_;
+
+  if ($self->dba->group =~ /(funcgen|variation)/) {
+    return $self->feature_lengths_dnadb($helper);
+  } else {
+    return $self->feature_lengths_core($helper);
+  }
+}
+
+sub feature_lengths_core {
   my ($self, $helper) = @_;
   my $species_id = $self->dba->species_id;
 
@@ -104,26 +125,89 @@ sub feature_lengths {
   return \%feature_lengths;
 }
 
+sub feature_lengths_dnadb {
+  my ($self, $helper) = @_;
+  # The coord_system table is typically not populated in variation dbs,
+  # and the coord_system_id column in the seq_region table is set to zero.
+  # So get a seq_region_id <=> coord_system_id mapping from the core db.
+  # Then, find the longest feature on each seq_region from the variation
+  # db, iterate over them and use the mapping to find the longest per
+  # coord_system.
+
+  my @tables = $self->tables;
+
+  $self->load_registry();
+  my $dnadb = $self->dba->dnadb();
+  if ($dnadb->group ne 'core') {
+    die "Could not retrieve DNA database for ".$self->dba->dbc->dbname;
+  }
+
+  my $sr_sql = 'SELECT seq_region_id, coord_system_id FROM seq_region';
+  my $seq_regions = $dnadb->dbc->sql_helper->execute_into_hash(-SQL => $sr_sql);
+
+  my %feature_lengths;
+  foreach my $table (sort @tables) {
+    my $sql = qq/
+      SELECT
+        seq_region_id, 
+        MAX(CAST(seq_region_end AS SIGNED) - CAST(seq_region_start AS SIGNED)) + 1 AS max_length
+      FROM
+        $table
+      GROUP BY seq_region_id
+    /;
+    my $max_lengths = $helper->execute_into_hash(-SQL => $sql);
+    foreach my $sr_id (keys %$max_lengths) {
+      my $cs_id = $$seq_regions{$sr_id};
+      $feature_lengths{$table}{$cs_id} = 0 unless exists $feature_lengths{$table}{$cs_id};
+      if ($$max_lengths{$sr_id} > $feature_lengths{$table}{$cs_id}) {
+        $feature_lengths{$table}{$cs_id} = $$max_lengths{$sr_id};
+      }
+    }
+  }
+
+  return \%feature_lengths;
+}
+
 sub tables {
   my ($self) = @_;
 
-  my @tables = qw/
-    assembly_exception
-    density_feature
-    ditag_feature
-    dna_align_feature
-    exon
-    gene
-    karyotype
-    marker_feature
-    misc_feature
-    prediction_exon
-    prediction_transcript
-    protein_align_feature
-    repeat_feature
-    simple_feature
-    transcript
-  /;
+  my @tables;
+  if ($self->dba->group eq 'funcgen') {
+    @tables = qw/
+      external_feature
+      mirna_target_feature
+      motif_feature
+      peak
+      probe_feature
+      regulatory_feature
+    /;
+  } elsif ($self->dba->group eq 'variation') {
+    @tables = qw/
+      compressed_genotype_region
+      phenotype_feature
+      read_coverage
+      structural_variation_feature
+      variation_feature
+    /;
+  } else {
+    @tables = qw/
+      assembly_exception
+      density_feature
+      ditag_feature
+      dna_align_feature
+      exon
+      gene
+      karyotype
+      marker_feature
+      misc_feature
+      prediction_exon
+      prediction_transcript
+      protein_align_feature
+      repeat_feature
+      simple_feature
+      transcript
+    /;
+  }
   return @tables;
 }
 
