@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists;
+package Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureStableID;
 
 use warnings;
 use strict;
@@ -29,11 +29,11 @@ use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'SampleRegulatoryFeatureExists',
-  DESCRIPTION => 'Check if the current regulatory build has a sample regulatory feature',
-  GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build'],
+  NAME        => 'RegulatoryFeatureStableID',
+  DESCRIPTION => 'Check that stable IDs are unique within a regulatory build',
+  GROUPS      => ['funcgen_handover'],
   DB_TYPES    => ['funcgen'],
-  TABLES      => ['regulatory_build','regulatory_feature'],
+  TABLES      => ['regulatory_feature']
 };
 
 sub skip_tests {
@@ -52,17 +52,14 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
 
-  my $desc = "Current regulatory build has a sample regulatory feature";
+  my $desc = "Regulatory feature stable IDs are unique";
+  my $diag = "Regulatory feature";
   my $sql  = qq/
-    SELECT COUNT(*) FROM
-      regulatory_build rb JOIN 
-      regulatory_feature rf ON rb.sample_regulatory_feature_id = rf.regulatory_feature_id 
-    WHERE
-      rb.regulatory_build_id = rf.regulatory_build_id AND
-      rf.stable_id IS NOT NULL
+    SELECT stable_id FROM regulatory_feature
+    GROUP BY regulatory_build_id, stable_id
+    HAVING COUNT(*) > 1
   /;
-  is_rows_nonzero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 
 1;
-

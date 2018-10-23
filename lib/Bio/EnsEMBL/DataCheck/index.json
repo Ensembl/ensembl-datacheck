@@ -301,6 +301,15 @@
       "name" : "RegulatoryFeatureIsActive",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive"
    },
+   "RegulatoryFeatureStableID" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that stable IDs are unique within a regulatory build",
+      "groups" : [
+         "funcgen_handover"
+      ],
+      "name" : "RegulatoryFeatureStableID",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureStableID"
+   },
    "SampleRegulatoryFeatureExists" : {
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has a sample regulatory feature",

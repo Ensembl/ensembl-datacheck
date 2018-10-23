@@ -104,7 +104,7 @@ sub sql_count {
 
   $dbc = $dbc->dbc() if $dbc->can('dbc');
 
-  if ($sql =~ /^SELECT COUNT/i && $sql !~ /GROUP BY/i) {
+  if ($sql =~ /^\s*SELECT COUNT/i && $sql !~ /GROUP BY/i) {
     return $dbc->sql_helper->execute_single_result(-SQL => $sql, -PARAMS => $params);
   } else {
     return scalar @{ $dbc->sql_helper->execute(-SQL => $sql, -PARAMS => $params) };
