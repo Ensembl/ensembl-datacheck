@@ -54,7 +54,6 @@ foreach my $species (@species) {
     my @names = qw/
       AssemblyAccession
       CompareSchema
-      CoreForeignKeys
       ForeignKeys
       GeneBounds
       SchemaVersion
@@ -62,7 +61,7 @@ foreach my $species (@species) {
     $manager->names(\@names);
 
     my ($datachecks) = $manager->run_checks(dba => $dba);
-    is(scalar(@$datachecks), 6, 'Datachecks run');
+    is(scalar(@$datachecks), 5, 'Datachecks run');
   };
 }
 
