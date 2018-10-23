@@ -36,7 +36,10 @@ my $dba      = $testdb->get_DBAdaptor($db_type);
 my $module = 'Bio::EnsEMBL::DataCheck::Test::DataCheck';
 
 diag('Methods');
-can_ok($module, qw(is_rows cmp_rows is_rows_zero is_rows_nonzero row_totals row_subtotals fk));
+can_ok($module,
+  qw( is_rows cmp_rows is_rows_zero is_rows_nonzero
+      row_totals row_subtotals
+      fk denormalized denormalised ));
 
 subtest 'Counting Database Rows', sub {
   my $sql_1 = 'SELECT COUNT(*) FROM gene';
