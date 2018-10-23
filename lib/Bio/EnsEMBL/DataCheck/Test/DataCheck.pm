@@ -39,7 +39,7 @@ our @ISA     = qw(Test::Builder::Module);
 our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
-  fk
+  fk denormalized denormalised
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -334,17 +334,18 @@ out; if not provided, a descriptive name will be generated.
 =cut
 
 sub fk {
-  my ( $dbc, $table1, $col1, $table2, $col2, $constraint, $name) =  @_;
+  my ( $dbc, $table1, $col1, $table2, $col2, $constraint, $name ) =  @_;
 
   my $tb = $CLASS->builder;
 
   $col2 = $col1 unless defined $col2;
   $name = "All $table1.$col1 rows linked to $table2.$col2 rows" unless defined $name;
 
-  my $sql =
-    qq/SELECT COUNT(*) FROM $table1 t1
-    LEFT JOIN $table2 t2 ON t1.$col1 = t2.$col2 
-    WHERE t1.$col1 IS NOT NULL AND t2.$col2 IS NULL/;
+  my $sql = qq/
+    SELECT COUNT(*) FROM
+    $table1 t1 LEFT JOIN $table2 t2 ON t1.$col1 = t2.$col2
+    WHERE t1.$col1 IS NOT NULL AND t2.$col2 IS NULL
+  /;
   $sql .= " AND $constraint" if $constraint;
 
   my ( $count, undef ) = _query( $dbc, $sql );
@@ -356,6 +357,57 @@ sub fk {
   }
 
   return $result;
+}
+
+=head2 Testing Denormalization 
+
+=over 4
+
+=item B<denormalized>
+
+Some databases are denormalized in order to speed up queries. This
+function checks whether the values in two tables are synchronized.
+
+denormalized($dbc, $table1, $col1a, $col1b $table2, $col2a, $col2b, $test_name);
+
+For the database connection C<$dbc> this joins on C<$table1.$col1a> and
+C<$table2.$col2a>, then checks that C<$table1.$col1b> = C<$table2.$col2b>.
+
+C<$test_name> is a very short description of the test that will be printed
+out; if not provided, a descriptive name will be generated.
+
+=back
+
+=cut
+
+sub denormalized {
+  my ( $dbc, $table1, $col1a, $col1b, $table2, $col2a, $col2b, $name ) =  @_;
+
+  my $tb = $CLASS->builder;
+
+  $col2a = $col1a unless defined $col2a;
+  $col2b = $col1b unless defined $col2b;
+  $name = "All $table1.$col1b rows in sync with $table2.$col2b" unless defined $name;
+
+  my $sql = qq/
+    SELECT COUNT(*) FROM
+    $table1 t1 INNER JOIN $table2 t2 ON t1.$col1a = t2.$col2a
+    WHERE t1.$col1b <> t2.$col2b
+  /;
+
+  my ( $count, undef ) = _query( $dbc, $sql );
+  my $result = $tb->is_eq( $count, 0, $name );
+
+  if ( $count > 0 ) {
+    my $diag_msg = "Faulty denormalisation found with SQL: $sql";
+    $tb->diag( $diag_msg );
+  }
+
+  return $result;
+}
+
+sub denormalised {
+  return denormalized(@_);
 }
 
 1;
