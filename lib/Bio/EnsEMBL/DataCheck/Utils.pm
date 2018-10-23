@@ -41,16 +41,35 @@ use File::Spec::Functions qw/catdir splitdir/;
 
 =item B<repo_location>
 
-repo_location($repo_name);
+repo_location($repo_name_or_dbtype);
 
-Finds the path to an Ensembl repository C<$repo_name> in your Perl environment.
-E.g. C<repo_location(ensembl-variation)> might return
+Finds the path to an Ensembl repository in your Perl environment.
+The C<$repo_name_or_dbtype> parameter can be either the repository name
+or a database type. E.g. C<repo_location('ensembl-variation')> and
+C<repo_location('variation')> are equivalent, and will return something like
 C</homes/superstar/work/repositories/ensembl-variation>.
 
 =cut
 
 sub repo_location {
-  my ($repo_name) = @_;
+  my ($repo_name_or_dbtype) = @_;
+
+  my $repo_name;
+  my %repo_names = (
+    'cdna'          => 'ensembl',
+    'compara'       => 'ensembl-compara',
+    'core'          => 'ensembl',
+    'funcgen'       => 'ensembl-funcgen',
+    'otherfeatures' => 'ensembl',
+    'production'    => 'ensembl-production',
+    'rnaseq'        => 'ensembl',
+    'variation'     => 'ensembl-variation',
+  );
+  if (exists $repo_names{$repo_name_or_dbtype}) {
+    $repo_name = $repo_names{$repo_name_or_dbtype};
+  } else {
+    $repo_name = $repo_name_or_dbtype;
+  }
 
   foreach my $location (@INC) {
     my @dirs = splitdir($location);

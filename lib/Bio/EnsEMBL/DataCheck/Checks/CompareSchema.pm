@@ -187,22 +187,10 @@ sub normalise_table_def {
 sub table_sql_file {
   my ($self) = @_;
 
-  my %repo_names = (
-    'cdna'          => 'ensembl',
-    'compara'       => 'ensembl-compara',
-    'core'          => 'ensembl',
-    'funcgen'       => 'ensembl-funcgen',
-    'otherfeatures' => 'ensembl',
-    'production'    => 'ensembl-production',
-    'rnaseq'        => 'ensembl',
-    'variation'     => 'ensembl-variation',
-  );
-
   # Don't need checking here, the DB_TYPES ensure we won't get
   # a $dba from a group that we can't handle, and the repo_location
   # method will die if the repo path isn't visible to Perl.
-  my $repo_name      = $repo_names{$self->dba->group};
-  my $repo_location  = repo_location($repo_name);
+  my $repo_location  = repo_location($self->dba->group);
   my $table_sql_file = "$repo_location/sql/table.sql";
 
   if (! -e $table_sql_file) {
