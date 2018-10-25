@@ -53,7 +53,7 @@ diag('Runtime attributes');
 can_ok($module, qw(dba dba_species_only registry_file server_uri registry old_server_uri dba_list));
 
 diag('Methods');
-can_ok($module, qw(species get_dba get_old_dba run_tests skip_datacheck verify_db_type check_history table_dates skip_tests));
+can_ok($module, qw(species get_dba get_dna_dba get_prod_dba get_old_dba run_tests skip_datacheck verify_db_type check_history table_dates skip_tests));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
