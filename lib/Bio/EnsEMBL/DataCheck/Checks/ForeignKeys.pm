@@ -43,6 +43,7 @@ sub tests {
   my $fk_sql_file = $self->fk_sql_file();
 
   foreach my $line ( path($fk_sql_file)->lines ) {
+    next if $line =~ /^\-\-/;
     next unless $line =~ /FOREIGN KEY/;
 
     my ($table1, $col1, $table2, $col2) = $line =~
@@ -60,6 +61,10 @@ sub tests {
 
   if ($self->dba->group =~ /(core|otherfeatures)/) {
     $self->core_fk();
+  } elsif ($self->dba->group eq 'funcgen') {
+    $self->funcgen_fk();
+  } elsif ($self->dba->group eq 'variation') {
+    $self->variation_fk();
   }
 }
 
@@ -82,7 +87,7 @@ sub fk_sql_file {
 sub core_fk {
   my ($self) = @_;
   # Check for incorrect foreign key relationships that are not defined
-  # in a "foreign_keys.sql" file..',
+  # in a "foreign_keys.sql" file.
 
   # Cases in which we want to check for the reverse direction of the FK constraint
   fk($self->dba, 'exon',            'exon_id',            'exon_transcript');
@@ -99,6 +104,49 @@ sub core_fk {
   fk($self->dba, 'supporting_feature',            'feature_id', 'protein_align_feature', 'protein_align_feature_id', 'feature_type = "protein_align_feature"');
   fk($self->dba, 'transcript_supporting_feature', 'feature_id', 'dna_align_feature',     'dna_align_feature_id',     'feature_type = "dna_align_feature"');
   fk($self->dba, 'transcript_supporting_feature', 'feature_id', 'protein_align_feature', 'protein_align_feature_id', 'feature_type = "protein_align_feature"');
+}
+
+sub funcgen_fk {
+  my ($self) = @_;
+  # Check for incorrect foreign key relationships that are not defined
+  # in a "foreign_keys.sql" file.
+
+  # Cases in which we need to restrict to a subset of rows, using a constraint
+  fk($self->dba, 'associated_feature_type', 'table_id', 'external_feature',   'external_feature_id',   'table_name = "external_feature"');
+  fk($self->dba, 'associated_feature_type', 'table_id', 'regulatory_feature', 'regulatory_feature_id', 'table_name = "regulatory_feature"');
+
+  fk($self->dba, 'data_file', 'table_id', 'alignment',             'alignment_id',             'table_name = "alignment"');
+  fk($self->dba, 'data_file', 'table_id', 'external_feature_file', 'external_feature_file_id', 'table_name = "external_feature_file"');
+  fk($self->dba, 'data_file', 'table_id', 'segmentation_file',     'segmentation_file_id',     'table_name = "segmentation_file"');
+
+  fk($self->dba, 'object_xref', 'ensembl_id', 'epigenome',            'epigenome_id',            'ensembl_object_type = "Epigenome"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'experiment',           'experiment_id',           'ensembl_object_type = "Experiment"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'regulatory_feature',   'regulatory_feature_id',   'ensembl_object_type = "RegulatoryFeature"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'external_feature',     'external_feature_id',     'ensembl_object_type = "ExternalFeature"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'feature_type',         'feature_type_id',         'ensembl_object_type = "FeatureType"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'mirna_target_feature', 'mirna_target_feature_id', 'ensembl_object_type = "MirnaTargetFeature"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'probe_set',            'probe_set_id',            'ensembl_object_type = "ProbeSet"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'probe',                'probe_id',                'ensembl_object_type = "Probe"');
+  fk($self->dba, 'object_xref', 'ensembl_id', 'probe_feature',        'probe_feature_id',        'ensembl_object_type = "ProbeFeature"');
+}
+
+sub variation_fk {
+  my ($self) = @_;
+  # Check for incorrect foreign key relationships that are not defined
+  # in a "foreign_keys.sql" file.
+
+  # Cases in which we want to check for the reverse direction of the FK constraint
+  fk($self->dba, 'phenotype', 'phenotype_id', 'phenotype_feature');
+
+  # "Temporary" table is not included in the "foreign_keys.sql" file
+  fk($self->dba, 'tmp_sample_genotype_single_bp', 'sample_id',    'sample');
+  fk($self->dba, 'tmp_sample_genotype_single_bp', 'variation_id', 'variation');
+
+  # Cases in which we need to restrict to a subset of rows, using a constraint
+  fk($self->dba, 'phenotype_feature', 'object_id', 'structural_variation', 'variation_name', 'type IN ("StructuralVariation", "SupportingStructuralVariation")');
+  fk($self->dba, 'phenotype_feature', 'object_id', 'variation',            'name',           'type = "Variation"');
+
+  fk($self->dba, 'compressed_genotype_region', 'seq_region_id', 'variation_feature', 'seq_region_id', 't1.seq_region_start = t2.seq_region_start');
 }
 
 1;

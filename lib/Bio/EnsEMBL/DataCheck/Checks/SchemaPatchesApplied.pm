@@ -83,7 +83,7 @@ sub file_patches {
   my $sql_dir = "$repo_location/sql";
 
   if (-e $sql_dir) {
-    my @files = path($sql_dir)->children(qr/^patch_.*\.sql$/);
+    my @files = path($sql_dir)->children(qr/^patch_\d+_\d+_\w+\.sql$/);
     foreach my $file ( sort {$a->basename cmp $b->basename} @files ) {
       push @file_patches, $file->basename;
     }

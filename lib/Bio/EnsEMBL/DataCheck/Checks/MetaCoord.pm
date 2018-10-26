@@ -40,14 +40,8 @@ sub tests {
   my $meta_coord_lengths = $self->meta_coord_lengths($helper);
   my $feature_lengths    = $self->feature_lengths($helper);
 
-  if ($self->dba->group eq 'variation') {
-    my $desc = 'Row in meta_coord for transcript_variation';
-    ok(exists $$meta_coord_lengths{'transcript_variation'}, $desc);
-    delete $$meta_coord_lengths{'transcript_variation'};
-  }
-
-  my $desc_1 = 'Contents of meta_coord table are correct';
-  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc_1);
+  my $desc = 'Contents of meta_coord table are correct';
+  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc);
   if (!$pass) {
     diag explain $meta_coord_lengths;
     diag explain $feature_lengths;
@@ -136,14 +130,10 @@ sub feature_lengths_dnadb {
 
   my @tables = $self->tables;
 
-  $self->load_registry();
-  my $dnadb = $self->dba->dnadb();
-  if ($dnadb->group ne 'core') {
-    die "Could not retrieve DNA database for ".$self->dba->dbc->dbname;
-  }
+  my $dna_dba = $self->get_dna_dba();
 
   my $sr_sql = 'SELECT seq_region_id, coord_system_id FROM seq_region';
-  my $seq_regions = $dnadb->dbc->sql_helper->execute_into_hash(-SQL => $sr_sql);
+  my $seq_regions = $dna_dba->dbc->sql_helper->execute_into_hash(-SQL => $sr_sql);
 
   my %feature_lengths;
   foreach my $table (sort @tables) {

@@ -178,6 +178,13 @@
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
    },
+   "ForeignKeysMultiDB" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for broken foreign key relationships between tables from multiple databases",
+      "groups" : [],
+      "name" : "ForeignKeysMultiDB",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysMultiDB"
+   },
    "GeneBiotypes" : {
       "datacheck_type" : "critical",
       "description" : "Check that genes and transcripts have valid biotypes",
@@ -300,6 +307,15 @@
       ],
       "name" : "RegulatoryFeatureIsActive",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive"
+   },
+   "RegulatoryFeatureStableID" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that stable IDs are unique within a regulatory build",
+      "groups" : [
+         "funcgen_handover"
+      ],
+      "name" : "RegulatoryFeatureStableID",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureStableID"
    },
    "SampleRegulatoryFeatureExists" : {
       "datacheck_type" : "critical",

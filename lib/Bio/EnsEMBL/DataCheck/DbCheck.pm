@@ -284,6 +284,20 @@ sub get_dba {
   return $dba;
 }
 
+sub get_dna_dba {
+  my $self = shift;
+
+  $self->load_registry();
+  my $dna_dba = $self->dba->dnadb();
+  if ($dna_dba->group ne 'core') {
+    die "Could not retrieve DNA database for ".$self->dba->dbc->dbname;
+  }
+
+  push @{$self->dba_list}, $dna_dba if defined $dna_dba;
+
+  return $dna_dba;
+}
+
 sub get_prod_dba {
   my $self = shift;
    return $self->get_dba('multi', 'production');

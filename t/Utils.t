@@ -29,8 +29,16 @@ my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
 subtest 'Repository Location', sub {
   my $repo = repo_location('ensembl-datacheck');
+  like($repo, qr!/ensembl-datacheck$!, 'Found repository with repo name');
 
-  like($repo, qr!/ensembl-datacheck$!, 'valid repository located');
+  $repo = repo_location('core');
+  like($repo, qr!/ensembl$!, 'Found repository with "core" db_type');
+
+  $repo = repo_location('otherfeatures');
+  like($repo, qr!/ensembl$!, 'Found repository with "otherfeatures" db_type');
+
+  $repo = repo_location('variation');
+  like($repo, qr!/ensembl-variation$!, 'Found repository with "variation" db_type');
 
   throws_ok(
     sub { repo_location('ensembl-bananas') },

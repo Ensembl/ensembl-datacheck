@@ -51,6 +51,7 @@ sub skip_tests {
 
 sub tests {
   my ($self) = @_;
+
   my $desc = "Regulatory features have a valid activity value in at least one epigenome";
   my $diag = "Regulatory feature";
   my $sql  = qq/
