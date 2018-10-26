@@ -40,14 +40,8 @@ sub tests {
   my $meta_coord_lengths = $self->meta_coord_lengths($helper);
   my $feature_lengths    = $self->feature_lengths($helper);
 
-  if ($self->dba->group eq 'variation') {
-    my $desc = 'Row in meta_coord for transcript_variation';
-    ok(exists $$meta_coord_lengths{'transcript_variation'}, $desc);
-    delete $$meta_coord_lengths{'transcript_variation'};
-  }
-
-  my $desc_1 = 'Contents of meta_coord table are correct';
-  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc_1);
+  my $desc = 'Contents of meta_coord table are correct';
+  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc);
   if (!$pass) {
     diag explain $meta_coord_lengths;
     diag explain $feature_lengths;
