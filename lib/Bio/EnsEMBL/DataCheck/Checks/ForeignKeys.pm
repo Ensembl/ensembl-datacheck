@@ -33,7 +33,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeys',
   DESCRIPTION => 'Check for incorrect foreign key relationships',
-  DB_TYPES    => ['compara', 'core', 'funcgen', 'otherfeatures', 'variation'],
+  DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1,
 };
 
@@ -59,7 +59,7 @@ sub tests {
     }
   }
 
-  if ($self->dba->group =~ /(core|otherfeatures)/) {
+  if ($self->dba->group =~ /(cdna|core|otherfeatures|rnaseq)/) {
     $self->core_fk();
   } elsif ($self->dba->group eq 'funcgen') {
     $self->funcgen_fk();
