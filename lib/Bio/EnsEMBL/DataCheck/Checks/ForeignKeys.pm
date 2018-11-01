@@ -115,7 +115,6 @@ sub funcgen_fk {
   fk($self->dba, 'associated_feature_type', 'table_id', 'external_feature',   'external_feature_id',   'table_name = "external_feature"');
   fk($self->dba, 'associated_feature_type', 'table_id', 'regulatory_feature', 'regulatory_feature_id', 'table_name = "regulatory_feature"');
 
-  fk($self->dba, 'data_file', 'table_id', 'alignment',             'alignment_id',             'table_name = "alignment"');
   fk($self->dba, 'data_file', 'table_id', 'external_feature_file', 'external_feature_file_id', 'table_name = "external_feature_file"');
   fk($self->dba, 'data_file', 'table_id', 'segmentation_file',     'segmentation_file_id',     'table_name = "segmentation_file"');
 
