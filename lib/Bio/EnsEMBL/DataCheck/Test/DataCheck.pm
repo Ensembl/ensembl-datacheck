@@ -158,6 +158,7 @@ sub is_rows_zero {
 
     my $counter = 0;
     foreach my $row ( @$rows ) {
+      for ( @$row ) { $_ = 'NULL' unless defined $_; }
       $tb->diag( "$diag_msg (" . join(', ', @$row) . ")" );
       last if ++$counter == MAX_DIAG_ROWS;
     }
