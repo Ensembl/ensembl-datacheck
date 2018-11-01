@@ -191,8 +191,15 @@ sub set_dba_param {
           # The get_all_DBAdaptors_by_dbname method gives us a DBA for
           # each species in the collection. Which is nice, but not what
           # we want. The datacheck code will take of species-specific
-          # stuff, if necessary.
+          # stuff, if necessary. We need to clear all those other dbas
+          # out of the registry, otherwise we get into bother when running
+          # the tests.
           $dba = $$dbas[0];
+          my @species = map { $_->species } @$dbas;
+          my @groups  = map { $_->group   } @$dbas;
+          for (my $i = 1; $i < scalar(@species); $i++) {
+            Bio::EnsEMBL::Registry->remove_DBAdaptor($species[$i], $groups[$i]);
+          }
         } else {
           $self->throw("Multiple databases matching '$dbname' in registry");
         }
