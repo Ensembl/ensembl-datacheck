@@ -133,6 +133,15 @@
       "name" : "CurrentRegulatoryBuildHasEpigenomes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes"
    },
+   "DNAEmpty" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that core-like databases do not contain DNA sequences",
+      "groups" : [
+         "corelike_handover"
+      ],
+      "name" : "DNAEmpty",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
+   },
    "Denormalized" : {
       "datacheck_type" : "critical",
       "description" : "Check that denormalized columns are synchronised",
@@ -317,6 +326,15 @@
       "name" : "RegulatoryFeatureStableID",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureStableID"
    },
+   "RepeatFeatureCoords" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that repeat feature coordinates are sensible",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "RepeatFeatureCoords",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatureCoords"
+   },
    "SampleRegulatoryFeatureExists" : {
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has a sample regulatory feature",
@@ -355,6 +373,42 @@
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
+   },
+   "SeqRegionNames" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that seq_region names are unique (top-level) or consistent (non-top-level)",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "SeqRegionNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
+   },
+   "SeqRegionNamesINSDC" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check that seq_region names from INSDC are appropriately formatted and attributed",
+      "groups" : [
+         "assembly"
+      ],
+      "name" : "SeqRegionNamesINSDC",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
+   },
+   "SeqRegionRank" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that chromosomes have rank 1",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "SeqRegionRank",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionRank"
+   },
+   "SeqRegionTopLevel" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that top-level seq_regions are appropriately configured",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "SeqRegionTopLevel",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionTopLevel"
    },
    "SequenceLevel" : {
       "datacheck_type" : "critical",
