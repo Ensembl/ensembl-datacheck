@@ -395,12 +395,21 @@ sub run_tests {
     # a new DBA (reusing the same connection) for each species in turn.
     my $original_dba = $self->dba;
 
+    # Fetch species_ids ourselves; the code in the DBAdaptor module doesn't
+    # do it quite right, and doing it once for all is more efficient anyway.
+    my $sql = qq/
+      SELECT meta_value, species_id FROM meta
+      WHERE meta_key = 'species.db_name'
+    /;
+    my $helper = $self->dba->dbc->sql_helper;
+    my %species_ids = %{ $helper->execute_into_hash(-SQL => $sql) };
+
     foreach my $species (@{$self->dba->all_species}) {
       my $dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(
         -dbconn          => $original_dba->dbc,
         -multispecies_db => 1,
         -species         => $species,
-        -add_species_id  => 1,
+        -species_id      => $species_ids{$species},
       );
       $self->dba($dba);
 

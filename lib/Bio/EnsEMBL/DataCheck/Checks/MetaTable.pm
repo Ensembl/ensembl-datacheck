@@ -23,6 +23,7 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -30,7 +31,8 @@ use constant {
   NAME        => 'MetaTable',
   DESCRIPTION => 'Ensure that meta table has valid meta_keys',
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
-  PER_DB      => 1
+  TABLES      => ['meta'],
+  PER_DB      => 1,
 };
 
 sub tests {
@@ -62,6 +64,65 @@ sub tests {
       my $desc = "Mandatory meta key '$meta_key' exists";
       ok(exists $meta_keys{$meta_key}, $desc);
     }
+  }
+
+  my $desc_1 = 'DB-wide meta keys have NULL species_id';
+  my $diag_1 = 'Non-NULL species_id';
+  my $sql_1  = qq/
+    SELECT
+      meta_key, species_id FROM meta
+    WHERE
+      meta_key IN ('patch', 'schema_type', 'schema_version') AND
+      species_id IS NOT NULL
+  /;
+  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
+
+  my $desc_2 = 'Species-related meta keys have non-NULL species_id';
+  my $diag_2 = 'NULL species_id';
+  my $sql_2  = qq/
+    SELECT
+      meta_key, species_id FROM meta
+    WHERE
+      meta_key NOT IN ('patch', 'schema_type', 'schema_version') AND
+      species_id IS NULL
+  /;
+  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
+
+  if ($self->dba->group eq 'variation') {
+    $self->variation_specific_keys();
+  }
+}
+
+sub variation_specific_keys {
+  my ($self) = @_;
+
+  if ($self->species eq 'homo_sapiens') {
+    my $desc_1 = 'Correct default population for human LD';
+    my $sql_1  = qq/
+      SELECT COUNT(*) FROM
+        meta INNER JOIN population ON meta_value = population_id
+      WHERE
+        meta_key = 'pairwise_ld.default_population'
+    /;
+    is_rows_nonzero($self->dba, $sql_1, $desc_1);
+
+    my $desc_2 = 'Polyphen version for human';
+    my $sql_2  = 'SELECT COUNT(*) FROM meta WHERE meta_key = "polyphen_version"';
+    is_rows_nonzero($self->dba, $sql_2, $desc_2);
+
+    my $desc_3 = 'Sift version for human';
+    my $sql_3  = 'SELECT COUNT(*) FROM meta WHERE meta_key = "sift_version"';
+    is_rows_nonzero($self->dba, $sql_3, $desc_3);
+
+  } elsif ($self->species eq 'canis_familiaris') {
+    my $desc = 'Correct default strain for dog';
+    my $sql  = qq/
+      SELECT COUNT(*) FROM
+        meta INNER JOIN sample ON meta_value = name
+      WHERE
+        meta_key = 'sample.default_strain'
+    /;
+    is_rows_nonzero($self->dba, $sql, $desc);
   }
 }
 
