@@ -41,15 +41,6 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-# It's quite easy to add genes but not get the display correct.
-# highlight any analysis linked to the gene.analysis_id
-# that has either analysis_description.displayable = 0 or
-# analysis_description.web_data = NULL.
-
-# If there is no web_data, it is most likely an error. Similarly, if displayable=0, those genes won't appear at all; in which case what are they doing there? (Although, maybe there was a last-minute decision not to display them, and this is the easiest way to do that, which is why it would be an advisory datacheck.)
-
-# So, if a gene analysis has no webdata, fail. Likewise, displayable=0, fail.
-
   sub skip_tests {
     my ($self) = @_;
 
