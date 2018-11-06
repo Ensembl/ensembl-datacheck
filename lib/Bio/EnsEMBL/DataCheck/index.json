@@ -151,6 +151,15 @@
       "name" : "Denormalized",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Denormalized"
    },
+   "DisplaybleGenes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check that genes are displayable and have web_data attached to their analysis.",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "DisplaybleGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplaybleGenes"
+   },
    "EpigenomeHasSegmentationFile" : {
       "datacheck_type" : "critical",
       "description" : "Check that every epigenome which is part of the current Regulatory Build has a segmentation file in the segmentation_file table",
