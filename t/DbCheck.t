@@ -31,11 +31,12 @@ use DbCheck_4;
 use DbCheck_5;
 
 my $test_db_dir = $FindBin::Bin;
-my $db_type     = 'core';
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
 my $species = 'drosophila_melanogaster';
+my $db_type = 'core';
 my $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+
 my $dba     = $testdb->get_DBAdaptor($db_type);
 
 # Note that you cannot, by design, create a DbCheck object; datachecks
@@ -423,6 +424,7 @@ subtest 'Fetch DBA from registry', sub {
 };
 
 $species = 'collection';
+$db_type = 'core';
 $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
 $dba     = $testdb->get_DBAdaptor($db_type);
 $dba->is_multispecies(1);
