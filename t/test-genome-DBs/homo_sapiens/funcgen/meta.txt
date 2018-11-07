@@ -1,0 +1,16 @@
+1	\N	schema_version	95
+2	\N	schema_type	funcgen
+3	1	species.production_name	homo_sapiens
+4	\N	patch	patch_94_95_a.sql|schema_version
+5	\N	patch	patch_94_95_b.sql|update to segmentation state tables
+6	\N	patch	patch_94_95_c.sql|Update to alignment table
+7	\N	patch	patch_94_95_d.sql|Update to execution_plan table
+8	\N	patch	patch_94_95_e.sql|Update to regulatory_build_statistic table
+9	\N	patch	patch_94_95_f.sql|Update to experimental_group table
+10	\N	patch	patch_94_95_g.sql|segmentation table
+11	\N	patch	patch_94_95_h.sql|segmentation_cell_tables
+12	\N	patch	patch_94_95_i.sql|segmentation_statistic table
+13	\N	patch	patch_94_95_j.sql|segmentation_file table
+14	\N	patch	patch_94_95_k.sql|peak calling statistic table
+15	\N	patch	patch_94_95_l.sql|Modify length for column name from epigenome table
+16	\N	patch	patch_94_95_m.sql|drop obsolete tables
