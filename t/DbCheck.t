@@ -257,6 +257,11 @@ subtest 'DbCheck with db_type and tables', sub {
   cmp_ok($dbcheck->_started, '>', $started, '_started attribute changed after relevant table update');
   like($dbcheck->_finished,  qr/^\d+$/,     '_finished attribute has numeric value after relevant table update');
   is($dbcheck->_passed,        1,           '_passed attribute is true');
+
+  # Tell datacheck that it needs to run, even if tables haven't changed.
+  $dbcheck->force(1);
+  ($skip, undef) = $dbcheck->check_history();
+  is($skip, undef, 'Datacheck forced to run when it would normally be skipped');
 };
 
 subtest 'DbCheck with skip_tests method defined', sub {
