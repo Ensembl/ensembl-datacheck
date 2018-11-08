@@ -419,6 +419,15 @@
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
    },
+   "SpeciesMeta" : {
+      "datacheck_type" : "critical",
+      "description" : "Check the presence and format of species-related meta keys",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "SpeciesMeta",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesMeta"
+   },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
       "description" : "Check that production_name and alias are unique across all species",
