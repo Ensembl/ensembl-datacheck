@@ -104,6 +104,15 @@
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
    },
+   "ControlledMetaKeys" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that database has mandatory and permitted meta keys",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "ControlledMetaKeys",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
+   },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
@@ -286,12 +295,14 @@
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
    },
-   "MetaTable" : {
+   "MetaKeyLevel" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that meta table has valid meta_keys",
-      "groups" : [],
-      "name" : "MetaTable",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaTable"
+      "description" : "Ensure that meta_keys are correctly assigned at species or database level",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyLevel",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyLevel"
    },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
