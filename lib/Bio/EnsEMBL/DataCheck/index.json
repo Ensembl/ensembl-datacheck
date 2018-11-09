@@ -104,6 +104,15 @@
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
    },
+   "ControlledAnalysis" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that analysis descriptions and display settings are correct",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "ControlledAnalysis",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis"
+   },
    "ControlledMetaKeys" : {
       "datacheck_type" : "critical",
       "description" : "Ensure that database has mandatory and permitted meta keys",
