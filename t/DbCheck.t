@@ -53,7 +53,10 @@ diag('Runtime attributes');
 can_ok($module, qw(dba dba_species_only registry_file server_uri registry old_server_uri dba_list));
 
 diag('Methods');
-can_ok($module, qw(species get_dba get_dna_dba get_prod_dba get_old_dba run_tests skip_datacheck verify_db_type check_history table_dates skip_tests));
+can_ok($module, qw(
+  species get_dba get_dna_dba get_prod_dba get_old_dba 
+  skip_datacheck run_datacheck skip_tests tests run
+  verify_db_type check_history table_dates));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
@@ -275,10 +278,6 @@ subtest 'DbCheck with skip_tests method defined', sub {
   is($skip_reason, undef, 'No skip reason');
 
   ($skip, $skip_reason) = $dbcheck->skip_tests('please');
-  is($skip, 1, 'Skip if condition is not met');
-  is($skip_reason, 'All good here, thank you', 'Correct skip reason');
-
-  ($skip, $skip_reason) = $dbcheck->skip_datacheck('please');
   is($skip, 1, 'Skip if condition is not met');
   is($skip_reason, 'All good here, thank you', 'Correct skip reason');
 };

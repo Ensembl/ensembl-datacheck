@@ -386,7 +386,7 @@ sub get_old_dba {
   return $old_dba;
 }
 
-sub run_tests {
+sub run_datacheck {
   my $self = shift;
 
   if (!$self->per_db && !$self->dba_species_only && $self->dba->is_multispecies) {
@@ -414,7 +414,13 @@ sub run_tests {
       $self->dba($dba);
 
       subtest $species => sub {
-        $self->tests(@_);
+        SKIP: {
+          my ($skip, $skip_reason) = $self->skip_tests(@_);
+
+          plan skip_all => $skip_reason if $skip;
+
+          $self->tests(@_);
+        }
       };
     }
 
@@ -423,7 +429,13 @@ sub run_tests {
     $self->dba($original_dba);
 
   } else {
-    $self->tests(@_);
+    SKIP: {
+      my ($skip, $skip_reason) = $self->skip_tests(@_);
+
+      plan skip_all => $skip_reason if $skip;
+
+      $self->tests(@_);
+    }
   }
 }
 
@@ -433,9 +445,6 @@ sub skip_datacheck {
   my ($skip, $skip_reason) = $self->verify_db_type();
   if (!$skip) {
     ($skip, $skip_reason) = $self->check_history();
-    if (!$skip) {
-      ($skip, $skip_reason) = $self->skip_tests(@_);
-    }
   }
 
   return ($skip, $skip_reason);
