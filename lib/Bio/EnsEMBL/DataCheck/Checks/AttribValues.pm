@@ -23,6 +23,7 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -48,7 +49,7 @@ sub skip_tests {
 
   my %applicable_species = map { $_ => 1 } @applicable_species;
 
-  if ( ! exists $applicable_species{$self->dba->species} ) {
+  if ( ! exists $applicable_species{$self->species} ) {
     return (1, 'Attribute types not applicable.');
   }
 }
@@ -73,7 +74,7 @@ sub tests {
       gene g INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       seq_region_attrib sra USING (seq_region_id) INNER JOIN
-      attrib_type at ON sra.attrib_type_id = at.attrib_type_id
+      attrib_type at ON sra.attrib_type_id = at.attrib_type_id INNER JOIN
       transcript t USING (gene_id) INNER JOIN
       transcript_attrib ta USING (transcript_id) INNER JOIN
       attrib_type at2 ON ta.attrib_type_id = at2.attrib_type_id
@@ -133,7 +134,7 @@ sub tests {
   my $refseq_count = $helper->execute_single_result( -SQL => $sql_3b );
   is($refseq_count, $gene_count, $desc_3);
 
-  if ($self->dba->species =~ /(homo_sapiens|mus_musculus)/) {
+  if ($self->species =~ /(homo_sapiens|mus_musculus)/) {
     my $desc_4 = 'All genes have at least one transcript with a gencode_basic attribute';
     my $sql_4a = q/
       SELECT COUNT(distinct gene_id) FROM transcript
@@ -142,7 +143,7 @@ sub tests {
     my $sql_4b = q/
       SELECT COUNT(distinct gene_id) FROM
         transcript INNER JOIN
-        transcript_attrib USING (transcript_id)
+        transcript_attrib USING (transcript_id) INNER JOIN
         attrib_type USING (attrib_type_id) 
       WHERE
         biotype NOT IN ('LRG_gene') AND
@@ -169,7 +170,7 @@ sub tests {
         gene g INNER JOIN
         seq_region sr USING (seq_region_id) INNER JOIN
         seq_region_attrib sra USING (seq_region_id) INNER JOIN
-        attrib_type at ON sra.attrib_type_id = at.attrib_type_id
+        attrib_type at ON sra.attrib_type_id = at.attrib_type_id INNER JOIN
         transcript t USING (gene_id) INNER JOIN
         transcript_attrib ta USING (transcript_id) INNER JOIN
         attrib_type at2 ON ta.attrib_type_id = at2.attrib_type_id
