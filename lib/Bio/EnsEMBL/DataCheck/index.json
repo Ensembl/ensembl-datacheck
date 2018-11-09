@@ -376,7 +376,7 @@
    },
    "SegmentationFileHasBigBed" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every segmentation_file entry which has been used in the current Regulatory Build is linked to a BIGBED entry in the data_file table and exist on disk",
+      "description" : "Check that every segmentation_file entry which has been used in the current Regulatory Build is linked to a BIGBED entry in the data_file table and exists on disk",
       "groups" : [
          "funcgen_integrity",
          "funcgen_Post_regulatory_build"
