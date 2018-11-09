@@ -62,6 +62,9 @@ sub param_defaults {
     %manager_params,
     %dbcheck_params,
     failures_fatal => 1,
+    passed  => undef,
+    failed  => undef,
+    skipped => undef,
   };
 }
 
