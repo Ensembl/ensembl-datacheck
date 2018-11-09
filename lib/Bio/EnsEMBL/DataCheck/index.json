@@ -374,6 +374,16 @@
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
    },
+   "SegmentationFileHasBigBed" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every segmentation_file entry which has been used in the current Regulatory Build is linked to a BIGBED entry in the data_file table and exist on disk",
+      "groups" : [
+         "funcgen_integrity",
+         "funcgen_Post_regulatory_build"
+      ],
+      "name" : "SegmentationFileHasBigBed",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SegmentationFileHasBigBed"
+   },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
       "description" : "Check that seq_region names are unique (top-level) or consistent (non-top-level)",
