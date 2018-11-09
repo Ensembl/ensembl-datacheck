@@ -79,6 +79,15 @@
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
    },
+   "ChromosomesAnnotated" : {
+      "datacheck_type" : "critical",
+      "description" : "Check whether chromosomal seq_regions have appropriate attribute.",
+      "groups" : [
+         "assembly"
+      ],
+      "name" : "ChromosomesAnnotated",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
+   },
    "CompareBiotype" : {
       "datacheck_type" : "critical",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
@@ -238,6 +247,15 @@
       ],
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
+   },
+   "Karyotype" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check whether karyotype data exists.",
+      "groups" : [
+         "assembly"
+      ],
+      "name" : "Karyotype",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Karyotype"
    },
    "LRG" : {
       "datacheck_type" : "critical",
