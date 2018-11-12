@@ -49,16 +49,22 @@ sub skip_tests {
   }
 }
 
-sub tests {
-  my ($self) = @_;
-  my $data_file_path = '/nfs/panda/ensembl/production/ensemblftp/data_files2/';
-  my $table_name = 'segmentation_file';
-  my $file_type = 'BIGBED';
+sub build_segmentation_base_file_path {
+  my ($self,$data_file_path) = @_;
   my $species = $self->species;
-  my $core_dba = $self->get_dba($self->species, 'core');
-  fail("Core database found in registry") if ! defined $core_dba;
+  my $core_dba = $self->get_dna_dba();
   my $meta = $core_dba->get_MetaContainer();
   my $assembly_default = $meta->single_value_by_key('assembly.default');
+  my $base_file_path = "$data_file_path/$species/$assembly_default/";
+  return $base_file_path;
+}
+
+sub tests {
+  my ($self) = @_;
+  my $data_file_path = '/nfs/panda/ensembl/production/ensemblftp/data_files/';
+  my $table_name = 'segmentation_file';
+  my $file_type = 'BIGBED';
+  my $base_file_path = $self->build_segmentation_base_file_path($data_file_path);
   my $helper = $self->dba->dbc->sql_helper;
   my $missing_file_for_segmentation_file_id = 0;
   my $sql = qq/
@@ -83,16 +89,12 @@ sub tests {
           table_id = ?
      /;
      my $file_path = $helper->execute_simple(-SQL => $sql2,-PARAMS => [$table_name,$file_type,$segmentation_file_id])->[0];
+     my $desc = "$file_type file entry found in the data_file table for $table_name with name ".$segmentation_files->{$segmentation_file_id}." and id $segmentation_file_id";
+     ok(defined $file_path, $desc);
      if (defined $file_path){
-        my $segmentation_file = "$data_file_path/$species/$assembly_default/$file_path";
-        ok(-e $segmentation_file,"$segmentation_file exists on disk") or diag("$segmentation_file doest not exist on the disk for segmentation id $segmentation_file_id and name ".$segmentation_files->{$segmentation_file_id});
-     }
-     else{
-         diag("No $file_type file entry found in the data_file table for $table_name with name ".$segmentation_files->{$segmentation_file_id}." and id $segmentation_file_id");
-         $missing_file_for_segmentation_file_id ++;
+       my $segmentation_file = $base_file_path."$file_path";
+       ok(-e $segmentation_file,"$segmentation_file exists on disk") or diag("$segmentation_file doest not exist on the disk for segmentation id $segmentation_file_id and name ".$segmentation_files->{$segmentation_file_id});
      }
    }
-   my $desc = "All segmentation_file_id have an associated path in data_file table";
-   is($missing_file_for_segmentation_file_id, 0, $desc);
 }
 1;
