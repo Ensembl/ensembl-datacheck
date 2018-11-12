@@ -31,11 +31,12 @@ use DbCheck_4;
 use DbCheck_5;
 
 my $test_db_dir = $FindBin::Bin;
-my $db_type     = 'core';
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
 my $species = 'drosophila_melanogaster';
+my $db_type = 'core';
 my $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+
 my $dba     = $testdb->get_DBAdaptor($db_type);
 
 # Note that you cannot, by design, create a DbCheck object; datachecks
@@ -259,6 +260,11 @@ subtest 'DbCheck with db_type and tables', sub {
   cmp_ok($dbcheck->_started, '>', $started, '_started attribute changed after relevant table update');
   like($dbcheck->_finished,  qr/^\d+$/,     '_finished attribute has numeric value after relevant table update');
   is($dbcheck->_passed,        1,           '_passed attribute is true');
+
+  # Tell datacheck that it needs to run, even if tables haven't changed.
+  $dbcheck->force(1);
+  ($skip, undef) = $dbcheck->check_history();
+  is($skip, undef, 'Datacheck forced to run when it would normally be skipped');
 };
 
 subtest 'DbCheck with skip_tests method defined', sub {
@@ -422,6 +428,7 @@ subtest 'Fetch DBA from registry', sub {
 };
 
 $species = 'collection';
+$db_type = 'core';
 $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
 $dba     = $testdb->get_DBAdaptor($db_type);
 $dba->is_multispecies(1);

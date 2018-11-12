@@ -84,6 +84,16 @@ has 'per_db' => (
   default => 0
 );
 
+=head2 force
+  Description: If 1, the tests will always run, even if the datacheck detects
+               that nothing has changed in the the database.
+=cut
+has 'force' => (
+  is      => 'rw',
+  isa     => 'Bool',
+  default => 0
+);
+
 =head2 dba
   Description: DBAdaptor object for database on which to run tests.
 =cut
@@ -471,23 +481,25 @@ sub check_history {
 
   my $run_required = 1;
 
-  if ($self->_passed && $self->_started) {
-    my $tables_in_db = $self->table_dates();
-    my @tables_to_check;
+  if (!$self->force) {
+    if ($self->_passed && $self->_started) {
+      my $tables_in_db = $self->table_dates();
+      my @tables_to_check;
 
-    # If no tables are specified, check them all.
-    if (scalar(@{$self->tables}) == 0) {
-      @tables_to_check = keys %$tables_in_db;
-    } else {
-      @tables_to_check = @{$self->tables};
-    }
+      # If no tables are specified, check them all.
+      if (scalar(@{$self->tables}) == 0) {
+        @tables_to_check = keys %$tables_in_db;
+      } else {
+        @tables_to_check = @{$self->tables};
+      }
 
-    $run_required = 0;
-    foreach my $table_name (@tables_to_check) {
-      if (exists $$tables_in_db{$table_name}) {
-        if ($self->_started < $$tables_in_db{$table_name}) {
-          $run_required = 1;
-          last;
+      $run_required = 0;
+      foreach my $table_name (@tables_to_check) {
+        if (exists $$tables_in_db{$table_name}) {
+          if ($self->_started < $$tables_in_db{$table_name}) {
+            $run_required = 1;
+            last;
+          }
         }
       }
     }

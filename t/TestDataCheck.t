@@ -233,4 +233,50 @@ subtest 'Foreign Keys', sub {
   $dba->dbc->sql_helper->execute_update($sql_fix);
 };
 
+# Switch to variation db to test denormalization,
+# because the situation does not exist in core dbs.
+$species = 'homo_sapiens';
+$db_type = 'variation';
+$testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+$dba     = $testdb->get_DBAdaptor($db_type);
+
+subtest 'Denormalized', sub {
+  my $table_1    = 'variation';
+  my $table_2    = 'variation_feature';
+  my $col_join   = 'variation_id';
+  my $col_denorm = 'display';
+
+  subtest 'denormalized fine', sub {
+    check_tests(
+      sub {
+        denormalized($dba, $table_1, $col_join, $col_denorm, $table_2);
+        denormalized($dba, $table_2, $col_join, $col_denorm, $table_1, $col_join, $col_denorm, 'pass: variation.display = variation_feature.display');
+      },
+      [
+        { ok => 1, depth => undef, name => 'All variation.display rows in sync with variation_feature.display' },
+        { ok => 1, depth => undef, name => 'pass: variation.display = variation_feature.display' },
+      ],
+      'denormalized method'
+    );
+  };
+
+  my $sql_break = 'UPDATE variation SET display = display + 1';
+  $dba->dbc->sql_helper->execute_update($sql_break);
+
+  subtest 'denormalized broken', sub {
+    check_tests(
+      sub {
+        denormalised($dba, $table_1, $col_join, $col_denorm, $table_2, undef, undef, 'fail: variation.display = variation_feature.display');
+      },
+      [
+        { ok => 0, depth => undef, name => 'fail: variation.display = variation_feature.display' },
+      ],
+      'denormalized method'
+    );
+  };
+
+  my $sql_fix = 'UPDATE variation SET display = display - 1';
+  $dba->dbc->sql_helper->execute_update($sql_fix);
+};
+
 done_testing();
