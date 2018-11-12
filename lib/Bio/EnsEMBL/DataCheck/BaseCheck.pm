@@ -128,10 +128,14 @@ sub skip_datacheck {
   # Method to be overridden by a subclass, if required.
 }
 
-sub run_tests {
+sub run_datacheck {
   # Method can be overridden by a subclass, if required.
   my $self = shift;
   $self->tests(@_);
+}
+
+sub skip_tests {
+  # Method to be overridden by a subclass, if required.
 }
 
 sub tests {
@@ -155,7 +159,7 @@ sub run {
 
       plan skip_all => $skip_reason if $skip;
 
-      $self->run_tests(@_);
+      $self->run_datacheck(@_);
 
       $self->_finished(time);
     }
