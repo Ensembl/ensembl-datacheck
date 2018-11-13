@@ -30,8 +30,8 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'DisplayableGenes',
-  DESCRIPTION    => 'Check that genes are displayable'
-    . 'have web_data attached to their analysis.',
+  DESCRIPTION    => 'Check that genes are displayable '
+    . 'and have web_data attached to their analysis.',
   GROUPS         => ['core_handover'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core', 'otherfeatures', 'rnaseq', 'cdna'],

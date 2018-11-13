@@ -153,7 +153,7 @@
    },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
-      "description" : "Check that genes are displayablehave web_data attached to their analysis.",
+      "description" : "Check that genes are displayable and have web_data attached to their analysis.",
       "groups" : [
          "core_handover"
       ],
