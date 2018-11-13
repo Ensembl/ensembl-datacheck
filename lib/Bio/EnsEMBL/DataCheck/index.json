@@ -151,6 +151,15 @@
       "name" : "Denormalized",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Denormalized"
    },
+   "DisplayableGenes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check that genes are displayablehave web_data attached to their analysis.",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "DisplayableGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableGenes"
+   },
    "DisplaybleGenes" : {
       "datacheck_type" : "advisory",
       "description" : "Check that genes are displayable and have web_data attached to their analysis.",
