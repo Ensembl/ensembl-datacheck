@@ -195,7 +195,7 @@ if ($dbname) {
     -user            => $user,
     -pass            => $pass,
     -dbname          => $dbname,
-    -species         => 'monodelphis_domestica',
+    -species         => $species,
     -group           => $dbtype,
     -multispecies_db => $multispecies_db,
   );
