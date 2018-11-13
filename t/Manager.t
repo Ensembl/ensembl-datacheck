@@ -26,7 +26,11 @@ use Test::Exception;
 use Test::More;
 
 my $test_db_dir = $FindBin::Bin;
-my @species     = qw(collection drosophila_melanogaster homo_sapiens);
+my %db_types    = (
+                    collection => ['core'],
+                    drosophila_melanogaster => ['core'],
+                    homo_sapiens => ['core', 'funcgen', 'variation'],
+                  );
 my $db_type     = 'core';
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
@@ -378,112 +382,115 @@ subtest 'Run datachecks (BaseCheck)', sub {
   }
 };
 
-foreach my $species (@species) {
+foreach my $species (keys %db_types) {
   my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-  my $dba    = $testdb->get_DBAdaptor($db_type);
 
-  subtest 'Run datachecks (DbCheck)', sub {
-    # We need to redirect test output to a file, otherwise it gets muddled
-    # with the output from this .t file, and confuses the test harness.
-    my $output_file = Path::Tiny->tempfile();
+  foreach my $db_type (@{ $db_types{$species} }) {
+    my $dba    = $testdb->get_DBAdaptor($db_type);
 
-    my $before = time();
-    sleep(2);
+    subtest "Run datachecks (DbCheck, $species, $db_type)", sub {
+      # We need to redirect test output to a file, otherwise it gets muddled
+      # with the output from this .t file, and confuses the test harness.
+      my $output_file = Path::Tiny->tempfile();
 
-    my $manager = $module->new(
-      datacheck_dir => $datacheck_dir,
-      index_file    => $index_file,
-      output_file   => $output_file->stringify,
-      names         => ['DbCheck_1', 'DbCheck_3'],
-    );
+      my $before = time();
+      sleep(2);
 
-    my ($datachecks, $aggregator) = $manager->run_checks(dba => $dba);
+      my $manager = $module->new(
+        datacheck_dir => $datacheck_dir,
+        index_file    => $index_file,
+        output_file   => $output_file->stringify,
+        names         => ['DbCheck_1', 'DbCheck_3'],
+      );
 
-    sleep(2);
-    my $after = time();
+      my ($datachecks, $aggregator) = $manager->run_checks(dba => $dba);
 
-    foreach (@$datachecks) {
-      like($_->_passed, qr/^[01]$/, '_passed attribute has valid value for '.$_->name);
-      ok($before < $_->_started && $after > $_->_started, '_started attribute within expected range for '.$_->name);
-      if (defined $_->_finished) {
-        ok($before < $_->_finished && $after > $_->_finished, '_finished attribute within expected range for '.$_->name);
-      }
-    }
-  };
+      sleep(2);
+      my $after = time();
 
-  subtest 'Read and write history file (DbCheck)', sub {
-    my $history_file = Path::Tiny->tempfile();
-    my $output_file  = Path::Tiny->tempfile();
-
-    my $manager = $module->new(
-      datacheck_dir => $datacheck_dir,
-      index_file    => $index_file,
-      history_file  => $history_file->stringify,
-      output_file   => $output_file->stringify,
-      patterns      => ['DbCheck'],
-    );
-
-    my @attributes = sort ('passed', 'started', 'finished');
-
-    my $before = time();
-    sleep(2);
-
-    my ($datachecks, undef) = $manager->run_checks(dba => $dba);
-
-    sleep(2);
-    my $after = time();
-
-    my $json = $history_file->slurp;
-    my $history = JSON->new->decode($json);
-
-    my $dbserver = $dba->dbc->host . ':' . $dba->dbc->port;
-    my $dbname   = $dba->dbc->dbname;
-    my $db_history_species = $$history{$dbserver}{$dbname}{'1'};
-    my $db_history_all     = $$history{$dbserver}{$dbname}{'all'};
-
-    foreach (@$datachecks) {
-      my $db_history;
-      if ($_->name eq 'DbCheck_4') {
-        $db_history = $db_history_all;
-      } else {
-        $db_history = $db_history_species;
-      }
-
-      ok(exists $$db_history{$_->name}, 'Results written for '.$_->name);
-
-      my @datacheck_attributes = sort keys %{$$db_history{$_->name}};
-      is_deeply(\@datacheck_attributes, \@attributes, 'Expected attributes exist for '.$_->name);
-
-      if (exists $$db_history{$_->name}{started}) {
-        my $started = $$db_history{$_->name}{started};
-        ok($before < $started && $after > $started, 'Started within expected range for '.$_->name);
-      }
-
-      if (exists $$db_history{$_->name}{finished}) {
-        my $finished = $$db_history{$_->name}{finished};
-        if (defined $finished) {
-          ok($before < $finished && $after > $finished, 'Finished within expected range for '.$_->name);
+      foreach (@$datachecks) {
+        like($_->_passed, qr/^[01]$/, '_passed attribute has valid value for '.$_->name);
+        ok($before < $_->_started && $after > $_->_started, '_started attribute within expected range for '.$_->name);
+        if (defined $_->_finished) {
+          ok($before < $_->_finished && $after > $_->_finished, '_finished attribute within expected range for '.$_->name);
         }
       }
-    }
+    };
 
-    # The tests that are run are Test::More tests. Running them within a test
-    # is a bit confusing. To simulate a proper test of the tests, need to reset
-    # the Test::More framework.
-    Test::More->builder->reset();
+    subtest "Read and write history file (DbCheck, $species, $db_type)", sub {
+      my $history_file = Path::Tiny->tempfile();
+      my $output_file  = Path::Tiny->tempfile();
 
-    ($datachecks, undef) = $manager->run_checks(dba => $dba);
+      my $manager = $module->new(
+        datacheck_dir => $datacheck_dir,
+        index_file    => $index_file,
+        history_file  => $history_file->stringify,
+        output_file   => $output_file->stringify,
+        patterns      => ['DbCheck'],
+      );
 
-    # Should have 4 skipped checks and one failed one,
-    # if the history file was read correctly.
-    my ($skipped, $failed) = (0, 0);
-    foreach (@$datachecks) {
-      $skipped++ if $_->_passed && ! defined $_->_finished;
-      $failed++  if ! $_->_passed;
-    }
-    is($skipped, 4, 'Correct number of skipped tests');
-    is($failed,  1, 'Correct number of failed tests');
-  };
+      my @attributes = sort ('passed', 'started', 'finished');
+
+      my $before = time();
+      sleep(2);
+
+      my ($datachecks, undef) = $manager->run_checks(dba => $dba);
+
+      sleep(2);
+      my $after = time();
+
+      my $json = $history_file->slurp;
+      my $history = JSON->new->decode($json);
+
+      my $dbserver = $dba->dbc->host . ':' . $dba->dbc->port;
+      my $dbname   = $dba->dbc->dbname;
+      my $db_history_species = $$history{$dbserver}{$dbname}{'1'};
+      my $db_history_all     = $$history{$dbserver}{$dbname}{'all'};
+
+      foreach (@$datachecks) {
+        my $db_history;
+        if ($_->name eq 'DbCheck_4') {
+          $db_history = $db_history_all;
+        } else {
+          $db_history = $db_history_species;
+        }
+
+        ok(exists $$db_history{$_->name}, 'Results written for '.$_->name);
+
+        my @datacheck_attributes = sort keys %{$$db_history{$_->name}};
+        is_deeply(\@datacheck_attributes, \@attributes, 'Expected attributes exist for '.$_->name);
+
+        if (exists $$db_history{$_->name}{started}) {
+          my $started = $$db_history{$_->name}{started};
+          ok($before < $started && $after > $started, 'Started within expected range for '.$_->name);
+        }
+
+        if (exists $$db_history{$_->name}{finished}) {
+          my $finished = $$db_history{$_->name}{finished};
+          if (defined $finished) {
+            ok($before < $finished && $after > $finished, 'Finished within expected range for '.$_->name);
+          }
+        }
+      }
+
+      # The tests that are run are Test::More tests. Running them within a test
+      # is a bit confusing. To simulate a proper test of the tests, need to reset
+      # the Test::More framework.
+      Test::More->builder->reset();
+
+      ($datachecks, undef) = $manager->run_checks(dba => $dba);
+
+      # Should have 4 skipped checks and one failed one,
+      # if the history file was read correctly.
+      my ($skipped, $failed) = (0, 0);
+      foreach (@$datachecks) {
+        $skipped++ if $_->_passed && ! defined $_->_finished;
+        $failed++  if ! $_->_passed;
+      }
+      is($skipped, 4, 'Correct number of skipped tests');
+      is($failed,  1, 'Correct number of failed tests');
+    };
+  }
 }
 
 done_testing();

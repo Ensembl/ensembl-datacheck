@@ -177,56 +177,67 @@ foreach my $species (@species) {
   };
 
   # Point at the test datachecks. Output file is needed to prevent the
-  # results of those datacheck tests methods from polluting this test.
+  # results of those datacheck 'tests' methods from polluting this test.
   $obj->param('datacheck_dir', $datacheck_dir);
   $obj->param('index_file', $index_file);
   $obj->param('output_file', $output_file);
 
-  TODO: {
-    local $TODO = 
-      "Test output from the datachecks is a not quite right, ".
-      "because a harness is being run from a harness and it gets mangled. ".
-      "Haven't yet figured out how to manage this...";
-    subtest 'Running datachecks: BaseCheck', sub {
-      $obj->param('datacheck_names', ['BaseCheck_1']);
-      $obj->param('datacheck_groups', ['base']);
-      $obj->param('failures_fatal', 0);
+  subtest 'Running datachecks: BaseCheck', sub {
+    $obj->param('datacheck_names', ['BaseCheck_1']);
+    $obj->param('datacheck_groups', ['base']);
+    $obj->param('failures_fatal', 0);
 
-      $obj->fetch_input();
-      #$obj->run();
+    $obj->fetch_input();
+    $obj->run();
 
-      is($obj->param('passed'),  1, "Pass count correct");
-      is($obj->param('failed'),  1, "Fail count correct");
-      is($obj->param('skipped'), 1, "Skip count correct");
-    };
+    # In theory we could check $obj->param('passed'); but because
+    # we are here running a harness from a harness the parameters
+    # don't get set properly. (It works fine when not run within
+    # a test harness, honest guv!) But we can check if things have
+    # indeed run as expected via the datacheck objects.
+    my ($passed, $skipped, $failed) = (0, 0, 0);
+    foreach ( @{ $obj->param('datachecks') } ) {
+      $passed++  if $_->_passed && defined $_->_finished;
+      $skipped++ if $_->_passed && ! defined $_->_finished;
+      $failed++  if ! $_->_passed;
+    }
+    is($passed,  1, "Pass count correct");
+    is($skipped, 1, "Skip count correct");
+    is($failed,  1, "Fail count correct");
+  };
 
-    subtest 'Running datachecks: DbCheck', sub {
-      $obj->param('dba', $dba);
-      $obj->param('datacheck_names', ['DbCheck_1', 'DbCheck_2', 'DbCheck_3']);
-      $obj->param('datacheck_groups', []);
-      $obj->param('failures_fatal', 0);
+  subtest 'Running datachecks: DbCheck', sub {
+    $obj->param('dba', $dba);
+    $obj->param('datacheck_names', ['DbCheck_1', 'DbCheck_2', 'DbCheck_3']);
+    $obj->param('datacheck_groups', []);
+    $obj->param('failures_fatal', 0);
 
-      $obj->fetch_input();
-      #$obj->run();
+    $obj->fetch_input();
+    $obj->run();
 
-      is($obj->param('passed'),  1, "Pass count correct");
-      is($obj->param('failed'),  1, "Fail count correct");
-      is($obj->param('skipped'), 1, "Skip count correct");
-    };
+    my ($passed, $skipped, $failed) = (0, 0, 0);
+    foreach ( @{ $obj->param('datachecks') } ) {
+      $passed++  if $_->_passed && defined $_->_finished;
+      $skipped++ if $_->_passed && ! defined $_->_finished;
+      $failed++  if ! $_->_passed;
+    }
+    is($passed,  1, "Pass count correct");
+    is($skipped, 1, "Skip count correct");
+    is($failed,  1, "Fail count correct");
+  };
 
-    subtest 'Running datachecks: Fail', sub {
-      $obj->param('dba', $dba);
-      $obj->param('datacheck_names', ['DbCheck_2']);
-      $obj->param('datacheck_groups', []);
-      $obj->param('failures_fatal', 1);
+  subtest 'Running datachecks: Fail', sub {
+    $obj->param('dba', $dba);
+    $obj->param('datacheck_names', ['DbCheck_2']);
+    $obj->param('datacheck_groups', []);
+    $obj->param('failures_fatal', 1);
 
-      $obj->fetch_input();
+    $obj->fetch_input();
 
-      #throws_ok(
-      #  sub { $obj->run() },
-      #  qr/Datachecks failed: DbCheck_2/, "Fail if datacheck fails");
-    };
-  }
+    throws_ok(
+      sub { $obj->run() },
+      qr/Datachecks failed: /, "Fail if datacheck fails");
+  };
 }
 
 done_testing();

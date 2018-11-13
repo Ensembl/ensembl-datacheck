@@ -31,11 +31,12 @@ use DbCheck_4;
 use DbCheck_5;
 
 my $test_db_dir = $FindBin::Bin;
-my $db_type     = 'core';
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
 my $species = 'drosophila_melanogaster';
+my $db_type = 'core';
 my $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+
 my $dba     = $testdb->get_DBAdaptor($db_type);
 
 # Note that you cannot, by design, create a DbCheck object; datachecks
@@ -53,7 +54,10 @@ diag('Runtime attributes');
 can_ok($module, qw(dba dba_species_only registry_file server_uri registry old_server_uri dba_list));
 
 diag('Methods');
-can_ok($module, qw(species get_dba get_dna_dba get_old_dba run_tests skip_datacheck verify_db_type check_history table_dates skip_tests));
+can_ok($module, qw(
+  species get_dba get_dna_dba get_old_dba 
+  skip_datacheck run_datacheck skip_tests tests run
+  verify_db_type check_history table_dates));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
@@ -256,6 +260,11 @@ subtest 'DbCheck with db_type and tables', sub {
   cmp_ok($dbcheck->_started, '>', $started, '_started attribute changed after relevant table update');
   like($dbcheck->_finished,  qr/^\d+$/,     '_finished attribute has numeric value after relevant table update');
   is($dbcheck->_passed,        1,           '_passed attribute is true');
+
+  # Tell datacheck that it needs to run, even if tables haven't changed.
+  $dbcheck->force(1);
+  ($skip, undef) = $dbcheck->check_history();
+  is($skip, undef, 'Datacheck forced to run when it would normally be skipped');
 };
 
 subtest 'DbCheck with skip_tests method defined', sub {
@@ -275,10 +284,6 @@ subtest 'DbCheck with skip_tests method defined', sub {
   is($skip_reason, undef, 'No skip reason');
 
   ($skip, $skip_reason) = $dbcheck->skip_tests('please');
-  is($skip, 1, 'Skip if condition is not met');
-  is($skip_reason, 'All good here, thank you', 'Correct skip reason');
-
-  ($skip, $skip_reason) = $dbcheck->skip_datacheck('please');
   is($skip, 1, 'Skip if condition is not met');
   is($skip_reason, 'All good here, thank you', 'Correct skip reason');
 };
@@ -423,6 +428,7 @@ subtest 'Fetch DBA from registry', sub {
 };
 
 $species = 'collection';
+$db_type = 'core';
 $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
 $dba     = $testdb->get_DBAdaptor($db_type);
 $dba->is_multispecies(1);

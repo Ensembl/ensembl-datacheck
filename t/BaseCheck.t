@@ -42,7 +42,7 @@ diag('Internal attributes');
 can_ok($module, qw(_started _finished _passed));
 
 diag('Methods');
-can_ok($module, qw(skip_datacheck run tests run_tests));
+can_ok($module, qw(skip_datacheck run_datacheck skip_tests tests run));
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing

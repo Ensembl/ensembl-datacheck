@@ -84,6 +84,16 @@ has 'per_db' => (
   default => 0
 );
 
+=head2 force
+  Description: If 1, the tests will always run, even if the datacheck detects
+               that nothing has changed in the the database.
+=cut
+has 'force' => (
+  is      => 'rw',
+  isa     => 'Bool',
+  default => 0
+);
+
 =head2 dba
   Description: DBAdaptor object for database on which to run tests.
 =cut
@@ -381,7 +391,7 @@ sub get_old_dba {
   return $old_dba;
 }
 
-sub run_tests {
+sub run_datacheck {
   my $self = shift;
 
   if (!$self->per_db && !$self->dba_species_only && $self->dba->is_multispecies) {
@@ -409,7 +419,13 @@ sub run_tests {
       $self->dba($dba);
 
       subtest $species => sub {
-        $self->tests(@_);
+        SKIP: {
+          my ($skip, $skip_reason) = $self->skip_tests(@_);
+
+          plan skip_all => $skip_reason if $skip;
+
+          $self->tests(@_);
+        }
       };
     }
 
@@ -418,7 +434,13 @@ sub run_tests {
     $self->dba($original_dba);
 
   } else {
-    $self->tests(@_);
+    SKIP: {
+      my ($skip, $skip_reason) = $self->skip_tests(@_);
+
+      plan skip_all => $skip_reason if $skip;
+
+      $self->tests(@_);
+    }
   }
 }
 
@@ -428,9 +450,6 @@ sub skip_datacheck {
   my ($skip, $skip_reason) = $self->verify_db_type();
   if (!$skip) {
     ($skip, $skip_reason) = $self->check_history();
-    if (!$skip) {
-      ($skip, $skip_reason) = $self->skip_tests(@_);
-    }
   }
 
   return ($skip, $skip_reason);
@@ -457,23 +476,25 @@ sub check_history {
 
   my $run_required = 1;
 
-  if ($self->_passed && $self->_started) {
-    my $tables_in_db = $self->table_dates();
-    my @tables_to_check;
+  if (!$self->force) {
+    if ($self->_passed && $self->_started) {
+      my $tables_in_db = $self->table_dates();
+      my @tables_to_check;
 
-    # If no tables are specified, check them all.
-    if (scalar(@{$self->tables}) == 0) {
-      @tables_to_check = keys %$tables_in_db;
-    } else {
-      @tables_to_check = @{$self->tables};
-    }
+      # If no tables are specified, check them all.
+      if (scalar(@{$self->tables}) == 0) {
+        @tables_to_check = keys %$tables_in_db;
+      } else {
+        @tables_to_check = @{$self->tables};
+      }
 
-    $run_required = 0;
-    foreach my $table_name (@tables_to_check) {
-      if (exists $$tables_in_db{$table_name}) {
-        if ($self->_started < $$tables_in_db{$table_name}) {
-          $run_required = 1;
-          last;
+      $run_required = 0;
+      foreach my $table_name (@tables_to_check) {
+        if (exists $$tables_in_db{$table_name}) {
+          if ($self->_started < $$tables_in_db{$table_name}) {
+            $run_required = 1;
+            last;
+          }
         }
       }
     }
