@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ControlledMetaKeys',
   DESCRIPTION => 'Ensure that database has mandatory and permitted meta keys',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['core_handover', 'funcgen_handover', 'variation_handover'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   TABLES      => ['meta']
 };

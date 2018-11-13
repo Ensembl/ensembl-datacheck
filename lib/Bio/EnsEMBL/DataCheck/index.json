@@ -100,7 +100,11 @@
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
-      "groups" : [],
+      "groups" : [
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
+      ],
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
    },
@@ -117,7 +121,9 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that database has mandatory and permitted meta keys",
       "groups" : [
-         "core_handover"
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
       ],
       "name" : "ControlledMetaKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
@@ -135,7 +141,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
       "groups" : [
-         "production_db"
+         "production_db",
+         "variation_handover"
       ],
       "name" : "ControlledTablesVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
@@ -210,14 +217,21 @@
    "ForeignKeys" : {
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships",
-      "groups" : [],
+      "groups" : [
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
+      ],
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
    },
    "ForeignKeysMultiDB" : {
       "datacheck_type" : "critical",
       "description" : "Check for broken foreign key relationships between tables from multiple databases",
-      "groups" : [],
+      "groups" : [
+         "funcgen_handover",
+         "variation_handover"
+      ],
       "name" : "ForeignKeysMultiDB",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysMultiDB"
    },
@@ -398,7 +412,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that the schema type meta key matches the DB name",
       "groups" : [
-         "core_handover"
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
       ],
       "name" : "SchemaType",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaType"
@@ -407,7 +423,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that the schema version meta_key matches the DB name",
       "groups" : [
-         "core_handover"
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
