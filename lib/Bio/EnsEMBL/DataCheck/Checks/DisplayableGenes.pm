@@ -1,0 +1,101 @@
+=head1 LICENSE
+
+Copyright [2018] EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the 'License');
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an 'AS IS' BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+=cut
+
+package Bio::EnsEMBL::DataCheck::Checks::DisplayableGenes;
+
+use warnings;
+use strict;
+
+use Moose;
+use Test::More;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+
+extends 'Bio::EnsEMBL::DataCheck::DbCheck';
+
+use constant {
+  NAME           => 'DisplayableGenes',
+  DESCRIPTION    => 'Check that genes are displayable'
+    . 'have web_data attached to their analysis.',
+  GROUPS         => ['core_handover'],
+  DATACHECK_TYPE => 'advisory',
+  DB_TYPES       => ['core', 'otherfeatures', 'rnaseq', 'cdna'],
+  TABLES         => ['gene', 'analysis', 'analysis_description']
+};
+
+
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = 'SELECT COUNT(*) FROM analysis_description';
+
+  if (! sql_count($self->dba, $sql) ) {
+    return (1, 'No analysis_description');
+  }
+}
+
+# SELECT sr.name FROM
+#      assembly a INNER JOIN
+#      seq_region sr on a.cmp_seq_region_id = sr.seq_region_id INNER JOIN
+#      coord_system cs on sr.coord_system_id = cs.coord_system_id
+#    WHERE
+#      cs.name = 'contig' AND
+#      cs.version IS NOT NULL AND
+#      species_id = $species_id
+#    GROUP BY sr.name
+#    HAVING COUNT(*) > 1
+
+# SELECT COUNT(gene_id) FROM gene INNER JOIN analysis USING (analysis_id) INNER JOIN analysis_description USING (analysis_id) WHERE analysis_description.displayable = 0
+
+
+sub tests {
+  my ($self) = @_;
+
+  my $desc_1 = 'All genes have displayable analysis.';
+  my $diag_1 = 'Undisplayed analysis';
+  my $sql_1 = q/
+      SELECT analysis.logic_name
+        FROM gene
+  INNER JOIN analysis USING (analysis_id)
+  INNER JOIN analysis_description USING (analysis_id)
+       WHERE analysis_description.displayable = 0
+    GROUP BY analysis.logic_name
+      HAVING COUNT(*) > 1
+    /;
+
+  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
+
+  my $desc_2 = 'All genes have associated web_data.';
+  my $diag_2 = 'web_data is not set.';
+  my $sql_2 = q/
+      SELECT analysis.logic_name
+        FROM gene
+  INNER JOIN analysis USING (analysis_id)
+  INNER JOIN analysis_description USING (analysis_id)
+       WHERE analysis_description.web_data is NULL
+    GROUP BY analysis.logic_name
+      HAVING COUNT(*) > 1
+    /;
+
+  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
+
+}
+
+
+1;
+
