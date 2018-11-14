@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
     NAME        => 'AltAlleleGroup',
-    DESCRIPTION => 'Ensure that there are no alt_allele_group members that contains more than 1 gene on the primary assesmbly',
+    DESCRIPTION => 'Ensure that there are no alt_allele_group members that contains more than a single gene in the primary assembly',
     GROUPS      => [ 'core_handover' ],
     DB_TYPES    => [ 'core' ]
 };
@@ -52,8 +52,8 @@ sub tests {
         HAVING cnt > 1
     /;
 
-    my $diag_allele_group_check = 'Row with non-matching seq_regions for AltAllele group';
-    my $desc_allele_group_check = 'Alternative Allele mapping';
+    my $diag_allele_group_check = 'Aleternative allele group members contains more than 1 gene in the primary assembly';
+    my $desc_allele_group_check = 'Single Gene in primary assembly';
 
     is_rows_zero($self->dba, $sql_allele_group_check, $desc_allele_group_check, $diag_allele_group_check);
 }
