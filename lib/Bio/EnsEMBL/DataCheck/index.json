@@ -1,4 +1,11 @@
 {
+   "AltAllele" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure altallele group members all map back to the same",
+      "groups" : [],
+      "name" : "AltAllele",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAllele"
+   },
    "Archive" : {
       "datacheck_type" : "critical",
       "description" : "Gene archive table is up to date.",
