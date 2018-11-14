@@ -2,7 +2,9 @@
    "AltAllele" : {
       "datacheck_type" : "critical",
       "description" : "Ensure altallele group members all map back to the same",
-      "groups" : [],
+      "groups" : [
+         "core_handover"
+      ],
       "name" : "AltAllele",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAllele"
    },
