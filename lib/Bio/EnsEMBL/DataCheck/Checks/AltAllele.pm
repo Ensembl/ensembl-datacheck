@@ -39,7 +39,7 @@ use constant {
 sub tests {
     my ($self) = @_;
 
-    my $sql_allelle_group_check = qq/
+    my $sql_allele_check = qq/
         SELECT *
         FROM (
             SELECT  aa.alt_allele_group_id,
@@ -66,15 +66,15 @@ sub tests {
         WHERE length(seq_regions_check) - length(replace(seq_regions_check, ';', '')) + 1 > 1;
     /;
 
-    my $diag_allelle_group_check = 'Row with non-matching seq_regions for AltAllele group';
-    my $desc_allelle_group_check = 'Alternative Allele mapping';
+    my $diag_allele_check = 'Row with non-matching seq_regions for AltAllele group';
+    my $desc_allele_check = 'Alternative Allele mapping';
 
     my $helper = $self->dba->dbc->sql_helper;
 
     $helper->execute(q/
         SET SESSION group_concat_max_len = 2048;
     /);
-    is_rows_zero($self->dba, $sql_allelle_group_check, $desc_allelle_group_check, $diag_allelle_group_check);
+    is_rows_zero($self->dba, $sql_allele_check, $desc_allele_check, $diag_allele_check);
 
     # Check that no 'PAR' exc_type is present in the alt_alleles
     my $sql_allele_check_par_type = q/
@@ -88,10 +88,10 @@ sub tests {
         GROUP BY alt_allele_group_id
     /;
 
-    my $diag_allelle_check_par_type = 'AltAllele group exception with "PAR" type';
-    my $desc_allelle_check_par_type = '"PAR" assembly exception type in AltAllele';
+    my $diag_check_par_type = 'AltAllele group exception with "PAR" type';
+    my $desc_check_par_type = '"PAR" assembly exception type in AltAllele';
 
-    is_rows_zero($self->dba, $sql_allele_check_par_type, $desc_allelle_check_par_type, $diag_allelle_check_par_type);
+    is_rows_zero($self->dba, $sql_allele_check_par_type, $desc_check_par_type, $diag_check_par_type);
 }
 
 1;
