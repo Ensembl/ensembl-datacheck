@@ -1,7 +1,7 @@
 {
    "AltAllele" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure Alternative Allele group members all map back to the same base seq region",
+      "description" : "Ensure alt_allele group members all map back to the same chromosome",
       "groups" : [
          "core_handover"
       ],
@@ -10,7 +10,7 @@
    },
    "AltAlleleGroup" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure there are no alt_allele_group members that contains more than one gene in the primary assembly",
+      "description" : "Ensure that no alt_allele_group has more than one gene from the primary assembly",
       "groups" : [
          "core_handover"
       ],

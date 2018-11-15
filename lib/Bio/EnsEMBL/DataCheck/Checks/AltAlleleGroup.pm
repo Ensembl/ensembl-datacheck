@@ -23,39 +23,36 @@ use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-    NAME        => 'AltAlleleGroup',
-    DESCRIPTION => 'Ensure there are no alt_allele_group members that contains more than one gene in the primary assembly',
-    GROUPS      => [ 'core_handover' ],
-    DB_TYPES    => [ 'core' ]
+  NAME        => 'AltAlleleGroup',
+  DESCRIPTION => 'Ensure that no alt_allele_group has more than one gene from the primary assembly',
+  GROUPS      => ['core_handover'],
+  DB_TYPES    => ['core']
 };
 
 sub tests {
-    my ($self) = @_;
+  my ($self) = @_;
 
-    my $sql_allele_group_check = qq/
-        SELECT  COUNT(alt_allele_group_id) AS cnt,
-                alt_allele_group_id
-        FROM (
-            SELECT  aa.*,
-                    ae.exc_type
-            FROM alt_allele aa
-            LEFT JOIN gene g USING (gene_id)
-            LEFT JOIN assembly_exception ae USING (seq_region_id)
-            WHERE exc_type IS NULL
-        ) AS aaexc
-        GROUP BY    alt_allele_group_id
-        HAVING cnt > 1
-    /;
+  my $aaga = $self->dba->get_adaptor('AltAlleleGroup');
+  my $aags = $aaga->fetch_all();
 
-    my $diag_allele_group_check = 'Aleternative allele group members contains more than 1 gene in the primary assembly';
-    my $desc_allele_group_check = 'Single Gene in primary assembly';
+  my @multiple_reference = ();
 
-    is_rows_zero($self->dba, $sql_allele_group_check, $desc_allele_group_check, $diag_allele_group_check);
+  foreach my $aag (@$aags) {
+    my $genes = $aag->get_all_Genes();
+    my $reference = 0;
+    foreach (@$genes) {
+      $reference += $_->slice->is_reference;
+    }
+    push @multiple_reference, $aag->dbID if $reference > 1;
+  }
+
+  my $desc = 'No more than one gene in primary assembly linked to assembly groups';
+  is(scalar(@multiple_reference), 0, $desc) or
+    diag('AltAlleleGroup IDs: ' . join(',', @multiple_reference));
 }
 
 1;
