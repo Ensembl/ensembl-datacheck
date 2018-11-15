@@ -16,32 +16,34 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::MetaTable;
+package Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys;
 
 use warnings;
 use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'MetaTable',
-  DESCRIPTION => 'Ensure that meta table has valid meta_keys',
+  NAME        => 'ControlledMetaKeys',
+  DESCRIPTION => 'Ensure that database has mandatory and permitted meta keys',
+  GROUPS      => ['core_handover', 'funcgen_handover', 'variation_handover'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
-  TABLES      => ['meta'],
-  PER_DB      => 1,
+  TABLES      => ['meta']
 };
 
 sub tests {
   my ($self) = @_;
 
+  my $species_id = $self->dba->species_id;
   my $group = $self->dba->group;
 
   my $sql = qq/
-    SELECT meta_key, COUNT(*) FROM meta GROUP BY meta_key
+    SELECT meta_key, COUNT(*) FROM meta
+    WHERE species_id = $species_id OR species_id IS NULL
+    GROUP BY meta_key
   /;
   my $helper = $self->dba->dbc->sql_helper;
   my %meta_keys = %{ $helper->execute_into_hash(-SQL => $sql) };
@@ -51,7 +53,8 @@ sub tests {
     FROM meta_key
     WHERE FIND_IN_SET('$group', db_type) AND is_current = 1
   /;
-  my $prod_helper = $self->get_prod_dba->dbc->sql_helper;
+  my $prod_dba    = $self->get_dba('multi', 'production');
+  my $prod_helper = $prod_dba->dbc->sql_helper;
   my %prod_keys   = %{ $prod_helper->execute_into_hash(-SQL => $prod_sql) };
 
   foreach my $meta_key (keys %meta_keys) {
@@ -66,33 +69,14 @@ sub tests {
     }
   }
 
-  my $desc_1 = 'DB-wide meta keys have NULL species_id';
-  my $diag_1 = 'Non-NULL species_id';
-  my $sql_1  = qq/
-    SELECT
-      meta_key, species_id FROM meta
-    WHERE
-      meta_key IN ('patch', 'schema_type', 'schema_version') AND
-      species_id IS NOT NULL
-  /;
-  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
-
-  my $desc_2 = 'Species-related meta keys have non-NULL species_id';
-  my $diag_2 = 'NULL species_id';
-  my $sql_2  = qq/
-    SELECT
-      meta_key, species_id FROM meta
-    WHERE
-      meta_key NOT IN ('patch', 'schema_type', 'schema_version') AND
-      species_id IS NULL
-  /;
-  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
-
   if ($self->dba->group eq 'variation') {
     $self->variation_specific_keys();
   }
 }
 
+# I think this needs to be generalised to all species, and put somewhere
+# else. (There's a similar HC for core db sample.* keys that hasn't been
+# datachecked yet. But leaving here so it doesn't fall through the cracks.
 sub variation_specific_keys {
   my ($self) = @_;
 

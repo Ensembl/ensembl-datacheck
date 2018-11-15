@@ -121,6 +121,7 @@ use Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor;
 use Bio::EnsEMBL::Variation::DBSQL::DBAdaptor;
 use Bio::EnsEMBL::Registry;
 
+use DBI;
 use Getopt::Long qw(:config no_ignore_case);
 use Pod::Usage;
 
@@ -173,12 +174,28 @@ if ($dbname) {
 
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
 
+  my $species;
+  if ($dbtype eq 'compara') {
+    $species = 'Multi';
+  } else {
+    my $sql = q/
+      SELECT meta_value FROM meta
+      WHERE meta_key = "species.production_name" AND species_id = 1
+    /;
+    my $dsn  = "DBI:mysql:database=$dbname;host=$host;port=$port";
+    my %attr = ( PrintError => 0, RaiseError => 1 );
+    my $dbh  = DBI->connect($dsn, $user, $pass, \%attr);
+    my $vals = $dbh->selectcol_arrayref($sql);
+    $species = $vals->[0];
+  }
+
   $dba = $adaptor->new(
     -host            => $host,
     -port            => $port,
     -user            => $user,
     -pass            => $pass,
     -dbname          => $dbname,
+    -species         => $species,
     -group           => $dbtype,
     -multispecies_db => $multispecies_db,
   );

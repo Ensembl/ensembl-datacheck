@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SchemaVersion;
+package Bio::EnsEMBL::DataCheck::Checks::SpeciesMeta;
 
 use warnings;
 use strict;
@@ -27,29 +27,32 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'SchemaVersion',
-  DESCRIPTION => 'Check that the schema version meta_key matches the DB name',
-  GROUPS      => ['core_handover', 'funcgen_handover', 'variation_handover'],
-  DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
-  TABLES      => ['meta'],
-  PER_DB      => 1
+  NAME        => 'SpeciesMeta',
+  DESCRIPTION => 'Check the presence and format of species-related meta keys',
+  GROUPS      => ['core_handover'],
+  DB_TYPES    => ['core'],
+  TABLES      => ['meta']
 };
 
 sub tests {
   my ($self) = @_;
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
-  my $schema_version = $mca->schema_version;
 
-  my $db_version;
-  if ($self->dba->group eq 'compara') {
-    ($db_version) = $self->dba->dbc->dbname =~ /(\d+)$/;
-  } else {
-    ($db_version) = $self->dba->dbc->dbname =~ /(\d+)_\d+$/;
+  my %formats = (
+    'species.division'        => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates)',
+    'species.production_name' => '[a-z0-9]+_[a-z0-9_]+',
+    'species.scientific_name' => '[A-Z][a-z0-9]+ [\w \(\)]+',
+    'species.url'             => '[A-Z][a-z0-9]+_[A-Za-z0-9_]+',
+  );
+
+  foreach my $meta_key (sort keys %formats) {
+    my $desc   = "$meta_key has correct format";
+    my $format = $formats{$meta_key};
+    my $value  = $mca->single_value_by_key($meta_key);
+    like($value, qr/^$format$/, $desc);
   }
-
-  my $desc = "Meta key schema_version matches version in database name";
-  is($schema_version, $db_version, $desc);
 }
 
 1;
+

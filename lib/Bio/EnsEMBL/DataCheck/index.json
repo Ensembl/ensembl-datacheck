@@ -79,6 +79,15 @@
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
    },
+   "ChromosomesAnnotated" : {
+      "datacheck_type" : "critical",
+      "description" : "Check whether chromosomal seq_regions have appropriate attribute.",
+      "groups" : [
+         "assembly"
+      ],
+      "name" : "ChromosomesAnnotated",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
+   },
    "CompareBiotype" : {
       "datacheck_type" : "critical",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
@@ -91,9 +100,33 @@
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
-      "groups" : [],
+      "groups" : [
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
+      ],
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
+   },
+   "ControlledAnalysis" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that analysis descriptions and display settings are correct",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "ControlledAnalysis",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis"
+   },
+   "ControlledMetaKeys" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that database has mandatory and permitted meta keys",
+      "groups" : [
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
+      ],
+      "name" : "ControlledMetaKeys",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
    },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
@@ -108,7 +141,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
       "groups" : [
-         "production_db"
+         "production_db",
+         "variation_handover"
       ],
       "name" : "ControlledTablesVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
@@ -183,14 +217,21 @@
    "ForeignKeys" : {
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships",
-      "groups" : [],
+      "groups" : [
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
+      ],
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
    },
    "ForeignKeysMultiDB" : {
       "datacheck_type" : "critical",
       "description" : "Check for broken foreign key relationships between tables from multiple databases",
-      "groups" : [],
+      "groups" : [
+         "funcgen_handover",
+         "variation_handover"
+      ],
       "name" : "ForeignKeysMultiDB",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysMultiDB"
    },
@@ -239,6 +280,15 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "Karyotype" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check whether karyotype data exists.",
+      "groups" : [
+         "assembly"
+      ],
+      "name" : "Karyotype",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Karyotype"
+   },
    "LRG" : {
       "datacheck_type" : "critical",
       "description" : "Check that LRG features and seq_regions are correctly associated.",
@@ -268,12 +318,14 @@
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
    },
-   "MetaTable" : {
+   "MetaKeyLevel" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that meta table has valid meta_keys",
-      "groups" : [],
-      "name" : "MetaTable",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaTable"
+      "description" : "Ensure that meta_keys are correctly assigned at species or database level",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyLevel",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyLevel"
    },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
@@ -360,7 +412,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that the schema type meta key matches the DB name",
       "groups" : [
-         "core_handover"
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
       ],
       "name" : "SchemaType",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaType"
@@ -369,7 +423,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that the schema version meta_key matches the DB name",
       "groups" : [
-         "core_handover"
+         "core_handover",
+         "funcgen_handover",
+         "variation_handover"
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
@@ -428,6 +484,15 @@
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
+   },
+   "SpeciesMeta" : {
+      "datacheck_type" : "critical",
+      "description" : "Check the presence and format of species-related meta keys",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "SpeciesMeta",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesMeta"
    },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",

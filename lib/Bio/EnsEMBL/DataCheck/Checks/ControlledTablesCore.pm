@@ -38,7 +38,8 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $helper = $self->dba->dbc->sql_helper;
-  my $prod_helper = $self->get_prod_dba->dbc->sql_helper;
+  my $prod_dba = $self->get_dba('multi', 'production');
+  my $prod_helper = $prod_dba->dbc->sql_helper;
 
   foreach my $table ( @{$self->tables} ) {
     my $sql  = "SELECT * FROM $table";

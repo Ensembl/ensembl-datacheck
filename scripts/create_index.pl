@@ -77,4 +77,8 @@ $manager_params{index_file}    = $index_file    if defined $index_file;
 
 my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
 
-$manager->write_index();
+my $index = $manager->write_index();
+
+if (defined $index) {
+  say 'Index written';
+}

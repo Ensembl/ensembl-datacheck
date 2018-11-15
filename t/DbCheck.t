@@ -55,7 +55,7 @@ can_ok($module, qw(dba dba_species_only registry_file server_uri registry old_se
 
 diag('Methods');
 can_ok($module, qw(
-  species get_dba get_dna_dba get_prod_dba get_old_dba 
+  species get_dba get_dna_dba get_old_dba 
   skip_datacheck run_datacheck skip_tests tests run
   verify_db_type check_history table_dates));
 

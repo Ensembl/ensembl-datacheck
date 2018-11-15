@@ -30,6 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ForeignKeysMultiDB',
+  GROUPS      => ['funcgen_handover', 'variation_handover'],
   DESCRIPTION => 'Check for broken foreign key relationships between tables from multiple databases',
   DB_TYPES    => ['funcgen', 'variation']
 };
@@ -68,6 +69,8 @@ sub variation_funcgen_fk {
 
   SKIP: {
     my $funcgen_dba = $self->get_dba(undef, 'funcgen');
+
+    skip 'No funcgen database', 1 unless defined $funcgen_dba;
 
     my $sql = q/
       SELECT COUNT(name) FROM regulatory_build 
