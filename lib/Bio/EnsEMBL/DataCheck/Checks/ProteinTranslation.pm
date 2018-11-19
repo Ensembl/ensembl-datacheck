@@ -37,34 +37,47 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $ba = $self->dba->get_adaptor('Biotype');
-  my $biotype_objs = $ba->fetch_all_by_group_object_db_type(
-    'coding', 'transcript', $self->dba->group
-  );
-  my @biotypes = map { $_->name } @$biotype_objs;
-
+  # We don't use the 'coding' biotype group, because that contains
+  # plenty of things which are nominally coding, but do not have
+  # a valid translation. So restrict to the protein_coding biotype.
   my $ta = $self->dba->get_adaptor('Transcript');
-  my $transcripts = $ta->fetch_all_by_biotype(\@biotypes); 
+  my $transcripts = $ta->fetch_all_by_biotype(['protein_coding']); 
 
-  my $invalid_translations = 0;
+  my @missing_translation = ();
+  my @zero_length = ();
+  my @internal_stop = ();
 
   for my $transcript (@$transcripts) {
     my $seq_obj = $transcript->translate();
     if (defined $seq_obj) {
       my $aa_seq = $seq_obj->seq();
 
+      if (length($aa_seq) == 0) {
+        my $msg = $transcript->stable_id." has zero-length translation";
+        push @zero_length, $msg;
+      }
+
       if ($aa_seq =~ /^X+$/ || $aa_seq =~ /\*/) {
-        $invalid_translations++;
-        diag($transcript->stable_id." has invalid translation: $aa_seq");
+        my $msg = $transcript->stable_id." has invalid translation: $aa_seq";
+        push @internal_stop, $msg;
       }
     } else {
-      $invalid_translations++;
-      diag($transcript->stable_id." has no translation");
+      my $msg = $transcript->stable_id." has no translation";
+      push @missing_translation, $msg;
     }
   }
 
-  my $desc = "Protein-coding genes have valid translations";
-  is($invalid_translations, 0, $desc);
+  my $desc_1 = "Protein-coding genes have translations";
+  is(scalar(@missing_translation), 0, $desc_1) ||
+    diag(join("\n", @missing_translation));
+
+  my $desc_2 = "Amino acid sequences have non-zero length";
+  is(scalar(@zero_length), 0, $desc_2) ||
+    diag(join("\n", @zero_length));
+
+  my $desc_3 = "Protein-coding genes have no internal stop codons";
+  is(scalar(@internal_stop), 0, $desc_3) ||
+    diag(join("\n", @internal_stop));
 }
 
 1;
