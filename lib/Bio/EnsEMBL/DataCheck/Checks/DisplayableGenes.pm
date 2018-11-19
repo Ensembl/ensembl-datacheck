@@ -39,34 +39,10 @@ use constant {
 };
 
 
-sub skip_tests {
-  my ($self) = @_;
-
-  my $sql = 'SELECT COUNT(*) FROM analysis_description';
-
-  if (! sql_count($self->dba, $sql) ) {
-    return (1, 'No analysis_description');
-  }
-}
-
-# SELECT sr.name FROM
-#      assembly a INNER JOIN
-#      seq_region sr on a.cmp_seq_region_id = sr.seq_region_id INNER JOIN
-#      coord_system cs on sr.coord_system_id = cs.coord_system_id
-#    WHERE
-#      cs.name = 'contig' AND
-#      cs.version IS NOT NULL AND
-#      species_id = $species_id
-#    GROUP BY sr.name
-#    HAVING COUNT(*) > 1
-
-# SELECT COUNT(gene_id) FROM gene INNER JOIN analysis USING (analysis_id) INNER JOIN analysis_description USING (analysis_id) WHERE analysis_description.displayable = 0
-
-
 sub tests {
   my ($self) = @_;
 
-  my $desc_1 = 'All genes have displayable analysis.';
+  my $desc_1 = 'All genes have displayable analysis';
   my $diag_1 = 'Undisplayed analysis';
   my $sql_1 = q/
       SELECT analysis.logic_name
