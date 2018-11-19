@@ -512,6 +512,33 @@
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
    },
+   "UnlocatedTranscripts" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that transcripts are linked to sequences",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "UnlocatedTranscripts",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnlocatedTranscripts"
+   },
+   "ValidTranscripts" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that transcripts have translations, if appropriate",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "ValidTranscripts",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranscripts"
+   },
+   "ValidTranslations" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that translations have appropriate properties",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "ValidTranslations",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranslations"
+   },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
       "description" : "Check that xrefs are only attached to one feature type.",
