@@ -91,10 +91,11 @@ sub core_fk {
   # in a "foreign_keys.sql" file.
 
   # Cases in which we want to check for the reverse direction of the FK constraint
-  fk($self->dba, 'exon',            'exon_id',            'exon_transcript');
-  fk($self->dba, 'transcript',      'transcript_id',      'exon_transcript');
-  fk($self->dba, 'gene',            'gene_id',            'transcript');
-  fk($self->dba, 'mapping_session', 'mapping_session_id', 'stable_id_event');
+  fk($self->dba, 'exon',                  'exon_id',                  'exon_transcript');
+  fk($self->dba, 'transcript',            'transcript_id',            'exon_transcript');
+  fk($self->dba, 'gene',                  'gene_id',                  'transcript');
+  fk($self->dba, 'prediction_transcript', 'prediction_transcript_id', 'prediction_exon');
+  fk($self->dba, 'mapping_session',       'mapping_session_id',       'stable_id_event');
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
   fk($self->dba, 'object_xref', 'ensembl_id', 'gene',        'gene_id',        'ensembl_object_type = "Gene"');
