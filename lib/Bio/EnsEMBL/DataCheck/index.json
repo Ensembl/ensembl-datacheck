@@ -289,6 +289,15 @@
       "name" : "GeneGC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneGC"
    },
+   "GeneTranscriptBounds" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that gene and transcript bounds are consistent",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "GeneTranscriptBounds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTranscriptBounds"
+   },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
       "description" : "Check that genome statistics are present and correct",
