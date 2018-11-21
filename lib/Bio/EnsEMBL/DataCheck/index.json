@@ -207,7 +207,9 @@
    "ExonStrandOrder" : {
       "datacheck_type" : "critical",
       "description" : "Checks all exon of a gene are on the same strand and in the correct order in their transcript.",
-      "groups" : [],
+      "groups" : [
+         "core_handover"
+      ],
       "name" : "ExonStrandOrder",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonStrandOrder"
    },
