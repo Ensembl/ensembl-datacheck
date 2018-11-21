@@ -227,7 +227,7 @@
       "datacheck_type" : "critical",
       "description" : "Checks if features lie within bounds of seq_region i.e. start >=0 and end <= seq_region length.",
       "groups" : [
-         "corelike_handover"
+         "funcgen_handover"
       ],
       "name" : "FeaturePosition",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeaturePosition"
