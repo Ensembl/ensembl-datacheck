@@ -75,7 +75,6 @@ sub tests {
 	          USING (attrib_type_id)
 	          WHERE code='trans_spliced')
     ORDER BY et.transcript_id, et.`rank`
-    LIMIT 10
     /;
   my $lastTranscriptID = -1;
   my $lastExonStart = -1;
@@ -85,19 +84,34 @@ sub tests {
   my $lastExonRank = 0;
 
   my @genes_exons_strand = @{$self->dba->dbc->sql_helper->execute_simple(-SQL => $sql_strand_order, -CALLBACK => $mapper)};
+
   foreach my $strand (@genes_exons_strand) {
-    print $$strand{gene_id} . "  --- \n";
     if ($$strand{transcript_id} == $lastTranscriptID) {
       if ($lastExonStrand < -1) {
-        $lastExonStrand = $$strand{seq_region_strand};
-        $lastExonStart = $$strand{exon_strand};
+        $lastExonStrand = $$strand{exon_strand};
+        $lastExonStart = $$strand{exon_start};
         $lastExonEnd = $$strand{exon_end};
         $lastExonID = $$strand{exon_id};
         $lastExonRank = $$strand{exon_rank};
       }
       else {
-
+        is($$strand{exon_strand}, $lastExonStrand, "Exons in transcript $$strand{transcript_id} on the same strands");
+        is($$strand{exon_strand}, $$strand{transcript_strand}, "Exon/Strand $$strand{exon_id}/$$strand{exon_strand} | Transcript/Strand $$strand{transcript_id}/$$strand{transcript_strand}");
+        if ($$strand{exon_strand} == 1) {
+          cmp_ok($lastExonEnd, "<=", $$strand{exon_start}, "Exons $lastExonID (end $lastExonEnd) and $$strand{exon_id} (start $$strand{exon_start}) overlap");
+        }
+        elsif ($$strand{exon_strand} == -1) {
+          cmp_ok($lastExonStart, ">=", $$strand{exon_end}, "Exons $lastExonID (start $lastExonEnd) and $$strand{exon_id} (end $$strand{exon_start}) overlap");
+        }
       }
+    }
+    else {
+      $lastTranscriptID = $$strand{transcript_id};
+      $lastExonStrand = -2;
+      $lastExonStart = -1;
+      $lastExonEnd = -1;
+      $lastExonID = -1;
+      $lastExonRank = 0;
     }
   }
 
