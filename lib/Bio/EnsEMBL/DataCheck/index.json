@@ -204,13 +204,6 @@
       "name" : "ExonRank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonRank"
    },
-   "ExonStrandOrder" : {
-      "datacheck_type" : "critical",
-      "description" : "Checks all exon of a gene are on the same strand and in the correct order in their transcript.",
-      "groups" : [],
-      "name" : "ExonStrandOrder",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonStrandOrder"
-   },
    "ExperimentHasFeatureSet" : {
       "datacheck_type" : "critical",
       "description" : "Check that every distinct experiment, epigenome and feature_type combination is linked to a feature_set",
