@@ -81,6 +81,10 @@ sub tests {
 
   my @genes_exons_strand = @{$self->dba->dbc->sql_helper->execute_simple(-SQL => $sql_strand_order, -CALLBACK => $mapper)};
 
+  my @exons_not_on_same_strands;
+  my @exon_transcript_different_strand;
+  my @exons_overlaps;
+
   foreach my $strand (@genes_exons_strand) {
     if ($$strand{transcript_id} == $lastTranscriptID) {
       if ($lastExonStrand < -1) {
@@ -91,13 +95,21 @@ sub tests {
         $lastExonRank = $$strand{exon_rank};
       }
       else {
-        is($$strand{exon_strand}, $lastExonStrand, "Exons in transcript $$strand{transcript_id} on the same strands");
-        is($$strand{exon_strand}, $$strand{transcript_strand}, "Exon/Strand $$strand{exon_id}/$$strand{exon_strand} | Transcript/Strand $$strand{transcript_id}/$$strand{transcript_strand}");
+        if ($$strand{exon_strand} != $lastExonStrand) {
+          push(@exons_not_on_same_strands, "Exons in transcript $$strand{transcript_id} not on the same strands");
+        }
+        if ($$strand{exon_strand} != $$strand{transcript_strand}) {
+          push(@exon_transcript_different_strand, "Exon/Strand $$strand{exon_id}/$$strand{exon_strand} <> Transcript/Strand $$strand{transcript_id}/$$strand{transcript_strand}" );
+        }
         if ($$strand{exon_strand} == 1) {
-          cmp_ok($lastExonEnd, "<=", $$strand{exon_start}, "Exons $lastExonID (end $lastExonEnd) and $$strand{exon_id} (start $$strand{exon_start}) overlap");
+          if ($lastExonEnd >$$strand{exon_start}){
+            push(@exons_overlaps, "Exons $lastExonID (end $lastExonEnd) and $$strand{exon_id} (start $$strand{exon_start}) overlap");
+          }
         }
         elsif ($$strand{exon_strand} == -1) {
-          cmp_ok($lastExonStart, ">=", $$strand{exon_end}, "Exons $lastExonID (start $lastExonEnd) and $$strand{exon_id} (end $$strand{exon_start}) overlap");
+          if ($lastExonStart < $$strand{exon_end}) {
+            push(@exons_overlaps, "Exons $lastExonID (start $lastExonEnd) and $$strand{exon_id} (end $$strand{exon_start}) overlap");
+          }
         }
       }
     }
@@ -110,6 +122,13 @@ sub tests {
       $lastExonRank = 0;
     }
   }
+
+  my $desc_1 = 'Exons in same transcripts on same strands';
+  is(scalar(@exons_not_on_same_strands), 0, $desc_1);
+  my $desc_2 = 'Same exons and transcript strands';
+  is(scalar(@exon_transcript_different_strand), 0, $desc_2);
+  my $desc_3 = 'Exons do not overlaps';
+  is(scalar(@exons_overlaps), 0, $desc_3);
 
 }
 
