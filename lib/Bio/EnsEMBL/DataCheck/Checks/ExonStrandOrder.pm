@@ -46,9 +46,7 @@ sub tests {
         exon_start        => $$row[4],
         exon_end          => $$row[5],
         exon_strand       => $$row[6],
-        exon_rank         => $$row[7],
-        gene_stable_id    => $$row[8],
-        trans_stable_id   => $$row[9]
+        exon_rank         => $$row[7]
     );
     return \%row;
   };
@@ -61,9 +59,7 @@ sub tests {
             e.seq_region_start,
             e.seq_region_end,
             e.seq_region_strand,
-            et.`rank`,
-            g.stable_id,
-            tr.stable_id
+            et.`rank`
     FROM    gene g
     INNER JOIN transcript tr USING (gene_id)
     INNER JOIN exon_transcript et  USING (transcript_id)
