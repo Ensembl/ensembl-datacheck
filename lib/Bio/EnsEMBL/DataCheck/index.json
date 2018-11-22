@@ -60,6 +60,13 @@
       "name" : "AssemblyMapping",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyMapping"
    },
+   "CheckRepeatsDust" : {
+      "datacheck_type" : "advisory",
+      "groups" : [],
+      "name" : "CheckRepeatsDust",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckRepeatsDust",
+      "description" : "dust repeats exist"
+   },
    "AssemblySeqregion" : {
       "datacheck_type" : "critical",
       "description" : "assembly and seq_region table are consistent.",
