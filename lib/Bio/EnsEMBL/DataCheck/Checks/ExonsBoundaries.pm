@@ -16,19 +16,20 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::ExonStrandOrder;
+package Bio::EnsEMBL::DataCheck::Checks::ExonsBoundaries;
 
 use warnings;
 use strict;
 
 use Moose;
 use Test::More;
+use List::Util qw[min max];
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-    NAME        => 'ExonStrandOrder',
-    DESCRIPTION => 'Checks all exon of a gene are on the same strand and in the correct order in their transcript.',
+    NAME        => 'ExonsBoundaries',
+    DESCRIPTION => 'Checks exon boundaries in their transcript (same strand / correct order / min start / max end)',
     DB_TYPES    => [ 'core' ],
     GROUPS      => [ 'core_handover' ],
 };
@@ -42,11 +43,13 @@ sub tests {
         gene_id           => $$row[0],
         transcript_id     => $$row[1],
         transcript_strand => $$row[2],
-        exon_id           => $$row[3],
-        exon_start        => $$row[4],
-        exon_end          => $$row[5],
-        exon_strand       => $$row[6],
-        exon_rank         => $$row[7]
+        transcript_start  => $$row[3],
+        transcript_end    => $$row[4],
+        exon_id           => $$row[5],
+        exon_start        => $$row[6],
+        exon_end          => $$row[7],
+        exon_strand       => $$row[8],
+        exon_rank         => $$row[9]
     );
     return \%row;
   };
@@ -55,6 +58,8 @@ sub tests {
     SELECT  g.gene_id,
             tr.transcript_id,
             tr.seq_region_strand,
+            tr.seq_region_start,
+            tr.seq_region_end,
             e.exon_id,
             e.seq_region_start,
             e.seq_region_end,
@@ -72,18 +77,25 @@ sub tests {
 	          WHERE code='trans_spliced')
     ORDER BY et.transcript_id, et.`rank`
     /;
+
+
   my $lastTranscriptID = -1;
   my $lastExonStart = -1;
   my $lastExonEnd = -1;
   my $lastExonStrand = -2;
   my $lastExonID = -1;
   my $lastExonRank = 0;
+  my $minExonStart = -1;
+  my $maxExonEnd = 0;
+  my $lastTranscriptStart = -1;
+  my $lastTranscriptEnd = 0;
 
   my @genes_exons_strand = @{$self->dba->dbc->sql_helper->execute_simple(-SQL => $sql_strand_order, -CALLBACK => $mapper)};
 
   my @exons_not_on_same_strands;
   my @exon_transcript_different_strand;
   my @exons_overlaps;
+  my @exon_transcript_start_end;
 
   foreach my $strand (@genes_exons_strand) {
     if ($$strand{transcript_id} == $lastTranscriptID) {
@@ -93,16 +105,20 @@ sub tests {
         $lastExonEnd = $$strand{exon_end};
         $lastExonID = $$strand{exon_id};
         $lastExonRank = $$strand{exon_rank};
+        $minExonStart = $$strand{transcript_start};
+        $maxExonEnd = $$strand{transcript_end};
+        $lastTranscriptEnd = $$strand{transcript_end};
+        $lastTranscriptStart = $$strand{transcript_start};
       }
       else {
         if ($$strand{exon_strand} != $lastExonStrand) {
           push(@exons_not_on_same_strands, "Exons in transcript $$strand{transcript_id} not on the same strands");
         }
         if ($$strand{exon_strand} != $$strand{transcript_strand}) {
-          push(@exon_transcript_different_strand, "Exon/Strand $$strand{exon_id}/$$strand{exon_strand} <> Transcript/Strand $$strand{transcript_id}/$$strand{transcript_strand}" );
+          push(@exon_transcript_different_strand, "Exon/Strand $$strand{exon_id}/$$strand{exon_strand} <> Transcript/Strand $$strand{transcript_id}/$$strand{transcript_strand}");
         }
         if ($$strand{exon_strand} == 1) {
-          if ($lastExonEnd >$$strand{exon_start}){
+          if ($lastExonEnd > $$strand{exon_start}) {
             push(@exons_overlaps, "Exons $lastExonID (end $lastExonEnd) and $$strand{exon_id} (start $$strand{exon_start}) overlap");
           }
         }
@@ -111,24 +127,36 @@ sub tests {
             push(@exons_overlaps, "Exons $lastExonID (start $lastExonEnd) and $$strand{exon_id} (end $$strand{exon_start}) overlap");
           }
         }
+        $minExonStart = min($minExonStart, $lastExonStart);
+        $maxExonEnd = max($maxExonEnd, $lastExonEnd);
       }
+
     }
     else {
+      if ($minExonStart != $lastTranscriptStart || $maxExonEnd != $lastTranscriptEnd){
+        push (@exon_transcript_start_end, "Min/max  exon $lastExonID start/ends do not agree with transcript $lastTranscriptID tart/end in transcript");
+      }
       $lastTranscriptID = $$strand{transcript_id};
       $lastExonStrand = -2;
       $lastExonStart = -1;
       $lastExonEnd = -1;
       $lastExonID = -1;
       $lastExonRank = 0;
+      $minExonStart = $$strand{transcript_start};
+      $maxExonEnd = $$strand{transcript_end};
+      $lastTranscriptEnd = $$strand{transcript_end};
+      $lastTranscriptStart = $$strand{transcript_start};
     }
   }
 
   my $desc_1 = 'Exons in same transcripts on same strands';
   is(scalar(@exons_not_on_same_strands), 0, $desc_1);
-  my $desc_2 = 'Same exons and transcript strands';
+  my $desc_2 = 'Same exon on same transcript strands';
   is(scalar(@exon_transcript_different_strand), 0, $desc_2);
-  my $desc_3 = 'Exons do not overlaps';
+  my $desc_3 = 'Exons regions overlaps';
   is(scalar(@exons_overlaps), 0, $desc_3);
+  my $desc_4 = 'Min start / Max end exons regions compared to transcript';
+  is(scalar(@exon_transcript_start_end), 0, $desc_4);
 
 }
 
