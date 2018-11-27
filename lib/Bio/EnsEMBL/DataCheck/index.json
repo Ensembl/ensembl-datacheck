@@ -157,6 +157,15 @@
       "name" : "CoordSystemConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent"
    },
+   "CoreBiotypes" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks if the biotype table in core databases has been populated with all the required biotypes",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "CoreBiotypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreBiotypes"
+   },
    "CurrentRegulatoryBuildHasEpigenomes" : {
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has epigenomes data",
