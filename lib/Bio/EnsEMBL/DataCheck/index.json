@@ -1,4 +1,22 @@
 {
+   "AltAllele" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure alt_allele group members all map back to the same chromosome",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "AltAllele",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAllele"
+   },
+   "AltAlleleGroup" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that no alt_allele_group has more than one gene from the primary assembly",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "AltAlleleGroup",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAlleleGroup"
+   },
    "Archive" : {
       "datacheck_type" : "critical",
       "description" : "Gene archive table is up to date.",
