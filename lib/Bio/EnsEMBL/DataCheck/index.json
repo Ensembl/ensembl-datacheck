@@ -381,6 +381,15 @@
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
    },
+   "MetaKeyConsistent" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that meta_keys are identical between core and core-like databases",
+      "groups" : [
+         "corelike_handover"
+      ],
+      "name" : "MetaKeyConsistent",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConsistent"
+   },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
       "description" : "Check if database schema does not match the given MySQL storage engine",
