@@ -65,7 +65,10 @@ sub bounds_check {
       coord_system USING (coord_system_id) LEFT OUTER JOIN
       assembly_exception USING (seq_region_id)
     WHERE
-      $table.seq_region_end > seq_region.length AND
+      (
+        $table.seq_region_start = 0 OR
+        $table.seq_region_end > seq_region.length
+      ) AND
       coord_system.species_id = $species_id AND
       assembly_exception.seq_region_id IS NULL
   /;

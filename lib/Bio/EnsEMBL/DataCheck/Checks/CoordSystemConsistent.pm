@@ -37,21 +37,17 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $core_dba = $self->get_dba($self->species, 'core');
+  my $core_dba = $self->get_dna_dba();
 
-  if (! defined $core_dba) {
-    fail("Core database found in registry");
-  } else {
-    my $db_type = $self->dba->group;
-    my $desc = "coord_system table has same number of rows in core and $db_type databases";
-    my $sql  = q/
-      SELECT name, COUNT(*) FROM
-        coord_system
-      WHERE name <> 'lrg'
-      GROUP BY name
-    /;
-    row_subtotals($self->dba, $core_dba, $sql, undef, 1, $desc);
-  }
+  my $db_type = $self->dba->group;
+  my $desc = "coord_system table has same number of rows in core and $db_type databases";
+  my $sql  = q/
+    SELECT name, COUNT(*) FROM
+      coord_system
+    WHERE name <> 'lrg'
+    GROUP BY name
+  /;
+  row_subtotals($self->dba, $core_dba, $sql, undef, 1, $desc);
 }
 
 1;
