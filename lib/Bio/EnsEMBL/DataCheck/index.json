@@ -336,6 +336,15 @@
       "name" : "MetaCoord",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaCoord"
    },
+   "MetaKeyAssembly" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for consistency between assembly data and meta keys",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyAssembly",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyAssembly"
+   },
    "MetaKeyCardinality" : {
       "datacheck_type" : "critical",
       "description" : "Check cardinality of meta data that must be single-valued",
@@ -345,6 +354,15 @@
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
    },
+   "MetaKeyConditional" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for meta keys which are conditional on some aspect of the data",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyConditional",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConditional"
+   },
    "MetaKeyLevel" : {
       "datacheck_type" : "critical",
       "description" : "Ensure that meta_keys are correctly assigned at species or database level",
@@ -353,6 +371,15 @@
       ],
       "name" : "MetaKeyLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyLevel"
+   },
+   "MetaKeyOptional" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check for meta keys which are expected but not mandatory",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyOptional",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
    },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
