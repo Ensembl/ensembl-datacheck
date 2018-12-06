@@ -265,6 +265,7 @@
       "groups" : [
          "core_handover",
          "funcgen_handover",
+         "protein_features",
          "variation_handover"
       ],
       "name" : "ForeignKeys",
