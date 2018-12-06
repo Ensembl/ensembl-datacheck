@@ -334,6 +334,15 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "InterProFeatures" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that InterPro data are present and correct",
+      "groups" : [
+         "protein_features"
+      ],
+      "name" : "InterProFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::InterProFeatures"
+   },
    "Karyotype" : {
       "datacheck_type" : "advisory",
       "description" : "Check whether karyotype data exists.",
@@ -390,6 +399,15 @@
       "name" : "MetaKeyConditional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConditional"
    },
+   "MetaKeyConsistent" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that meta_keys are identical between core and core-like databases",
+      "groups" : [
+         "corelike_handover"
+      ],
+      "name" : "MetaKeyConsistent",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConsistent"
+   },
    "MetaKeyLevel" : {
       "datacheck_type" : "critical",
       "description" : "Ensure that meta_keys are correctly assigned at species or database level",
@@ -407,15 +425,6 @@
       ],
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
-   },
-   "MetaKeyConsistent" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that meta_keys are identical between core and core-like databases",
-      "groups" : [
-         "corelike_handover"
-      ],
-      "name" : "MetaKeyConsistent",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConsistent"
    },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
@@ -439,6 +448,15 @@
       "groups" : [],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
+   "ProteinFeatures" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that protein features are present and correct",
+      "groups" : [
+         "protein_features"
+      ],
+      "name" : "ProteinFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinFeatures"
    },
    "ProteinTranslation" : {
       "datacheck_type" : "critical",

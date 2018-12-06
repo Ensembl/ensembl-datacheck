@@ -38,7 +38,7 @@ sub tests {
   my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
-  my $desc_1 = 'Repeat start >= repeat end';
+  my $desc_1 = 'Repeat start <= repeat end';
   my $sql_1  = qq/
     SELECT COUNT(*) FROM
       repeat_feature INNER JOIN
@@ -50,14 +50,14 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql_1, $desc_1);
 
-  my $desc_2 = 'Repeat start and end > 0';
+  my $desc_2 = 'Repeat start > 0';
   my $sql_2  = qq/
     SELECT COUNT(*) FROM
       repeat_feature INNER JOIN
       seq_region USING (seq_region_id) INNER JOIN
       coord_system USING (coord_system_id)
     WHERE
-      repeat_start < 1 OR repeat_end < 1 AND
+      repeat_start < 1 AND
       coord_system.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
