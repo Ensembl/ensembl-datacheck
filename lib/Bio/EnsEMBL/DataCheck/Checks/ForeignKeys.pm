@@ -33,7 +33,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeys',
   DESCRIPTION => 'Check for incorrect foreign key relationships',
-  GROUPS      => ['core_handover', 'funcgen_handover', 'variation_handover'],
+  GROUPS      => ['core_handover', 'funcgen_handover', 'protein_features', 'variation_handover'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1,
 };
