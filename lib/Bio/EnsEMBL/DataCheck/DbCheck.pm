@@ -434,12 +434,14 @@ sub run_datacheck {
     $self->dba($original_dba);
 
   } else {
-    SKIP: {
-      my ($skip, $skip_reason) = $self->skip_tests(@_);
+    subtest $self->species => sub {
+      SKIP: {
+        my ($skip, $skip_reason) = $self->skip_tests(@_);
 
-      plan skip_all => $skip_reason if $skip;
+        plan skip_all => $skip_reason if $skip;
 
-      $self->tests(@_);
+        $self->tests(@_);
+      }
     }
   }
 }
