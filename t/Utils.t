@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Bio::EnsEMBL::DataCheck::Utils qw( repo_location sql_count );
+use Bio::EnsEMBL::DataCheck::Utils qw( repo_location sql_count array_diff hash_diff );
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
@@ -64,5 +64,32 @@ foreach my $species (@species) {
     like($sql_count_3, qr/^\d+$/, 'With parameters');
   };
 }
+
+subtest 'Array diff', sub {
+  my @primates  = ('loris', 'siamang', 'bonobo');
+  my @nocturnal = ('loris', 'vampire bat');
+
+  my $diff = array_diff(\@primates, \@nocturnal);
+  is_deeply($$diff{'In first set only'},  ['bonobo', 'siamang'], 'First set only');
+  is_deeply($$diff{'In second set only'}, ['vampire bat'],       'Second set only');
+
+  $diff = array_diff(\@primates, \@nocturnal, 'primates', 'nocturnal');
+  is_deeply($$diff{'In primates only'},  ['bonobo', 'siamang'], 'Named first set');
+  is_deeply($$diff{'In nocturnal only'}, ['vampire bat'],       'Named second set');
+};
+
+subtest 'Hash diff', sub {
+  my %primate_names   = ('loris' => 'charles', 'siamang' => 'elizabeth', 'potto' => 'arthur');
+  my %nocturnal_names = ('loris' => 'oliver', 'potto' => 'arthur', 'vampire bat' => 'harriet');
+
+  my $diff = hash_diff(\%primate_names, \%nocturnal_names);
+  is_deeply($$diff{'In first set only'},  {'siamang' => 'elizabeth'},          'First set only');
+  is_deeply($$diff{'In second set only'}, {'vampire bat' => 'harriet'},        'Second set only');
+  is_deeply($$diff{'Different values'},   {'loris' => ['charles', 'oliver']} , 'Different values');
+
+  $diff = hash_diff(\%primate_names, \%nocturnal_names, 'primates', 'nocturnal');
+  is_deeply($$diff{'In primates only'},  {'siamang' => 'elizabeth'},   'Named first set');
+  is_deeply($$diff{'In nocturnal only'}, {'vampire bat' => 'harriet'}, 'Named second set');
+};
 
 done_testing();
