@@ -487,14 +487,14 @@
       "name" : "RegulatoryFeatureStableID",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureStableID"
    },
-   "RepeatFeatureCoords" : {
+   "RepeatFeatures" : {
       "datacheck_type" : "critical",
-      "description" : "Check that repeat feature coordinates are sensible",
+      "description" : "Check that repeat feature coordinates are present and correct",
       "groups" : [
          "core_handover"
       ],
-      "name" : "RepeatFeatureCoords",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatureCoords"
+      "name" : "RepeatFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
    },
    "SampleRegulatoryFeatureExists" : {
       "datacheck_type" : "critical",
