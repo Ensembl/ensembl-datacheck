@@ -95,8 +95,6 @@ be an explicit C<COUNT(*)> (recommended for speed) or a C<SELECT> statement
 whose rows will be counted. The database connection can be a
 Bio::EnsEMBL::DBSQL::DBConnection or DBAdaptor object.
 
-=back
-
 =cut
 
 sub sql_count {
@@ -111,8 +109,6 @@ sub sql_count {
   }
 }
 
-=over 4
-
 =item B<array_diff>
 
 array_diff($array_1, $array_2, [$array_1_label, [$array_2_label]]);
@@ -123,7 +119,7 @@ This method B<does not> work with elements that are references.
 The C<$array_1_label> and C<$array_2_label> parameters allow elements
 that are only in one array to be usefully labelled in the results.
 
-The return value is two element hash, the values of which are arrays of
+The return value is hash with two keys, the values being arrays of
 elements that are only present in one array. This returned hash is perfect
 for passing to C<diag explain> upon the failure of a test
 (probably C<is_deeply>), in order to provide complete diagnostics. 
@@ -161,8 +157,6 @@ sub array_diff {
   return (\%diff);
 }
 
-=over 4
-
 =item B<hash_diff>
 
 hash_diff($hash_1, $hash_2, [$hash_1_label, [$hash_2_label]]);
@@ -179,6 +173,8 @@ The third subhash contains key-value pairs where the key exists in both
 hashes, but with different values. This returned hash is perfect
 for passing to C<diag explain> upon the failure of a test
 (probably C<is_deeply>), in order to provide complete diagnostics. 
+
+=back
 
 =cut
 
