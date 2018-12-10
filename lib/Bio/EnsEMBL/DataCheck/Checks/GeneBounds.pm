@@ -59,7 +59,10 @@ sub bounds_check {
       seq_region USING (seq_region_id) INNER JOIN
       coord_system USING (coord_system_id)
     WHERE
-      $table.seq_region_end > seq_region.length AND
+      (
+        $table.seq_region_start = 0 OR
+        $table.seq_region_end > seq_region.length
+      ) AND
       coord_system.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
