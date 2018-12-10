@@ -214,7 +214,7 @@
    },
    "ExonRank" : {
       "datacheck_type" : "critical",
-      "description" : "Check for entries in the exon_transcript table that are duplicates apart from the rank",
+      "description" : "Check for exon_transcript duplicates and missing rank=1 exons",
       "groups" : [
          "core_handover"
       ],
