@@ -63,10 +63,10 @@ sub tests {
 
   SKIP: {
     my $sql_assembly_count = qq/
-      SELECT COUNT(*) FROM coord_system cs
+      SELECT COUNT(*) FROM coord_system
       WHERE
-        cs.attrib RLIKE 'default_version' AND
-        cs.species_id = $species_id
+        attrib RLIKE 'default_version' AND
+        species_id = $species_id
     /;
     my $assembly_count = sql_count($self->dba, $sql_assembly_count);
 
@@ -74,12 +74,22 @@ sub tests {
 
     my $desc = 'Assembly mapping(s) exists';
     my $sql  = qq/
-      SELECT COUNT(*) FROM meta m
+      SELECT COUNT(*) FROM meta
       WHERE
-        m.meta_key = 'assembly.mapping' AND
-        m.species_id = $species_id
+        meta_key = 'assembly.mapping' AND
+        species_id = $species_id
     /;
     is_rows_nonzero($self->dba, $sql, $desc);
+  }
+
+  SKIP: {
+    my $mca = $self->dba->get_adaptor("MetaContainer");
+    my $accs = $mca->list_value_by_key('assembly.accession');
+
+    skip 'No assembly accession', 1 unless scalar(@$accs);
+
+    my $desc = 'Accession has expected format';
+    like($$accs[0], qr/^GCA_[0-9]+\.[0-9]+/, $desc);
   }
 
   SKIP: {
