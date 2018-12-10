@@ -38,16 +38,6 @@
       "name" : "ArraysHaveProbes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ArraysHaveProbes"
    },
-   "AssemblyAccession" : {
-      "datacheck_type" : "critical",
-      "description" : "Meta key \"assembly.accession\" is set.",
-      "groups" : [
-         "assembly",
-         "core_handover"
-      ],
-      "name" : "AssemblyAccession",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyAccession"
-   },
    "AssemblyConsistent" : {
       "datacheck_type" : "critical",
       "description" : "Assembly is the same in core and core-like databases",

@@ -84,6 +84,16 @@ sub tests {
 
   SKIP: {
     my $mca = $self->dba->get_adaptor("MetaContainer");
+    my $accs = $mca->list_value_by_key('assembly.default');
+
+    skip 'No assembly default', 1 unless scalar(@$accs);
+
+    my $desc = 'Assembly name has no disallowed characters';
+    like($$accs[0], qr/^[\w\.\-]+/, $desc);
+  }
+
+  SKIP: {
+    my $mca = $self->dba->get_adaptor("MetaContainer");
     my $accs = $mca->list_value_by_key('assembly.accession');
 
     skip 'No assembly accession', 1 unless scalar(@$accs);
