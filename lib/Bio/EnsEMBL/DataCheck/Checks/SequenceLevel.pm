@@ -61,14 +61,28 @@ sub tests {
       dna d USING (seq_region_id) 
     WHERE
       cs.attrib RLIKE 'sequence_level' AND
-      cs.species_id = $species_id AND
-      d.seq_region_id IS NULL
+      d.seq_region_id IS NULL AND
+      cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
 
-  my $desc_3 = 'Contigs shared between assemblies have null versions';
-  my $diag_3 = 'Versioned contig in multiple assemblies';
+  my $desc_3 = 'Sequence-level regions have correct length';
+  my $diag_3 = 'Incorrect length for seq_region';
   my $sql_3  = qq/
+    SELECT cs.name, sr.name FROM
+      coord_system cs INNER JOIN
+      seq_region sr USING (coord_system_id) INNER JOIN
+      dna d USING (seq_region_id) 
+    WHERE
+      cs.attrib RLIKE 'sequence_level' AND
+      sr.length <> LENGTH(d.sequence) AND
+      cs.species_id = $species_id
+  /;
+  is_rows_zero($self->dba, $sql_3, $desc_3, $diag_3);
+
+  my $desc_4 = 'Contigs shared between assemblies have null versions';
+  my $diag_4 = 'Versioned contig in multiple assemblies';
+  my $sql_4  = qq/
     SELECT sr.name FROM
       assembly a INNER JOIN
       seq_region sr on a.cmp_seq_region_id = sr.seq_region_id INNER JOIN
@@ -80,7 +94,7 @@ sub tests {
     GROUP BY sr.name
     HAVING COUNT(*) > 1
   /;
-  is_rows_zero($self->dba, $sql_3, $desc_3, $diag_3);
+  is_rows_zero($self->dba, $sql_4, $desc_4, $diag_4);
 }
 
 1;
