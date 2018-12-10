@@ -40,7 +40,7 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
 
-  my $sql = 'SELECT COUNT(*) FROM coord_system';
+  my $sql = 'SELECT COUNT(*) FROM assembly';
 
   if (! sql_count($self->dba, $sql) ) {
     return (1, 'No assembly.');
@@ -56,36 +56,30 @@ sub tests {
   /;
   is_rows_nonzero($self->dba, $sql_1, $desc_1);
 
-  my $desc_2 = 'assembly table populated';
+  my $desc_2 = 'assembly co-ordinates have start and end > 0';
   my $sql_2  = q/
-    SELECT COUNT(*) FROM assembly
-  /;
-  is_rows_nonzero($self->dba, $sql_2, $desc_2);
-
-  my $desc_3 = 'assembly co-ordinates have start and end > 0';
-  my $sql_3  = q/
     SELECT COUNT(*) FROM assembly
     WHERE asm_start < 1 OR asm_end < 1 OR cmp_start < 1 OR cmp_end < 1
   /;
-  is_rows_zero($self->dba, $sql_3, $desc_3);
+  is_rows_zero($self->dba, $sql_2, $desc_2);
 
-  my $desc_4 = 'assembly co-ordinates have end > start';
-  my $sql_4  = q/
+  my $desc_3 = 'assembly co-ordinates have end > start';
+  my $sql_3  = q/
     SELECT COUNT(*) FROM assembly
     WHERE asm_end < asm_start OR cmp_end < cmp_start
   /;
-  is_rows_zero($self->dba, $sql_4, $desc_4);
+  is_rows_zero($self->dba, $sql_3, $desc_3);
 
-  my $desc_5 = 'Assembled and component lengths consistent';
-  my $sql_5  = q/
+  my $desc_4 = 'Assembled and component lengths consistent';
+  my $sql_4  = q/
     SELECT COUNT(*) FROM assembly
     WHERE (asm_end - asm_start) <> (cmp_end - cmp_start)
   /;
-  is_rows_zero($self->dba, $sql_5, $desc_5);
+  is_rows_zero($self->dba, $sql_4, $desc_4);
 
-  my $desc_6 = 'assembly and seq_region lengths consistent';
-  my $diag_6 = 'seq_region length < largest asm_end value';
-  my $sql_6  = q/
+  my $desc_5 = 'assembly and seq_region lengths consistent';
+  my $diag_5 = 'seq_region length < largest asm_end value';
+  my $sql_5  = q/
     SELECT sr.name AS seq_region_name, sr.length, cs.name AS coord_system_name
     FROM
       seq_region sr INNER JOIN
@@ -94,7 +88,7 @@ sub tests {
     GROUP BY a.asm_seq_region_id
     HAVING sr.length < MAX(a.asm_end)
   /;
-  is_rows_zero($self->dba, $sql_6, $desc_6, $diag_6);
+  is_rows_zero($self->dba, $sql_5, $desc_5, $diag_5);
 }
 
 1;
