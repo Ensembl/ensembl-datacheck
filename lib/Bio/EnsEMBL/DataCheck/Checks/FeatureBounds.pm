@@ -39,9 +39,11 @@ sub tests {
   my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
+  $self->bounds_check('assembly_exception', $species_id);
   $self->bounds_check('density_feature', $species_id);
   $self->bounds_check('ditag_feature', $species_id);
   $self->bounds_check('dna_align_feature', $species_id);
+  $self->bounds_check('karyotype', $species_id);
   $self->bounds_check('marker_feature', $species_id);
   $self->bounds_check('misc_feature', $species_id);
   $self->bounds_check('protein_align_feature', $species_id);
@@ -59,8 +61,8 @@ sub bounds_check {
   my $desc = $table.'s within seq_region bounds';
   my $diag = "Out-of-bounds features in $table";
   my $sql  = qq/
-    SELECT $table\_id FROM
-      $table INNER JOIN
+    SELECT t.$table\_id FROM
+      $table t INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs  USING (coord_system_id) LEFT OUTER JOIN
       assembly_exception ae USING (seq_region_id) LEFT OUTER JOIN
@@ -73,8 +75,8 @@ sub bounds_check {
       ) at ON sr.seq_region_id = at.seq_region_id
     WHERE
       (
-        $table.seq_region_start = 0 OR
-        $table.seq_region_end > sr.length
+        t.seq_region_start = 0 OR
+        t.seq_region_end > sr.length
       ) AND
       cs.species_id = $species_id AND
       ae.seq_region_id IS NULL AND
