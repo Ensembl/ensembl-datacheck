@@ -58,16 +58,6 @@
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
    },
-   "AssemblyMapping" : {
-      "datacheck_type" : "critical",
-      "description" : "Check validity of assembly mappings.",
-      "groups" : [
-         "assembly",
-         "handover"
-      ],
-      "name" : "AssemblyMapping",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyMapping"
-   },
    "AssemblySeqregion" : {
       "datacheck_type" : "critical",
       "description" : "assembly and seq_region table are consistent.",
