@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SpeciesMeta;
+package Bio::EnsEMBL::DataCheck::Checks::MetaKeySpecies;
 
 use warnings;
 use strict;
@@ -27,7 +27,7 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'SpeciesMeta',
+  NAME        => 'MetaKeySpecies',
   DESCRIPTION => 'Check the presence and format of species-related meta keys',
   GROUPS      => ['core_handover'],
   DB_TYPES    => ['core'],

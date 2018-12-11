@@ -574,14 +574,14 @@
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
    },
-   "SpeciesMeta" : {
+   "MetaKeySpecies" : {
       "datacheck_type" : "critical",
       "description" : "Check the presence and format of species-related meta keys",
       "groups" : [
          "core_handover"
       ],
-      "name" : "SpeciesMeta",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesMeta"
+      "name" : "MetaKeySpecies",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeySpecies"
    },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
