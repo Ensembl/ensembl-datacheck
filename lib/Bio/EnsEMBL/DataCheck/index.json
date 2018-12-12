@@ -389,6 +389,15 @@
       "name" : "MetaKeyConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConsistent"
    },
+   "MetaKeyFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Check the format and links for meta values",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyFormat"
+   },
    "MetaKeyLevel" : {
       "datacheck_type" : "critical",
       "description" : "Ensure that meta_keys are correctly assigned at species or database level",
@@ -573,15 +582,6 @@
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
-   },
-   "MetaKeySpecies" : {
-      "datacheck_type" : "critical",
-      "description" : "Check the presence and format of species-related meta keys",
-      "groups" : [
-         "core_handover"
-      ],
-      "name" : "MetaKeySpecies",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeySpecies"
    },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",

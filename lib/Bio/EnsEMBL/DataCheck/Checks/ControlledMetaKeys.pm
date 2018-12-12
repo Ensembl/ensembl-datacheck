@@ -68,46 +68,6 @@ sub tests {
       ok(exists $meta_keys{$meta_key}, $desc);
     }
   }
-
-  if ($self->dba->group eq 'variation') {
-    $self->variation_specific_keys();
-  }
-}
-
-# I think this needs to be generalised to all species, and put somewhere
-# else. (There's a similar HC for core db sample.* keys that hasn't been
-# datachecked yet. But leaving here so it doesn't fall through the cracks.
-sub variation_specific_keys {
-  my ($self) = @_;
-
-  if ($self->species eq 'homo_sapiens') {
-    my $desc_1 = 'Correct default population for human LD';
-    my $sql_1  = qq/
-      SELECT COUNT(*) FROM
-        meta INNER JOIN population ON meta_value = population_id
-      WHERE
-        meta_key = 'pairwise_ld.default_population'
-    /;
-    is_rows_nonzero($self->dba, $sql_1, $desc_1);
-
-    my $desc_2 = 'Polyphen version for human';
-    my $sql_2  = 'SELECT COUNT(*) FROM meta WHERE meta_key = "polyphen_version"';
-    is_rows_nonzero($self->dba, $sql_2, $desc_2);
-
-    my $desc_3 = 'Sift version for human';
-    my $sql_3  = 'SELECT COUNT(*) FROM meta WHERE meta_key = "sift_version"';
-    is_rows_nonzero($self->dba, $sql_3, $desc_3);
-
-  } elsif ($self->species eq 'canis_familiaris') {
-    my $desc = 'Correct default strain for dog';
-    my $sql  = qq/
-      SELECT COUNT(*) FROM
-        meta INNER JOIN sample ON meta_value = name
-      WHERE
-        meta_key = 'sample.default_strain'
-    /;
-    is_rows_nonzero($self->dba, $sql, $desc);
-  }
 }
 
 1;

@@ -30,21 +30,25 @@ use constant {
   NAME        => 'MetaKeyConditional',
   DESCRIPTION => 'Check for meta keys which are conditional on some aspect of the data',
   GROUPS      => ['core_handover'],
-  DB_TYPES    => ['core'],
+  DB_TYPES    => ['core', 'variation'],
   TABLES      => ['meta']
 };
 
 sub tests {
   my ($self) = @_;
 
-  $self->collection_db_name();
-  $self->gencode_species();
-  $self->havana_species();
-  $self->projected_transcripts();
-  $self->repeat_analysis();
-
-  # assembly.ucsc_alias is a candidate for a conditional check,
-  # but not sure how best to define the condition...
+  if ($self->dba->group eq 'core') {
+    # assembly.ucsc_alias is a candidate for a conditional check,
+    # but not sure how best to define the condition...
+    $self->collection_db_name();
+    $self->gencode_species();
+    $self->havana_species();
+    $self->projected_transcripts();
+    $self->repeat_analysis();
+  } elsif ($self->dba->group eq 'variation') {
+    $self->has_polyphen();
+    $self->has_sift();
+  }
 }
 
 sub collection_db_name {
@@ -135,6 +139,40 @@ sub repeat_analysis {
     my $mca = $self->dba->get_adaptor('MetaContainer');
     my @values = sort @{ $mca->list_value_by_key('repeat.analysis') };
     is_deeply(\@values, \@logic_names, $desc);
+  }
+}
+
+sub has_polyphen {
+  my ($self) = @_;
+
+  my %polyphen_species = (
+    homo_sapiens => 1,
+  );
+
+  SKIP: {
+    skip 'Polyphen data not expected', 1 unless exists $polyphen_species{$self->species};
+
+    my $desc = "'polyphen_version' meta_key exists";
+    my $mca = $self->dba->get_adaptor('MetaContainer');
+    my $values = $mca->list_value_by_key('polyphen_version');
+    ok(scalar @$values, $desc);
+  }
+}
+
+sub has_sift {
+  my ($self) = @_;
+
+  my %sift_species = (
+    homo_sapiens => 1,
+  );
+
+  SKIP: {
+    skip 'Sift data not expected', 1 unless exists $sift_species{$self->species};
+
+    my $desc = "'sift_version' meta_key exists";
+    my $mca = $self->dba->get_adaptor('MetaContainer');
+    my $values = $mca->list_value_by_key('sift_version');
+    ok(scalar @$values, $desc);
   }
 }
 
