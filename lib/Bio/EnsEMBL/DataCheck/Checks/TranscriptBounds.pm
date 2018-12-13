@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::GeneTranscriptBounds;
+package Bio::EnsEMBL::DataCheck::Checks::TranscriptBounds;
 
 use warnings;
 use strict;
@@ -28,7 +28,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'GeneTranscriptBounds',
+  NAME        => 'TranscriptBounds',
   DESCRIPTION => 'Check that gene and transcript bounds are consistent',
   GROUPS      => ['core_handover'],
   DB_TYPES    => ['core', 'otherfeatures'],
