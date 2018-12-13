@@ -195,6 +195,15 @@
       "name" : "EpigenomeHasSegmentationFile",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
    },
+   "ExonBounds" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks exon boundaries in their transcript (same strand / correct order / min start / max end)",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "ExonBounds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonBounds"
+   },
    "ExonRank" : {
       "datacheck_type" : "critical",
       "description" : "Check for entries in the exon_transcript table that are duplicates apart from the rank",
@@ -203,15 +212,6 @@
       ],
       "name" : "ExonRank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonRank"
-   },
-   "ExonsBoundaries" : {
-      "datacheck_type" : "critical",
-      "description" : "Checks exon boundaries in their transcript (same strand / correct order / min start / max end)",
-      "groups" : [
-         "core_handover"
-      ],
-      "name" : "ExonsBoundaries",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonsBoundaries"
    },
    "ExperimentHasFeatureSet" : {
       "datacheck_type" : "critical",
