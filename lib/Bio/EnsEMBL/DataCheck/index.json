@@ -222,6 +222,15 @@
       "name" : "EpigenomeHasSegmentationFile",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
    },
+   "ExonBounds" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that exon regions are non-overlapping, and are consistent with their transcripts",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "ExonBounds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonBounds"
+   },
    "ExonRank" : {
       "datacheck_type" : "critical",
       "description" : "Check for entries in the exon_transcript table that are duplicates apart from the rank",
