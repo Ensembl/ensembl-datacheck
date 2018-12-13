@@ -197,7 +197,7 @@
    },
    "ExonBounds" : {
       "datacheck_type" : "critical",
-      "description" : "Checks exon boundaries in their transcript (same strand / correct order / min start / max end)",
+      "description" : "Check that exon regions are non-overlapping, and are consistent with their transcripts",
       "groups" : [
          "core_handover"
       ],

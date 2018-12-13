@@ -23,16 +23,15 @@ use strict;
 
 use Moose;
 use Test::More;
-use List::Util qw[min max];
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-    NAME        => 'ExonBounds',
-    DESCRIPTION => 'Checks exon boundaries in their transcript (same strand / correct order / min start / max end)',
-    DB_TYPES    => [ 'core' ],
-    GROUPS      => [ 'core_handover' ],
+  NAME        => 'ExonBounds',
+  DESCRIPTION => 'Check that exon regions are non-overlapping, and are consistent with their transcripts',
+  DB_TYPES    => ['core'],
+  GROUPS      => ['core_handover'],
 };
 
 sub tests {
