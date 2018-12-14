@@ -97,6 +97,16 @@
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
    },
+   "CanonicalTranscripts" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that canonical transcripts are set",
+      "groups" : [
+         "core",
+         "geneset"
+      ],
+      "name" : "CanonicalTranscripts",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Check whether chromosomal seq_regions have appropriate attribute.",
@@ -326,6 +336,27 @@
       "name" : "GeneGC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneGC"
    },
+   "GeneStableID" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that genes have unique stable IDs",
+      "groups" : [
+         "core",
+         "geneset"
+      ],
+      "name" : "GeneStableID",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStableID"
+   },
+   "GeneStrands" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that genes have valid strand values",
+      "groups" : [
+         "core",
+         "corelike",
+         "geneset"
+      ],
+      "name" : "GeneStrands",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
+   },
    "GeneTranscriptBounds" : {
       "datacheck_type" : "critical",
       "description" : "Check that gene and transcript bounds are consistent",
@@ -458,6 +489,16 @@
       "groups" : [],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
+   "ProteinCodingGenes" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for at least one protein-coding gene",
+      "groups" : [
+         "core",
+         "geneset"
+      ],
+      "name" : "ProteinCodingGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinCodingGenes"
    },
    "ProteinFeatures" : {
       "datacheck_type" : "critical",
@@ -629,6 +670,16 @@
       ],
       "name" : "UnlocatedTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnlocatedTranscripts"
+   },
+   "UnversionedGenes" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that genes are unversioned in non-vertebrate databases",
+      "groups" : [
+         "core",
+         "geneset"
+      ],
+      "name" : "UnversionedGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnversionedGenes"
    },
    "ValidTranscripts" : {
       "datacheck_type" : "critical",
