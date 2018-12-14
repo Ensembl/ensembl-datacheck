@@ -38,16 +38,6 @@
       "name" : "ArraysHaveProbes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ArraysHaveProbes"
    },
-   "AssemblyAccession" : {
-      "datacheck_type" : "critical",
-      "description" : "Meta key \"assembly.accession\" is set.",
-      "groups" : [
-         "assembly",
-         "core_handover"
-      ],
-      "name" : "AssemblyAccession",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyAccession"
-   },
    "AssemblyConsistent" : {
       "datacheck_type" : "critical",
       "description" : "Assembly is the same in core and core-like databases",
@@ -67,16 +57,6 @@
       ],
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
-   },
-   "AssemblyMapping" : {
-      "datacheck_type" : "critical",
-      "description" : "Check validity of assembly mappings.",
-      "groups" : [
-         "assembly",
-         "handover"
-      ],
-      "name" : "AssemblyMapping",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyMapping"
    },
    "AssemblySeqregion" : {
       "datacheck_type" : "critical",
@@ -243,7 +223,7 @@
    },
    "ExonRank" : {
       "datacheck_type" : "critical",
-      "description" : "Check for entries in the exon_transcript table that are duplicates apart from the rank",
+      "description" : "Check for exon_transcript duplicates and missing rank=1 exons",
       "groups" : [
          "core_handover"
       ],
@@ -357,15 +337,6 @@
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
    },
-   "GeneTranscriptBounds" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that gene and transcript bounds are consistent",
-      "groups" : [
-         "core_handover"
-      ],
-      "name" : "GeneTranscriptBounds",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTranscriptBounds"
-   },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
       "description" : "Check that genome statistics are present and correct",
@@ -448,6 +419,15 @@
       ],
       "name" : "MetaKeyConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConsistent"
+   },
+   "MetaKeyFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Check the format and links for meta values",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MetaKeyFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyFormat"
    },
    "MetaKeyLevel" : {
       "datacheck_type" : "critical",
@@ -537,14 +517,14 @@
       "name" : "RegulatoryFeatureStableID",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureStableID"
    },
-   "RepeatFeatureCoords" : {
+   "RepeatFeatures" : {
       "datacheck_type" : "critical",
-      "description" : "Check that repeat feature coordinates are sensible",
+      "description" : "Check that repeat feature coordinates are present and correct",
       "groups" : [
          "core_handover"
       ],
-      "name" : "RepeatFeatureCoords",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatureCoords"
+      "name" : "RepeatFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
    },
    "SampleRegulatoryFeatureExists" : {
       "datacheck_type" : "critical",
@@ -644,15 +624,6 @@
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
    },
-   "SpeciesMeta" : {
-      "datacheck_type" : "critical",
-      "description" : "Check the presence and format of species-related meta keys",
-      "groups" : [
-         "core_handover"
-      ],
-      "name" : "SpeciesMeta",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesMeta"
-   },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
       "description" : "Check that production_name and alias are unique across all species",
@@ -661,6 +632,15 @@
       ],
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
+   },
+   "TranscriptBounds" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that gene and transcript bounds are consistent",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "TranscriptBounds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptBounds"
    },
    "UnlocatedTranscripts" : {
       "datacheck_type" : "critical",

@@ -31,7 +31,7 @@ use feature 'say';
 
 require Exporter;
 our @ISA       = qw( Exporter );
-our @EXPORT_OK = qw( repo_location sql_count );
+our @EXPORT_OK = qw( repo_location sql_count array_diff hash_diff );
 
 use File::Spec::Functions qw/catdir splitdir/;
 
@@ -95,8 +95,6 @@ be an explicit C<COUNT(*)> (recommended for speed) or a C<SELECT> statement
 whose rows will be counted. The database connection can be a
 Bio::EnsEMBL::DBSQL::DBConnection or DBAdaptor object.
 
-=back
-
 =cut
 
 sub sql_count {
@@ -109,6 +107,109 @@ sub sql_count {
   } else {
     return scalar @{ $dbc->sql_helper->execute(-SQL => $sql, -PARAMS => $params) };
   }
+}
+
+=item B<array_diff>
+
+array_diff($array_1, $array_2, [$array_1_label, [$array_2_label]]);
+
+Calculate the difference between two arrays of string values, C<$array_1>
+and C<$array_1>, ignoring the order of the elements.
+This method B<does not> work with elements that are references.
+The C<$array_1_label> and C<$array_2_label> parameters allow elements
+that are only in one array to be usefully labelled in the results.
+
+The return value is hash with two keys, the values being arrays of
+elements that are only present in one array. This returned hash is perfect
+for passing to C<diag explain> upon the failure of a test
+(probably C<is_deeply>), in order to provide complete diagnostics. 
+
+=cut
+
+sub array_diff {
+  my ($array_1, $array_2, $array_1_label, $array_2_label) = @_;
+
+  my @array_1_only;
+  my @array_2_only;
+
+  my %array_1 = map { $_ => 1 } @$array_1; 
+  my %array_2 = map { $_ => 1 } @$array_2; 
+
+  foreach my $key (sort keys %array_1) {
+    unless (exists $array_2{$key}) {
+      push @array_1_only, $key;
+    }
+  }
+
+  foreach my $key (sort keys %array_2) {
+    unless (exists $array_1{$key}) {
+      push @array_2_only, $key;
+    }
+  }
+
+  $array_1_label = 'first set' unless $array_1_label;
+  $array_2_label = 'second set' unless $array_2_label;
+  my %diff = (
+    "In $array_1_label only" => \@array_1_only,
+    "In $array_2_label only" => \@array_2_only,
+  );
+
+  return (\%diff);
+}
+
+=item B<hash_diff>
+
+hash_diff($hash_1, $hash_2, [$hash_1_label, [$hash_2_label]]);
+
+Calculate the difference between two hashes whose values are string values,
+C<$hash_1> and C<$hash_2>.
+This method B<does not> work with values that are references.
+The C<$hash_1_label> and C<$hash_2_label> parameters allow key-value pairs
+that are only in one hash to be usefully labelled in the results.
+
+The return value is a hash of three hashes. Two of the subhashes contain
+key-value pairs for which the key is only present in one hash or the other.
+The third subhash contains key-value pairs where the key exists in both
+hashes, but with different values. This returned hash is perfect
+for passing to C<diag explain> upon the failure of a test
+(probably C<is_deeply>), in order to provide complete diagnostics. 
+
+=back
+
+=cut
+
+sub hash_diff {
+  my ($hash_1, $hash_2, $hash_1_label, $hash_2_label) = @_;
+
+  my %hash_1_only;
+  my %hash_2_only;
+  my %different_values;
+
+  foreach my $key (keys %$hash_1) {
+    if (exists $$hash_2{$key}) {
+      if ($$hash_1{$key} ne $$hash_2{$key}) {
+        $different_values{$key} = [$$hash_1{$key}, $$hash_2{$key}];
+      }
+    } else {
+      $hash_1_only{$key} = $$hash_1{$key};
+    }
+  }
+
+  foreach my $key (keys %$hash_2) {
+    unless (exists $$hash_1{$key}) {
+      $hash_2_only{$key} = $$hash_2{$key};
+    }
+  }
+
+  $hash_1_label = 'first set' unless $hash_1_label;
+  $hash_2_label = 'second set' unless $hash_2_label;
+  my %diff = (
+    "In $hash_1_label only" => \%hash_1_only,
+    "In $hash_2_label only" => \%hash_2_only,
+    'Different values'      => \%different_values,
+  );
+
+  return (\%diff);
 }
 
 1;

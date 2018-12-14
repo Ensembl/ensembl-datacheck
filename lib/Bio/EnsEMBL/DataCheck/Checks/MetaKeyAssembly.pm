@@ -63,7 +63,10 @@ sub tests {
 
   SKIP: {
     my $sql_assembly_count = qq/
-      SELECT COUNT(*) FROM coord_system cs
+      SELECT COUNT(*) FROM
+        assembly a INNER JOIN
+        seq_region sr ON a.asm_seq_region_id = sr.seq_region_id INNER JOIN
+        coord_system cs ON sr.coord_system_id = cs.coord_system_id
       WHERE
         cs.attrib RLIKE 'default_version' AND
         cs.species_id = $species_id
@@ -72,14 +75,48 @@ sub tests {
 
     skip 'No assemblies defined', 1 unless $assembly_count;
 
-    my $desc = 'Assembly mapping(s) exists';
-    my $sql  = qq/
-      SELECT COUNT(*) FROM meta m
-      WHERE
-        m.meta_key = 'assembly.mapping' AND
-        m.species_id = $species_id
-    /;
-    is_rows_nonzero($self->dba, $sql, $desc);
+    my $mca = $self->dba->get_adaptor("MetaContainer");
+    my $mappings = $mca->list_value_by_key('assembly.mapping');
+
+    my $desc_1 = 'Assembly mapping(s) exists';
+    ok(scalar(@$mappings), $desc_1);
+
+    my $desc_2 = 'Assembly mapping has correct format';
+    my $desc_3 = 'Assembly mapping has valid coordinate system';
+
+    my $assembly_pattern = qr/([^:]+)(:(.+))?/;
+    my $csa = $self->dba->get_adaptor("CoordSystem");
+
+    foreach my $mapping (@$mappings) {
+      foreach my $map_element (split(/[|#]/, $mapping)) {
+        my ($name, undef, $version) = $map_element =~ $assembly_pattern;
+        my $cs = $csa->fetch_by_name($name, $version);
+
+        like($map_element, $assembly_pattern, "$desc_2 ('$map_element' part of '$mapping')");
+
+        ok(defined $cs, "$desc_3 ($name)");
+      }
+    }
+  }
+
+  SKIP: {
+    my $mca = $self->dba->get_adaptor("MetaContainer");
+    my $accs = $mca->list_value_by_key('assembly.default');
+
+    skip 'No assembly default', 1 unless scalar(@$accs);
+
+    my $desc = 'Assembly name has no disallowed characters';
+    like($$accs[0], qr/^[\w\.\-]+/, $desc);
+  }
+
+  SKIP: {
+    my $mca = $self->dba->get_adaptor("MetaContainer");
+    my $accs = $mca->list_value_by_key('assembly.accession');
+
+    skip 'No assembly accession', 1 unless scalar(@$accs);
+
+    my $desc = 'Accession has expected format';
+    like($$accs[0], qr/^GCA_[0-9]+\.[0-9]+/, $desc);
   }
 
   SKIP: {

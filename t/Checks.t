@@ -57,10 +57,10 @@ foreach my $species (keys %db_types) {
       # meaningful for a test db, we just want to ensure that datachecks run.
 
       my @names = qw/
-        AssemblyAccession
         CompareSchema
         ForeignKeys
         GeneBounds
+        MetaKeyAssembly
         SchemaVersion
       /;
       $manager->names(\@names);

@@ -471,7 +471,6 @@ subtest 'DbCheck with collection database, single species', sub {
   is($result, 0, 'test passes');
 
   unlike($dbcheck->output, qr/\s*1\.\.3/, 'Tests not run for three species');
-  unlike($dbcheck->output, qr/Subtest: giardia_intestinalis/, 'Test not run in "collection" context');
   like($dbcheck->output, qr/Subtest: DbCheck_1/, 'Test run for single species in collection');
 };
 

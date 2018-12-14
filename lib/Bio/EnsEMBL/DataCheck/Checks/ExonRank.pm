@@ -28,28 +28,35 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-    NAME        => 'ExonRank',
-    DESCRIPTION => 'Check for entries in the exon_transcript table that are duplicates apart from the rank',
-    GROUPS      => [ 'core_handover' ],
-    DB_TYPES    => [ 'core' ]
+  NAME        => 'ExonRank',
+  DESCRIPTION => 'Check for exon_transcript duplicates and missing rank=1 exons',
+  GROUPS      => ['core_handover'],
+  DB_TYPES    => ['core']
 };
 
 sub tests {
-    my ($self) = @_;
+  my ($self) = @_;
 
-    my $descexon_rank = 'Exon/Transcript rank count';
-    my $diagexon_rank = "Same Exon/Transcript with different ranks";
-    my $sqlexon_rank = qq/
-        SELECT  exon_id,
-                transcript_id,
-                GROUP_CONCAT(`rank` SEPARATOR '-')
-        FROM exon_transcript
-        GROUP BY exon_id, transcript_id
-        HAVING COUNT(`rank`) > 1
-    /;
-    is_rows_zero($self->dba, $sqlexon_rank, $descexon_rank, $diagexon_rank);
+  my $desc_1 = 'No duplicate exon/transcript links';
+  my $diag_1 = "Duplicate exon/transcript link";
+  my $sql_1  = qq/
+    SELECT  exon_id,
+            transcript_id,
+            GROUP_CONCAT(`rank` SEPARATOR '-')
+    FROM exon_transcript
+    GROUP BY exon_id, transcript_id
+    HAVING COUNT(`rank`) > 1
+  /;
+  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
 
+  my $desc_2 = 'Transcripts all have an exon with rank=1';
+  my $diag_2 = 'Transcript lacks exon with rank=1';
+  my $sql_2  = qq/
+    SELECT stable_id FROM transcript
+    WHERE transcript_id NOT IN
+	  (SELECT transcript_id FROM exon_transcript WHERE rank = 1)
+  /;
+  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
 }
 
 1;
-

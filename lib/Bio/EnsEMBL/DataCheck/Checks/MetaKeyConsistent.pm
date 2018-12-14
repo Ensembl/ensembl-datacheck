@@ -23,6 +23,7 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Utils qw/ array_diff hash_diff /;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -41,13 +42,15 @@ sub tests {
   my $identical_core = $self->identical_meta_keys($self->get_dna_dba);
 
   my $desc_1 = 'Identical assembly.* meta keys in core and core-like databases';
-  is_deeply($identical_of, $identical_core, $desc_1);
-  
+  is_deeply($identical_of, $identical_core, $desc_1) ||
+    diag explain hash_diff($identical_of, $identical_core, 'otherfeatures db', 'core db');
+
   my $consistent_of   = $self->consistent_meta_keys($self->dba);
   my $consistent_core = $self->consistent_meta_keys($self->get_dna_dba);
 
   my $desc_2 = 'Consistent species.* meta keys in core and core-like databases';
-  is_deeply($consistent_of, $consistent_core, $desc_2);
+  is_deeply($consistent_of, $consistent_core, $desc_2) ||
+    diag explain array_diff($consistent_of, $consistent_core, 'otherfeatures db', 'core db');
 }
 
 sub identical_meta_keys {
@@ -60,7 +63,7 @@ sub identical_meta_keys {
   my $sql = qq/
     SELECT
       meta_id,
-      CONCAT(meta_key, ':', meta_value) AS meta_key_value_pair
+      CONCAT(meta_key, ': ', meta_value) AS meta_key_value_pair
     FROM
       meta
     WHERE
