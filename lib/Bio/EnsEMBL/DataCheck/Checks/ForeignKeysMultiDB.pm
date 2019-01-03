@@ -23,8 +23,7 @@ use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count array_diff hash_diff/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -48,62 +47,145 @@ sub tests {
 
 sub variation_core_fk {
   my ($self) = @_;
-  # Core <-> Variation database relationships. We assume that the dbs are
-  # on the same server; not ideal, but should be good enough in practice.
+  # Core <-> Variation database relationships. We cannot assume that the dbs
+  # are on the same server, so need to compare in Perl rather than SQL.
 
   my $dna_dba = $self->get_dna_dba();
-  my $core_db = $dna_dba->dbc->dbname();
 
-  fk($self->dba, 'transcript_variation', 'feature_stable_id', "$core_db.transcript", 'stable_id');
+  my ($stable_ids) = $self->col_array($dna_dba, 'transcript', 'stable_id');
+  my @stable_id_tables = qw/
+    transcript_variation
+  /;
+  foreach my $table (@stable_id_tables) {
+    my $desc = "All stable IDs in $table exist in core database";
 
-  fk($self->dba, 'variation_feature',            'seq_region_id', "$core_db.seq_region");
-  fk($self->dba, 'structural_variation_feature', 'seq_region_id', "$core_db.seq_region");
+    my ($ids, $label) = $self->col_array($self->dba, $table, 'feature_stable_id');
+    my $diff = array_diff($ids, $stable_ids, $label);
+    my @diffs = @{$$diff{"In $label only"}};
+    is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
+  }
 
-  denormalized($self->dba, 'seq_region', 'seq_region_id', 'name', "$core_db.seq_region");
+  my ($seq_region_ids) = $self->col_array($dna_dba, 'seq_region', 'seq_region_id');
+  my @seq_region_id_tables = qw/
+    variation_feature
+    structural_variation_feature
+  /;
+  foreach my $table (@seq_region_id_tables) {
+    my $desc = "All seq_region IDs in $table exist in core database";
+
+    my ($ids, $label) = $self->col_array($self->dba, $table, 'seq_region_id');
+    my $diff = array_diff($ids, $seq_region_ids, $label);
+    my @diffs = @{$$diff{"In $label only"}};
+    is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
+  }
+
+  {
+    my $desc = "seq_region IDs and names are consistent with the core database";
+    my ($sr_variation, $label) = $self->col_hash($self->dba, 'seq_region', 'seq_region_id', 'name');
+    my ($sr_core) = $self->col_hash($dna_dba, 'seq_region', 'seq_region_id', 'name');
+    my $diff = hash_diff($sr_variation, $sr_core, $label);
+    my @diffs = keys %{$$diff{"In $label only"}};
+    is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
+    @diffs = keys %{$$diff{"Different values"}};
+    is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
+  }
 }
 
 sub variation_funcgen_fk {
   my ($self) = @_;
-  # Funcgen <-> Variation database relationships. We assume that the dbs are
-  # on the same server; not ideal, but should be good enough in practice.
+  # Funcgen <-> Variation database relationships. We cannot assume that the dbs
+  # are on the same server, so need to compare in Perl rather than SQL.
 
   SKIP: {
     my $funcgen_dba = $self->get_dba(undef, 'funcgen');
-
     skip 'No funcgen database', 1 unless defined $funcgen_dba;
 
-    my $sql = q/
-      SELECT COUNT(name) FROM regulatory_build 
-      WHERE is_current=1
-    /;
-
+    my $sql = 'SELECT COUNT(name) FROM regulatory_build WHERE is_current = 1';
     skip 'The database has no regulatory build', 1 unless sql_count($funcgen_dba, $sql);
 
-    my $funcgen_db = $funcgen_dba->dbc->dbname();
+    {
+      my $desc = "All stable IDs in motif_feature_variation exist in funcgen database";
+      my ($mf_ids) = $self->col_array($funcgen_dba, 'motif_feature', 'stable_id');
+      my ($mfv_ids, $label) = $self->col_array($self->dba, 'motif_feature_variation', 'feature_stable_id');
+      my $diff = array_diff($mfv_ids, $mf_ids, $label);
+      my @diffs = @{$$diff{"In $label only"}};
+      is(scalar(@diffs), 0, $desc);
+    }
 
-    fk($self->dba, 'motif_feature_variation', 'feature_stable_id', "$funcgen_db.motif_feature", 'stable_id');
-    fk($self->dba, 'regulatory_feature_variation', 'feature_stable_id', "$funcgen_db.regulatory_feature", 'stable_id');
+    {
+      my $desc = "All stable IDs in regulatory_feature_variation exist in funcgen database";
+      my ($rf_ids) = $self->col_array($funcgen_dba, 'regulatory_feature', 'stable_id');
+      my ($rfv_ids, $label) = $self->col_array($self->dba, 'regulatory_feature_variation', 'feature_stable_id');
+      my $diff = array_diff($rfv_ids, $rf_ids, $label);
+      my @diffs = @{$$diff{"In $label only"}};
+      is(scalar(@diffs), 0, $desc);
+    }
   }
 }
 
 sub funcgen_core_fk {
   my ($self) = @_;
-  # Core <-> Funcgen database relationships. We assume that the dbs are
-  # on the same server; not ideal, but should be good enough in practice.
+  # Core <-> Funcgen database relationships. We cannot assume that the dbs
+  # are on the same server, so need to compare in Perl rather than SQL.
 
   my $dna_dba = $self->get_dna_dba();
-  my $core_db = $dna_dba->dbc->dbname();
 
-  fk($self->dba, 'probe_feature_transcript', 'stable_id', "$core_db.transcript");
-  fk($self->dba, 'probe_set_transcript',     'stable_id', "$core_db.transcript");
-  fk($self->dba, 'probe_transcript',         'stable_id', "$core_db.transcript");
+  my ($stable_ids) = $self->col_array($dna_dba, 'transcript', 'stable_id');
+  my @stable_id_tables = qw/
+    probe_feature_transcript
+    probe_set_transcript
+    probe_transcript
+  /;
+  foreach my $table (@stable_id_tables) {
+    my $desc = "All stable IDs in $table exist in core database";
 
-  fk($self->dba, 'external_feature',     'seq_region_id', "$core_db.seq_region");
-  fk($self->dba, 'mirna_target_feature', 'seq_region_id', "$core_db.seq_region");
-  fk($self->dba, 'motif_feature',        'seq_region_id', "$core_db.seq_region");
-  fk($self->dba, 'peak',                 'seq_region_id', "$core_db.seq_region");
-  fk($self->dba, 'probe_feature',        'seq_region_id', "$core_db.seq_region");
-  fk($self->dba, 'regulatory_feature',   'seq_region_id', "$core_db.seq_region");
+    my ($ids, $label) = $self->col_array($self->dba, $table, 'stable_id');
+    my $diff = array_diff($ids, $stable_ids, $label);
+    my @diffs = @{$$diff{"In $label only"}};
+    is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
+  }
+
+  my ($seq_region_ids) = $self->col_array($dna_dba, 'seq_region', 'seq_region_id');
+  my @seq_region_id_tables = qw/
+    external_feature
+    mirna_target_feature
+    motif_feature
+    peak
+    probe_feature
+    regulatory_feature
+  /;
+  foreach my $table (@seq_region_id_tables) {
+    my $desc = "All seq_region IDs in $table exist in core database";
+
+    my ($ids, $label) = $self->col_array($self->dba, $table, 'seq_region_id');
+    my $diff = array_diff($ids, $seq_region_ids, $label);
+    my @diffs = @{$$diff{"In $label only"}};
+    is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
+  }
+}
+
+sub col_array {
+  my ($self, $dba, $table, $col) =  @_;
+
+  my $dbname = $dba->dbc->dbname();
+  my $label  = "$dbname.$table.$col";
+
+  my $sql  = "SELECT DISTINCT $col FROM $table WHERE $col IS NOT NULL";
+  my $data = $dba->dbc->sql_helper()->execute_simple( -SQL => $sql );
+
+  return ($data, $label);
+}
+
+sub col_hash {
+  my ($self, $dba, $table, $col1, $col2) =  @_;
+
+  my $dbname = $dba->dbc->dbname();
+  my $label  = "$dbname.$table.[$col1,$col2]";
+
+  my $sql  = "SELECT DISTINCT $col1, $col2 FROM $table WHERE $col1 IS NOT NULL";
+  my $data = $dba->dbc->sql_helper()->execute_into_hash( -SQL => $sql );
+
+  return ($data, $label);
 }
 
 1;
