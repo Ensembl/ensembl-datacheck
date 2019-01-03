@@ -165,6 +165,15 @@
       "name" : "CoordSystemConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent"
    },
+   "CoreTables" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that appropriate core-like tables are identical to those in the core database",
+      "groups" : [
+         "corelike"
+      ],
+      "name" : "CoreTables",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoreTables"
+   },
    "CurrentRegulatoryBuildHasEpigenomes" : {
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has epigenomes data",
