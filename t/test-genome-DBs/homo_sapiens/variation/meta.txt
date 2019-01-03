@@ -1,5 +1,10 @@
 1	\N	schema_type	variation
-2	\N	schema_version	95
+2	\N	schema_version	96
 3	1	species.production_name	homo_sapiens
 4	\N	patch	patch_94_95_a.sql|schema version
 5	\N	patch	patch_94_95_b.sql|create table to store allele synonyms
+23	\N	patch	patch_95_96_a.sql|schema version
+24	\N	patch	patch_95_96_b.sql|modify index on variation_synonym
+25	\N	patch	patch_95_96_c.sql|add new entries to the failed_description table
+26	\N	patch	patch_95_96_d.sql|create table to store failed variation features
+27	\N	patch	patch_95_96_e.sql|Rename motif_name to binding_matrix_stable_id.
