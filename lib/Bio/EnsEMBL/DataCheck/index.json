@@ -240,7 +240,7 @@
    },
    "FeaturePosition" : {
       "datacheck_type" : "critical",
-      "description" : "Checks if features lie within bounds of seq_region i.e. start >=0 and end <= seq_region length.",
+      "description" : "Ensure that features are within the bounds of their seq_region",
       "groups" : [
          "funcgen_handover"
       ],
