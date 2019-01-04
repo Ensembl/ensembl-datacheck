@@ -134,7 +134,8 @@ CREATE TABLE `binding_matrix` (
   `source` varchar(20) NOT NULL,
   `stable_id` varchar(128) NOT NULL,
   PRIMARY KEY (`binding_matrix_id`),
-  UNIQUE KEY `name_idx` (`name`)
+  UNIQUE KEY `name_idx` (`name`),
+  UNIQUE KEY `stable_id_idx` (`stable_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `binding_matrix_frequencies` (
@@ -203,6 +204,7 @@ CREATE TABLE `epigenome` (
   UNIQUE KEY `name_idx` (`name`),
   UNIQUE KEY `display_label_idx` (`display_label`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 CREATE TABLE `execution_plan` (
   `execution_plan_id` int(18) unsigned NOT NULL AUTO_INCREMENT,
   `time` bigint(20) DEFAULT NULL,
@@ -210,6 +212,7 @@ CREATE TABLE `execution_plan` (
   `execution_plan` longtext NOT NULL,
   PRIMARY KEY (`execution_plan_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 CREATE TABLE `experiment` (
   `experiment_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -225,6 +228,7 @@ CREATE TABLE `experiment` (
   KEY `feature_type_idx` (`feature_type_id`),
   KEY `epigenome_idx` (`epigenome_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 CREATE TABLE `experimental_group` (
   `experimental_group_id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(40) NOT NULL,
@@ -376,8 +380,8 @@ CREATE TABLE `meta` (
   PRIMARY KEY (`meta_id`),
   UNIQUE KEY `species_key_value_idx` (`species_id`,`meta_key`,`meta_value`),
   KEY `species_value_idx` (`species_id`,`meta_value`)
-) ENGINE=MyISAM AUTO_INCREMENT=112 DEFAULT CHARSET=latin1;
-INSERT INTO `meta` VALUES (1,1,'schema_type','funcgen'),(2,NULL,'schema_version','95'),(3,NULL,'patch','patch_87_88_a.sql|schema_version'),(4,NULL,'patch','patch_87_88_b.sql|seq_region_name_255'),(5,NULL,'patch','patch_87_88_c.sql|sample_regulatory_feature_id field for regulatory build'),(6,NULL,'patch','patch_88_89_a.sql|schema_version'),(7,NULL,'patch','patch_88_89_b.sql|Created probe_seq table'),(8,NULL,'patch','patch_88_89_c.sql|created probe_feature_transcript table'),(9,NULL,'patch','patch_88_89_d.sql|created probe_transcript table'),(10,NULL,'patch','patch_88_89_e.sql|created probeset_transcript table'),(11,NULL,'patch','patch_88_89_f.sql|Removed probe features from object_xref and xref table'),(12,NULL,'patch','patch_88_89_g.sql|Removed probe mappings from the xref tables'),(13,NULL,'patch','patch_88_89_h.sql|Removed probe set mappings from the xref tables'),(14,NULL,'patch','patch_88_89_i.sql|New columns for array table'),(15,NULL,'patch','patch_88_89_j.sql|Added array_chip_id column to probe_set table'),(16,NULL,'patch','patch_88_89_k.sql|Added probe_seq_id column to probe table'),(17,NULL,'patch','patch_89_90_a.sql|schema_version'),(18,NULL,'patch','patch_89_90_b.sql|probe feature columns'),(19,NULL,'patch','patch_89_90_c.sql|Adds stable id index for probe_transcript table'),(20,NULL,'patch','patch_89_90_d.sql|Adds stable id index for probe_set_transcript table'),(21,NULL,'patch','patch_90_91_a.sql|schema_version'),(22,NULL,'patch','patch_90_91_b.sql|Remove sequence regions from previous releases'),(23,NULL,'patch','patch_90_91_c.sql|Translate sequence region ids of regulatory features'),(24,NULL,'patch','patch_90_91_d.sql|Replace regulatory features with updated ones'),(25,NULL,'patch','patch_90_91_e.sql|Translate sequence region ids of segmentation features'),(26,NULL,'patch','patch_90_91_f.sql|Replace segmentation features with updated ones'),(27,NULL,'patch','patch_90_91_g.sql|Translate sequence region ids of probe features'),(28,NULL,'patch','patch_90_91_h.sql|Replace probe features with updated ones'),(29,NULL,'patch','patch_90_91_i.sql|Translate sequence region ids of annotated features'),(30,NULL,'patch','patch_90_91_j.sql|Replace annotated features with updated ones'),(31,NULL,'patch','patch_90_91_k.sql|Translate sequence region ids of external features'),(32,NULL,'patch','patch_90_91_l.sql|Replace external features with updated ones'),(33,NULL,'patch','patch_90_91_m.sql|Translate sequence region ids of mi rna target features'),(34,NULL,'patch','patch_90_91_n.sql|Replace mi rna target features with updated ones'),(35,NULL,'patch','patch_90_91_o.sql|Translate sequence region ids of motif features'),(36,NULL,'patch','patch_90_91_p.sql|Replace motif features with updated ones'),(37,NULL,'patch','patch_90_91_q.sql|Drop seq_region table'),(38,NULL,'patch','patch_90_91_r.sql|Translate coord_system_ids in meta_coord table'),(39,NULL,'patch','patch_90_91_s.sql|Replace meta coord table with the updated table'),(40,NULL,'patch','patch_90_91_t.sql|Drop coord_system table'),(41,NULL,'patch','patch_90_91_u.sql|Set default gender to unknown for epigenomes'),(42,NULL,'patch','patch_90_91_v.sql|Create read_file table and populate it'),(43,NULL,'patch','patch_90_91_w.sql|Create read_file_experimental_configuration table and populate it'),(44,NULL,'patch','patch_90_91_x.sql|Rename result_set to alignment in various tables and columns'),(45,NULL,'patch','patch_90_91_y.sql|Rename annotated_feature to peak'),(46,NULL,'patch','patch_90_91_z.sql|Drop input_subset table'),(47,NULL,'patch','patch_90_91_za.sql|Move peak_callings from feature_set to peak_calling'),(48,NULL,'patch','patch_90_91_zb.sql|Rename another table'),(49,NULL,'patch','patch_90_91_zc.sql|Remove peak_callings from the feature_set table'),(50,NULL,'patch','patch_90_91_zd.sql|Drop data_set table'),(51,NULL,'patch','patch_90_91_ze.sql|Drop supporting_set table'),(52,NULL,'patch','patch_90_91_zf.sql|Drop status tables'),(53,NULL,'patch','patch_90_91_zg.sql|rename table dbfile_registry to data_file and change the way alignments link to it'),(54,NULL,'patch','patch_90_91_zh.sql|Add new columns to read_file_experimental_configuration table'),(55,NULL,'patch','patch_90_91_zi.sql|Create probe_id index on probe_transcript table'),(56,NULL,'patch','patch_91_92_a.sql|schema_version'),(57,NULL,'patch','patch_91_92_b.sql|Drop column paired_with from table read_file'),(58,NULL,'patch','patch_91_92_c.sql|Create underlying_structure table'),(59,NULL,'patch','patch_92_93_a.sql|schema_version'),(60,NULL,'patch','patch_92_93_b.sql|Allow failed peak callings'),(61,NULL,'patch','patch_92_93_c.sql|Allow the number of reads to be stored'),(62,NULL,'patch','patch_92_93_d.sql|Create table for chance quality check'),(63,NULL,'patch','patch_92_93_e.sql|Peak_calling table changes'),(64,NULL,'patch','patch_92_93_f.sql|Updates to alignment table'),(65,NULL,'patch','patch_92_93_g.sql|New table idr'),(66,NULL,'patch','patch_92_93_h.sql|execution_plan table'),(67,NULL,'patch','patch_92_93_i.sql|Add table to store fastqc outcomes'),(68,NULL,'patch','patch_92_93_j.sql|phantom peak table'),(69,NULL,'patch','patch_92_93_k.sql|Add table to store frip scores'),(70,NULL,'patch','patch_92_93_l.sql|Remove unused epigenome columns'),(71,NULL,'patch','patch_92_93_m.sql|Remove constraints'),(72,NULL,'patch','patch_92_93_n.sql|Fix ids, add missing autoincrement'),(73,NULL,'patch','patch_92_93_o.sql|Create peak_calling_statistic table'),(74,NULL,'patch','patch_92_93_p.sql|Create segmentation_state_assignment table'),(75,NULL,'patch','patch_92_93_q.sql|Create segmentation_state_emission table'),(76,NULL,'patch','patch_92_93_r.sql|Create regulatory_build_statistics table'),(77,NULL,'patch','patch_92_93_s.sql|drop segmentation_feature table'),(78,NULL,'patch','patch_92_93_t.sql|drop alignment_qc_phantom_peak table'),(79,NULL,'patch','patch_92_93_u.sql|Create probemapping meta table'),(80,NULL,'patch','patch_92_93_v.sql|Create probemapping statistic table'),(81,NULL,'patch','patch_92_93_w.sql|Modify index name_exp_idx from table read_file_experimental_configuration'),(82,NULL,'patch','patch_93_94_a.sql|schema_version'),(83,NULL,'patch','patch_93_94_b.sql|Modify column display_label length from epigenome table'),(84,NULL,'patch','patch_93_94_c.sql|Adds table segmentation_cell_table_ctcf'),(85,NULL,'patch','patch_93_94_d.sql|Adds table segmentation_cell_table_without_ctcf'),(86,NULL,'patch','patch_93_94_e.sql|Create transcription_factor table'),(87,NULL,'patch','patch_93_94_f.sql|Create transcription_factor_complex table'),(88,NULL,'patch','patch_93_94_g.sql|Create transcription_factor_complex_composition table'),(89,NULL,'patch','patch_93_94_h.sql|Create binding_matrix_transcription_factor_complex table'),(90,NULL,'patch','patch_93_94_i.sql|Modify motif_feature table'),(91,NULL,'patch','patch_93_94_j.sql|Create motif_feature_peak table'),(92,NULL,'patch','patch_93_94_k.sql|Create motif_feature_regulatory_feature table'),(93,NULL,'patch','patch_93_94_l.sql|Modify binding_matrix_table'),(94,NULL,'patch','patch_93_94_m.sql|Create binding_matrix_frequencies table'),(95,NULL,'patch','patch_93_94_n.sql|Modify indices in motif_feature_peak table'),(96,NULL,'patch','patch_93_94_o.sql|Add indices to motif_feature_regulatory_feature table'),(97,NULL,'patch','patch_93_94_p.sql|Modify column display_label length from epigenome table'),(98,NULL,'patch','patch_94_95_a.sql|schema_version'),(99,NULL,'patch','patch_94_95_b.sql|update to segmentation state tables'),(100,NULL,'patch','patch_94_95_c.sql|Update to alignment table'),(101,NULL,'patch','patch_94_95_d.sql|Update to execution_plan table'),(102,NULL,'patch','patch_94_95_e.sql|Update to regulatory_build_statistic table'),(103,NULL,'patch','patch_94_95_f.sql|Update to experimental_group table'),(104,NULL,'patch','patch_94_95_g.sql|segmentation table'),(105,NULL,'patch','patch_94_95_h.sql|segmentation_cell_tables'),(106,NULL,'patch','patch_94_95_i.sql|segmentation_statistic table'),(107,NULL,'patch','patch_94_95_j.sql|segmentation_file table'),(108,NULL,'patch','patch_94_95_k.sql|peak calling statistic table'),(109,NULL,'patch','patch_94_95_l.sql|Modify length for column name from epigenome table'),(110,NULL,'patch','patch_94_95_m.sql|drop obsolete tables'),(111,NULL,'patch','patch_94_95_n.sql|add unique constrain on display_label column for epigenome table');
+) ENGINE=MyISAM AUTO_INCREMENT=118 DEFAULT CHARSET=latin1;
+
 CREATE TABLE `meta_coord` (
   `table_name` varchar(40) NOT NULL,
   `coord_system_id` int(10) unsigned NOT NULL,
@@ -446,7 +450,7 @@ CREATE TABLE `motif_feature_regulatory_feature` (
 CREATE TABLE `object_xref` (
   `object_xref_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ensembl_id` int(10) unsigned NOT NULL,
-  `ensembl_object_type` enum('Epigenome','Experiment','RegulatoryFeature','ExternalFeature','AnnotatedFeature','FeatureType','MirnaTargetFeature','ProbeSet','Probe','ProbeFeature') NOT NULL,
+  `ensembl_object_type` enum('Epigenome','Experiment','RegulatoryFeature','ExternalFeature','AnnotatedFeature','FeatureType','MirnaTargetFeature','ProbeSet','Probe','ProbeFeature','ReadFile') NOT NULL,
   `xref_id` int(10) unsigned NOT NULL,
   `linkage_annotation` varchar(255) DEFAULT NULL,
   `analysis_id` smallint(5) unsigned NOT NULL,
@@ -540,6 +544,7 @@ CREATE TABLE `probe` (
   `description` varchar(255) DEFAULT NULL,
   `probe_seq_id` int(10) DEFAULT NULL,
   PRIMARY KEY (`probe_id`,`name`,`array_chip_id`),
+  UNIQUE KEY `probe_idx` (`probe_id`),
   KEY `probe_set_idx` (`probe_set_id`),
   KEY `array_chip_idx` (`array_chip_id`),
   KEY `name_idx` (`name`),
@@ -675,6 +680,8 @@ CREATE TABLE `regulatory_activity` (
 CREATE TABLE `regulatory_build` (
   `regulatory_build_id` int(4) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
+  `release_version` int(11) DEFAULT NULL,
+  `description` text,
   `version` varchar(50) DEFAULT NULL,
   `initial_release_date` varchar(50) DEFAULT NULL,
   `last_annotation_update` varchar(50) DEFAULT NULL,
@@ -696,7 +703,7 @@ CREATE TABLE `regulatory_build_statistic` (
   `regulatory_build_statistic_id` int(30) unsigned NOT NULL AUTO_INCREMENT,
   `regulatory_build_id` int(22) unsigned DEFAULT NULL,
   `statistic` varchar(255) DEFAULT NULL,
-  `value` bigint(11) unsigned DEFAULT NULL,
+  `value` float unsigned DEFAULT NULL,
   PRIMARY KEY (`regulatory_build_statistic_id`),
   UNIQUE KEY `stats_uniq` (`statistic`,`regulatory_build_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;

@@ -38,16 +38,6 @@
       "name" : "ArraysHaveProbes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ArraysHaveProbes"
    },
-   "AssemblyConsistent" : {
-      "datacheck_type" : "critical",
-      "description" : "Assembly is the same in core and core-like databases",
-      "groups" : [
-         "assembly",
-         "corelike_handover"
-      ],
-      "name" : "AssemblyConsistent",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyConsistent"
-   },
    "AssemblyExceptions" : {
       "datacheck_type" : "critical",
       "description" : "Check if assembly_exceptions are present and correct.",
@@ -154,16 +144,6 @@
       ],
       "name" : "ControlledTablesVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
-   },
-   "CoordSystemConsistent" : {
-      "datacheck_type" : "critical",
-      "description" : "Coord system is the same in core and core-like databases",
-      "groups" : [
-         "assembly",
-         "corelike_handover"
-      ],
-      "name" : "CoordSystemConsistent",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent"
    },
    "CurrentRegulatoryBuildHasEpigenomes" : {
       "datacheck_type" : "critical",
