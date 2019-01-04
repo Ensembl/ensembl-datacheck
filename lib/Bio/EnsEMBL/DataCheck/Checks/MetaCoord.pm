@@ -87,7 +87,7 @@ sub feature_lengths_core {
   my ($self, $helper) = @_;
   my $species_id = $self->dba->species_id;
 
-  my @tables = $self->tables;
+  my @tables = $self->feature_tables;
 
   my @sqls;
   foreach my $table (sort @tables) {
@@ -128,7 +128,7 @@ sub feature_lengths_dnadb {
   # db, iterate over them and use the mapping to find the longest per
   # coord_system.
 
-  my @tables = $self->tables;
+  my @tables = $self->feature_tables;
 
   my $dna_dba = $self->get_dna_dba();
 
@@ -158,7 +158,7 @@ sub feature_lengths_dnadb {
   return \%feature_lengths;
 }
 
-sub tables {
+sub feature_tables {
   my ($self) = @_;
 
   my @tables;

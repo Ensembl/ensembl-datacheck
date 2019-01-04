@@ -48,39 +48,6 @@ sub skip_tests {
 
 sub tests {
   my ($self) = @_;
-
-  my $species_id = $self->dba->species_id;
-
-  my $desc = 'Genes are unversioned';
-  my $diag = 'Versioned gene';
-  my $sql  = qq/
-	SELECT
-	  gene.stable_id, gene.version,
-	  transcript.stable_id, transcript.version,
-	  exon.stable_id, exon.version,
-	  translation.stable_id, translation.version
-	FROM
-	  gene INNER JOIN
-	  transcript USING (gene_id) INNER JOIN
-	  exon_transcript USING (transcript_id) INNER JOIN
-	  exon USING (exon_id) INNER JOIN
-      seq_region sr ON gene.seq_region_id = sr.seq_region_id INNER JOIN
-      coord_system cs USING (coord_system_id) LEFT OUTER JOIN
-      translation USING (transcript_id)
-	WHERE
-	  (
-	    gene.version IS NOT NULL OR
-	    transcript.version IS NOT NULL OR
-	    exon.version IS NOT NULL OR
-	    translation.version IS NOT NULL
-	  ) AND
-      cs.species_id = $species_id
-  /;
-  is_rows_zero($self->dba, $sql, $desc, $diag);
-}
-
-sub tests {
-  my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
   $self->version_check('gene',       $species_id);

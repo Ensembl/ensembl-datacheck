@@ -16,38 +16,40 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CoordSystemConsistent;
+package Bio::EnsEMBL::DataCheck::Checks::CoreTables;
 
 use warnings;
 use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'CoordSystemConsistent',
-  DESCRIPTION => 'Coord system is the same in core and core-like databases',
-  GROUPS      => ['assembly', 'corelike_handover'],
+  NAME        => 'CoreTables',
+  DESCRIPTION => 'Check that appropriate core-like tables are identical to those in the core database',
+  GROUPS      => ['corelike'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
-  TABLES      => ['coord_system']
+  TABLES      => ['assembly', 'coord_system', 'seq_region', 'seq_region_attrib']
 };
 
 sub tests {
   my ($self) = @_;
-  my $core_dba = $self->get_dna_dba();
 
-  my $db_type = $self->dba->group;
-  my $desc = "coord_system table has same number of rows in core and $db_type databases";
-  my $sql  = q/
-    SELECT name, COUNT(*) FROM
-      coord_system
-    WHERE name <> 'lrg'
-    GROUP BY name
-  /;
-  row_subtotals($self->dba, $core_dba, $sql, undef, 1, $desc);
+  my $helper = $self->dba->dbc->sql_helper();
+  my $core_helper = $self->get_dna_dba->dbc->sql_helper();
+
+  foreach my $table (@{$self->tables}) {
+    my $desc = "$table is identical in core and core-like database";
+
+    my $sql = "CHECKSUM TABLE $table";
+
+    my $corelike = $helper->execute( -SQL => $sql );
+    my $core = $core_helper->execute( -SQL => $sql );
+    is($$corelike[0][1], $$core[0][1], $desc);
+  }
 }
 
 1;

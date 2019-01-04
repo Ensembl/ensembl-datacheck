@@ -1,0 +1,2 @@
+21	Reference allele does not match the bases at this genome location
+22	Alleles cannot be resolved
