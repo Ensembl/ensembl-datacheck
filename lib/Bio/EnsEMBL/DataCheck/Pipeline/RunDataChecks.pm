@@ -28,6 +28,7 @@ use warnings;
 use feature 'say';
 
 use Bio::EnsEMBL::DataCheck::Manager;
+use Bio::EnsEMBL::Registry;
 use Path::Tiny;
 
 use base ('Bio::EnsEMBL::Hive::Process');
@@ -70,6 +71,11 @@ sub param_defaults {
 
 sub fetch_input {
   my $self = shift;
+
+  my $reg = 'Bio::EnsEMBL::Registry';
+  if ($self->param_is_defined('registry_file')) {
+    $reg->load_all($self->param('registry_file'));
+  }
 
   my $output_file;
   if ($self->param_is_defined('output_dir') && $self->param_is_defined('output_filename')) {

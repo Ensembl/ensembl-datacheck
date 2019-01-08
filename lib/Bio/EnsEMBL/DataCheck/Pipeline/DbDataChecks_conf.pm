@@ -47,36 +47,70 @@ sub default_options {
     meta_filters => {},
     db_type      => 'core',
 
-    datacheck_dir   => undef,
-    index_file      => undef,
-    history_file    => undef,
-    output_dir      => undef,
-    overwrite_files => 1,
-    name            => [],
-    pattern         => [],
-    group           => [],
-    datacheck_type  => [],
-    registry_file   => $self->o('registry'),
-    old_server_uri  => undef,
+    datacheck_dir      => undef,
+    index_file         => undef,
+    history_file       => undef,
+    output_dir         => undef,
+    overwrite_files    => 1,
+    datacheck_names    => [],
+    datacheck_patterns => [],
+    datacheck_groups   => [],
+    datacheck_types    => [],
+    registry_file      => undef,
+    old_server_uri     => undef,
 
     failures_fatal => 0,
 
     parallelize_datachecks => 0,
 
-    email_report => 1,
-    email        => $ENV{'USER'}.'@ebi.ac.uk',
-
+    tag          => undef,
+    timestamp    => undef,
+    email        => undef,
+    email_report => 0,
+    report_all   => 0,
   };
 }
 
-sub pipeline_wide_parameters {
- my ($self) = @_;
- 
- return {
-   %{$self->SUPER::pipeline_wide_parameters},
-   'parallelize_datachecks' => $self->o('parallelize_datachecks'),
-   'email_report'           => $self->o('email_report'),
- };
+# Implicit parameter propagation throughout the pipeline.
+sub hive_meta_table {
+  my ($self) = @_;
+  
+  return {
+    %{$self->SUPER::hive_meta_table},
+    'hive_use_param_stack' => 1,
+  };
+}
+
+sub pipeline_create_commands {
+  my ($self) = @_;
+
+  my $submission_table_sql = q/
+    CREATE TABLE datacheck_submission (
+      submission_job_id INT PRIMARY KEY,
+      history_file VARCHAR(255) NULL,
+      output_dir VARCHAR(255) NULL,
+      tag VARCHAR(255) NULL,
+      email VARCHAR(255) NULL,
+      submitted VARCHAR(255) NULL
+    );
+  /;
+
+  my $results_table_sql = q/
+    CREATE TABLE datacheck_results (
+      submission_job_id INT,
+      dbname VARCHAR(255) NOT NULL,
+      passed INT,
+      failed INT,
+      skipped INT,
+      INDEX submission_job_id_idx (submission_job_id)
+    );
+  /;
+
+  return [
+    @{$self->SUPER::pipeline_create_commands},
+    $self->db_cmd($submission_table_sql),
+    $self->db_cmd($results_table_sql),
+  ];
 }
 
 sub pipeline_analyses {
@@ -84,10 +118,10 @@ sub pipeline_analyses {
 
   return [
     {
-      -logic_name        => 'DbFactory',
-      -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
-      -max_retry_count   => 0,
-      -input_ids         => [ {} ],
+      -logic_name        => 'DataCheckSubmission',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSubmission',
+      -analysis_capacity => 1,
+      -max_retry_count   => 1,
       -parameters        => {
                               species      => $self->o('species'),
                               antispecies  => $self->o('antispecies'),
@@ -97,16 +131,50 @@ sub pipeline_analyses {
                               run_all      => $self->o('run_all'),
                               meta_filters => $self->o('meta_filters'),
                               db_type      => $self->o('db_type'),
+
+                              datacheck_dir      => $self->o('datacheck_dir'),
+                              index_file         => $self->o('index_file'),
+                              history_file       => $self->o('history_file'),
+                              output_dir         => $self->o('output_dir'),
+                              overwrite_files    => $self->o('overwrite_files'),
+                              datacheck_names    => $self->o('datacheck_names'),
+                              datacheck_patterns => $self->o('datacheck_patterns'),
+                              datacheck_groups   => $self->o('datacheck_groups'),
+                              datacheck_types    => $self->o('datacheck_types'),
+                              registry_file      => $self->o('registry_file'),
+                              old_server_uri     => $self->o('old_server_uri'),
+
+                              failures_fatal     => $self->o('failures_fatal'),
+
+                              parallelize_datachecks => $self->o('parallelize_datachecks'),
+
+                              tag          => $self->o('tag'),
+                              timestamp    => $self->o('timestamp'),
+                              email        => $self->o('email'),
+                              email_report => $self->o('email_report'),
+                              report_all   => $self->o('report_all'),
                             },
+      -rc_name           => 'default',
       -flow_into         => {
-                              '2' =>
+                              '1' => ['DbFactory'],
+                              '3' => ['?table_name=datacheck_submission'],
+                            },
+    },
+
+    {
+      -logic_name        => 'DbFactory',
+      -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
+      -max_retry_count   => 0,
+      -flow_into         => {
+                              '2->A' =>
                                 WHEN('#parallelize_datachecks#' => 
                                   ['DataCheckFactory'],
                                 ELSE 
                                   ['RunDataChecks']
                                 ),
+                              'A->1' => ['DataChecksFinished'],
                             },
-      -rc_name           => 'default_w_reg',
+      -rc_name           => 'default',
     },
 
     {
@@ -115,22 +183,12 @@ sub pipeline_analyses {
       -analysis_capacity => 10,
       -max_retry_count   => 0,
       -parameters        => {
-                              datacheck_dir      => $self->o('datacheck_dir'),
-                              index_file         => $self->o('index_file'),
-                              history_file       => $self->o('history_file'),
-                              output_dir         => $self->o('output_dir'),
-                              output_filename    => '#dbname#',
-                              overwrite_files    => $self->o('overwrite_files'),
-                              datacheck_names    => $self->o('name'),
-                              datacheck_patterns => $self->o('pattern'),
-                              datacheck_groups   => $self->o('group'),
-                              datacheck_types    => $self->o('datacheck_type'),
-                              registry_file      => $self->o('registry_file'),
-                              old_server_uri     => $self->o('old_server_uri'),
-                              failures_fatal     => $self->o('failures_fatal'),
+                              'output_filename' => '#dbname#',
                             },
-      -rc_name           => 'default_w_reg',
-      -flow_into         => WHEN('#email_report#' => {'EmailReport' => INPUT_PLUS()}),
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '1' => ['StoreResults'],
+                            },
     },
 
     {
@@ -139,24 +197,12 @@ sub pipeline_analyses {
       -analysis_capacity => 10,
       -max_retry_count   => 0,
       -parameters        => {
-                              datacheck_dir      => $self->o('datacheck_dir'),
-                              index_file         => $self->o('index_file'),
-                              history_file       => $self->o('history_file'),
-                              output_dir         => $self->o('output_dir'),
-                              output_filename    => '#dbname#',
-                              overwrite_files    => $self->o('overwrite_files'),
-                              datacheck_names    => $self->o('name'),
-                              datacheck_patterns => $self->o('pattern'),
-                              datacheck_groups   => $self->o('group'),
-                              datacheck_types    => $self->o('datacheck_type'),
-                              registry_file      => $self->o('registry_file'),
-                              old_server_uri     => $self->o('old_server_uri'),
-                              failures_fatal     => $self->o('failures_fatal'),
+                              'output_filename' => '#dbname#',
                             },
-      -rc_name           => 'default_w_reg',
+      -rc_name           => 'default',
       -flow_into         => {
-                              '2->A' => {'DataCheckFan'    => INPUT_PLUS()},
-                              'A->1' => {'DataCheckFunnel' => INPUT_PLUS()},
+                              '2->A' => ['DataCheckFan'],
+                              'A->1' => ['DataCheckFunnel'],
                             },
     },
 
@@ -166,17 +212,9 @@ sub pipeline_analyses {
       -analysis_capacity => 100,
       -max_retry_count   => 0,
       -parameters        => {
-                              datacheck_dir      => $self->o('datacheck_dir'),
-                              index_file         => $self->o('index_file'),
-                              history_file       => $self->o('history_file'),
-                              output_dir         => $self->o('output_dir'),
-                              output_filename    => '#dbname#',
-                              overwrite_files    => $self->o('overwrite_files'),
-                              registry_file      => $self->o('registry_file'),
-                              old_server_uri     => $self->o('old_server_uri'),
-                              failures_fatal     => $self->o('failures_fatal'),
+                              'output_filename' => '#dbname#',
                             },
-      -rc_name           => 'default_w_reg',
+      -rc_name           => 'default',
       -flow_into         => {
                               '1' => ['?accu_name=results&accu_address=[]'],
                             },
@@ -189,22 +227,24 @@ sub pipeline_analyses {
       -batch_size        => 100,
       -max_retry_count   => 0,
       -parameters        => {
-                              datacheck_dir      => $self->o('datacheck_dir'),
-                              index_file         => $self->o('index_file'),
-                              history_file       => $self->o('history_file'),
-                              output_dir         => $self->o('output_dir'),
-                              output_filename    => '#dbname#',
-                              overwrite_files    => $self->o('overwrite_files'),
-                              datacheck_names    => $self->o('name'),
-                              datacheck_patterns => $self->o('pattern'),
-                              datacheck_groups   => $self->o('group'),
-                              datacheck_types    => $self->o('datacheck_type'),
-                              registry_file      => $self->o('registry_file'),
-                              old_server_uri     => $self->o('old_server_uri'),
-                              failures_fatal     => $self->o('failures_fatal'),
+                              'output_filename' => '#dbname#',
                             },
-      -rc_name           => 'default_w_reg',
-      -flow_into         => WHEN('#email_report#' => {'EmailReport' => INPUT_PLUS()}),
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '1' => ['StoreResults'],
+                            },
+    },
+
+    {
+      -logic_name        => 'StoreResults',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::StoreResults',
+      -analysis_capacity => 10,
+      -max_retry_count   => 1,
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '3' => ['?table_name=datacheck_results'],
+                              '4' => ['EmailReport'],
+                            },
     },
 
     {
@@ -213,9 +253,23 @@ sub pipeline_analyses {
       -analysis_capacity => 10,
       -batch_size        => 100,
       -max_retry_count   => 0,
-      -parameters        => {
-                              email => $self->o('email'),
-                            },
+      -rc_name           => 'default',
+    },
+
+    {
+      -logic_name        => 'DataChecksFinished',
+      -module            => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -rc_name           => 'default',
+      -flow_into         => WHEN('defined #email#' => ['EmailSummary']),
+    },
+
+    {
+      -logic_name        => 'EmailSummary',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::EmailSummary',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
       -rc_name           => 'default',
     },
 
@@ -225,12 +279,8 @@ sub pipeline_analyses {
 sub resource_classes {
   my ($self) = @_;
 
-  my $default_lsf = '-q production-rh7 -M 500 -R "rusage[mem=500]"';
-  my $reg_conf    = '--reg_conf '.$self->o('registry');
-
   return {
-    default       => {LSF => $default_lsf},
-    default_w_reg => {LSF => [$default_lsf, $reg_conf], LOCAL => ['', $reg_conf]},
+    default => {LSF => '-q production-rh7 -M 500 -R "rusage[mem=500]"'},
   }
 }
 
