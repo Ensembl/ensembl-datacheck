@@ -47,9 +47,17 @@ sub write_output {
 
   my $datachecks = $self->param('datachecks');
 
+  # Because we have pipeline-wide parameter propagation, any pattern,
+  # group or type parameters would be picked up by the subsequent 'fan'
+  # module, which is not what we want, so we need to explicitly overwrite
+  # them with empty arrays.
+
   foreach my $datacheck (@$datachecks) {
     my %output = (
-      datacheck_names => [$datacheck->name],
+      datacheck_names    => [$datacheck->name],
+      datacheck_patterns => [],
+      datacheck_groups   => [],
+      datacheck_types    => [],
     );
 
     $self->dataflow_output_id(\%output, 2);
