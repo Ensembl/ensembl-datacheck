@@ -44,7 +44,7 @@ sub write_output {
 
   if (
     defined $self->param('email') &&
-    $self->param('email_report') &&
+    $self->param('report_per_db') &&
     ($self->param('datachecks_failed') || $self->param('report_all'))
   ) {
     
