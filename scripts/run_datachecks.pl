@@ -57,21 +57,24 @@ not possible to load them via the registry_file.
 A URI must be specified with the location of the previous release's databases,
 e.g. mysql://a_user@some_host:port_number/[old_db_name|old_release_number]
 
-=item B<-n[ame]> <name>
+=item B<-n[ames]> <names>
 
 The name of the datacheck to execute.
-To run multiple datachecks, use multiple -n[ame] parameters.
+Multiple names can be given as separate -n[ame] parameters, 
+or as a single comma-separated string.
 
-=item B<-pat[tern]> <pattern>
+=item B<-pat[terns]> <patterns>
 
 A pattern (i.e. Perl regex) that is matched against datacheck names _and_
 descriptions, and the resulting set of datachecks is executed.
-To apply multiple patterns, use multiple -pat[tern] parameters.
+Multiple patterns can be given as separate -pat[tern] parameters, 
+or as a single comma-separated string.
 
-=item B<-g[roup]> <group>
+=item B<-g[roups]> <groups>
 
 The name of a group of datachecks to execute.
-To run multiple groups, use multiple -g[roup] parameters.
+Multiple groups can be given as separate -g[roup] parameters, 
+or as a single comma-separated string.
 
 =item B<-datacheck_t[ype]> [critical|advisory]
 
@@ -209,6 +212,13 @@ if (defined $datacheck_dir && ! defined $index_file) {
 if (! defined $datacheck_dir && defined $index_file) {
   die "datacheck_dir is mandatory if index_file is specified";
 }
+
+# If datacheck parameters have been specified as comma-separated strings,
+# convert them into arrays.
+@names = map { split(/[,\s]+/, $_) } @names if scalar @names;
+@patterns = map { split(/[,\s]+/, $_) } @patterns if scalar @patterns;
+@groups = map { split(/[,\s]+/, $_) } @groups if scalar @groups;
+@datacheck_types = map { split(/[,\s]+/, $_) } @datacheck_types if scalar @datacheck_types;
 
 my %manager_params;
 $manager_params{names}           = \@names           if scalar @names;
