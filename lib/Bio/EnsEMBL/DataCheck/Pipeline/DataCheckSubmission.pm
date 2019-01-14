@@ -70,14 +70,12 @@ sub write_output {
 
     parallelize_datachecks => $self->param('parallelize_datachecks'),
 
-    tag          => $self->param('tag'),
-    email        => $self->param('email'),
-    email_report => $self->param('email_report'),
-    report_all   => $self->param('report_all'),
+    tag           => $self->param('tag'),
+    email         => $self->param('email'),
+    report_per_db => $self->param('report_per_db'),
+    report_all    => $self->param('report_all'),
 
     submission_job_id => $self->input_job->dbID,
-
-    reg_conf => $self->param('registry_file'),
   };
   $self->dataflow_output_id($params, 1);
 

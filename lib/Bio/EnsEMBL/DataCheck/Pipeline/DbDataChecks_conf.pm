@@ -39,11 +39,11 @@ sub default_options {
     pipeline_name => 'db_datachecks',
 
     species      => [],
-    antispecies  => [],
     taxons       => [],
-    antitaxons   => [],
     division     => [],
     run_all      => 0,
+    antispecies  => [],
+    antitaxons   => [],
     meta_filters => {},
     db_type      => 'core',
 
@@ -63,11 +63,11 @@ sub default_options {
 
     parallelize_datachecks => 0,
 
-    tag          => undef,
-    timestamp    => undef,
-    email        => undef,
-    email_report => 0,
-    report_all   => 0,
+    tag           => undef,
+    timestamp     => undef,
+    email         => undef,
+    report_per_db => 0,
+    report_all    => 0,
   };
 }
 
@@ -124,11 +124,11 @@ sub pipeline_analyses {
       -max_retry_count   => 1,
       -parameters        => {
                               species      => $self->o('species'),
-                              antispecies  => $self->o('antispecies'),
                               taxons       => $self->o('taxons'),
-                              antitaxons   => $self->o('antitaxons'),
                               division     => $self->o('division'),
                               run_all      => $self->o('run_all'),
+                              antispecies  => $self->o('antispecies'),
+                              antitaxons   => $self->o('antitaxons'),
                               meta_filters => $self->o('meta_filters'),
                               db_type      => $self->o('db_type'),
 
@@ -148,11 +148,11 @@ sub pipeline_analyses {
 
                               parallelize_datachecks => $self->o('parallelize_datachecks'),
 
-                              tag          => $self->o('tag'),
-                              timestamp    => $self->o('timestamp'),
-                              email        => $self->o('email'),
-                              email_report => $self->o('email_report'),
-                              report_all   => $self->o('report_all'),
+                              tag           => $self->o('tag'),
+                              timestamp     => $self->o('timestamp'),
+                              email         => $self->o('email'),
+                              report_per_db => $self->o('report_per_db'),
+                              report_all    => $self->o('report_all'),
                             },
       -rc_name           => 'default',
       -flow_into         => {
