@@ -76,12 +76,38 @@ sub tests {
         biotype.biotype_group = '$biotype_group' AND
         biotype.object_type = 'gene' AND
         FIND_IN_SET( 'core', biotype.db_type ) > 0 AND
+        seq_region_id NOT IN 
+          (SELECT seq_region_id 
+           FROM seq_region_attrib INNER JOIN attrib_type USING (attrib_type_id)
+           WHERE code = "non_ref") AND
         coord_system.species_id = $species_id
     /;
+    my $count = $helper->execute_single_result(-SQL => $sql_b);
 
-    is_rows($self->dba, $sql_b, $sum, $desc);
+    if ($self->species eq 'homo_sapiens') {
+      my $sql_c = qq/
+        SELECT COUNT(*) FROM
+          gene INNER JOIN
+          biotype ON gene.biotype = biotype.name INNER JOIN
+          seq_region USING (seq_region_id) INNER JOIN
+          coord_system USING (coord_system_id) INNER JOIN
+          assembly_exception ae on gene.seq_region_id = ae.exc_seq_region_id
+        WHERE
+          biotype.biotype_group = '$biotype_group' AND
+          biotype.object_type = 'gene' AND
+          FIND_IN_SET( 'core', biotype.db_type ) > 0 AND
+          ae.exc_type = 'PAR' AND
+          (
+            gene.seq_region_start BETWEEN ae.exc_seq_region_start AND ae.exc_seq_region_end AND
+            gene.seq_region_end BETWEEN ae.exc_seq_region_start AND ae.exc_seq_region_end
+          ) AND
+          coord_system.species_id = $species_id
+      /;
+      $count += $helper->execute_single_result(-SQL => $sql_c);
+    }
+
+    is($sum, $count, $desc);
   }
 }
 
 1;
-

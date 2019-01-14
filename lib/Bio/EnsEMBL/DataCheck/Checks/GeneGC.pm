@@ -56,6 +56,7 @@ sub tests {
       seq_region USING (seq_region_id) INNER JOIN
       coord_system USING (coord_system_id)
     WHERE
+      biotype <> 'LRG_gene' AND
       species_id = $species_id
   /;
   my $sql_2b = qq/
