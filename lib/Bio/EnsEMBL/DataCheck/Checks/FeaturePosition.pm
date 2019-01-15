@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
     NAME        => 'FeaturePosition',
     DESCRIPTION => 'Ensure that features are within the bounds of their seq_region',
-    GROUPS      => ['funcgen_handover'],
+    GROUPS      => ['funcgen', 'ersa'],
     DB_TYPES    => ['funcgen'],
     TABLES      => ['external_feature', 'mirna_target_feature', 'motif_feature', 'peak', 'regulatory_feature']
 };

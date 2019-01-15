@@ -242,7 +242,8 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that features are within the bounds of their seq_region",
       "groups" : [
-         "funcgen_handover"
+         "funcgen",
+         "ersa"
       ],
       "name" : "FeaturePosition",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeaturePosition"
