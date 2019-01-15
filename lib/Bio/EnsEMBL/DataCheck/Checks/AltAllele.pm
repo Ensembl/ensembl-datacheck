@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AltAllele',
   DESCRIPTION => 'Ensure alt_allele group members all map back to the same chromosome',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['core', 'geneset'],
   DB_TYPES    => ['core'],
 };
 

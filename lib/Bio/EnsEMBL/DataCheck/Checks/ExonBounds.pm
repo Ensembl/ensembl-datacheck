@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ExonBounds',
   DESCRIPTION => 'Check that exon regions are non-overlapping, and are consistent with their transcripts',
-  DB_TYPES    => ['core'],
+  DB_TYPES    => ['core', 'corelike', 'geneset'],
   GROUPS      => ['core_handover'],
 };
 

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'DNAEmpty',
   DESCRIPTION => 'Check that core-like databases do not contain DNA sequences',
-  GROUPS      => ['corelike_handover'],
+  GROUPS      => ['corelike'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
   PER_DB      => 1
 };

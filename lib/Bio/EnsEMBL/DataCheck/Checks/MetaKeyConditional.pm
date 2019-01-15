@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyConditional',
   DESCRIPTION => 'Check for meta keys which are conditional on some aspect of the data',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['core', 'meta', 'variation'],
   DB_TYPES    => ['core', 'variation'],
   TABLES      => ['meta']
 };
