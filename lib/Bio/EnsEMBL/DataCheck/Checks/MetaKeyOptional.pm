@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'MetaKeyOptional',
   DESCRIPTION    => 'Check for meta keys which are expected but not mandatory',
-  GROUPS         => ['core_handover'],
+  GROUPS         => ['core', 'meta'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['meta']

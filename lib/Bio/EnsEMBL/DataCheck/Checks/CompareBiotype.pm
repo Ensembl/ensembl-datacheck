@@ -28,12 +28,13 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'CompareBiotype',
-  DESCRIPTION => 'Check for more than 25% difference between the number of genes '.
-                 'in two databases, broken down by biotype.',
-  DB_TYPES    => ['core'],
-  TABLES      => ['gene'],
-  GROUPS      => ['handover'],
+  NAME           => 'CompareBiotype',
+  DESCRIPTION    => 'Check for more than 25% difference between the number of genes '.
+                    'in two databases, broken down by biotype.',
+  GROUPS         => ['core_compare'],
+  DATACHECK_TYPE => 'advisory',
+  DB_TYPES       => ['core'],
+  TABLES         => ['gene'],
 };
 
 sub tests {

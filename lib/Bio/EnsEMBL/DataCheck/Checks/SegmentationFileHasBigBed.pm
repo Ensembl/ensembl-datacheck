@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SegmentationFileHasBigBed',
   DESCRIPTION => 'Check that every segmentation_file entry which has been used in the current Regulatory Build is linked to a BIGBED entry in the data_file table and exists on disk',
-  GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build'],
+  GROUPS      => ['funcgen', 'regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_build','regulatory_feature'],
 };

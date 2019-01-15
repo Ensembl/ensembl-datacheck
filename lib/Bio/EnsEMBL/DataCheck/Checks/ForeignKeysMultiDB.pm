@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ForeignKeysMultiDB',
-  GROUPS      => ['funcgen_handover', 'variation_handover'],
+  GROUPS      => ['funcgen', 'schema', 'variation'],
   DESCRIPTION => 'Check for broken foreign key relationships between tables from multiple databases',
   DB_TYPES    => ['funcgen', 'variation']
 };

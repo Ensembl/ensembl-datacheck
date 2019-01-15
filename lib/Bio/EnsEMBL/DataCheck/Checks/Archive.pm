@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'Archive',
   DESCRIPTION => 'Gene archive table is up to date.',
-  GROUPS      => ['core_handover', 'post_projection', 'stable_id_mapping'],
+  GROUPS      => ['id_mapping'],
   DB_TYPES    => ['core'],
   TABLES      => ['gene_archive', 'stable_id_event'],
   PER_DB      => 1,

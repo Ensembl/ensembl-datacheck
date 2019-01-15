@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'GeneBounds',
   DESCRIPTION => 'Ensure that genes are within the bounds of their seq_region',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['coord_system', 'exon', 'gene', 'seq_region', 'transcript']
 };

@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AssemblySeqregion',
   DESCRIPTION => 'assembly and seq_region table are consistent.',
-  GROUPS      => ['assembly', 'core_handover'],
+  GROUPS      => ['assembly', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['assembly', 'coord_system', 'seq_region'],
   PER_DB      => 1,

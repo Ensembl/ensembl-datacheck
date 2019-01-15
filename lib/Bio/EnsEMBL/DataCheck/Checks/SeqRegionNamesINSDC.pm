@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'SeqRegionNamesINSDC',
   DESCRIPTION    => 'Check that seq_region names from INSDC are appropriately formatted and attributed',
-  GROUPS         => ['assembly'],
+  GROUPS         => ['assembly', 'core'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'external_db', 'seq_region', 'seq_region_attrib', 'seq_region_synonym']

@@ -23,21 +23,18 @@ use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'DisplayableGenes',
-  DESCRIPTION    => 'Check that genes are displayable '
-    . 'and have web_data attached to their analysis.',
-  GROUPS         => ['core_handover'],
+  DESCRIPTION    => 'Check that genes are displayable and have web_data attached to their analysis',
+  GROUPS         => ['core', 'corelike', 'geneset'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core', 'otherfeatures', 'rnaseq', 'cdna'],
   TABLES         => ['gene', 'analysis', 'analysis_description']
 };
-
 
 sub tests {
   my ($self) = @_;
@@ -56,8 +53,8 @@ sub tests {
 
   is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
 
-  my $desc_2 = 'All genes have associated web_data.';
-  my $diag_2 = 'web_data is not set.';
+  my $desc_2 = 'All genes have associated web_data';
+  my $diag_2 = 'web_data is not set';
   my $sql_2 = q/
       SELECT analysis.logic_name
         FROM gene
@@ -72,6 +69,4 @@ sub tests {
 
 }
 
-
 1;
-
