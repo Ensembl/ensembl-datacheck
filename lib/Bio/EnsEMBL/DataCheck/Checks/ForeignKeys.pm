@@ -96,6 +96,7 @@ sub core_fk {
   fk($self->dba, 'gene',                  'gene_id',                  'transcript');
   fk($self->dba, 'prediction_transcript', 'prediction_transcript_id', 'prediction_exon');
   fk($self->dba, 'mapping_session',       'mapping_session_id',       'stable_id_event');
+  fk($self->dba, 'analysis',              'analysis_id',              'analysis_description');
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
   fk($self->dba, 'object_xref', 'ensembl_id', 'gene',        'gene_id',        'ensembl_object_type = "Gene"');

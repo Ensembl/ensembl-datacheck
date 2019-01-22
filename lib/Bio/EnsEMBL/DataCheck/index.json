@@ -1,4 +1,14 @@
 {
+   "AlignFeatureExternalDB" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check that all align_feature rows have an external_db",
+      "groups" : [
+         "core",
+         "corelike"
+      ],
+      "name" : "AlignFeatureExternalDB",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignFeatureExternalDB"
+   },
    "AltAllele" : {
       "datacheck_type" : "critical",
       "description" : "Ensure alt_allele group members all map back to the same chromosome",
@@ -18,6 +28,16 @@
       ],
       "name" : "AltAlleleGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAlleleGroup"
+   },
+   "AnalysisFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that analysis is formatted correctly",
+      "groups" : [
+         "core",
+         "corelike"
+      ],
+      "name" : "AnalysisFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisFormat"
    },
    "Archive" : {
       "datacheck_type" : "critical",
@@ -505,6 +525,15 @@
       "groups" : [],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
+   "PolyploidAttribs" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that component genomes are annotated for polyploid genomes",
+      "groups" : [
+         "core"
+      ],
+      "name" : "PolyploidAttribs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
    },
    "ProteinCodingGenes" : {
       "datacheck_type" : "critical",
