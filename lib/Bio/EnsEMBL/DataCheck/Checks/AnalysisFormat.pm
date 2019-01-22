@@ -49,7 +49,9 @@ sub tests {
   my $desc_2 = 'Created date is not all zeroes';
   my $sql_2  = q/
     SELECT logic_name FROM analysis
-    WHERE created = '0000-00-00 00:00:00'
+    WHERE
+      created = '0000-00-00 00:00:00' OR
+      created = '1970-00-00 00:00:00'
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
 }
