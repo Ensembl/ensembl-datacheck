@@ -718,6 +718,16 @@
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
    },
+   "StableIDUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for uniqueness of stable IDs, both within a database, and across all databases in the registry",
+      "groups" : [
+         "annotation",
+         "core"
+      ],
+      "name" : "StableIDUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
+   },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
       "description" : "Check that gene and transcript bounds are consistent",
