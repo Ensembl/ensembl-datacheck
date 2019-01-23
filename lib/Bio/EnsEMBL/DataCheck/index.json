@@ -385,6 +385,15 @@
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
    },
+   "MTCodonTable" : {
+      "datacheck_type" : "critical",
+      "description" : "MT seq region had associated seq_region attribute and correct codon table",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "MTCodonTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MTCodonTable"
+   },
    "MetaCoord" : {
       "datacheck_type" : "critical",
       "description" : "Check that the meta_coord table is correctly populated",
