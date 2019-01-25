@@ -727,6 +727,7 @@
       ],
       "name" : "StableIDUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
+   },
    "SpeciesTaxonomy" : {
       "datacheck_type" : "critical",
       "description" : "Check that taxonomy meta key is consistent with taxonomy database",
