@@ -718,6 +718,15 @@
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
    },
+   "SpeciesTaxonomy" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that taxonomy meta key is consistent with taxonomy database",
+      "groups" : [
+         "core"
+      ],
+      "name" : "SpeciesTaxonomy",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesTaxonomy"
+   },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
       "description" : "Check that gene and transcript bounds are consistent",
