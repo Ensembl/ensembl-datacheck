@@ -1,0 +1,2 @@
+1	7227	0	7227	drosophila_melanogaster	Drosophila_melanogaster	Drosophila melanogaster	Drosophila melanogaster	\N	\N	\N	\N
+2	126957	0	126957	strigamia_maritima	Strigamia_maritima	Strigamia maritima	Strigamia maritima	\N	\N	\N	\N

@@ -15,5 +15,8 @@
       'funcgen' => 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor',
       'variation' => 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor',
     },
+    'multi' => {
+	  'metadata' => 'Bio::EnsEMBL::MetaData::DBSQL::MetaDataDBAdaptor',
+	},
   },
 }
