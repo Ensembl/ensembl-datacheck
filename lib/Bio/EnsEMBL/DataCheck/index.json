@@ -107,14 +107,14 @@
       "name" : "ChromosomesAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
    },
-   "CompareBiotype" : {
+   "CompareBiotypeGroup" : {
       "datacheck_type" : "advisory",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
       "groups" : [
          "core_compare"
       ],
-      "name" : "CompareBiotype",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype"
+      "name" : "CompareBiotypeGroup",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup"
    },
    "CompareSchema" : {
       "datacheck_type" : "critical",

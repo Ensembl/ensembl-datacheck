@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CompareBiotype;
+package Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup;
 
 use warnings;
 use strict;
@@ -28,7 +28,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CompareBiotype',
+  NAME           => 'CompareBiotypeGroup',
   DESCRIPTION    => 'Check for more than 25% difference between the number of genes '.
                     'in two databases, broken down by biotype.',
   GROUPS         => ['core_compare'],
