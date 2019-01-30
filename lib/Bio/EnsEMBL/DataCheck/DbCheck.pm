@@ -434,7 +434,9 @@ sub run_datacheck {
     $self->dba($original_dba);
 
   } else {
-    subtest $self->species => sub {
+    my $label = $self->per_db ? 'all species in collection' : $self->species;
+
+    subtest $label => sub {
       SKIP: {
         my ($skip, $skip_reason) = $self->skip_tests(@_);
 
