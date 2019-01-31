@@ -39,14 +39,19 @@ use constant {
 sub tests {
   my ($self) = @_;
 
+  my $species_id = $self->dba->species_id;
+
   my $desc_1 = 'All genes have displayable analysis';
   my $diag_1 = 'Undisplayed analysis';
-  my $sql_1 = q/
+  my $sql_1  = qq/
       SELECT analysis.logic_name
         FROM gene
   INNER JOIN analysis USING (analysis_id)
   INNER JOIN analysis_description USING (analysis_id)
+  INNER JOIN seq_region USING (seq_region_id)
+  INNER JOIN coord_system USING (coord_system_id)
        WHERE analysis_description.displayable = 0
+         AND coord_system.species_id = $species_id
     GROUP BY analysis.logic_name
       HAVING COUNT(*) > 1
     /;
@@ -55,12 +60,15 @@ sub tests {
 
   my $desc_2 = 'All genes have associated web_data';
   my $diag_2 = 'web_data is not set';
-  my $sql_2 = q/
+  my $sql_2  = qq/
       SELECT analysis.logic_name
         FROM gene
   INNER JOIN analysis USING (analysis_id)
   INNER JOIN analysis_description USING (analysis_id)
+  INNER JOIN seq_region USING (seq_region_id)
+  INNER JOIN coord_system USING (coord_system_id)
        WHERE analysis_description.web_data is NULL
+         AND coord_system.species_id = $species_id
     GROUP BY analysis.logic_name
       HAVING COUNT(*) > 1
     /;
