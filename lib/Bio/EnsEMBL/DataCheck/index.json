@@ -116,6 +116,15 @@
       "name" : "CompareBiotypeGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup"
    },
+   "CompareGOXref" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare GO xref counts, broken down by source, between two databases",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "CompareGOXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGOXref"
+   },
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
@@ -128,6 +137,24 @@
       ],
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
+   },
+   "CompareSynonym" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare synonym counts, broken down by external_db, between two databases",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "CompareSynonym",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSynonym"
+   },
+   "CompareXref" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare xref counts, broken down by external_db, between two databases",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "CompareXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareXref"
    },
    "ControlledAnalysis" : {
       "datacheck_type" : "critical",
