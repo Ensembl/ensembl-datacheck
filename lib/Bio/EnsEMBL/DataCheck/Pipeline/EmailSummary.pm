@@ -44,6 +44,7 @@ sub fetch_input {
   my $sql = q/
     SELECT dbname, passed, failed, skipped FROM datacheck_results
     WHERE submission_job_id = ?
+    ORDER BY dbname
   /;
   my $sth = $self->dbc->prepare($sql);
   $sth->execute($submission_job_id);

@@ -1,0 +1,2 @@
+1	1	drosophila_melanogaster_core_95_6	1	core
+2	2	strigamia_maritima_core_42_95_1	1	core
