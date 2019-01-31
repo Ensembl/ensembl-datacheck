@@ -29,6 +29,15 @@
       "name" : "AltAlleleGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAlleleGroup"
    },
+   "AnalysisDescription" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that certain analyses have descriptions",
+      "groups" : [
+         "core"
+      ],
+      "name" : "AnalysisDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisDescription"
+   },
    "AnalysisFormat" : {
       "datacheck_type" : "critical",
       "description" : "Ensure that analysis is formatted correctly",
@@ -211,6 +220,15 @@
       ],
       "name" : "Denormalized",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Denormalized"
+   },
+   "FuncgenAnalysisDescription" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that certain features have descriptions and are displayable",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "FuncgenAnalysisDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FuncgenAnalysisDescription"
    },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
@@ -534,6 +552,16 @@
       ],
       "name" : "PolyploidAttribs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
+   },
+   "ProbeUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that probe IDs and mappings are unique",
+      "groups" : [
+         "funcgen",
+         "probe_mapping"
+      ],
+      "name" : "ProbeUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProbeUnique"
    },
    "ProteinCodingGenes" : {
       "datacheck_type" : "critical",
