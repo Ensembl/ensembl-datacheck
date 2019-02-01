@@ -38,7 +38,7 @@ my $module = 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks';
 
 diag('Methods');
 my @hive_methods   = qw(param_defaults fetch_input run write_output);
-my @module_methods = qw(datacheck_params set_dba_param set_registry_param);
+my @module_methods = qw(datacheck_params set_dba_param set_datacheck_params);
 can_ok($module, @hive_methods);
 can_ok($module, @module_methods);
 
@@ -58,6 +58,7 @@ subtest 'Parameter instantiation: Manager', sub {
   $obj->param('history_file', '/path/to/history/file');
   $obj->param('output_dir', '/output/dir');
   $obj->param('output_filename', 'tap_output');
+  $obj->param('config_file', '/path/to/config/file');
   $obj->param('overwrite_files', 0);
   $obj->param('datacheck_names', ['DbCheck_1', 'DbCheck_4']);
   $obj->param('datacheck_patterns', ['BaseCheck']);
@@ -72,6 +73,7 @@ subtest 'Parameter instantiation: Manager', sub {
   is($manager->index_file, '/path/to/index/file', 'Index file is set correctly');
   is($manager->history_file, '/path/to/history/file', 'History file is set correctly');
   is($manager->output_file, '/output/dir/tap_output.txt', 'Output file is set correctly');
+  is($manager->config_file, '/path/to/config/file', 'Config file is set correctly');
   is($manager->overwrite_files, 0, 'Overwrite flag is set correctly');
   is_deeply($manager->names, ['DbCheck_1', 'DbCheck_4'], 'Datacheck names are set correctly');
   is_deeply($manager->patterns, ['BaseCheck'], 'Datacheck patterns are set correctly');
@@ -159,10 +161,11 @@ foreach my $species (@species) {
     $obj->param('group', 'core');
   };
 
-  subtest 'Parameter instantiation: DbCheck registry parameters', sub {
+  subtest 'Parameter instantiation: DbCheck non-DBA parameters', sub {
     $obj->param('registry_file', '/path/to/registry');
     $obj->param('server_uri', 'mysql_uri_1');
     $obj->param('old_server_uri', 'mysql_uri_2');
+    $obj->param('data_file_path', '/path/to/data_files');
 
     $obj->fetch_input();
     my $datacheck_params = $obj->param('datacheck_params');
@@ -170,10 +173,12 @@ foreach my $species (@species) {
     is($$datacheck_params{registry_file}, '/path/to/registry', 'Registry file is set correctly');
     is($$datacheck_params{server_uri}, 'mysql_uri_1', 'Server URI is set correctly');
     is($$datacheck_params{old_server_uri}, 'mysql_uri_2', 'Old server URI is set correctly');
+    is($$datacheck_params{data_file_path}, '/path/to/data_files', 'Data file path is set correctly');
 
     $obj->param('registry_file', undef);
     $obj->param('server_uri', undef);
     $obj->param('old_server_uri', undef);
+    $obj->param('data_file_path', undef);
   };
 
   # Point at the test datachecks. Output file is needed to prevent the

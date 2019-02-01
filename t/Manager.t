@@ -40,10 +40,18 @@ my $index_file    = "$FindBin::Bin/index.json";
 my $module = 'Bio::EnsEMBL::DataCheck::Manager';
 
 diag('Attributes');
-can_ok($module, qw(datacheck_dir index_file names patterns groups datacheck_types history_file output_file));
+can_ok($module, qw(datacheck_dir index_file config_file names patterns groups datacheck_types history_file output_file));
 
 diag('Methods');
-can_ok($module, qw(load_checks filter run_checks read_index write_index read_history write_history));
+can_ok($module, qw(load_config load_checks filter run_checks read_index write_index read_history write_history));
+
+# Need to move the default config file, if it exists, so that we
+# can test its absence/presence properly.
+my $default_config_file = $FindBin::Bin;
+$default_config_file =~ s!t$!config.json!;
+if (-e $default_config_file) {
+  path($default_config_file)->move("$default_config_file.tmp");
+}
 
 # As well as being a nice way to encapsulate sets of tests, the use of
 # subtests here is necessary, because the behaviour we are testing
@@ -55,6 +63,7 @@ subtest 'Default attributes', sub {
 
   like($manager->datacheck_dir, qr!lib/Bio/EnsEMBL/DataCheck/Checks!,     'Default datacheck_dir correct');
   like($manager->index_file,    qr!lib/Bio/EnsEMBL/DataCheck/index.json!, 'Default index_file correct');
+  is($manager->config_file,     undef, 'Default config_file correct (undefined)');
   is($manager->history_file,    undef, 'Default history_file correct (undefined)');
   is($manager->output_file,     undef, 'Default output_file correct (undefined)');
   is_deeply($manager->names,    [], 'Default names correct (empty list)');
@@ -491,6 +500,11 @@ foreach my $species (keys %db_types) {
       is($failed,  1, 'Correct number of failed tests');
     };
   }
+}
+
+# Reinstate config file, if necessary.
+if (-e "$default_config_file.tmp") {
+  path("$default_config_file.tmp")->move($default_config_file);
 }
 
 done_testing();
