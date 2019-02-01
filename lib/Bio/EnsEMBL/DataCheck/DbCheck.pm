@@ -206,6 +206,15 @@ has 'old_server_uri' => (
   isa => 'Str | Undef',
 );
 
+=head2 data_file_path
+  Description: Path to directory containing data files that need to be
+               tested as part of some datachecks.
+=cut
+has 'data_file_path' => (
+  is  => 'ro',
+  isa => 'Str | Undef',
+);
+
 =head2 dba_list
   Description: List of DBAdaptor objects that get created by the datacheck.
                (They're tracked so that we can close the connections nicely.)
