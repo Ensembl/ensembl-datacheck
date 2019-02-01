@@ -29,6 +29,15 @@
       "name" : "AltAlleleGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAlleleGroup"
    },
+   "AnalysisDescription" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that certain analyses have descriptions",
+      "groups" : [
+         "core"
+      ],
+      "name" : "AnalysisDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisDescription"
+   },
    "AnalysisFormat" : {
       "datacheck_type" : "critical",
       "description" : "Ensure that analysis is formatted correctly",
@@ -229,6 +238,15 @@
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
    },
+   "DataFilesExist" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that data files are defined in the database, and that the files exist",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "DataFilesExist",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DataFilesExist"
+   },
    "Denormalized" : {
       "datacheck_type" : "critical",
       "description" : "Check that denormalized columns are synchronised",
@@ -334,6 +352,15 @@
       ],
       "name" : "ForeignKeysMultiDB",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysMultiDB"
+   },
+   "FuncgenAnalysisDescription" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that certain features have descriptions and are displayable",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "FuncgenAnalysisDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FuncgenAnalysisDescription"
    },
    "GeneBiotypes" : {
       "datacheck_type" : "critical",
@@ -562,6 +589,16 @@
       "name" : "PolyploidAttribs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
    },
+   "ProbeUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that probe IDs and mappings are unique",
+      "groups" : [
+         "funcgen",
+         "probe_mapping"
+      ],
+      "name" : "ProbeUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProbeUnique"
+   },
    "ProteinCodingGenes" : {
       "datacheck_type" : "critical",
       "description" : "Check for at least one protein-coding gene",
@@ -672,16 +709,6 @@
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
-   },
-   "SegmentationFileHasBigBed" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that every segmentation_file entry which has been used in the current Regulatory Build is linked to a BIGBED entry in the data_file table and exists on disk",
-      "groups" : [
-         "funcgen",
-         "regulatory_build"
-      ],
-      "name" : "SegmentationFileHasBigBed",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SegmentationFileHasBigBed"
    },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
