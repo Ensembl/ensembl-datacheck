@@ -118,7 +118,7 @@ sub funcgen_fk {
   # in a "foreign_keys.sql" file.
 
   # Cases in which we want to check for the reverse direction of the FK constraint
-  fk($self->dba, 'feature_set', 'feature_type_id', 'feature_type');
+  fk($self->dba, 'read_file', 'read_file_id', 'alignment_read_file');
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
   fk($self->dba, 'associated_feature_type', 'table_id', 'external_feature',   'external_feature_id',   'table_name = "external_feature"');
