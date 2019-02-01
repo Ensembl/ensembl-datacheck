@@ -99,9 +99,11 @@ sub segmentation_file_has_bigbed {
 sub data_files_exist {
   my ($self) = @_;
 
-  # This path needs to be un-hardcoded from here and put into a config file...
-  my $data_file_path = '/nfs/panda/ensembl/production/ensemblftp/data_files/';
-  my $path = $self->species_assembly_path($data_file_path);
+  if ( ! (defined $self->data_file_path && -e $self->data_file_path) ) {
+    die "Data file directory must be set as 'data_file_path' attribute";
+  }
+
+  my $path = $self->species_assembly_path($self->data_file_path);
 
   my $data_file_sql = q/
     SELECT table_name, path FROM data_file
