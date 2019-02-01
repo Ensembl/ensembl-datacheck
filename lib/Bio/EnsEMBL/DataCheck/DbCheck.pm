@@ -41,6 +41,7 @@ use constant {
   DB_TYPES => undef,
   TABLES   => undef,
   PER_DB   => undef,
+  FORCE    => undef,
 };
 
 subtype 'DBAdaptor', as 'Object', where {
@@ -227,10 +228,12 @@ around BUILDARGS => sub {
   die "'db_types' cannot be overridden" if exists $param{db_types};
   die "'tables' cannot be overridden" if exists $param{tables};
   die "'per_species' cannot be overridden" if exists $param{per_species};
+  die "'force' cannot be overridden" if exists $param{force};
 
   $param{db_types} = $class->DB_TYPES if defined $class->DB_TYPES;
   $param{tables}   = $class->TABLES if defined $class->TABLES;
   $param{per_db}   = $class->PER_DB if defined $class->PER_DB;
+  $param{force}    = $class->FORCE if defined $class->FORCE;
 
   return $class->$orig(%param);
 };
