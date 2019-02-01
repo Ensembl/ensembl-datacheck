@@ -54,6 +54,19 @@ not possible to load them via the registry_file.
 A URI must be specified with the location of the previous release's databases,
 e.g. mysql://a_user@some_host:port_number/[old_db_name|old_release_number]
 
+=item B<-data_f[ile_path]> <data_file_path>
+
+Path to a directory containing data files that need to be tested
+as part of some datachecks (currently only applies to funcgen).
+
+=item B<-c[onfig_file]> <config_file>
+
+Path to a config file that contains default values for parameters
+needed by datachecks. If not explicitly specified, then the config.json
+file in the repository's root directory will be used, if it exists.
+The values in this file are overridden by any specific parameters
+that are given to this script.
+
 =item B<-dbtype> <dbtype>
 
 By default, 'core' databases will be checked. Valid options are
@@ -186,14 +199,17 @@ use Bio::EnsEMBL::Registry;
 use Data::Dumper;
 local $Data::Dumper::Terse = 1;
 use DBI;
+use FindBin; FindBin::again();
 use Getopt::Long qw(:config no_ignore_case);
+use JSON;
+use Path::Tiny;
 use Pod::Usage;
 use Time::Piece;
 
 my (
     $help,
     $host, $port, $user, $pass, $dbname, $drop_db,
-    $registry_file, $old_server_uri, $dbtype,
+    $registry_file, $old_server_uri, $data_file_path, $config_file, $dbtype,
     @species, @taxons, @divisions, $run_all, @antispecies, @antitaxons,
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_dir,
@@ -213,6 +229,8 @@ GetOptions(
 
   "registry_file=s",  \$registry_file,
   "old_server_uri:s", \$old_server_uri,
+  "data_file_path:s", \$data_file_path,
+  "config_file:s",    \$config_file,
   "dbtype|db_type:s", \$dbtype,
   "species:s",        \@species,
   "taxons:s",         \@taxons,
@@ -245,8 +263,26 @@ if (! defined $host || ! defined $port || ! defined $user || ! defined $pass) {
 }
 $dbname = $ENV{'USER'}.'_db_datachecks'unless defined $dbname;
 
-if (! defined $registry_file || ! -e $registry_file) {
-  die "registry_file is mandatory";
+if (! defined $registry_file) {
+  if (! defined $config_file) {
+    $config_file = $FindBin::Bin;
+    $config_file =~ s!scripts$!config.json!;
+  }
+
+  if (-e $config_file) {
+    my $json = path($config_file)->slurp;
+    my %config = %{ JSON->new->decode($json) };
+    if (exists $config{registry_file} && defined $config{registry_file}) {
+      $registry_file = $config{registry_file};
+    } else {
+      die "registry_file is mandatory";
+    }
+  } else {
+    die "registry_file is mandatory";
+  }
+}
+if (! -e $registry_file) {
+  die "registry_file '$registry_file' does not exist";
 }
 
 # It doesn't make sense to use the default index file if a datacheck_dir
@@ -302,6 +338,7 @@ my %input_id = (
   timestamp     => localtime->cdate,
 );
 $input_id{old_server_uri} = $old_server_uri if defined $old_server_uri;
+$input_id{data_file_path} = $data_file_path if defined $data_file_path;
 $input_id{db_type} = $dbtype if defined $dbtype;
 $input_id{species} = \@species if scalar @species;
 $input_id{taxons} = \@taxons if scalar @taxons;
@@ -317,6 +354,7 @@ $input_id{datacheck_dir} = $datacheck_dir if defined $datacheck_dir;
 $input_id{index_file} = $index_file if defined $index_file;
 $input_id{history_file} = $history_file if defined $history_file;
 $input_id{output_dir} = $output_dir if defined $output_dir;
+$input_id{config_file} = $config_file if defined $config_file;
 $input_id{parallelize_datachecks} = $parallelize_datachecks if defined $parallelize_datachecks;
 $input_id{tag} = $tag if defined $tag;
 $input_id{email} = $email if defined $email;
