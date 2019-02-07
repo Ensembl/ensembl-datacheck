@@ -116,6 +116,15 @@
       "name" : "ChromosomesAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
    },
+   "CompareAllele" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare allele counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareAllele",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareAllele"
+   },
    "CompareBiotypeGroup" : {
       "datacheck_type" : "advisory",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
@@ -124,6 +133,15 @@
       ],
       "name" : "CompareBiotypeGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup"
+   },
+   "CompareConsequenceTypes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare transcript_variation counts, broken down by consequence type, between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareConsequenceTypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareConsequenceTypes"
    },
    "CompareGOXref" : {
       "datacheck_type" : "advisory",
@@ -151,6 +169,7 @@
       "datacheck_type" : "advisory",
       "description" : "Compare synonym counts, broken down by external_db, between two databases",
       "groups" : [
+         "compare_core",
          "xref"
       ],
       "name" : "CompareSynonym",
@@ -160,6 +179,7 @@
       "datacheck_type" : "advisory",
       "description" : "Compare xref counts, broken down by external_db, between two databases",
       "groups" : [
+         "compare_core",
          "xref"
       ],
       "name" : "CompareXref",

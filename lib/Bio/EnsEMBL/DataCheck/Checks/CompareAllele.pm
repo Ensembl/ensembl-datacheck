@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an 'AS IS' BASIS,
@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup;
+package Bio::EnsEMBL::DataCheck::Checks::CompareAllele;
 
 use warnings;
 use strict;
@@ -28,13 +28,12 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CompareBiotypeGroup',
-  DESCRIPTION    => 'Check for more than 25% difference between the number of genes '.
-                    'in two databases, broken down by biotype.',
-  GROUPS         => ['core_compare'],
+  NAME           => 'CompareAllele',
+  DESCRIPTION    => 'Compare allele counts between two databases',
+  GROUPS         => ['compare_variation'],
   DATACHECK_TYPE => 'advisory',
-  DB_TYPES       => ['core'],
-  TABLES         => ['biotype', 'coord_system', 'gene', 'seq_region'],
+  DB_TYPES       => ['variation'],
+  TABLES         => ['allele']
 };
 
 sub tests {
@@ -45,20 +44,10 @@ sub tests {
 
     skip 'No old version of database', 1 unless defined $old_dba;
 
-    my $desc = 'Consistent gene counts between '.
+    my $desc = "Consistent allele counts between ".
                $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
-    my $sql  = q/
-      SELECT biotype_group, COUNT(*) FROM
-        biotype INNER JOIN
-        gene ON biotype.name = gene.biotype INNER JOIN
-        seq_region USING (seq_region_id) INNER JOIN
-        coord_system USING (coord_system_id)
-      WHERE species_id = %d
-      GROUP BY biotype_group
-    /;
-    my $sql1 = sprintf($sql, $self->dba->species_id);
-    my $sql2 = sprintf($sql, $old_dba->species_id);
-    row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.75, $desc);
+    my $sql  = 'SELECT COUNT(*) FROM allele';
+    row_totals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
   }
 }
 

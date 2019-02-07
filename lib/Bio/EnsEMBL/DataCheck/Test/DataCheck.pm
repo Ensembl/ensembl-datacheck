@@ -251,15 +251,14 @@ sub row_totals {
 
   $dbc2 = $dbc1 if ! defined $dbc2;
   $sql2 = $sql1 if ! defined $sql2;
-  $min_proportion = 1 if ! defined $min_proportion;
 
   my ( $count1, undef ) = _query( $dbc1, $sql1 );
   my ( $count2, undef ) = _query( $dbc2, $sql2 );
-  
-  if ($min_proportion == 1) {
-    return $tb->is_eq( $count2, $count1, $name );
-  } else {
+
+  if (defined $min_proportion) {
     return $tb->cmp_ok( $count2 * $min_proportion, '<=', $count1, $name );
+  } else {
+    return $tb->is_eq( $count2, $count1, $name );
   }
 }
 
@@ -293,13 +292,24 @@ sub row_subtotals {
   foreach my $category (keys %subtotals2) {
     $subtotals1{$category} = 0 unless exists $subtotals1{$category};
 
-    if ($subtotals2{$category} * $min_proportion > $subtotals1{$category}) {
-      $ok = 0;
-      my $diag_msg =
-        "Lower count than expected for $category.\n".
-        $subtotals1{$category} . ' < ' . $subtotals2{$category} . ' * ' . $min_proportion*100 . '%';
-      
-      $tb->diag( $diag_msg );
+    if (defined $min_proportion) {
+      if ($subtotals2{$category} * $min_proportion > $subtotals1{$category}) {
+        $ok = 0;
+        my $diag_msg =
+          "Lower count than expected for $category.\n".
+          $subtotals1{$category} . ' < ' . $subtotals2{$category} . ' * ' . $min_proportion*100 . '%';
+        
+        $tb->diag( $diag_msg );
+      }
+    } else {
+      if ($subtotals2{$category} != $subtotals1{$category}) {
+        $ok = 0;
+        my $diag_msg =
+          "Counts do not match for $category.\n".
+          $subtotals1{$category} . ' != ' . $subtotals2{$category};
+        
+        $tb->diag( $diag_msg );
+      }
     }
   }
 
