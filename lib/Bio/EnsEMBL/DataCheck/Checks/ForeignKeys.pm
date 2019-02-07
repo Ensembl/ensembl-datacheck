@@ -33,7 +33,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeys',
   DESCRIPTION => 'Check for incorrect foreign key relationships',
-  GROUPS      => ['core_handover', 'funcgen_handover', 'protein_features', 'variation_handover'],
+  GROUPS      => ['compara', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1,
 };
@@ -96,6 +96,10 @@ sub core_fk {
   fk($self->dba, 'gene',                  'gene_id',                  'transcript');
   fk($self->dba, 'prediction_transcript', 'prediction_transcript_id', 'prediction_exon');
   fk($self->dba, 'mapping_session',       'mapping_session_id',       'stable_id_event');
+  
+  # I think this one should be enforced, but need to investigate
+  # downsides, and give people some warning, since a lot of dbs would fail...
+  #fk($self->dba, 'analysis', 'analysis_id', 'analysis_description');
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
   fk($self->dba, 'object_xref', 'ensembl_id', 'gene',        'gene_id',        'ensembl_object_type = "Gene"');
@@ -112,6 +116,9 @@ sub funcgen_fk {
   my ($self) = @_;
   # Check for incorrect foreign key relationships that are not defined
   # in a "foreign_keys.sql" file.
+
+  # Cases in which we want to check for the reverse direction of the FK constraint
+  fk($self->dba, 'read_file', 'read_file_id', 'alignment_read_file');
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
   fk($self->dba, 'associated_feature_type', 'table_id', 'external_feature',   'external_feature_id',   'table_name = "external_feature"');

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'GeneGC',
   DESCRIPTION => 'Check that every gene has a GC statistic',
-  GROUPS      => ['genes'],
+  GROUPS      => ['statistics'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'gene', 'gene_attrib']
 };

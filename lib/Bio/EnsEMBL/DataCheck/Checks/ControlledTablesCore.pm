@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ControlledTablesCore',
   DESCRIPTION => 'Check that controlled tables are consistent with production database',
-  GROUPS      => ['production_db'],
+  GROUPS      => ['core', 'corelike', 'production_db'],
   DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
   TABLES      => ['attrib_type', 'biotype', 'external_db', 'misc_set', 'unmapped_reason'],
   PER_DB      => 1

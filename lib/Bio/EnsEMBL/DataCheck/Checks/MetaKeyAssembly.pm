@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyAssembly',
   DESCRIPTION => 'Check for consistency between assembly data and meta keys',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['assembly', 'core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['assembly', 'attrib_type', 'coord_system', 'meta', 'seq_region', 'seq_region_attrib']
 };
@@ -97,26 +97,40 @@ sub tests {
         ok(defined $cs, "$desc_3 ($name)");
       }
     }
-  }
 
-  SKIP: {
-    my $mca = $self->dba->get_adaptor("MetaContainer");
-    my $accs = $mca->list_value_by_key('assembly.default');
+    my $desc_4 = 'Assembly mapping has corresponding meta key';
+    my $sql_implicit_mappings = qq/
+      SELECT
+        cs1.name, cs1.version, cs2.name, cs2.version
+      FROM
+        coord_system cs1 INNER JOIN
+        seq_region sr1 ON cs1.coord_system_id = sr1.coord_system_id INNER JOIN
+        assembly a ON sr1.seq_region_id = a.asm_seq_region_id INNER JOIN
+        seq_region sr2 ON a.cmp_seq_region_id = sr2.seq_region_id INNER JOIN
+        coord_system cs2 ON sr2.coord_system_id = cs2.coord_system_id
+      WHERE
+        cs1.coord_system_id <> cs2.coord_system_id AND
+        cs1.species_id = $species_id
+      GROUP BY
+        cs1.name, cs1.version, cs2.name, cs2.version;
+    /;
+    my $helper = $self->dba->dbc->sql_helper;
+    my $implicit_mappings = $helper->execute(-SQL => $sql_implicit_mappings);
 
-    skip 'No assembly default', 1 unless scalar(@$accs);
+    foreach my $implicit (@$implicit_mappings) {
+      my ($name1, $version1, $name2, $version2) = @$implicit;
+      $name1 .= ":$version1" if defined $version1;
+      $name2 .= ":$version2" if defined $version2;
 
-    my $desc = 'Assembly name has no disallowed characters';
-    like($$accs[0], qr/^[\w\.\-]+/, $desc);
-  }
-
-  SKIP: {
-    my $mca = $self->dba->get_adaptor("MetaContainer");
-    my $accs = $mca->list_value_by_key('assembly.accession');
-
-    skip 'No assembly accession', 1 unless scalar(@$accs);
-
-    my $desc = 'Accession has expected format';
-    like($$accs[0], qr/^GCA_[0-9]+\.[0-9]+/, $desc);
+      my $match = 0;
+      foreach my $mapping (@$mappings) {
+        if ($mapping =~ /$name1[\|#]$name2/) {
+          $match = 1;
+          last;
+        }
+      }
+      ok($match, "$desc_4 ($name1#$name2)");
+    }
   }
 
   SKIP: {
@@ -128,7 +142,7 @@ sub tests {
     /;
     my $liftover_count = sql_count($self->dba, $sql_liftover_count);
 
-    skip 'No liftover mappings defined', 1 unless $liftover_count;
+    skip 'No mappings between assemblies', 1 unless $liftover_count;
 
     my $desc = 'Liftover mapping(s) exists';
     my $sql_meta_count = qq/

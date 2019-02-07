@@ -30,7 +30,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 use constant {
   NAME        => 'SeqRegionRank',
   DESCRIPTION => 'Check that chromosomes have rank 1',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['assembly', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };

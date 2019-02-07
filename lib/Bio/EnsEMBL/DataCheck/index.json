@@ -1,9 +1,20 @@
 {
+   "AlignFeatureExternalDB" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check that all align_feature rows have an external_db",
+      "groups" : [
+         "core",
+         "corelike"
+      ],
+      "name" : "AlignFeatureExternalDB",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignFeatureExternalDB"
+   },
    "AltAllele" : {
       "datacheck_type" : "critical",
       "description" : "Ensure alt_allele group members all map back to the same chromosome",
       "groups" : [
-         "core_handover"
+         "core",
+         "geneset"
       ],
       "name" : "AltAllele",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAllele"
@@ -12,18 +23,36 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that no alt_allele_group has more than one gene from the primary assembly",
       "groups" : [
-         "core_handover"
+         "core",
+         "geneset"
       ],
       "name" : "AltAlleleGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AltAlleleGroup"
+   },
+   "AnalysisDescription" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that certain analyses have descriptions",
+      "groups" : [
+         "core"
+      ],
+      "name" : "AnalysisDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisDescription"
+   },
+   "AnalysisFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that analysis is formatted correctly",
+      "groups" : [
+         "core",
+         "corelike"
+      ],
+      "name" : "AnalysisFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisFormat"
    },
    "Archive" : {
       "datacheck_type" : "critical",
       "description" : "Gene archive table is up to date.",
       "groups" : [
-         "core_handover",
-         "post_projection",
-         "stable_id_mapping"
+         "id_mapping"
       ],
       "name" : "Archive",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Archive"
@@ -32,7 +61,7 @@
       "datacheck_type" : "critical",
       "description" : "All arrays are associated with probes.",
       "groups" : [
-         "funcgen_release",
+         "funcgen",
          "probe_mapping"
       ],
       "name" : "ArraysHaveProbes",
@@ -43,7 +72,7 @@
       "description" : "Check if assembly_exceptions are present and correct.",
       "groups" : [
          "assembly",
-         "handover"
+         "core"
       ],
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
@@ -53,7 +82,7 @@
       "description" : "assembly and seq_region table are consistent.",
       "groups" : [
          "assembly",
-         "core_handover"
+         "core"
       ],
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
@@ -62,7 +91,7 @@
       "datacheck_type" : "advisory",
       "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist",
       "groups" : [
-         "core_handover"
+         "annotation"
       ],
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
@@ -109,36 +138,88 @@
       "datacheck_type" : "critical",
       "description" : "Check whether chromosomal seq_regions have appropriate attribute.",
       "groups" : [
-         "assembly"
+         "assembly",
+         "core"
       ],
       "name" : "ChromosomesAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
    },
-   "CompareBiotype" : {
-      "datacheck_type" : "critical",
+   "CompareAllele" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare allele counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareAllele",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareAllele"
+   },
+   "CompareBiotypeGroup" : {
+      "datacheck_type" : "advisory",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
       "groups" : [
-         "handover"
+         "core_compare"
       ],
-      "name" : "CompareBiotype",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotype"
+      "name" : "CompareBiotypeGroup",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup"
+   },
+   "CompareConsequenceTypes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare transcript_variation counts, broken down by consequence type, between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareConsequenceTypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareConsequenceTypes"
+   },
+   "CompareGOXref" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare GO xref counts, broken down by source, between two databases",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "CompareGOXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGOXref"
    },
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
       "groups" : [
-         "core_handover",
-         "funcgen_handover",
-         "variation_handover"
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
       ],
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
+   },
+   "CompareSynonym" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare synonym counts, broken down by external_db, between two databases",
+      "groups" : [
+         "compare_core",
+         "xref"
+      ],
+      "name" : "CompareSynonym",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSynonym"
+   },
+   "CompareXref" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare xref counts, broken down by external_db, between two databases",
+      "groups" : [
+         "compare_core",
+         "xref"
+      ],
+      "name" : "CompareXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareXref"
    },
    "ControlledAnalysis" : {
       "datacheck_type" : "critical",
       "description" : "Check that analysis descriptions and display settings are correct",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "production_db"
       ],
       "name" : "ControlledAnalysis",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis"
@@ -147,9 +228,11 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that database has mandatory and permitted meta keys",
       "groups" : [
-         "core_handover",
-         "funcgen_handover",
-         "variation_handover"
+         "core",
+         "corelike",
+         "funcgen",
+         "production_db",
+         "variation"
       ],
       "name" : "ControlledMetaKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
@@ -158,6 +241,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
       "groups" : [
+         "core",
+         "corelike",
          "production_db"
       ],
       "name" : "ControlledTablesCore",
@@ -168,7 +253,7 @@
       "description" : "Check that controlled tables are consistent with production database",
       "groups" : [
          "production_db",
-         "variation_handover"
+         "variation"
       ],
       "name" : "ControlledTablesVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesVariation"
@@ -186,8 +271,8 @@
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has epigenomes data",
       "groups" : [
-         "funcgen_integrity",
-         "funcgen_Post_regulatory_build"
+         "funcgen",
+         "regulatory_build"
       ],
       "name" : "CurrentRegulatoryBuildHasEpigenomes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CurrentRegulatoryBuildHasEpigenomes"
@@ -196,7 +281,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that core-like databases do not contain DNA sequences",
       "groups" : [
-         "corelike_handover"
+         "corelike"
       ],
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
@@ -214,21 +299,33 @@
       ],
       "name" : "DatabaseCollation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseCollation"
+    },
+   "DataFilesExist" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that data files are defined in the database, and that the files exist",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "DataFilesExist",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DataFilesExist"
    },
    "Denormalized" : {
       "datacheck_type" : "critical",
       "description" : "Check that denormalized columns are synchronised",
       "groups" : [
-         "variation_handover"
+         "variation",
+         "schema"
       ],
       "name" : "Denormalized",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Denormalized"
    },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
-      "description" : "Check that genes are displayable and have web_data attached to their analysis.",
+      "description" : "Check that genes are displayable and have web_data attached to their analysis",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "DisplayableGenes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableGenes"
@@ -237,8 +334,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that every epigenome which is part of the current Regulatory Build has a segmentation file in the segmentation_file table",
       "groups" : [
-         "funcgen_integrity",
-         "funcgen_Post_regulatory_build"
+         "funcgen",
+         "regulatory_build"
       ],
       "name" : "EpigenomeHasSegmentationFile",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
@@ -256,7 +353,9 @@
       "datacheck_type" : "critical",
       "description" : "Check for exon_transcript duplicates and missing rank=1 exons",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "ExonRank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonRank"
@@ -265,8 +364,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that every distinct experiment, epigenome and feature_type combination is linked to a feature_set",
       "groups" : [
-         "funcgen_integrity",
-         "funcgen_Post_regulatory_build"
+         "funcgen",
+         "ersa"
       ],
       "name" : "ExperimentHasFeatureSet",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExperimentHasFeatureSet"
@@ -275,7 +374,9 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that features are within the bounds of their seq_region",
       "groups" : [
-         "core_handover"
+         "annotation",
+         "core",
+         "corelike"
       ],
       "name" : "FeatureBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeatureBounds"
@@ -293,10 +394,12 @@
       "datacheck_type" : "critical",
       "description" : "Check for incorrect foreign key relationships",
       "groups" : [
-         "core_handover",
-         "funcgen_handover",
-         "protein_features",
-         "variation_handover"
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
       ],
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
@@ -305,17 +408,29 @@
       "datacheck_type" : "critical",
       "description" : "Check for broken foreign key relationships between tables from multiple databases",
       "groups" : [
-         "funcgen_handover",
-         "variation_handover"
+         "funcgen",
+         "schema",
+         "variation"
       ],
       "name" : "ForeignKeysMultiDB",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysMultiDB"
+   },
+   "FuncgenAnalysisDescription" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that certain features have descriptions and are displayable",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "FuncgenAnalysisDescription",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FuncgenAnalysisDescription"
    },
    "GeneBiotypes" : {
       "datacheck_type" : "critical",
       "description" : "Check that genes and transcripts have valid biotypes",
       "groups" : [
-         "gene"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "GeneBiotypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneBiotypes"
@@ -324,7 +439,9 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that genes are within the bounds of their seq_region",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "GeneBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneBounds"
@@ -333,7 +450,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that gene counts are correct",
       "groups" : [
-         "genes"
+         "statistics"
       ],
       "name" : "GeneCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneCounts"
@@ -342,7 +459,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that every gene has a GC statistic",
       "groups" : [
-         "genes"
+         "statistics"
       ],
       "name" : "GeneGC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneGC"
@@ -372,7 +489,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that genome statistics are present and correct",
       "groups" : [
-         "genes"
+         "statistics"
       ],
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
@@ -408,9 +525,13 @@
       "datacheck_type" : "critical",
       "description" : "Check that the meta_coord table is correctly populated",
       "groups" : [
-         "core_handover",
-         "funcgen_handover",
-         "variation_handover"
+         "annotation",
+         "core",
+         "corelike",
+         "funcgen",
+         "geneset",
+         "protein_features",
+         "variation"
       ],
       "name" : "MetaCoord",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaCoord"
@@ -419,7 +540,9 @@
       "datacheck_type" : "critical",
       "description" : "Check for consistency between assembly data and meta keys",
       "groups" : [
-         "core_handover"
+         "assembly",
+         "core",
+         "meta"
       ],
       "name" : "MetaKeyAssembly",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyAssembly"
@@ -428,7 +551,8 @@
       "datacheck_type" : "critical",
       "description" : "Check cardinality of meta data that must be single-valued",
       "groups" : [
-         "core_handover"
+         "core",
+         "meta"
       ],
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
@@ -437,7 +561,9 @@
       "datacheck_type" : "critical",
       "description" : "Check for meta keys which are conditional on some aspect of the data",
       "groups" : [
-         "core_handover"
+         "core",
+         "meta",
+         "variation"
       ],
       "name" : "MetaKeyConditional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConditional"
@@ -446,7 +572,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that meta_keys are identical between core and core-like databases",
       "groups" : [
-         "corelike_handover"
+         "corelike",
+         "meta"
       ],
       "name" : "MetaKeyConsistent",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyConsistent"
@@ -455,7 +582,9 @@
       "datacheck_type" : "critical",
       "description" : "Check the format and links for meta values",
       "groups" : [
-         "core_handover"
+         "core",
+         "meta",
+         "variation"
       ],
       "name" : "MetaKeyFormat",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyFormat"
@@ -464,7 +593,11 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that meta_keys are correctly assigned at species or database level",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "funcgen",
+         "meta",
+         "variation"
       ],
       "name" : "MetaKeyLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyLevel"
@@ -473,7 +606,8 @@
       "datacheck_type" : "advisory",
       "description" : "Check for meta keys which are expected but not mandatory",
       "groups" : [
-         "core_handover"
+         "core",
+         "meta"
       ],
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
@@ -481,7 +615,14 @@
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
       "description" : "Check if database schema does not match the given MySQL storage engine",
-      "groups" : [],
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
       "name" : "MySQLStorageEngine",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MySQLStorageEngine"
    },
@@ -489,7 +630,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that every translation has pepstats statistics",
       "groups" : [
-         "genes"
+         "statistics"
       ],
       "name" : "PepstatsAttributes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PepstatsAttributes"
@@ -500,6 +641,25 @@
       "groups" : [],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
+   "PolyploidAttribs" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that component genomes are annotated for polyploid genomes",
+      "groups" : [
+         "core"
+      ],
+      "name" : "PolyploidAttribs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
+   },
+   "ProbeUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that probe IDs and mappings are unique",
+      "groups" : [
+         "funcgen",
+         "probe_mapping"
+      ],
+      "name" : "ProbeUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProbeUnique"
    },
    "ProteinCodingGenes" : {
       "datacheck_type" : "critical",
@@ -524,7 +684,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that every protein-coding gene has a valid translation",
       "groups" : [
-         "core"
+         "core",
+         "geneset"
       ],
       "name" : "ProteinTranslation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinTranslation"
@@ -533,8 +694,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that every regulatory feature has a valid activity value in at least one epigenome.",
       "groups" : [
-         "funcgen_integrity",
-         "funcgen_Post_regulatory_build"
+         "funcgen",
+         "regulatory_build"
       ],
       "name" : "RegulatoryFeatureIsActive",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive"
@@ -543,7 +704,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that stable IDs are unique within a regulatory build",
       "groups" : [
-         "funcgen_handover"
+         "funcgen",
+         "regulatory_build"
       ],
       "name" : "RegulatoryFeatureStableID",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureStableID"
@@ -552,7 +714,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that repeat feature coordinates are present and correct",
       "groups" : [
-         "core_handover"
+         "annotation",
+         "core"
       ],
       "name" : "RepeatFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
@@ -561,8 +724,8 @@
       "datacheck_type" : "critical",
       "description" : "Check if the current regulatory build has a sample regulatory feature",
       "groups" : [
-         "funcgen_integrity",
-         "funcgen_Post_regulatory_build"
+         "funcgen",
+         "regulatory_build"
       ],
       "name" : "SampleRegulatoryFeatureExists",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists"
@@ -571,9 +734,12 @@
       "datacheck_type" : "critical",
       "description" : "Check that schema patches are up-to-date",
       "groups" : [
-         "core_handover",
-         "funcgen_handover",
-         "variation_handover"
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
       ],
       "name" : "SchemaPatchesApplied",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaPatchesApplied"
@@ -582,9 +748,12 @@
       "datacheck_type" : "critical",
       "description" : "Check that the schema type meta key matches the DB name",
       "groups" : [
-         "core_handover",
-         "funcgen_handover",
-         "variation_handover"
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
       ],
       "name" : "SchemaType",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaType"
@@ -593,28 +762,22 @@
       "datacheck_type" : "critical",
       "description" : "Check that the schema version meta_key matches the DB name",
       "groups" : [
-         "core_handover",
-         "funcgen_handover",
-         "variation_handover"
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
-   },
-   "SegmentationFileHasBigBed" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that every segmentation_file entry which has been used in the current Regulatory Build is linked to a BIGBED entry in the data_file table and exists on disk",
-      "groups" : [
-         "funcgen_integrity",
-         "funcgen_Post_regulatory_build"
-      ],
-      "name" : "SegmentationFileHasBigBed",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SegmentationFileHasBigBed"
    },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
       "description" : "Check that seq_region names are unique (top-level) or consistent (non-top-level)",
       "groups" : [
-         "core_handover"
+         "assembly",
+         "core"
       ],
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
@@ -623,7 +786,8 @@
       "datacheck_type" : "advisory",
       "description" : "Check that seq_region names from INSDC are appropriately formatted and attributed",
       "groups" : [
-         "assembly"
+         "assembly",
+         "core"
       ],
       "name" : "SeqRegionNamesINSDC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
@@ -632,7 +796,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that chromosomes have rank 1",
       "groups" : [
-         "core_handover"
+         "assembly",
+         "core"
       ],
       "name" : "SeqRegionRank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionRank"
@@ -641,7 +806,10 @@
       "datacheck_type" : "critical",
       "description" : "Check that top-level seq_regions are appropriately configured",
       "groups" : [
-         "core_handover"
+         "assembly",
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "SeqRegionTopLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionTopLevel"
@@ -650,7 +818,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that DNA is attached and only attached to sequence-level seq_regions.",
       "groups" : [
-         "handover"
+         "assembly",
+         "core"
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
@@ -659,16 +828,38 @@
       "datacheck_type" : "critical",
       "description" : "Check that production_name and alias are unique across all species",
       "groups" : [
+         "core",
          "meta"
       ],
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
    },
+   "StableIDUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for uniqueness of stable IDs, both within a database, and across all databases in the registry",
+      "groups" : [
+         "annotation",
+         "core"
+      ],
+      "name" : "StableIDUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
+   },
+   "SpeciesTaxonomy" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that taxonomy meta key is consistent with taxonomy database",
+      "groups" : [
+         "core"
+      ],
+      "name" : "SpeciesTaxonomy",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesTaxonomy"
+   },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
       "description" : "Check that gene and transcript bounds are consistent",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "TranscriptBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptBounds"
@@ -677,7 +868,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that transcripts are linked to sequences",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "UnlocatedTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnlocatedTranscripts"
@@ -696,7 +889,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that transcripts have translations, if appropriate",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "ValidTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranscripts"
@@ -705,7 +900,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that translations have appropriate properties",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "ValidTranslations",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranslations"
@@ -714,7 +911,7 @@
       "datacheck_type" : "advisory",
       "description" : "Check that xrefs are only attached to one feature type.",
       "groups" : [
-         "handover"
+         "xref"
       ],
       "name" : "XrefTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefTypes"

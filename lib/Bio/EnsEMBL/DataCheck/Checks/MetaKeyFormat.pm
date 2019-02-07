@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyFormat',
   DESCRIPTION => 'Check the format and links for meta values',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['core', 'meta', 'variation'],
   DB_TYPES    => ['core', 'variation'],
   TABLES      => ['meta']
 };
@@ -42,24 +42,36 @@ sub tests {
 
   # Check that the format of meta_values conforms to expectations.
   my %formats = (
-    'genebuild.start_date'    => '\d{4}\-\d{2}\-\S+',
-    'sample.location_param'   => '\w+:\d+\-\d+',
-    'species.division'        => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates)',
-    'species.production_name' => '[a-z0-9]+_[a-z0-9_]+',
-    'species.scientific_name' => '[A-Z][a-z0-9]+ [\w \(\)]+',
-    'species.url'             => '[A-Z][a-z0-9]+_[A-Za-z0-9_]+',
+    'assembly.accession'             => 'GCA_\d+\.\d+',
+    'assembly.date'                  => '\d{4}-\d{2}',
+    'assembly.default'               => '[\w\.\-]+',
+    'genebuild.id'                   => '\d+',
+    'genebuild.initial_release_date' => '\d{4}-\d{2}',
+    'genebuild.last_geneset_update'  => '\d{4}-\d{2}',
+    'genebuild.method'               => '(full_genebuild|projection_build|import|mixed_strategy_build|external_annotation_import)',
+    'genebuild.start_date'           => '\d{4}\-\d{2}\-\S+',
+    'patch'                          => '[^\n]+',
+    'sample.location_param'          => '\w+:\d+\-\d+',
+    'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates)',
+    'species.production_name'        => '[a-z0-9]+_[a-z0-9_]+',
+    'species.scientific_name'        => '[A-Z][a-z0-9]+ [\w \(\)]+',
+    'species.url'                    => '[A-Z][a-z0-9]+_[A-Za-z0-9_]+',
+    'web_accession_type'             => '(GenBank Assembly ID|EMBL\-Bank|WGS Master)',
+    'web_accession_source'           => '(NCBI|ENA|DDBJ)',
   );
 
   foreach my $meta_key (sort keys %formats) {
     my $desc   = "Value for $meta_key has correct format";
     my $format = $formats{$meta_key};
-    my $value  = $mca->single_value_by_key($meta_key);
+    my $values = $mca->list_value_by_key($meta_key);
     SKIP: {
-      skip "No $meta_key defined", 1 unless defined $value;
-      like($value, qr/^$format$/, $desc);
+      skip "No $meta_key defined", 1 unless scalar(@$values);
+      foreach my $value (@$values) {
+        like($value, qr/^$format$/, $desc);
+      }
     }
   }
-  
+
   # For meta_values that are from other parts of the database,
   # ensure that the data actually exists.
   if ($self->dba->group eq 'core') {

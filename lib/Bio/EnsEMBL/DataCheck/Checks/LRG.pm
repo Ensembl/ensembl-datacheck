@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'LRG',
   DESCRIPTION => 'Check that LRG features and seq_regions are correctly associated.',
-  DB_TYPES    => ['core'],
+  DB_TYPES    => ['core', 'xref'],
   TABLES      => ['coord_system', 'gene',  'seq_region', 'transcript'],
   GROUPS      => ['handover'],
   PER_DB      => 1,

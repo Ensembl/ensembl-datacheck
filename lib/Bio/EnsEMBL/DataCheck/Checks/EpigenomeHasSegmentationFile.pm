@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'EpigenomeHasSegmentationFile',
   DESCRIPTION => 'Check that every epigenome which is part of the current Regulatory Build has a segmentation file in the segmentation_file table',
-  GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build'],
+  GROUPS      => ['funcgen', 'regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_build','regulatory_build_epigenome','epigenome'],
 };

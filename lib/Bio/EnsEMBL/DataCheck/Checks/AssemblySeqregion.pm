@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AssemblySeqregion',
   DESCRIPTION => 'assembly and seq_region table are consistent.',
-  GROUPS      => ['assembly', 'core_handover'],
+  GROUPS      => ['assembly', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['assembly', 'coord_system', 'seq_region'],
   PER_DB      => 1,
@@ -56,30 +56,37 @@ sub tests {
   /;
   is_rows_nonzero($self->dba, $sql_1, $desc_1);
 
-  my $desc_2 = 'assembly co-ordinates have start and end > 0';
+  my $desc_2 = 'Coord system names are lower case';
   my $sql_2  = q/
-    SELECT COUNT(*) FROM assembly
-    WHERE asm_start < 1 OR asm_end < 1 OR cmp_start < 1 OR cmp_end < 1
+    SELECT name FROM coord_system
+    WHERE BINARY name <> lower(name)
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
 
-  my $desc_3 = 'assembly co-ordinates have end > start';
+  my $desc_3 = 'assembly co-ordinates have start and end > 0';
   my $sql_3  = q/
     SELECT COUNT(*) FROM assembly
-    WHERE asm_end < asm_start OR cmp_end < cmp_start
+    WHERE asm_start < 1 OR asm_end < 1 OR cmp_start < 1 OR cmp_end < 1
   /;
   is_rows_zero($self->dba, $sql_3, $desc_3);
 
-  my $desc_4 = 'Assembled and component lengths consistent';
+  my $desc_4 = 'assembly co-ordinates have end > start';
   my $sql_4  = q/
     SELECT COUNT(*) FROM assembly
-    WHERE (asm_end - asm_start) <> (cmp_end - cmp_start)
+    WHERE asm_end < asm_start OR cmp_end < cmp_start
   /;
   is_rows_zero($self->dba, $sql_4, $desc_4);
 
-  my $desc_5 = 'assembly and seq_region lengths consistent';
-  my $diag_5 = 'seq_region length < largest asm_end value';
+  my $desc_5 = 'Assembled and component lengths consistent';
   my $sql_5  = q/
+    SELECT COUNT(*) FROM assembly
+    WHERE (asm_end - asm_start) <> (cmp_end - cmp_start)
+  /;
+  is_rows_zero($self->dba, $sql_5, $desc_5);
+
+  my $desc_6 = 'assembly and seq_region lengths consistent';
+  my $diag_6 = 'seq_region length < largest asm_end value';
+  my $sql_6  = q/
     SELECT sr.name AS seq_region_name, sr.length, cs.name AS coord_system_name
     FROM
       seq_region sr INNER JOIN
@@ -88,7 +95,7 @@ sub tests {
     GROUP BY a.asm_seq_region_id
     HAVING sr.length < MAX(a.asm_end)
   /;
-  is_rows_zero($self->dba, $sql_5, $desc_5, $diag_5);
+  is_rows_zero($self->dba, $sql_6, $desc_6, $diag_6);
 }
 
 1;

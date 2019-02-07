@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ExonRank',
   DESCRIPTION => 'Check for exon_transcript duplicates and missing rank=1 exons',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['core', 'corelike', 'geneset'],
   DB_TYPES    => ['core']
 };
 

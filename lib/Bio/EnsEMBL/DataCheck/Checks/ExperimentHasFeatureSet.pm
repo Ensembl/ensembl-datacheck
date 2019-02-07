@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ExperimentHasFeatureSet',
   DESCRIPTION => 'Check that every distinct experiment, epigenome and feature_type combination is linked to a feature_set',
-  GROUPS      => ['funcgen_integrity', 'funcgen_Post_regulatory_build'],
+  GROUPS      => ['funcgen', 'ersa'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['experiment','feature_type','epigenome','peak_calling'],
 };

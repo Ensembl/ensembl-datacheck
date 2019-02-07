@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CompareBiotype;
+package Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup;
 
 use warnings;
 use strict;
@@ -28,12 +28,13 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'CompareBiotype',
-  DESCRIPTION => 'Check for more than 25% difference between the number of genes '.
-                 'in two databases, broken down by biotype.',
-  DB_TYPES    => ['core'],
-  TABLES      => ['gene'],
-  GROUPS      => ['handover'],
+  NAME           => 'CompareBiotypeGroup',
+  DESCRIPTION    => 'Check for more than 25% difference between the number of genes '.
+                    'in two databases, broken down by biotype.',
+  GROUPS         => ['core_compare'],
+  DATACHECK_TYPE => 'advisory',
+  DB_TYPES       => ['core'],
+  TABLES         => ['biotype', 'coord_system', 'gene', 'seq_region'],
 };
 
 sub tests {
@@ -44,21 +45,19 @@ sub tests {
 
     skip 'No old version of database', 1 unless defined $old_dba;
 
-    diag('Comparing '.$self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname);
-    diag('Species '.$self->species.', '.$self->dba->species);
-    my $desc = 'Consistent gene counts';
+    my $desc = 'Consistent gene counts between '.
+               $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
     my $sql  = q/
-      SELECT biotype, COUNT(*) FROM
-        gene INNER JOIN
+      SELECT biotype_group, COUNT(*) FROM
+        biotype INNER JOIN
+        gene ON biotype.name = gene.biotype INNER JOIN
         seq_region USING (seq_region_id) INNER JOIN
         coord_system USING (coord_system_id)
       WHERE species_id = %d
-      GROUP BY biotype
+      GROUP BY biotype_group
     /;
     my $sql1 = sprintf($sql, $self->dba->species_id);
     my $sql2 = sprintf($sql, $old_dba->species_id);
-    diag($sql1);
-    diag($sql2);
     row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.75, $desc);
   }
 }

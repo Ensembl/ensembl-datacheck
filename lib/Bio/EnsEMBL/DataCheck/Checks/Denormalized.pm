@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'Denormalized',
   DESCRIPTION => 'Check that denormalized columns are synchronised',
-  GROUPS      => ['variation_handover'],
+  GROUPS      => ['variation', 'schema'],
   DB_TYPES    => ['variation']
 };
 

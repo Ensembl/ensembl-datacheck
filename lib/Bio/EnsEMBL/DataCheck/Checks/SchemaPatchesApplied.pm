@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SchemaPatchesApplied',
   DESCRIPTION => 'Check that schema patches are up-to-date',
-  GROUPS      => ['core_handover', 'funcgen_handover', 'variation_handover'],
+  GROUPS      => ['compara', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'production', 'rnaseq', 'variation'],
   TABLES      => ['meta'],
   PER_DB      => 1,

@@ -41,6 +41,7 @@ use constant {
   DB_TYPES => undef,
   TABLES   => undef,
   PER_DB   => undef,
+  FORCE    => undef,
 };
 
 subtype 'DBAdaptor', as 'Object', where {
@@ -227,10 +228,12 @@ around BUILDARGS => sub {
   die "'db_types' cannot be overridden" if exists $param{db_types};
   die "'tables' cannot be overridden" if exists $param{tables};
   die "'per_species' cannot be overridden" if exists $param{per_species};
+  die "'force' cannot be overridden" if exists $param{force};
 
   $param{db_types} = $class->DB_TYPES if defined $class->DB_TYPES;
   $param{tables}   = $class->TABLES if defined $class->TABLES;
   $param{per_db}   = $class->PER_DB if defined $class->PER_DB;
+  $param{force}    = $class->FORCE if defined $class->FORCE;
 
   return $class->$orig(%param);
 };
@@ -312,6 +315,9 @@ sub get_old_dba {
   my $self = shift;
   my ($species, $group) = @_;
 
+  $species = $self->species    unless defined $species;
+  $group   = $self->dba->group unless defined $group;
+
   if (!defined $self->old_server_uri) {
     die "Old server details must be set as 'old_server_uri' attribute";
   }
@@ -335,10 +341,11 @@ sub get_old_dba {
     $db_version = ($mca->schema_version) - 1;
   }
 
-  if (! exists $params{'-DBNAME'}) {
-    $species = $self->species    unless defined $species;
-    $group   = $self->dba->group unless defined $group;
-
+  my $dbh;
+  if (exists $params{'-DBNAME'}) {
+	my $message = 'Specified database does not exist';
+	$dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+  } else {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
     die "No metadata database found in the registry" unless defined $meta_dba;
 
@@ -356,39 +363,64 @@ sub get_old_dba {
     my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
 
     if (scalar(@dbnames) == 1) {
-      # We need to suffix the species name to comply with uniqueness rules
-      # (whenvever you create a dba, it adds itself to the registry...)
-      # This subsequently means that add_species_id functionality doesn't
-      # work, so we'll need to work out the species_id ourselves.
-      my $species_id = 'xxx';
-
-      $params{'-SPECIES'} = $species.'_old';
-      $params{'-GROUP'}   = $group;
-      $params{'-DBNAME'}  = $dbnames[0];
-      if ($self->dba->is_multispecies) {
-        $params{'-SPECIES_ID'}      = $species_id;
-        $params{'-MULTISPECIES_DB'} = 1;
-      }
-    } elsif (scalar(@dbnames) == 0) {
-      warn "No release $db_version $group database for $species";
-    } else {
+      $params{'-DBNAME'} = $dbnames[0];
+      my $message = 'Database in metadata database does not exist';
+	  $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+    } elsif (scalar(@dbnames) > 1) {
       die "Multiple release $db_version $group databases for $species";
     }
   }
 
-  # We allow $old_dba to be undefined if there is no entry in the metadata db;
+  # $old_dba can be undefined if there is no entry in the metadata db;
   # a datacheck could use the undefined-ness to skip tests in this case.
   my $old_dba;
   if (exists $params{'-DBNAME'}) {
-    $old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
-    unless (defined $old_dba) {
-      die "Release $db_version of $species $group database not found";
+    # We need to suffix '_old' to the species name to comply
+    # with uniqueness rules, and ensure we can distinguish between the
+    # two databases in the registry.
+    $params{'-SPECIES'} = $species.'_old';
+    $params{'-GROUP'}   = $group;
+
+    # Because we have added a suffix to the species name,
+    # the DBAdaptor code can't work out the correct species_id,
+    # so we need to work out the species_id and pass it explicitly.
+    my $sql = qq/
+      SELECT species_id FROM meta
+      WHERE
+		meta_key = 'species.production_name' AND
+		meta_value = '$species'
+    /;
+    my $vals = $dbh->selectcol_arrayref($sql);
+    my $species_id = $vals->[0];
+    $params{'-SPECIES_ID'} = $species_id;
+
+	# We assume that if the new db is multispecies,
+	# the old one will be too.
+    if ($self->dba->is_multispecies) {
+      $params{'-MULTISPECIES_DB'} = 1;
     }
+
+	$old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
 
     push @{$self->dba_list}, $old_dba;
   }
 
   return $old_dba;
+}
+
+sub test_db_connection {
+  my $self = shift;
+  my ($uri, $dbname, $message) = @_;
+
+  my $dsn = "DBI:mysql:database=$dbname;host=".$uri->host.";port=".$uri->port;
+  my $dbh = DBI->connect($dsn, $uri->user, $uri->pass, { PrintError => 0 });
+
+  if (! defined $dbh) {
+    my $err = $DBI::errstr;
+    die "$message: $dsn\n$err";
+  }
+
+  return $dbh;
 }
 
 sub run_datacheck {
@@ -434,7 +466,12 @@ sub run_datacheck {
     $self->dba($original_dba);
 
   } else {
-    subtest $self->species => sub {
+    my $label = $self->species;
+    if ($self->per_db && $self->dba->is_multispecies) {
+      $label = 'all species in collection';
+    }
+
+    subtest $label => sub {
       SKIP: {
         my ($skip, $skip_reason) = $self->skip_tests(@_);
 

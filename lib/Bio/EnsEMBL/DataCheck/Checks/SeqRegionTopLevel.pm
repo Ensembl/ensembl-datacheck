@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SeqRegionTopLevel',
   DESCRIPTION => 'Check that top-level seq_regions are appropriately configured',
-  GROUPS      => ['core_handover'],
+  GROUPS      => ['assembly', 'core', 'corelike', 'geneset'],
   DB_TYPES    => ['core'],
 };
 
