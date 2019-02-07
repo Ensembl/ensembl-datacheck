@@ -130,8 +130,8 @@ subtest 'Comparing Database Rows', sub {
   subtest 'row_totals', sub {
     check_tests(
       sub {
-        row_totals($dba, undef, $sql_1, $sql_1, 1, 'pass: Exact row totals');
-        row_totals($dba, undef, $sql_1, $sql_2, 1, 'fail: Exact row totals');
+        row_totals($dba, undef, $sql_1, $sql_1, undef, 'pass: Exact row totals');
+        row_totals($dba, undef, $sql_1, $sql_2, undef, 'fail: Exact row totals');
         row_totals($dba, undef, $sql_1, $sql_2, 0.5, 'pass: Row totals with min_proportion');
         row_totals($dba, undef, $sql_1, $sql_2, 0.9, 'pass: Row totals with min_proportion');
         row_totals($dba, undef, $sql_2, $sql_1, 0.5, 'pass: Row totals with min_proportion');
