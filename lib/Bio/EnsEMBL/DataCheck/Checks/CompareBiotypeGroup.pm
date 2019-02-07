@@ -34,7 +34,7 @@ use constant {
   GROUPS         => ['core_compare'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
-  TABLES         => ['gene'],
+  TABLES         => ['biotype', 'coord_system', 'gene', 'seq_region'],
 };
 
 sub tests {
