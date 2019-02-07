@@ -96,6 +96,34 @@
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
    },
+   "BlankEnums" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for NULLable columns that contain empty strings",
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
+      "name" : "BlankEnums",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankEnums"
+   },
+   "BlankNulls" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for nullable columns that contain empty strings",
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
+      "name" : "BlankNulls",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankNulls"
+   },
    "CanonicalTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Check that canonical transcripts are set",
@@ -258,6 +286,20 @@
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
    },
+   "DatabaseCollation" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that all tables in a database have the same collation, (latin1_swedish_ci)",
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
+      "name" : "DatabaseCollation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseCollation"
+    },
    "DataFilesExist" : {
       "datacheck_type" : "critical",
       "description" : "Check that data files are defined in the database, and that the files exist",
