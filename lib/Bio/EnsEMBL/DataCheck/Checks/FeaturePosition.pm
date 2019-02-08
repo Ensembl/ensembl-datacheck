@@ -129,7 +129,7 @@ sub end_bound_check {
   }
 
   is(scalar(@out_of_bounds), 0, $desc) ||
-    diag explain {'seq__region_ids' => \@out_of_bounds};
+    diag explain {'seq_region_ids' => \@out_of_bounds};
 }
 
 1;
