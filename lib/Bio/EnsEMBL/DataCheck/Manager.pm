@@ -164,7 +164,7 @@ sub load_config {
   my %params = @_;
 
   if (defined $self->config_file) {
-    die unless -e $self->config_file;
+    die "Config file does not exist" unless -e $self->config_file;
 
     my $json = path($self->config_file)->slurp;
     my %config = %{ JSON->new->decode($json) };
