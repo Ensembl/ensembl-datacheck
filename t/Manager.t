@@ -72,6 +72,37 @@ subtest 'Default attributes', sub {
   is_deeply($manager->datacheck_types, [], 'Default datacheck_types correct (empty list)');
 };
 
+subtest 'Config file', sub {
+  my $manager = $module->new(
+    config_file => '/oops/file/does/not/exist',
+  );
+
+  throws_ok(
+    sub { $manager->load_config() },
+    qr/Config file does not exist/, 'Check for existence of config file');
+
+  my $config = {
+    registry_file  => 'registry_file_from_config',
+    data_file_path =>  'data_file_path_from_config',
+  };
+  my $json = JSON->new->pretty->encode($config);
+  my $config_file = Path::Tiny->tempfile();
+  $config_file->spew($json);
+
+  $manager->config_file($config_file->stringify);
+
+  my %params = (
+    registry_file  => 'registry_file_from_param',
+    old_server_uri => 'old_server_uri_from_param',
+  );
+
+  my %loaded = $manager->load_config(%params);
+
+  is($loaded{data_file_path}, 'data_file_path_from_config', 'Parameter loaded from config file');
+  is($loaded{old_server_uri}, 'old_server_uri_from_param', 'Explicit parameter loaded');
+  is($loaded{registry_file},  'registry_file_from_param', 'Explicit parameters overwrite config file');
+};
+
 subtest 'TestChecks directory', sub {
   my $manager = $module->new(
     datacheck_dir => $datacheck_dir,
