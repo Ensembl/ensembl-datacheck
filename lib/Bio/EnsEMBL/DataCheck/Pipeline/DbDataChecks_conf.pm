@@ -51,6 +51,7 @@ sub default_options {
     index_file         => undef,
     history_file       => undef,
     output_dir         => undef,
+    config_file        => undef,
     overwrite_files    => 1,
     datacheck_names    => [],
     datacheck_patterns => [],
@@ -58,6 +59,7 @@ sub default_options {
     datacheck_types    => [],
     registry_file      => undef,
     old_server_uri     => undef,
+    data_file_path     => undef,
 
     failures_fatal => 0,
 
@@ -136,6 +138,7 @@ sub pipeline_analyses {
                               index_file         => $self->o('index_file'),
                               history_file       => $self->o('history_file'),
                               output_dir         => $self->o('output_dir'),
+                              config_file        => $self->o('config_file'),
                               overwrite_files    => $self->o('overwrite_files'),
                               datacheck_names    => $self->o('datacheck_names'),
                               datacheck_patterns => $self->o('datacheck_patterns'),
@@ -143,6 +146,7 @@ sub pipeline_analyses {
                               datacheck_types    => $self->o('datacheck_types'),
                               registry_file      => $self->o('registry_file'),
                               old_server_uri     => $self->o('old_server_uri'),
+                              data_file_path     => $self->o('data_file_path'),
 
                               failures_fatal     => $self->o('failures_fatal'),
 

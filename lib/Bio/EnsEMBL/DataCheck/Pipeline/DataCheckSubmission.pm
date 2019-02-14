@@ -58,6 +58,7 @@ sub write_output {
     index_file         => $self->param('index_file'),
     history_file       => $self->param('history_file'),
     output_dir         => $self->param('output_dir'),
+    config_file        => $self->param('config_file'),
     overwrite_files    => $self->param('overwrite_files'),
     datacheck_names    => $self->param('datacheck_names'),
     datacheck_patterns => $self->param('datacheck_patterns'),
@@ -65,6 +66,7 @@ sub write_output {
     datacheck_types    => $self->param('datacheck_types'),
     registry_file      => $self->param('registry_file'),
     old_server_uri     => $self->param('old_server_uri'),
+    data_file_path     => $self->param('data_file_path'),
 
     failures_fatal => $self->param('failures_fatal'),
 

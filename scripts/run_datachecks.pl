@@ -57,6 +57,19 @@ not possible to load them via the registry_file.
 A URI must be specified with the location of the previous release's databases,
 e.g. mysql://a_user@some_host:port_number/[old_db_name|old_release_number]
 
+=item B<-data_f[ile_path]> <data_file_path>
+
+Path to a directory containing data files that need to be tested
+as part of some datachecks (currently only applies to funcgen).
+
+=item B<-c[onfig_file]> <config_file>
+
+Path to a config file that contains default values for parameters
+needed by datachecks. If not explicitly specified, then the config.json
+file in the repository's root directory will be used, if it exists.
+The values in this file are overridden by any specific parameters
+that are given to this script.
+
 =item B<-n[ames]> <names>
 
 The name of the datacheck to execute.
@@ -131,7 +144,7 @@ use Pod::Usage;
 my (
     $help,
     $host, $port, $user, $pass, $dbname, $dbtype,
-    $registry_file, $server_uri, $old_server_uri,
+    $registry_file, $server_uri, $old_server_uri, $data_file_path, $config_file,
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_file,
 );
@@ -147,6 +160,8 @@ GetOptions(
   "registry_file=s",   \$registry_file,
   "server_uri=s",      \$server_uri,
   "old_server_uri=s",  \$old_server_uri,
+  "data_file_path=s",  \$data_file_path,
+  "config_file=s",     \$config_file,
   "names|n:s",         \@names,
   "patterns:s",        \@patterns,
   "groups:s",          \@groups,
@@ -229,12 +244,14 @@ $manager_params{datacheck_dir}   = $datacheck_dir    if defined $datacheck_dir;
 $manager_params{index_file}      = $index_file       if defined $index_file;
 $manager_params{history_file}    = $history_file     if defined $history_file;
 $manager_params{output_file}     = $output_file      if defined $output_file;
+$manager_params{config_file}     = $config_file      if defined $config_file;
 
 my %datacheck_params;
 $datacheck_params{dba}            = $dba            if defined $dba;
 $datacheck_params{registry_file}  = $registry_file  if defined $registry_file;
 $datacheck_params{server_uri}     = $server_uri     if defined $server_uri;
 $datacheck_params{old_server_uri} = $old_server_uri if defined $old_server_uri;
+$datacheck_params{data_file_path} = $data_file_path if defined $data_file_path;
 
 my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
 

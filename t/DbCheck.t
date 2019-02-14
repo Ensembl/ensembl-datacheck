@@ -48,10 +48,10 @@ my $dba     = $testdb->get_DBAdaptor($db_type);
 my $module = 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 diag('Fixed attributes');
-can_ok($module, qw(db_types tables per_db));
+can_ok($module, qw(db_types tables per_db force));
 
 diag('Runtime attributes');
-can_ok($module, qw(dba dba_species_only registry_file server_uri registry old_server_uri dba_list));
+can_ok($module, qw(dba dba_species_only registry_file server_uri registry old_server_uri data_file_path dba_list));
 
 diag('Methods');
 can_ok($module, qw(
@@ -425,6 +425,16 @@ subtest 'Fetch DBA from registry', sub {
   isa_ok($dba2, $dba_type, 'Return value of "get_dba"');
   is($dba2->species, $dba->species, 'Species name matches');
   is($dba2->group,   $dba->group,   'Group matches');
+};
+
+subtest 'Set directory for data files', sub {
+  my $check = TestChecks::DbCheck_1->new(
+    data_file_path => '/data_files',
+  );
+
+  my $data_file_path = $check->data_file_path;
+
+  is($data_file_path, '/data_files', 'Set data_file_path');
 };
 
 $species = 'collection';

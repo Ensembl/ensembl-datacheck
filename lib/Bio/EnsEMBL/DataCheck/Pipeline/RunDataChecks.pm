@@ -42,6 +42,7 @@ sub param_defaults {
     history_file       => undef,
     output_dir         => undef,
     output_filename    => undef,
+    config_file        => undef,
     overwrite_files    => 1,
     datacheck_names    => [],
     datacheck_patterns => [],
@@ -57,6 +58,7 @@ sub param_defaults {
     registry_file  => undef,
     server_uri     => undef,
     old_server_uri => undef,
+    data_file_path => undef,
   );
 
   return {
@@ -87,6 +89,7 @@ sub fetch_input {
   $manager_params{index_file}    = $self->param('index_file')    if $self->param_is_defined('index_file');
   $manager_params{history_file}  = $self->param('history_file')  if $self->param_is_defined('history_file');
   $manager_params{output_file}   = $self->param('output_file')   if $self->param_is_defined('output_file');
+  $manager_params{config_file}   = $self->param('config_file')   if $self->param_is_defined('config_file');
 
   $manager_params{overwrite_files} = $self->param('overwrite_files');
 
@@ -170,7 +173,7 @@ sub datacheck_params {
 
   $self->set_dba_param($datacheck_params);
 
-  $self->set_registry_param($datacheck_params);
+  $self->set_datacheck_params($datacheck_params);
 
   return $datacheck_params;
 }
@@ -234,17 +237,19 @@ sub set_dba_param {
   # parameter for datachecks, because databases aren't necessarily needed.
 }
 
-sub set_registry_param {
+sub set_datacheck_params {
   my $self = shift;
   my ($params) = @_;
 
   my $registry_file  = $self->param('registry_file');
   my $server_uri     = $self->param('server_uri');
   my $old_server_uri = $self->param('old_server_uri');
+  my $data_file_path = $self->param('data_file_path');
 
   $$params{registry_file}  = $registry_file  if defined $registry_file;
   $$params{server_uri}     = $server_uri     if defined $server_uri;
   $$params{old_server_uri} = $old_server_uri if defined $old_server_uri;
+  $$params{data_file_path} = $data_file_path if defined $data_file_path;
 }
 
 1;

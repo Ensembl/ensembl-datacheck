@@ -76,6 +76,26 @@ sub _index_file_default {
   return $file;
 }
 
+=head2 config_file
+  Description: Path to a file with parameters needed by datachecks
+=cut
+has 'config_file' => (
+  is       => 'rw',
+  isa      => 'Str | Undef',
+  lazy     => 1,
+  required => 0,
+  builder  => '_config_file_default',
+);
+
+sub _config_file_default {
+  (my $module_name = __PACKAGE__) =~ s!::!/!g;
+  my $file = $INC{"$module_name.pm"};
+
+  $file =~ s!lib/Bio/EnsEMBL/DataCheck/[\w\.]+$!config.json!;
+
+  return $file if -e $file;
+}
+
 =head2 names
   Description: List of datacheck names
 =cut
@@ -139,9 +159,29 @@ has 'overwrite_files' => (
 
 __PACKAGE__->meta->make_immutable;
 
+sub load_config {
+  my $self = shift;
+  my %params = @_;
+
+  if (defined $self->config_file) {
+    die "Config file does not exist" unless -e $self->config_file;
+
+    my $json = path($self->config_file)->slurp;
+    my %config = %{ JSON->new->decode($json) };
+
+    foreach my $key (keys %config) {
+      if (!exists $params{$key}) {
+        $params{$key} = $config{$key};
+      }
+    }
+  }
+
+  return %params;
+}
+
 sub load_checks {
   my $self = shift;
-  my @params = @_;
+  my @params = $self->load_config(@_);
 
   my %index = %{ $self->read_index() };
 
