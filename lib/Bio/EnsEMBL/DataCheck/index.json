@@ -3,6 +3,7 @@
       "datacheck_type" : "advisory",
       "description" : "Check that all align_feature rows have an external_db",
       "groups" : [
+         "annotation",
          "core",
          "corelike"
       ],
@@ -33,7 +34,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that certain analyses have descriptions",
       "groups" : [
-         "core"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "AnalysisDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisDescription"
@@ -91,7 +94,7 @@
       "datacheck_type" : "advisory",
       "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist",
       "groups" : [
-         "annotation"
+         "geneset"
       ],
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
@@ -157,7 +160,7 @@
       "datacheck_type" : "advisory",
       "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
       "groups" : [
-         "core_compare"
+         "compare_core"
       ],
       "name" : "CompareBiotypeGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup"
@@ -175,6 +178,7 @@
       "datacheck_type" : "advisory",
       "description" : "Compare GO xref counts, broken down by source, between two databases",
       "groups" : [
+         "compare_core",
          "xref"
       ],
       "name" : "CompareGOXref",
@@ -217,9 +221,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that analysis descriptions and display settings are correct",
       "groups" : [
+         "controlled_tables",
          "core",
-         "corelike",
-         "production_db"
+         "corelike"
       ],
       "name" : "ControlledAnalysis",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis"
@@ -228,10 +232,10 @@
       "datacheck_type" : "critical",
       "description" : "Ensure that database has mandatory and permitted meta keys",
       "groups" : [
+         "controlled_tables",
          "core",
          "corelike",
          "funcgen",
-         "production_db",
          "variation"
       ],
       "name" : "ControlledMetaKeys",
@@ -241,9 +245,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
       "groups" : [
+         "controlled_tables",
          "core",
-         "corelike",
-         "production_db"
+         "corelike"
       ],
       "name" : "ControlledTablesCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCore"
@@ -252,7 +256,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that controlled tables are consistent with production database",
       "groups" : [
-         "production_db",
+         "controlled_tables",
          "variation"
       ],
       "name" : "ControlledTablesVariation",
@@ -286,6 +290,15 @@
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
    },
+   "DataFilesExist" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that data files are defined in the database, and that the files exist",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "DataFilesExist",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DataFilesExist"
+   },
    "DatabaseCollation" : {
       "datacheck_type" : "critical",
       "description" : "Check that all tables in a database have the same collation, (latin1_swedish_ci)",
@@ -299,15 +312,6 @@
       ],
       "name" : "DatabaseCollation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseCollation"
-    },
-   "DataFilesExist" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that data files are defined in the database, and that the files exist",
-      "groups" : [
-         "funcgen"
-      ],
-      "name" : "DataFilesExist",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DataFilesExist"
    },
    "Denormalized" : {
       "datacheck_type" : "critical",
@@ -344,7 +348,9 @@
       "datacheck_type" : "critical",
       "description" : "Check that exon regions are non-overlapping, and are consistent with their transcripts",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "ExonBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonBounds"
@@ -517,7 +523,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that LRG features and seq_regions are correctly associated.",
       "groups" : [
-         "handover"
+         "core",
+         "xref"
       ],
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
@@ -639,7 +646,9 @@
    "PhenotypeDescription" : {
       "datacheck_type" : "critical",
       "description" : "Check that imported description contains only supported characters",
-      "groups" : [],
+      "groups" : [
+         "variation"
+      ],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
    },
@@ -647,6 +656,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that component genomes are annotated for polyploid genomes",
       "groups" : [
+         "assembly",
          "core"
       ],
       "name" : "PolyploidAttribs",
@@ -835,24 +845,26 @@
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
    },
-   "StableIDUnique" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for uniqueness of stable IDs, both within a database, and across all databases in the registry",
-      "groups" : [
-         "annotation",
-         "core"
-      ],
-      "name" : "StableIDUnique",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
-   },
    "SpeciesTaxonomy" : {
       "datacheck_type" : "critical",
       "description" : "Check that taxonomy meta key is consistent with taxonomy database",
       "groups" : [
-         "core"
+         "core",
+         "meta"
       ],
       "name" : "SpeciesTaxonomy",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesTaxonomy"
+   },
+   "StableIDUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for uniqueness of stable IDs, both within a database, and across all databases in the registry",
+      "groups" : [
+         "core",
+         "corelike",
+         "geneset"
+      ],
+      "name" : "StableIDUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
    },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
