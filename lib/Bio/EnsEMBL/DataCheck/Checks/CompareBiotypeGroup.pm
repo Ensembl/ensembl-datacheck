@@ -31,7 +31,7 @@ use constant {
   NAME           => 'CompareBiotypeGroup',
   DESCRIPTION    => 'Check for more than 25% difference between the number of genes '.
                     'in two databases, broken down by biotype.',
-  GROUPS         => ['core_compare'],
+  GROUPS         => ['compare_core'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['biotype', 'coord_system', 'gene', 'seq_region'],

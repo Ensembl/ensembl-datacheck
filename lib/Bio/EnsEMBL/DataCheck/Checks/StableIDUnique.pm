@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'StableIDUnique',
   DESCRIPTION => 'Check for uniqueness of stable IDs, both within a database, and across all databases in the registry',
-  GROUPS      => ['annotation', 'core'],
+  GROUPS      => ['core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['gene', 'transcript', 'translation'],
   PER_DB      => 1

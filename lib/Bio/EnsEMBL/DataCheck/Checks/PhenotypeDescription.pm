@@ -30,6 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'PhenotypeDescription',
   DESCRIPTION => 'Check that imported description contains only supported characters',
+  GROUPS      => ['variation'],
   DB_TYPES    => ['variation'],
   TABLES      => ['phenotype']
 };

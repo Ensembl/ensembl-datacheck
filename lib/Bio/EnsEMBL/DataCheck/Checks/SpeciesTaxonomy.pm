@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SpeciesTaxonomy',
   DESCRIPTION => 'Check that taxonomy meta key is consistent with taxonomy database',
-  GROUPS      => ['core'],
+  GROUPS      => ['core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta']
 };

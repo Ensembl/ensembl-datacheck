@@ -31,7 +31,7 @@ use constant {
   NAME        => 'ExonRank',
   DESCRIPTION => 'Check for exon_transcript duplicates and missing rank=1 exons',
   GROUPS      => ['core', 'corelike', 'geneset'],
-  DB_TYPES    => ['core']
+  DB_TYPES    => ['core', 'otherfeatures']
 };
 
 sub tests {
