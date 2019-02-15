@@ -28,8 +28,8 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ControlledAnalysis',
-  DESCRIPTION => 'Check that analysis descriptions and display settings are correct',
-  GROUPS      => ['core', 'corelike', 'production_db'],
+  DESCRIPTION => 'Analysis descriptions and display settings are consistent with production database',
+  GROUPS      => ['controlled_tables', 'core', 'corelike'],
   DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
   TABLES      => ['analysis', 'analysis_description'],
   PER_DB      => 1

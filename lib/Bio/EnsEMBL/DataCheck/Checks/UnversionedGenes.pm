@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'UnversionedGenes',
-  DESCRIPTION => 'Check that genes are unversioned in non-vertebrate databases',
+  DESCRIPTION => 'Genes are unversioned in non-vertebrate databases',
   GROUPS      => ['core', 'geneset'],
   DB_TYPES    => ['core'],
   TABLES      => ['coord_system', 'exon', 'exon_transcript', 'gene', 'seq_region', 'transcript', 'translation']

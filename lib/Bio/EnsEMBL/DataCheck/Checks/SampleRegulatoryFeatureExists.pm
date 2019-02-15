@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'SampleRegulatoryFeatureExists',
-  DESCRIPTION => 'Check if the current regulatory build has a sample regulatory feature',
+  DESCRIPTION => 'Current regulatory build has a sample regulatory feature',
   GROUPS      => ['funcgen', 'regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_build','regulatory_feature'],

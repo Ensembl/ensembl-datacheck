@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'MetaKeyOptional',
-  DESCRIPTION    => 'Check for meta keys which are expected but not mandatory',
+  DESCRIPTION    => 'Optional, but expected, meta keys exist',
   GROUPS         => ['core', 'meta'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],

@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ArraysHaveProbes',
-  DESCRIPTION => 'All arrays are associated with probes.',
+  DESCRIPTION => 'All arrays are associated with probes',
   GROUPS      => ['funcgen', 'probe_mapping'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['array', 'array_chip', 'probe']

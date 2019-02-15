@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'MetaKeyCardinality',
-  DESCRIPTION => 'Check cardinality of meta data that must be single-valued',
+  DESCRIPTION => 'A subset of meta keys must only have a single value',
   GROUPS      => ['core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta']

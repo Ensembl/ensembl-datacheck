@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'BlankEnums',
-  DESCRIPTION => 'Check for NULLable columns that contain empty strings',
+  DESCRIPTION => 'Enum columns do not have empty string values',
   GROUPS      => ['compara', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1

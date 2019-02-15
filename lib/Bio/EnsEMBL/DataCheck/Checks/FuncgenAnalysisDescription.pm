@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'FuncgenAnalysisDescription',
-  DESCRIPTION => 'Check that certain features have descriptions and are displayable',
+  DESCRIPTION => 'Probe features and feature sets have descriptions and are displayable',
   GROUPS      => ['funcgen'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['analysis', 'analysis_description', 'feature_set', 'probe_feature']

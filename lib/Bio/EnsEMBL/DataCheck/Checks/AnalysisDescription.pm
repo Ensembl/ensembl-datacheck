@@ -29,9 +29,9 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'AnalysisDescription',
-  DESCRIPTION => 'Check that certain analyses have descriptions',
-  GROUPS      => ['core'],
-  DB_TYPES    => ['core'],
+  DESCRIPTION => 'Gene analyses have descriptions',
+  GROUPS      => ['core', 'corelike', 'geneset'],
+  DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['analysis', 'analysis_description', 'gene', 'prediction_transcript', 'transcript']
 };
 

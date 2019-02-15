@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'RegulatoryFeatureIsActive',
-  DESCRIPTION => 'Check that every regulatory feature has a valid activity value in at least one epigenome.',
+  DESCRIPTION => 'All regulatory features have a valid activity value in at least one epigenome',
   GROUPS      => ['funcgen', 'regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_build','regulatory_feature','regulatory_activity'],

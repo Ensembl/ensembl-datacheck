@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'GeneCounts',
-  DESCRIPTION => 'Check that gene counts are correct',
+  DESCRIPTION => 'Gene counts are correct',
   GROUPS      => ['statistics'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'gene', 'seq_region', 'seq_region_attrib']

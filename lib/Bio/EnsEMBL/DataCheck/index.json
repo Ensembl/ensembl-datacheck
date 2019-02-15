@@ -1,8 +1,9 @@
 {
    "AlignFeatureExternalDB" : {
       "datacheck_type" : "advisory",
-      "description" : "Check that all align_feature rows have an external_db",
+      "description" : "All alignment features are linked to an external DB",
       "groups" : [
+         "annotation",
          "core",
          "corelike"
       ],
@@ -11,7 +12,7 @@
    },
    "AltAllele" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure alt_allele group members all map back to the same chromosome",
+      "description" : "Alt allele group members map back to the same chromosome",
       "groups" : [
          "core",
          "geneset"
@@ -21,7 +22,7 @@
    },
    "AltAlleleGroup" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that no alt_allele_group has more than one gene from the primary assembly",
+      "description" : "No alt_allele_group has more than one gene from the primary assembly",
       "groups" : [
          "core",
          "geneset"
@@ -31,16 +32,18 @@
    },
    "AnalysisDescription" : {
       "datacheck_type" : "critical",
-      "description" : "Check that certain analyses have descriptions",
+      "description" : "Gene analyses have descriptions",
       "groups" : [
-         "core"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "AnalysisDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisDescription"
    },
    "AnalysisFormat" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that analysis is formatted correctly",
+      "description" : "Analysis logic name and date are formatted correctly",
       "groups" : [
          "core",
          "corelike"
@@ -50,7 +53,7 @@
    },
    "Archive" : {
       "datacheck_type" : "critical",
-      "description" : "Gene archive table is up to date.",
+      "description" : "Gene archive table is up to date",
       "groups" : [
          "id_mapping"
       ],
@@ -59,7 +62,7 @@
    },
    "ArraysHaveProbes" : {
       "datacheck_type" : "critical",
-      "description" : "All arrays are associated with probes.",
+      "description" : "All arrays are associated with probes",
       "groups" : [
          "funcgen",
          "probe_mapping"
@@ -69,7 +72,7 @@
    },
    "AssemblyExceptions" : {
       "datacheck_type" : "critical",
-      "description" : "Check if assembly_exceptions are present and correct.",
+      "description" : "Assembly exceptions are correctly configured",
       "groups" : [
          "assembly",
          "core"
@@ -79,7 +82,7 @@
    },
    "AssemblySeqregion" : {
       "datacheck_type" : "critical",
-      "description" : "assembly and seq_region table are consistent.",
+      "description" : "Assembly and seq_region tables are consistent",
       "groups" : [
          "assembly",
          "core"
@@ -91,14 +94,14 @@
       "datacheck_type" : "advisory",
       "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist",
       "groups" : [
-         "annotation"
+         "geneset"
       ],
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
    },
    "BlankEnums" : {
       "datacheck_type" : "critical",
-      "description" : "Check for NULLable columns that contain empty strings",
+      "description" : "Enum columns do not have empty string values",
       "groups" : [
          "compara",
          "core",
@@ -112,7 +115,7 @@
    },
    "BlankNulls" : {
       "datacheck_type" : "critical",
-      "description" : "Check for nullable columns that contain empty strings",
+      "description" : "Nullable columns do not have empty string values",
       "groups" : [
          "compara",
          "core",
@@ -126,7 +129,7 @@
    },
    "CanonicalTranscripts" : {
       "datacheck_type" : "critical",
-      "description" : "Check that canonical transcripts are set",
+      "description" : "Canonical transcripts and translation are correctly configured",
       "groups" : [
          "core",
          "geneset"
@@ -136,7 +139,7 @@
    },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
-      "description" : "Check whether chromosomal seq_regions have appropriate attribute.",
+      "description" : "Chromosomal seq_regions have appropriate attribute",
       "groups" : [
          "assembly",
          "core"
@@ -155,16 +158,16 @@
    },
    "CompareBiotypeGroup" : {
       "datacheck_type" : "advisory",
-      "description" : "Check for more than 25% difference between the number of genes in two databases, broken down by biotype.",
+      "description" : "Compare gene counts between two databases, categorised by biotype",
       "groups" : [
-         "core_compare"
+         "compare_core"
       ],
       "name" : "CompareBiotypeGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareBiotypeGroup"
    },
    "CompareConsequenceTypes" : {
       "datacheck_type" : "advisory",
-      "description" : "Compare transcript_variation counts, broken down by consequence type, between two databases",
+      "description" : "Compare transcript_variation counts between two databases, categorised by consequence type",
       "groups" : [
          "compare_variation"
       ],
@@ -173,8 +176,9 @@
    },
    "CompareGOXref" : {
       "datacheck_type" : "advisory",
-      "description" : "Compare GO xref counts, broken down by source, between two databases",
+      "description" : "Compare GO xref counts between two databases, categorised by source",
       "groups" : [
+         "compare_core",
          "xref"
       ],
       "name" : "CompareGOXref",
@@ -195,7 +199,7 @@
    },
    "CompareSynonym" : {
       "datacheck_type" : "advisory",
-      "description" : "Compare synonym counts, broken down by external_db, between two databases",
+      "description" : "Compare synonym counts between two databases, categorised by external_db",
       "groups" : [
          "compare_core",
          "xref"
@@ -205,7 +209,7 @@
    },
    "CompareXref" : {
       "datacheck_type" : "advisory",
-      "description" : "Compare xref counts, broken down by external_db, between two databases",
+      "description" : "Compare xref counts between two databases, categorised by external_db",
       "groups" : [
          "compare_core",
          "xref"
@@ -215,23 +219,24 @@
    },
    "ControlledAnalysis" : {
       "datacheck_type" : "critical",
-      "description" : "Check that analysis descriptions and display settings are correct",
+      "description" : "Analysis descriptions and display settings are consistent with production database",
       "groups" : [
+         "controlled_tables",
          "core",
-         "corelike",
-         "production_db"
+         "corelike"
       ],
       "name" : "ControlledAnalysis",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis"
    },
    "ControlledMetaKeys" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that database has mandatory and permitted meta keys",
+      "description" : "Meta keys are consistent with production database",
       "groups" : [
+         "controlled_tables",
          "core",
          "corelike",
+         "meta",
          "funcgen",
-         "production_db",
          "variation"
       ],
       "name" : "ControlledMetaKeys",
@@ -239,20 +244,20 @@
    },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
-      "description" : "Check that controlled tables are consistent with production database",
+      "description" : "Controlled tables are consistent with production database",
       "groups" : [
+         "controlled_tables",
          "core",
-         "corelike",
-         "production_db"
+         "corelike"
       ],
       "name" : "ControlledTablesCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCore"
    },
    "ControlledTablesVariation" : {
       "datacheck_type" : "critical",
-      "description" : "Check that controlled tables are consistent with production database",
+      "description" : "Controlled tables are consistent with production database",
       "groups" : [
-         "production_db",
+         "controlled_tables",
          "variation"
       ],
       "name" : "ControlledTablesVariation",
@@ -260,7 +265,7 @@
    },
    "CoreTables" : {
       "datacheck_type" : "critical",
-      "description" : "Check that appropriate core-like tables are identical to those in the core database",
+      "description" : "Requisite core-like tables are identical to those in the core database",
       "groups" : [
          "corelike"
       ],
@@ -269,7 +274,7 @@
    },
    "CurrentRegulatoryBuildHasEpigenomes" : {
       "datacheck_type" : "critical",
-      "description" : "Check if the current regulatory build has epigenomes data",
+      "description" : "Current regulatory build has epigenome data",
       "groups" : [
          "funcgen",
          "regulatory_build"
@@ -279,16 +284,25 @@
    },
    "DNAEmpty" : {
       "datacheck_type" : "critical",
-      "description" : "Check that core-like databases do not contain DNA sequences",
+      "description" : "Core-like databases do not contain DNA sequences",
       "groups" : [
          "corelike"
       ],
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
    },
+   "DataFilesExist" : {
+      "datacheck_type" : "critical",
+      "description" : "Data files are defined where necessary, and exist on the filesystem",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "DataFilesExist",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DataFilesExist"
+   },
    "DatabaseCollation" : {
       "datacheck_type" : "critical",
-      "description" : "Check that all tables in a database have the same collation, (latin1_swedish_ci)",
+      "description" : "All tables have the same collation (latin1_swedish_ci)",
       "groups" : [
          "compara",
          "core",
@@ -299,19 +313,10 @@
       ],
       "name" : "DatabaseCollation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseCollation"
-    },
-   "DataFilesExist" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that data files are defined in the database, and that the files exist",
-      "groups" : [
-         "funcgen"
-      ],
-      "name" : "DataFilesExist",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DataFilesExist"
    },
    "Denormalized" : {
       "datacheck_type" : "critical",
-      "description" : "Check that denormalized columns are synchronised",
+      "description" : "Denormalized columns are synchronised",
       "groups" : [
          "variation",
          "schema"
@@ -321,7 +326,7 @@
    },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
-      "description" : "Check that genes are displayable and have web_data attached to their analysis",
+      "description" : "Genes are displayable and have web_data attached to their analysis",
       "groups" : [
          "core",
          "corelike",
@@ -332,7 +337,7 @@
    },
    "EpigenomeHasSegmentationFile" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every epigenome which is part of the current Regulatory Build has a segmentation file in the segmentation_file table",
+      "description" : "All epigenomes in the current regulatory build have a segmentation file",
       "groups" : [
          "funcgen",
          "regulatory_build"
@@ -342,16 +347,18 @@
    },
    "ExonBounds" : {
       "datacheck_type" : "critical",
-      "description" : "Check that exon regions are non-overlapping, and are consistent with their transcripts",
+      "description" : "Exon regions are non-overlapping, and are consistent with their transcripts",
       "groups" : [
-         "core_handover"
+         "core",
+         "corelike",
+         "geneset"
       ],
       "name" : "ExonBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ExonBounds"
    },
    "ExonRank" : {
       "datacheck_type" : "critical",
-      "description" : "Check for exon_transcript duplicates and missing rank=1 exons",
+      "description" : "Exon/transcript links are not duplicated, and rank=1 exons exist for every transcript",
       "groups" : [
          "core",
          "corelike",
@@ -362,7 +369,7 @@
    },
    "ExperimentHasFeatureSet" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every distinct experiment, epigenome and feature_type combination is linked to a feature_set",
+      "description" : "All distinct experiment, epigenome and feature_type combinations are linked to a feature_set",
       "groups" : [
          "funcgen",
          "ersa"
@@ -372,7 +379,7 @@
    },
    "FeatureBounds" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that features are within the bounds of their seq_region",
+      "description" : "Feature co-ordinates are within the bounds of their seq_region",
       "groups" : [
          "annotation",
          "core",
@@ -383,7 +390,7 @@
    },
    "FeaturePosition" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that features are within the bounds of their seq_region",
+      "description" : "Feature co-ordinates are within the bounds of their seq_region",
       "groups" : [
          "funcgen",
          "ersa"
@@ -393,7 +400,7 @@
    },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
-      "description" : "Check for incorrect foreign key relationships",
+      "description" : "Foreign key relationships are not violated",
       "groups" : [
          "compara",
          "core",
@@ -407,7 +414,7 @@
    },
    "ForeignKeysMultiDB" : {
       "datacheck_type" : "critical",
-      "description" : "Check for broken foreign key relationships between tables from multiple databases",
+      "description" : "Foreign key relationships between tables from different databases are not violated",
       "groups" : [
          "funcgen",
          "schema",
@@ -418,7 +425,7 @@
    },
    "FuncgenAnalysisDescription" : {
       "datacheck_type" : "critical",
-      "description" : "Check that certain features have descriptions and are displayable",
+      "description" : "Probe features and feature sets have descriptions and are displayable",
       "groups" : [
          "funcgen"
       ],
@@ -427,7 +434,7 @@
    },
    "GeneBiotypes" : {
       "datacheck_type" : "critical",
-      "description" : "Check that genes and transcripts have valid biotypes",
+      "description" : "Genes and transcripts have valid biotypes",
       "groups" : [
          "core",
          "corelike",
@@ -438,7 +445,7 @@
    },
    "GeneBounds" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that genes are within the bounds of their seq_region",
+      "description" : "Genes are within the bounds of their seq_region",
       "groups" : [
          "core",
          "corelike",
@@ -449,7 +456,7 @@
    },
    "GeneCounts" : {
       "datacheck_type" : "critical",
-      "description" : "Check that gene counts are correct",
+      "description" : "Gene counts are correct",
       "groups" : [
          "statistics"
       ],
@@ -458,7 +465,7 @@
    },
    "GeneGC" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every gene has a GC statistic",
+      "description" : "All genes have a GC statistic",
       "groups" : [
          "statistics"
       ],
@@ -467,7 +474,7 @@
    },
    "GeneStableID" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that genes have unique stable IDs",
+      "description" : "Genes, transcripts, exons and translations have non-NULL, unique stable IDs",
       "groups" : [
          "core",
          "geneset"
@@ -477,7 +484,7 @@
    },
    "GeneStrands" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that genes have valid strand values",
+      "description" : "Genes have valid strand values",
       "groups" : [
          "core",
          "corelike",
@@ -488,7 +495,7 @@
    },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
-      "description" : "Check that genome statistics are present and correct",
+      "description" : "Genome statistics are present and correct",
       "groups" : [
          "statistics"
       ],
@@ -497,7 +504,7 @@
    },
    "InterProFeatures" : {
       "datacheck_type" : "critical",
-      "description" : "Check that InterPro data are present and correct",
+      "description" : "InterPro data is present and correct",
       "groups" : [
          "protein_features"
       ],
@@ -506,7 +513,7 @@
    },
    "Karyotype" : {
       "datacheck_type" : "advisory",
-      "description" : "Check whether karyotype data exists.",
+      "description" : "Karyotype data exists for human, mouse and rat",
       "groups" : [
          "assembly"
       ],
@@ -515,16 +522,17 @@
    },
    "LRG" : {
       "datacheck_type" : "critical",
-      "description" : "Check that LRG features and seq_regions are correctly associated.",
+      "description" : "LRG features and seq_regions are correctly configured",
       "groups" : [
-         "handover"
+         "core",
+         "xref"
       ],
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
    },
    "MetaCoord" : {
       "datacheck_type" : "critical",
-      "description" : "Check that the meta_coord table is correctly populated",
+      "description" : "The meta_coord table is correctly populated",
       "groups" : [
          "annotation",
          "core",
@@ -539,7 +547,7 @@
    },
    "MetaKeyAssembly" : {
       "datacheck_type" : "critical",
-      "description" : "Check for consistency between assembly data and meta keys",
+      "description" : "Assembly data and meta keys are consistent",
       "groups" : [
          "assembly",
          "core",
@@ -550,7 +558,7 @@
    },
    "MetaKeyCardinality" : {
       "datacheck_type" : "critical",
-      "description" : "Check cardinality of meta data that must be single-valued",
+      "description" : "A subset of meta keys must only have a single value",
       "groups" : [
          "core",
          "meta"
@@ -560,7 +568,7 @@
    },
    "MetaKeyConditional" : {
       "datacheck_type" : "critical",
-      "description" : "Check for meta keys which are conditional on some aspect of the data",
+      "description" : "Conditional meta keys exist if the data requires them",
       "groups" : [
          "core",
          "meta",
@@ -571,7 +579,7 @@
    },
    "MetaKeyConsistent" : {
       "datacheck_type" : "critical",
-      "description" : "Check that meta_keys are identical between core and core-like databases",
+      "description" : "Assembly and species meta keys are identical between core and core-like databases",
       "groups" : [
          "corelike",
          "meta"
@@ -581,7 +589,7 @@
    },
    "MetaKeyFormat" : {
       "datacheck_type" : "critical",
-      "description" : "Check the format and links for meta values",
+      "description" : "Meta values are correctly formatted and linked",
       "groups" : [
          "core",
          "meta",
@@ -592,7 +600,7 @@
    },
    "MetaKeyLevel" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that meta_keys are correctly assigned at species or database level",
+      "description" : "Meta keys are correctly assigned at species or database level",
       "groups" : [
          "core",
          "corelike",
@@ -605,7 +613,7 @@
    },
    "MetaKeyOptional" : {
       "datacheck_type" : "advisory",
-      "description" : "Check for meta keys which are expected but not mandatory",
+      "description" : "Optional, but expected, meta keys exist",
       "groups" : [
          "core",
          "meta"
@@ -615,7 +623,7 @@
    },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
-      "description" : "Check if database schema does not match the given MySQL storage engine",
+      "description" : "Database schema matches expected MySQL storage engine",
       "groups" : [
          "compara",
          "core",
@@ -629,7 +637,7 @@
    },
    "PepstatsAttributes" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every translation has pepstats statistics",
+      "description" : "All translations have peptide statistics",
       "groups" : [
          "statistics"
       ],
@@ -638,15 +646,18 @@
    },
    "PhenotypeDescription" : {
       "datacheck_type" : "critical",
-      "description" : "Check that imported description contains only supported characters",
-      "groups" : [],
+      "description" : "Imported descriptions contain only supported characters",
+      "groups" : [
+         "variation"
+      ],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
    },
    "PolyploidAttribs" : {
       "datacheck_type" : "critical",
-      "description" : "Check that component genomes are annotated for polyploid genomes",
+      "description" : "Component genomes are annotated for polyploid genomes",
       "groups" : [
+         "assembly",
          "core"
       ],
       "name" : "PolyploidAttribs",
@@ -654,7 +665,7 @@
    },
    "ProbeUnique" : {
       "datacheck_type" : "critical",
-      "description" : "Check that probe IDs and mappings are unique",
+      "description" : "Probe IDs and mappings are unique",
       "groups" : [
          "funcgen",
          "probe_mapping"
@@ -664,7 +675,7 @@
    },
    "ProteinCodingGenes" : {
       "datacheck_type" : "critical",
-      "description" : "Check for at least one protein-coding gene",
+      "description" : "At least one protein-coding gene exists",
       "groups" : [
          "core",
          "geneset"
@@ -674,7 +685,7 @@
    },
    "ProteinFeatures" : {
       "datacheck_type" : "critical",
-      "description" : "Check that protein features are present and correct",
+      "description" : "Protein features are present and correct",
       "groups" : [
          "protein_features"
       ],
@@ -683,7 +694,7 @@
    },
    "ProteinTranslation" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every protein-coding gene has a valid translation",
+      "description" : "All protein-coding genes have a valid translation",
       "groups" : [
          "core",
          "geneset"
@@ -693,7 +704,7 @@
    },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
-      "description" : "Check that every regulatory feature has a valid activity value in at least one epigenome.",
+      "description" : "All regulatory features have a valid activity value in at least one epigenome",
       "groups" : [
          "funcgen",
          "regulatory_build"
@@ -703,7 +714,7 @@
    },
    "RegulatoryFeatureStableID" : {
       "datacheck_type" : "critical",
-      "description" : "Check that stable IDs are unique within a regulatory build",
+      "description" : "Regulatory feature stable IDs are unique within a regulatory build",
       "groups" : [
          "funcgen",
          "regulatory_build"
@@ -713,7 +724,7 @@
    },
    "RepeatFeatures" : {
       "datacheck_type" : "critical",
-      "description" : "Check that repeat feature coordinates are present and correct",
+      "description" : "Repeat feature coordinates are present and correct",
       "groups" : [
          "annotation",
          "core"
@@ -723,7 +734,7 @@
    },
    "SampleRegulatoryFeatureExists" : {
       "datacheck_type" : "critical",
-      "description" : "Check if the current regulatory build has a sample regulatory feature",
+      "description" : "Current regulatory build has a sample regulatory feature",
       "groups" : [
          "funcgen",
          "regulatory_build"
@@ -733,7 +744,7 @@
    },
    "SchemaPatchesApplied" : {
       "datacheck_type" : "critical",
-      "description" : "Check that schema patches are up-to-date",
+      "description" : "Schema patches are up-to-date",
       "groups" : [
          "compara",
          "core",
@@ -747,7 +758,7 @@
    },
    "SchemaType" : {
       "datacheck_type" : "critical",
-      "description" : "Check that the schema type meta key matches the DB name",
+      "description" : "The schema type meta key matches the DB name",
       "groups" : [
          "compara",
          "core",
@@ -761,7 +772,7 @@
    },
    "SchemaVersion" : {
       "datacheck_type" : "critical",
-      "description" : "Check that the schema version meta_key matches the DB name",
+      "description" : "The schema version meta key matches the DB name",
       "groups" : [
          "compara",
          "core",
@@ -775,7 +786,7 @@
    },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
-      "description" : "Check that seq_region names are unique (top-level) or consistent (non-top-level)",
+      "description" : "Seq_region names are unique (top-level) or consistent (non-top-level)",
       "groups" : [
          "assembly",
          "core"
@@ -785,7 +796,7 @@
    },
    "SeqRegionNamesINSDC" : {
       "datacheck_type" : "advisory",
-      "description" : "Check that seq_region names from INSDC are appropriately formatted and attributed",
+      "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
       "groups" : [
          "assembly",
          "core"
@@ -795,7 +806,7 @@
    },
    "SeqRegionRank" : {
       "datacheck_type" : "critical",
-      "description" : "Check that chromosomes have rank 1",
+      "description" : "Chromosomes have rank 1",
       "groups" : [
          "assembly",
          "core"
@@ -805,7 +816,7 @@
    },
    "SeqRegionTopLevel" : {
       "datacheck_type" : "critical",
-      "description" : "Check that top-level seq_regions are appropriately configured",
+      "description" : "Top-level seq_regions are appropriately configured",
       "groups" : [
          "assembly",
          "core",
@@ -817,7 +828,7 @@
    },
    "SequenceLevel" : {
       "datacheck_type" : "critical",
-      "description" : "Check that DNA is attached and only attached to sequence-level seq_regions.",
+      "description" : "DNA is attached, and only attached, to sequence-level seq_regions",
       "groups" : [
          "assembly",
          "core"
@@ -827,7 +838,7 @@
    },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
-      "description" : "Check that production_name and alias are unique across all species",
+      "description" : "Species production_name and alias are unique across all databases in the registry",
       "groups" : [
          "core",
          "meta"
@@ -835,28 +846,30 @@
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
    },
-   "StableIDUnique" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for uniqueness of stable IDs, both within a database, and across all databases in the registry",
-      "groups" : [
-         "annotation",
-         "core"
-      ],
-      "name" : "StableIDUnique",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
-   },
    "SpeciesTaxonomy" : {
       "datacheck_type" : "critical",
-      "description" : "Check that taxonomy meta key is consistent with taxonomy database",
+      "description" : "Taxonomic meta keys are consistent with taxonomy database",
       "groups" : [
-         "core"
+         "core",
+         "meta"
       ],
       "name" : "SpeciesTaxonomy",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesTaxonomy"
    },
+   "StableIDUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Stable IDs are unique, both within a database, and across all databases in the registry",
+      "groups" : [
+         "core",
+         "corelike",
+         "geneset"
+      ],
+      "name" : "StableIDUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
+   },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
-      "description" : "Check that gene and transcript bounds are consistent",
+      "description" : "Gene and transcript bounds are consistent",
       "groups" : [
          "core",
          "corelike",
@@ -867,7 +880,7 @@
    },
    "UnlocatedTranscripts" : {
       "datacheck_type" : "critical",
-      "description" : "Check that transcripts are linked to sequences",
+      "description" : "Transcripts are linked to sequences",
       "groups" : [
          "core",
          "corelike",
@@ -878,7 +891,7 @@
    },
    "UnversionedGenes" : {
       "datacheck_type" : "critical",
-      "description" : "Check that genes are unversioned in non-vertebrate databases",
+      "description" : "Genes are unversioned in non-vertebrate databases",
       "groups" : [
          "core",
          "geneset"
@@ -888,7 +901,7 @@
    },
    "ValidTranscripts" : {
       "datacheck_type" : "critical",
-      "description" : "Check that transcripts have translations, if appropriate",
+      "description" : "Transcripts have translations, if appropriate",
       "groups" : [
          "core",
          "corelike",
@@ -899,7 +912,7 @@
    },
    "ValidTranslations" : {
       "datacheck_type" : "critical",
-      "description" : "Check that translations have appropriate properties",
+      "description" : "Translations have appropriate properties",
       "groups" : [
          "core",
          "corelike",
@@ -910,7 +923,7 @@
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
-      "description" : "Check that xrefs are only attached to one feature type.",
+      "description" : "Xrefs are only attached to one feature type.",
       "groups" : [
          "xref"
       ],

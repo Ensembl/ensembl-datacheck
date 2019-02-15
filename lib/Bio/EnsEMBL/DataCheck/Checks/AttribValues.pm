@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'AttribValues',
   DESCRIPTION    => 'TSL, APPRIS, GENCODE and RefSeq attributes exist',
-  GROUPS         => ['annotation'],
+  GROUPS         => ['geneset'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['assembly_exception', 'attrib_type', 'coord_system', 'gene', 'gene_attrib', 'seq_region', 'seq_region_attrib', 'transcript', 'transcript_attrib']

@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'GeneStrands',
-  DESCRIPTION => 'Ensure that genes have valid strand values',
+  DESCRIPTION => 'Genes have valid strand values',
   GROUPS      => ['core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['coord_system', 'exon', 'gene', 'prediction_exon', 'prediction_transcript', 'seq_region', 'transcript']

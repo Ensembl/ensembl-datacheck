@@ -28,8 +28,8 @@ extends 'Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCore';
 
 use constant {
   NAME        => 'ControlledTablesVariation',
-  DESCRIPTION => 'Check that controlled tables are consistent with production database',
-  GROUPS      => ['production_db', 'variation'],
+  DESCRIPTION => 'Controlled tables are consistent with production database',
+  GROUPS      => ['controlled_tables', 'variation'],
   DB_TYPES    => ['variation'],
   TABLES      => ['attrib', 'attrib_set'],
   PER_DB      => 1

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'DataFilesExist',
-  DESCRIPTION => 'Check that data files are defined in the database, and that the files exist',
+  DESCRIPTION => 'Data files are defined where necessary, and exist on the filesystem',
   GROUPS      => ['funcgen'],
   DB_TYPES    => ['funcgen'],
   FORCE       => 1

@@ -29,8 +29,8 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'PolyploidAttribs',
-  DESCRIPTION => 'Check that component genomes are annotated for polyploid genomes',
-  GROUPS      => ['core'],
+  DESCRIPTION => 'Component genomes are annotated for polyploid genomes',
+  GROUPS      => ['assembly', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'seq_region', 'seq_region_attrib']
 };

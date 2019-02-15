@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ProteinCodingGenes',
-  DESCRIPTION => 'Check for at least one protein-coding gene',
+  DESCRIPTION => 'At least one protein-coding gene exists',
   GROUPS      => ['core', 'geneset'],
   DB_TYPES    => ['core'],
   TABLES      => ['coord_system', 'gene', 'seq_region']
