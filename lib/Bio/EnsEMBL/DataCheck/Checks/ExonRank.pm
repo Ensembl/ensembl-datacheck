@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ExonRank',
-  DESCRIPTION => 'Check for exon_transcript duplicates and missing rank=1 exons',
+  DESCRIPTION => 'Exon/transcript links are not duplicated, and rank=1 exons exist for every transcript',
   GROUPS      => ['core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures']
 };

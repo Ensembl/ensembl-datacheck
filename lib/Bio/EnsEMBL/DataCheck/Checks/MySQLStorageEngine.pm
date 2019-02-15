@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'MySQLStorageEngine',
-  DESCRIPTION => 'Check if database schema does not match the given MySQL storage engine',
+  DESCRIPTION => 'Database schema matches expected MySQL storage engine',
   GROUPS      => ['compara', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1,

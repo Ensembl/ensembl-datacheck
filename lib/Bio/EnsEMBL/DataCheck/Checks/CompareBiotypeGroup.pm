@@ -29,8 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'CompareBiotypeGroup',
-  DESCRIPTION    => 'Check for more than 25% difference between the number of genes '.
-                    'in two databases, broken down by biotype.',
+  DESCRIPTION    => 'Compare gene counts between two databases, categorised by biotype',
   GROUPS         => ['compare_core'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],

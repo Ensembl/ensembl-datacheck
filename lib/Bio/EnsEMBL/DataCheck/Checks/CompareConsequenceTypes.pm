@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'CompareConsequenceTypes',
-  DESCRIPTION    => 'Compare transcript_variation counts, broken down by consequence type, between two databases',
+  DESCRIPTION    => 'Compare transcript_variation counts between two databases, categorised by consequence type',
   GROUPS         => ['compare_variation'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['variation'],

@@ -29,7 +29,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 use constant {
   NAME        => 'SeqRegionRank',
-  DESCRIPTION => 'Check that chromosomes have rank 1',
+  DESCRIPTION => 'Chromosomes have rank 1',
   GROUPS      => ['assembly', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
@@ -41,7 +41,7 @@ sub tests {
   my $species_id = $self->dba->species_id;
 
   my $desc = 'Chromosomal seq_regions have rank 1';
-  my $diag = '';
+  my $diag = 'Rank > 1';
   my $sql  = qq/
     SELECT sr.name, cs.name, cs.version FROM
       seq_region sr INNER JOIN

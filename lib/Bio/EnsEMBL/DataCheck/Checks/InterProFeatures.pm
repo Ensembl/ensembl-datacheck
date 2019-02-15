@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'InterProFeatures',
-  DESCRIPTION => 'Check that InterPro data are present and correct',
+  DESCRIPTION => 'InterPro data is present and correct',
   GROUPS      => ['protein_features'],
   DB_TYPES    => ['core'],
   TABLES      => ['analysis', 'interpro', 'xref'],

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'Karyotype',
-  DESCRIPTION    => 'Check whether karyotype data exists.',
+  DESCRIPTION    => 'Karyotype data exists for human, mouse and rat',
   GROUPS         => ['assembly'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],

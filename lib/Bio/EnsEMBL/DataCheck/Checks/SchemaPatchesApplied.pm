@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'SchemaPatchesApplied',
-  DESCRIPTION => 'Check that schema patches are up-to-date',
+  DESCRIPTION => 'Schema patches are up-to-date',
   GROUPS      => ['compara', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'production', 'rnaseq', 'variation'],
   TABLES      => ['meta'],

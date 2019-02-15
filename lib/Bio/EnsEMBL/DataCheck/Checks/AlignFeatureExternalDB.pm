@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'AlignFeatureExternalDB',
-  DESCRIPTION    => 'Check that all align_feature rows have an external_db',
+  DESCRIPTION    => 'All alignment features are linked to an external DB',
   GROUPS         => ['annotation', 'core', 'corelike'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['cdna', 'core', 'otherfeatures', 'rnaseq'],

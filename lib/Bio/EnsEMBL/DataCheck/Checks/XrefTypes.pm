@@ -27,10 +27,9 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
-
 use constant {
   NAME           => 'XrefTypes',
-  DESCRIPTION    => 'Check that xrefs are only attached to one feature type.',
+  DESCRIPTION    => 'Xrefs are only attached to one feature type.',
   GROUPS         => ['xref'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],

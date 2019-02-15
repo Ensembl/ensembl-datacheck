@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'GeneStableID',
-  DESCRIPTION => 'Ensure that genes have unique stable IDs',
+  DESCRIPTION => 'Genes, transcripts, exons and translations have non-NULL, unique stable IDs',
   GROUPS      => ['core', 'geneset'],
   DB_TYPES    => ['core'],
   TABLES      => ['coord_system', 'exon', 'gene', 'seq_region', 'transcript', 'translation']
@@ -52,11 +52,11 @@ sub stable_id_check {
   my $desc_1 = $table.' table has non-NULL stable IDs';
   my $diag_1 = "Null $table.stable_id";
   my $sql_1  = qq/
-	SELECT $table.stable_id FROM
-	  $table INNER JOIN
+    SELECT $table.stable_id FROM
+      $table INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
-	WHERE cs.species_id = $species_id
+    WHERE cs.species_id = $species_id
       AND $table.stable_id IS NULL
   /;
   is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
@@ -64,11 +64,11 @@ sub stable_id_check {
   my $desc_2 = $table.' table has unique stable IDs';
   my $diag_2 = "Duplicate $table.stable_id";
   my $sql_2  = qq/
-	SELECT $table.stable_id FROM
-	  $table INNER JOIN
+    SELECT $table.stable_id FROM
+      $table INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
-	WHERE cs.species_id = $species_id
+    WHERE cs.species_id = $species_id
     GROUP BY $table.stable_id
     HAVING COUNT(*) > 1
   /;
@@ -81,12 +81,12 @@ sub translation_stable_id_check {
   my $desc_1 = 'translation table has non-NULL stable IDs';
   my $diag_1 = "Null translation.stable_id";
   my $sql_1  = qq/
-	SELECT tn.stable_id FROM
-	  translation tn INNER JOIN
-	  transcript tt USING (transcript_id) INNER JOIN
+    SELECT tn.stable_id FROM
+      translation tn INNER JOIN
+      transcript tt USING (transcript_id) INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
-	WHERE cs.species_id = $species_id
+    WHERE cs.species_id = $species_id
       AND tn.stable_id IS NULL
   /;
   is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
@@ -94,12 +94,12 @@ sub translation_stable_id_check {
   my $desc_2 = 'translation table has unique stable IDs';
   my $diag_2 = "Duplicate translation.stable_id";
   my $sql_2  = qq/
-	SELECT tn.stable_id FROM
-	  translation tn INNER JOIN
-	  transcript tt USING (transcript_id) INNER JOIN
+    SELECT tn.stable_id FROM
+      translation tn INNER JOIN
+      transcript tt USING (transcript_id) INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
-	WHERE cs.species_id = $species_id
+    WHERE cs.species_id = $species_id
     GROUP BY tn.stable_id
     HAVING COUNT(*) > 1
   /;

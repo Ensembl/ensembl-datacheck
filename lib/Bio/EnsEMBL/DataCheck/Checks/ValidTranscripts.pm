@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ValidTranscripts',
-  DESCRIPTION => 'Check that transcripts have translations, if appropriate',
+  DESCRIPTION => 'Transcripts have translations, if appropriate',
   GROUPS      => ['core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['biotype', 'coord_system', 'seq_region', 'transcript', 'translation']

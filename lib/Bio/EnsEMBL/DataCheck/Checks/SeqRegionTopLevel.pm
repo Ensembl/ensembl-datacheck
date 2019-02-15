@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'SeqRegionTopLevel',
-  DESCRIPTION => 'Check that top-level seq_regions are appropriately configured',
+  DESCRIPTION => 'Top-level seq_regions are appropriately configured',
   GROUPS      => ['assembly', 'core', 'corelike', 'geneset'],
   DB_TYPES    => ['core'],
 };

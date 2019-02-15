@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ProbeUnique',
-  DESCRIPTION => 'Check that probe IDs and mappings are unique',
+  DESCRIPTION => 'Probe IDs and mappings are unique',
   GROUPS      => ['funcgen', 'probe_mapping'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['array', 'array_chip', 'probe', 'probe_set_transcript', 'probe_transcript']

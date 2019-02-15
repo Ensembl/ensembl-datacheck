@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'MetaKeyLevel',
-  DESCRIPTION => 'Ensure that meta_keys are correctly assigned at species or database level',
+  DESCRIPTION => 'Meta keys are correctly assigned at species or database level',
   GROUPS      => ['core', 'corelike', 'funcgen', 'meta', 'variation'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   TABLES      => ['meta'],

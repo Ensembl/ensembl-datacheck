@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'MetaKeyConsistent',
-  DESCRIPTION => 'Check that meta_keys are identical between core and core-like databases',
+  DESCRIPTION => 'Assembly and species meta keys are identical between core and core-like databases',
   GROUPS      => ['corelike', 'meta'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
   TABLES      => ['meta']

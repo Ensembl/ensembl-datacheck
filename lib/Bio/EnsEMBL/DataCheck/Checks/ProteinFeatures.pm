@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ProteinFeatures',
-  DESCRIPTION => 'Check that protein features are present and correct',
+  DESCRIPTION => 'Protein features are present and correct',
   GROUPS      => ['protein_features'],
   DB_TYPES    => ['core'],
   TABLES      => ['analysis', 'coord_system', 'interpro', 'protein_feature', 'seq_region', 'transcript', 'translation']

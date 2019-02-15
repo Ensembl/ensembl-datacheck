@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ProteinTranslation',
-  DESCRIPTION => 'Check that every protein-coding gene has a valid translation',
+  DESCRIPTION => 'All protein-coding genes have a valid translation',
   GROUPS      => ['core', 'geneset'],
   DB_TYPES    => ['core'],
   TABLES      => ['assembly', 'dna', 'exon', 'exon_transcript', 'gene', 'seq_region', 'seq_region_attrib', 'transcript', 'transcript_attrib', 'translation', 'translation_attrib']

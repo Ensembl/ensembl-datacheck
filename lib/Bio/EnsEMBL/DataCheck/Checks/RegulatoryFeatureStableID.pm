@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'RegulatoryFeatureStableID',
-  DESCRIPTION => 'Check that stable IDs are unique within a regulatory build',
+  DESCRIPTION => 'Regulatory feature stable IDs are unique within a regulatory build',
   GROUPS      => ['funcgen', 'regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_feature']

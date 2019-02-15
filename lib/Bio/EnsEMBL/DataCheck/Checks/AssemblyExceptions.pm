@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'AssemblyExceptions',
-  DESCRIPTION => 'Check if assembly_exceptions are present and correct.',
+  DESCRIPTION => 'Assembly exceptions are correctly configured',
   GROUPS      => ['assembly', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['analysis', 'assembly_exception', 'dna_align_feature',

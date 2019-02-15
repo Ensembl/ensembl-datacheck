@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'CurrentRegulatoryBuildHasEpigenomes',
-  DESCRIPTION => 'Check if the current regulatory build has epigenomes data',
+  DESCRIPTION => 'Current regulatory build has epigenome data',
   GROUPS      => ['funcgen', 'regulatory_build'],
   DB_TYPES    => ['funcgen'],
   TABLES      => ['regulatory_build','regulatory_build_epigenome','epigenome'],

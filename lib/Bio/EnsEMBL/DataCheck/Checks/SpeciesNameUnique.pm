@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'SpeciesNameUnique',
-  DESCRIPTION => 'Check that production_name and alias are unique across all species',
+  DESCRIPTION => 'Species production_name and alias are unique across all databases in the registry',
   GROUPS      => ['core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta'],

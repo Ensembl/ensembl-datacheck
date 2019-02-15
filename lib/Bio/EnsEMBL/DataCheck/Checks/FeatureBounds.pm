@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'FeatureBounds',
-  DESCRIPTION => 'Ensure that features are within the bounds of their seq_region',
+  DESCRIPTION => 'Feature co-ordinates are within the bounds of their seq_region',
   GROUPS      => ['annotation', 'core', 'corelike'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['assembly_exception', 'coord_system', 'density_feature', 'ditag_feature', 'dna_align_feature', 'marker_feature', 'misc_feature', 'protein_align_feature', 'repeat_feature', 'seq_region', 'simple_feature']
