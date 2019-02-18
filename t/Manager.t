@@ -43,7 +43,7 @@ diag('Attributes');
 can_ok($module, qw(datacheck_dir index_file config_file names patterns groups datacheck_types history_file output_file));
 
 diag('Methods');
-can_ok($module, qw(load_config load_checks filter run_checks read_index write_index read_history write_history));
+can_ok($module, qw(load_config load_checks filter filter_datacheck_type run_checks read_index write_index read_history write_history));
 
 # Need to move the default config file, if it exists, so that we
 # can test its absence/presence properly.
@@ -196,15 +196,17 @@ subtest 'Filter groups', sub {
 };
 
 subtest 'Filter datacheck type', sub {
+  my @groups = ('base');
   my $datacheck_type = 'critical';
   my $manager = $module->new(
     datacheck_dir   => $datacheck_dir,
     index_file      => $index_file,
+    groups          => \@groups,
     datacheck_types => [$datacheck_type],
   );
 
   my $datachecks = $manager->load_checks();
-  is(scalar(@$datachecks), 7, 'Loaded seven datachecks');
+  is(scalar(@$datachecks), 1, 'Loaded one datacheck');
   my %datacheck_names = map {$_->name => 1} @$datachecks;
   foreach (@$datachecks) {
     is($_->datacheck_type, $datacheck_type, $_->name." datacheck type matches '$datacheck_type'");
