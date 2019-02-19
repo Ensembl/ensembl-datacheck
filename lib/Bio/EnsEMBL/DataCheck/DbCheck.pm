@@ -184,8 +184,16 @@ sub _registry_default {
     die "Registry requires a 'registry_file' or 'server_uri' attribute";
   }
 
-  if ($registry->alias_exists($species)) {
-	  $registry->remove_DBAdaptor($species, $self->dba->group);
+  if ($self->dba->is_multispecies) {
+    foreach my $collection_species (@{$self->dba->all_species}) {
+      if ($registry->alias_exists($collection_species)) {
+        $registry->remove_DBAdaptor($collection_species, $self->dba->group);
+      }
+    }
+  } else {
+    if ($registry->alias_exists($species)) {
+      $registry->remove_DBAdaptor($species, $self->dba->group);
+    }
   }
 
   $registry->load_registry_from_url($dba_url);
