@@ -129,7 +129,8 @@ or as a single comma-separated string.
 
 =item B<-datacheck_type> [critical|advisory]
 
-The type of datachecks to execute. 
+The type of datachecks to execute. Only effective if used with one or
+more B<-name>, B<-pattern>, or B<-group> parameters. 
 
 =item B<-datacheck_dir> <datacheck_dir>
 

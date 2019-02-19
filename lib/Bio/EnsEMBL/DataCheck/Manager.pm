@@ -198,10 +198,9 @@ sub load_checks {
   my %index = %{ $self->read_index() };
 
   my $filters =
-    scalar( @{$self->names}           ) ||
-    scalar( @{$self->patterns}        ) ||
-    scalar( @{$self->groups}          ) ||
-    scalar( @{$self->datacheck_types} );
+    scalar( @{$self->names}    ) ||
+    scalar( @{$self->patterns} ) ||
+    scalar( @{$self->groups}   );
 
   my @datachecks;
 
@@ -230,26 +229,41 @@ sub filter {
   my ($meta_data) = @_;
 
   if (any { $$meta_data{name} eq $_ } @{$self->names}) {
-    return 1;
+    return $self->filter_datacheck_type($meta_data);
   }
 
   if (any { $$meta_data{name} =~ /$_/ } @{$self->patterns}) {
-    return 1;
+    return $self->filter_datacheck_type($meta_data);
   }
 
   if (any { $$meta_data{description} =~ /$_/i } @{$self->patterns}) {
-    return 1;
+    return $self->filter_datacheck_type($meta_data);
   }
 
   foreach my $group ( @{$$meta_data{groups}} ) {
     if (any { $group eq $_ } @{$self->groups}) {
-      return 1;
+      return $self->filter_datacheck_type($meta_data);
     }
   }
 
-  if (any { $$meta_data{datacheck_type} eq $_ } @{$self->datacheck_types}) {
-    return 1;
+  return 0;
+}
+
+sub filter_datacheck_type {
+  my $self = shift;
+  my ($meta_data) = @_;
+
+  my $filtered = 0;
+
+  if ( scalar( @{$self->datacheck_types} ) ) {
+    if (any { $$meta_data{datacheck_type} eq $_ } @{$self->datacheck_types}) {
+      $filtered = 1;
+    }
+  } else {
+    $filtered = 1;
   }
+
+  return $filtered;
 }
 
 sub run_checks {
