@@ -57,13 +57,13 @@ subtest 'Parameter instantiation: Manager', sub {
   $obj->param('index_file', '/path/to/index/file');
   $obj->param('history_file', '/path/to/history/file');
   $obj->param('output_dir', '/output/dir');
-  $obj->param('output_filename', 'tap_output');
   $obj->param('config_file', '/path/to/config/file');
   $obj->param('overwrite_files', 0);
   $obj->param('datacheck_names', ['DbCheck_1', 'DbCheck_4']);
   $obj->param('datacheck_patterns', ['BaseCheck']);
   $obj->param('datacheck_groups', ['base']);
   $obj->param('datacheck_types', ['advisory']);
+  $obj->param('submission_job_id', '1612');
 
   $obj->fetch_input();
   my $manager = $obj->param('manager');
@@ -72,7 +72,7 @@ subtest 'Parameter instantiation: Manager', sub {
   is($manager->datacheck_dir, '/datacheck/dir', 'Datacheck directory is set correctly');
   is($manager->index_file, '/path/to/index/file', 'Index file is set correctly');
   is($manager->history_file, '/path/to/history/file', 'History file is set correctly');
-  is($manager->output_file, '/output/dir/tap_output.txt', 'Output file is set correctly');
+  is($manager->output_file, '/output/dir/.1612.txt', 'Output file is set correctly');
   is($manager->config_file, '/path/to/config/file', 'Config file is set correctly');
   is($manager->overwrite_files, 0, 'Overwrite flag is set correctly');
   is_deeply($manager->names, ['DbCheck_1', 'DbCheck_4'], 'Datacheck names are set correctly');
