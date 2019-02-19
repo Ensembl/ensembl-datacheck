@@ -83,7 +83,7 @@ sub fetch_input {
     my $filename =
       $self->param('dbname') . '.' .
       $self->param('submission_job_id') . '.txt';
-    $self->param('output_file', $self->param('output_dir') . "/$filename"));
+    $self->param('output_file', $self->param('output_dir') . "/$filename");
   }
 
   my %manager_params;
