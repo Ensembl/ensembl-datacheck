@@ -186,9 +186,6 @@ sub pipeline_analyses {
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
       -analysis_capacity => 10,
       -max_retry_count   => 0,
-      -parameters        => {
-                              'output_filename' => '#dbname#',
-                            },
       -rc_name           => 'default',
       -flow_into         => {
                               '1' => ['StoreResults'],
@@ -200,9 +197,6 @@ sub pipeline_analyses {
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFactory',
       -analysis_capacity => 10,
       -max_retry_count   => 0,
-      -parameters        => {
-                              'output_filename' => '#dbname#',
-                            },
       -rc_name           => 'default',
       -flow_into         => {
                               '2->A' => ['DataCheckFan'],
@@ -215,9 +209,6 @@ sub pipeline_analyses {
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
       -analysis_capacity => 100,
       -max_retry_count   => 0,
-      -parameters        => {
-                              'output_filename' => '#dbname#',
-                            },
       -rc_name           => 'default',
       -flow_into         => {
                               '1' => ['?accu_name=results&accu_address=[]'],
@@ -230,9 +221,6 @@ sub pipeline_analyses {
       -analysis_capacity => 10,
       -batch_size        => 100,
       -max_retry_count   => 0,
-      -parameters        => {
-                              'output_filename' => '#dbname#',
-                            },
       -rc_name           => 'default',
       -flow_into         => {
                               '1' => ['StoreResults'],

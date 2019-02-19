@@ -169,9 +169,21 @@ sub load_config {
     my $json = path($self->config_file)->slurp;
     my %config = %{ JSON->new->decode($json) };
 
-    foreach my $key (keys %config) {
+    foreach my $key (keys %{$config{'datacheck_params'}}) {
       if (!exists $params{$key}) {
-        $params{$key} = $config{$key};
+        $params{$key} = $config{'datacheck_params'}{$key};
+      }
+    }
+
+    if (!defined $self->history_file) {
+      if (defined $config{'history_file'} && exists $config{'history_file'}) {
+        $self->history_file($config{'history_file'});
+      }
+    }
+
+    if (!defined $self->output_file) {
+      if (defined $config{'output_file'} && exists $config{'output_file'}) {
+        $self->history_file($config{'output_file'});
       }
     }
   }

@@ -263,26 +263,32 @@ if (! defined $host || ! defined $port || ! defined $user || ! defined $pass) {
 }
 $dbname = $ENV{'USER'}.'_db_datachecks'unless defined $dbname;
 
-if (! defined $registry_file) {
-  if (! defined $config_file) {
-    $config_file = $FindBin::Bin;
-    $config_file =~ s!scripts$!config.json!;
-  }
+my %config;
+if (! defined $config_file) {
+  $config_file = $FindBin::Bin;
+  $config_file =~ s!scripts$!config.json!;
+}
+if (-e $config_file) {
+  my $json = path($config_file)->slurp;
+  %config = %{ JSON->new->decode($json) };
+}
 
-  if (-e $config_file) {
-    my $json = path($config_file)->slurp;
-    my %config = %{ JSON->new->decode($json) };
-    if (exists $config{registry_file} && defined $config{registry_file}) {
-      $registry_file = $config{registry_file};
-    } else {
-      die "registry_file is mandatory";
-    }
+if (! defined $registry_file) {
+  if (exists $config{registry_file} && defined $config{registry_file}) {
+    $registry_file = $config{registry_file};
   } else {
     die "registry_file is mandatory";
   }
 }
+
 if (! -e $registry_file) {
   die "registry_file '$registry_file' does not exist";
+}
+
+if (! defined $output_dir) {
+  if (exists $config{output_dir} && defined $config{output_dir}) {
+    $output_dir = $config{output_dir};
+  }
 }
 
 # It doesn't make sense to use the default index file if a datacheck_dir

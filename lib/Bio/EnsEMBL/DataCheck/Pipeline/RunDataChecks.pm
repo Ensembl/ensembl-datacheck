@@ -79,9 +79,11 @@ sub fetch_input {
     $reg->load_all($self->param('registry_file'));
   }
 
-  my $output_file;
-  if ($self->param_is_defined('output_dir') && $self->param_is_defined('output_filename')) {
-    $self->param('output_file', $self->param('output_dir') . '/' . $self->param('output_filename') . '.txt');
+  if ($self->param_is_defined('output_dir')) {
+    my $filename =
+      $self->param('dbname') . '.' .
+      $self->param('submission_job_id') . '.txt';
+    $self->param('output_file', $self->param('output_dir') . "/$filename");
   }
 
   my %manager_params;
