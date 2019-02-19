@@ -233,19 +233,25 @@ sub filter {
       return $self->filter_datacheck_type($meta_data);
     }
   }
+
+  return 0;
 }
 
 sub filter_datacheck_type {
   my $self = shift;
   my ($meta_data) = @_;
 
+  my $filtered = 0;
+
   if ( scalar( @{$self->datacheck_types} ) ) {
     if (any { $$meta_data{datacheck_type} eq $_ } @{$self->datacheck_types}) {
-      return 1;
+      $filtered = 1;
     }
   } else {
-    return 1;
+    $filtered = 1;
   }
+
+  return $filtered;
 }
 
 sub run_checks {
