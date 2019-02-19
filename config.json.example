@@ -1,6 +1,11 @@
 {
-  "registry_file"  : null,
-  "server_uri"     : null,
-  "old_server_uri" : null,
-  "data_file_path" : null,
+  "datacheck_params" : {
+    "registry_file"  : null,
+    "server_uri"     : null,
+    "old_server_uri" : null,
+    "data_file_path" : null
+  },
+  "history_file" : null,
+  "output_file"  : null,
+  "output_dir"   : null
 }
