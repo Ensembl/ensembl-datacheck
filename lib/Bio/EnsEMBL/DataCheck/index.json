@@ -10,6 +10,17 @@
       "name" : "AlignFeatureExternalDB",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignFeatureExternalDB"
    },
+   "AlignmentReadFileOrphans" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that all read files are used in an alignment",
+      "groups" : [
+         "funcgen",
+         "regulatory_build",
+         "funcgen_alignments"
+      ],
+      "name" : "AlignmentReadFileOrphans",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentReadFileOrphans"
+   },
    "AltAllele" : {
       "datacheck_type" : "critical",
       "description" : "Alt allele group members map back to the same chromosome",
@@ -217,6 +228,17 @@
       "name" : "CompareXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareXref"
    },
+   "ControlAlignmentNamingConvention" : {
+      "datacheck_type" : "critical",
+      "description" : "By convention all controls should have WCE in their name.",
+      "groups" : [
+         "funcgen",
+         "funcgen_alignments",
+         "regulatory_build"
+      ],
+      "name" : "ControlAlignmentNamingConvention",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlAlignmentNamingConvention"
+   },
    "ControlledAnalysis" : {
       "datacheck_type" : "critical",
       "description" : "Analysis descriptions and display settings are consistent with production database",
@@ -335,6 +357,17 @@
       "name" : "DisplayableGenes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableGenes"
    },
+   "DuplicateReadNames" : {
+      "datacheck_type" : "critical",
+      "description" : "Duplicate read names",
+      "groups" : [
+         "funcgen",
+         "regulatory_build",
+         "funcgen_registration"
+      ],
+      "name" : "DuplicateReadNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames"
+   },
    "EpigenomeHasSegmentationFile" : {
       "datacheck_type" : "critical",
       "description" : "All epigenomes in the current regulatory build have a segmentation file",
@@ -397,6 +430,28 @@
       ],
       "name" : "FeaturePosition",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeaturePosition"
+   },
+   "FeatureTypesHaveSOAccessions" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that every feature type used by an experiment has an SO accession.",
+      "groups" : [
+         "funcgen",
+         "regulatory_build",
+         "funcgen_registration"
+      ],
+      "name" : "FeatureTypesHaveSOAccessions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeatureTypesHaveSOAccessions"
+   },
+   "FeatureTypesUnique" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that experiments do not link to feature types that are different, but have the same name.",
+      "groups" : [
+         "funcgen",
+         "regulatory_build",
+         "funcgen_registration"
+      ],
+      "name" : "FeatureTypesUnique",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FeatureTypesUnique"
    },
    "ForeignKeys" : {
       "datacheck_type" : "critical",
@@ -702,6 +757,17 @@
       "name" : "ProteinTranslation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinTranslation"
    },
+   "ReadFileNames" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that read file names are valid.",
+      "groups" : [
+         "funcgen",
+         "regulatory_build",
+         "funcgen_registration"
+      ],
+      "name" : "ReadFileNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFileNames"
+   },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
       "description" : "All regulatory features have a valid activity value in at least one epigenome",
@@ -835,6 +901,17 @@
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
+   },
+   "SignalControlMismatches" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that signals are not matched to the wrong controls.",
+      "groups" : [
+         "funcgen",
+         "regulatory_build",
+         "funcgen_registration"
+      ],
+      "name" : "SignalControlMismatches",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SignalControlMismatches"
    },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
