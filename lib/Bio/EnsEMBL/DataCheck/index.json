@@ -324,6 +324,26 @@
       "name" : "Denormalized",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Denormalized"
    },
+   "DensityFeatures" : {
+      "datacheck_type" : "critical",
+      "description" : "Density statistics are present and correct for chromosomal species",
+      "groups" : [
+         "core_statistics",
+         "statistics"
+      ],
+      "name" : "DensityFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensityFeatures"
+   },
+   "DensitySNPs" : {
+      "datacheck_type" : "critical",
+      "description" : "Density statistics are present and correct for SNPs",
+      "groups" : [
+         "statistics",
+         "variation_statistics"
+      ],
+      "name" : "DensitySNPs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
+   },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
       "description" : "Genes are displayable and have web_data attached to their analysis",
@@ -458,6 +478,7 @@
       "datacheck_type" : "critical",
       "description" : "Gene counts are correct",
       "groups" : [
+         "core_statistics",
          "statistics"
       ],
       "name" : "GeneCounts",
@@ -467,6 +488,7 @@
       "datacheck_type" : "critical",
       "description" : "All genes have a GC statistic",
       "groups" : [
+         "core_statistics",
          "statistics"
       ],
       "name" : "GeneGC",
@@ -497,7 +519,9 @@
       "datacheck_type" : "critical",
       "description" : "Genome statistics are present and correct",
       "groups" : [
-         "statistics"
+         "core_statistics",
+         "statistics",
+         "variation_statistics"
       ],
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
@@ -639,6 +663,7 @@
       "datacheck_type" : "critical",
       "description" : "All translations have peptide statistics",
       "groups" : [
+         "core_statistics",
          "statistics"
       ],
       "name" : "PepstatsAttributes",
@@ -731,6 +756,16 @@
       ],
       "name" : "RepeatFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
+   },
+   "SNPCounts" : {
+      "datacheck_type" : "critical",
+      "description" : "SNP counts are correct",
+      "groups" : [
+         "statistics",
+         "variation_statistics"
+      ],
+      "name" : "SNPCounts",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SNPCounts"
    },
    "SampleRegulatoryFeatureExists" : {
       "datacheck_type" : "critical",

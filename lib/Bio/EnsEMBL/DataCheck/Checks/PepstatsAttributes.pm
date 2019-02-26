@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'PepstatsAttributes',
   DESCRIPTION => 'All translations have peptide statistics',
-  GROUPS      => ['statistics'],
+  GROUPS      => ['core_statistics', 'statistics'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'translation', 'translation_attrib']
 };
