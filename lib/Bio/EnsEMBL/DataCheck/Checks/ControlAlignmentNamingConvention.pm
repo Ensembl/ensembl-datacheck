@@ -37,9 +37,6 @@ use constant {
 sub tests {
   my $self = shift;
 
-  my $desc = "All read files have been aligned";
-  my $diag = "Read files have not been aligned";
-  
   my $sql = '
     select 
       * 
