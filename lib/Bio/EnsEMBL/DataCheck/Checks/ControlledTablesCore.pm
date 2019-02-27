@@ -42,13 +42,17 @@ sub tests {
   my $prod_helper = $prod_dba->dbc->sql_helper;
 
   foreach my $table ( @{$self->tables} ) {
-    my $sql  = "SELECT * FROM $table";
+    # We need things returned in a consistent order, for which we need
+    # columns names. Easiest way to get them is to return one row.
+    my $row_sql  = "SELECT * FROM $table LIMIT 1";
+    my @row = @{ $helper->execute(-SQL => $row_sql, -use_hashrefs => 1) };
+    my $columns = join(", ", keys %{$row[0]});
+
+    my $sql = "SELECT * FROM $table ORDER BY $columns";
     my @data = @{ $helper->execute(-SQL => $sql, -use_hashrefs => 1) };
 
-    my @columns = keys %{$data[0]};
-
     my $prod_table = "master_$table";
-    my $prod_sql   = "SELECT ".join(", ", @columns)." FROM $prod_table WHERE is_current = 1";
+    my $prod_sql   = "SELECT $columns FROM $prod_table WHERE is_current = 1 ORDER BY $columns";
     my @prod_data  = @{ $prod_helper->execute(-SQL => $prod_sql, -use_hashrefs => 1) };
 
     # Deal with column which is _not_ necessarily the same...
@@ -58,9 +62,19 @@ sub tests {
     }
 
     # Create hashes of db rows, indexed on the tables auto-increment ID.
+    my %data;
+    my %prod_data;
+    
     my $id_column = "$table\_id";
-    my %data = map { $_->{$id_column} => $_ } @data;
-    my %prod_data = map { $_->{$id_column} => $_ } @prod_data;
+
+    foreach (@data) {
+      my $id = $_->{$id_column};
+      push @{ $data{$id} }, $_;
+    }
+    foreach (@prod_data) {
+      my $id = $_->{$id_column};
+      push @{ $prod_data{$id} }, $_;
+    }
 
     # We do not compare the core and prod hashes in a single test, because
     # we allow entries in the prod db that are not in the core db. We could
