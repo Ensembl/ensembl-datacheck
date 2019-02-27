@@ -55,7 +55,7 @@ sub tests {
     $self->dba, 
     $sql, 
     $desc, 
-    "Read files have not been aligned"
+    $diag
   );
   return;
 }
