@@ -24,7 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils ``;
+use Bio::EnsEMBL::DataCheck::Utils 'sql_count';
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
