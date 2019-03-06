@@ -230,7 +230,7 @@
    },
    "ControlAlignmentNamingConvention" : {
       "datacheck_type" : "critical",
-      "description" : "By convention all controls should have WCE in their name.",
+      "description" : "By convention all controls should have WCE in their name and signals should not.",
       "groups" : [
          "funcgen",
          "funcgen_alignments",
