@@ -40,14 +40,8 @@ sub tests {
 
   my $desc = 'Phenotype has description';
   my $diag = 'Phenotype description is missing';
-  my $sql = qq/
-      SELECT *  
-      FROM phenotype 
-      WHERE description IS NULL 
-      OR description = 'NULL'
-      OR description = ''
-  /;
-  is_rows_zero($self->dba, $sql, $desc, $diag);
+  no_missing_value($self->dba, 'phenotype', 'description', 'phenotype_id', $desc, $diag); 
+
 }
 
 1;

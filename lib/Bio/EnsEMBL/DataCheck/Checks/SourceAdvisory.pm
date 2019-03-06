@@ -57,27 +57,14 @@ sub tests {
   /; 
   cmp_rows($self->dba, $sql_version, '<=', 1, $desc_version);
 
-  my $desc_missing = 'Source has a description';
+  my $desc_missing = 'Source has description';
   my $diag_missing = 'Source description is missing';
-  $self->checkMissingValue('source', 'description', $desc_missing, $diag_missing); 
+  no_missing_value($self->dba, 'source', 'description', 'source_id', $desc_missing, $diag_missing); 
 
   my $desc_url = 'Source has URL';
   my $diag_url = 'Source URL is missing';
-  $self->checkMissingValue('source', 'url', $desc_url, $diag_url);
+  no_missing_value($self->dba,'source', 'url', 'source_id', $desc_url, $diag_url);
 
-}
-
-sub checkMissingValue {
-  my ($self, $table, $column, $desc, $diag) = @_; 
-
-  my $sql = qq/
-      SELECT *  
-      FROM $table
-      WHERE $column IS NULL 
-      OR $column = 'NULL'
-      OR $column = ''
-  /;  
-  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 
 1;

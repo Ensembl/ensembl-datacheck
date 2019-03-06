@@ -40,14 +40,7 @@ sub tests {
 
   my $desc_title = 'Publication has title';
   my $diag_title = 'Publication title is missing';
-  my $sql_title = qq/
-      SELECT *  
-      FROM publication
-      WHERE title IS NULL 
-      OR title = 'NULL'
-      OR title = ''
-  /;
-  is_rows_zero($self->dba, $sql_title, $desc_title, $diag_title);
+  no_missing_value($self->dba, 'publication', 'title', 'publication_id', $desc_title, $diag_title);
 
   my $desc_ids = 'Publication with pmid, pmcid or doi';
   my $diag_ids = 'Publication with no pmid, pmcid and doi';

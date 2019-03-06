@@ -40,6 +40,7 @@ our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
   fk denormalized denormalised
+  no_missing_value
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -419,6 +420,38 @@ sub denormalized {
 
 sub denormalised {
   return denormalized(@_);
+}
+
+=head2 Testing empty values  
+
+=over 4
+
+=item B<no_missing_value>
+
+no_missing_value($dbc, $table, $column, $id, $test_name, $diag_msg);
+
+Builds a SQL statement to test if a C<$table> contains C<$column> with null 
+or empty values by calling B<is_rows_zero>. Which means, if the number of 
+rows is zero the test will pass. 
+
+=back
+
+=cut
+
+sub no_missing_value {
+  my ($dbc, $table, $column, $id, $test_name, $diag_msg) = @_;
+  
+  my $tb = $CLASS->builder; 
+  
+  my $sql = qq/
+    SELECT $id
+    FROM $table 
+    WHERE $column IS NULL 
+    OR $column = 'NULL'
+    OR $column = '' 
+  /;  
+  
+  is_rows_zero($dbc, $sql, $test_name, $diag_msg);  
 }
 
 1;
