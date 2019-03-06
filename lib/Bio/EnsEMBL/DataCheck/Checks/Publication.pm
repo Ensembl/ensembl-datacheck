@@ -61,13 +61,13 @@ sub tests {
   is_rows_zero($self->dba, $sql_ids, $desc_ids, $diag_ids);
 
   my $desc = 'Publication duplicated pmid, pmcid, doi';
-  $self->checkDuplicatedRows('publication', 'pmid', 'publication_id', $desc, 'Publication is duplicated on pmid');
-  $self->checkDuplicatedRows('publication', 'pmcid', 'publication_id', $desc, 'Publication is duplicated on pmcid');
-  $self->checkDuplicatedRows('publication', 'doi', 'publication_id', $desc, 'Publication is duplicated on doi');
+  $self->checkDuplicatedValues('publication', 'pmid', 'publication_id', $desc, 'Publication is duplicated on pmid');
+  $self->checkDuplicatedValues('publication', 'pmcid', 'publication_id', $desc, 'Publication is duplicated on pmcid');
+  $self->checkDuplicatedValues('publication', 'doi', 'publication_id', $desc, 'Publication is duplicated on doi');
 
 }
 
-sub checkDuplicatedRows {
+sub checkDuplicatedValues {
   my ($self, $table, $column, $id, $desc, $diag) = @_;
 
   my $sql = qq/
