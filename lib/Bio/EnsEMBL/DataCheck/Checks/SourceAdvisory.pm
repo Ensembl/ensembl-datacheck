@@ -59,26 +59,25 @@ sub tests {
 
   my $desc_missing = 'Source has a description';
   my $diag_missing = 'Source description is missing';
-  my $sql_missing = qq/
-      SELECT *  
-      FROM source 
-      WHERE description IS NULL 
-      OR description = 'NULL'
-      OR description = ''
-  /;
-  is_rows_zero($self->dba, $sql_missing, $desc_missing, $diag_missing);
+  $self->checkMissingValue('source', 'description', $desc_missing, $diag_missing); 
 
   my $desc_url = 'Source has URL';
   my $diag_url = 'Source URL is missing';
-  my $sql_url = qq/
-      SELECT *
-      FROM source
-      WHERE url IS NULL
-      OR url = 'NULL'
-      OR url = ''
-  /;
-  is_rows_zero($self->dba, $sql_url, $desc_url, $diag_url);
+  $self->checkMissingValue('source', 'url', $desc_url, $diag_url);
 
+}
+
+sub checkMissingValue {
+  my ($self, $table, $column, $desc, $diag) = @_; 
+
+  my $sql = qq/
+      SELECT *  
+      FROM $table
+      WHERE $column IS NULL 
+      OR $column = 'NULL'
+      OR $column = ''
+  /;  
+  is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 
 1;

@@ -28,8 +28,8 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'PhenotypeFeatureAttrib',
-  DESCRIPTION => 'Imported phenotype_feature_attrib value is meaningful and well-formed',
+  NAME           => 'PhenotypeFeatureAttrib',
+  DESCRIPTION    => 'Imported phenotype_feature_attrib value is meaningful and well-formed',
   DATACHECK_TYPE => 'advisory',
   GROUPS         => ['variation'],
   DB_TYPES       => ['variation'],
