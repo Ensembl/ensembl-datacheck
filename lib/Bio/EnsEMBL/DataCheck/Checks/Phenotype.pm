@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'Phenotype',
   DESCRIPTION => 'Phenotype does not have empty descriptions',
-  GROUPS      => ['variation'], 
+  GROUPS      => ['variation_import'], 
   DB_TYPES    => ['variation'],
   TABLES      => ['phenotype']
 };

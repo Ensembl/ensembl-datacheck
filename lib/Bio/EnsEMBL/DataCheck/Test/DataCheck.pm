@@ -430,9 +430,11 @@ sub denormalised {
 
 no_missing_value($dbc, $table, $column, $id, $test_name, $diag_msg);
 
-Builds a SQL statement to test if a C<$table> contains C<$column> with null 
-or empty values by calling B<is_rows_zero>. Which means, if the number of 
-rows is zero the test will pass. 
+Tests if a C<$table> contains C<$column> with null or empty values 
+by calling B<is_rows_zero>. Which means, if the number of 
+rows is zero the test will pass. The C<$id> will be used for 
+a C<SELECT> statement to count the rows that are returned and print 
+them as a diagnostic message. 
 
 =back
 
@@ -440,8 +442,6 @@ rows is zero the test will pass.
 
 sub no_missing_value {
   my ($dbc, $table, $column, $id, $test_name, $diag_msg) = @_;
-  
-  my $tb = $CLASS->builder; 
   
   my $sql = qq/
     SELECT $id

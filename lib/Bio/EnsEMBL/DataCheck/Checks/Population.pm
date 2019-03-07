@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'Population',
   DESCRIPTION => 'Population data is consistent',
-  GROUPS      => ['variation'], 
+  GROUPS      => ['variation_import'], 
   DB_TYPES    => ['variation'],
   TABLES      => ['population']
 };
@@ -41,7 +41,7 @@ sub tests {
   my $desc_length = 'Population size'; 
   my $diag_length = 'Population has no stored size'; 
   my $sql_length = qq/
-      SELECT *
+      SELECT p.population_id
       FROM population p, sample_population sp
       WHERE p.population_id = sp.population_id
       AND p.size is NULL
@@ -53,7 +53,7 @@ sub tests {
   if($species =~ /homo_sapiens|mus_musculus/){ 
     my $desc = 'No populations have freqs_from_gts set'; 
     my $sql = qq/
-        SELECT *
+        SELECT population_id
         FROM population
         WHERE freqs_from_gts = 1
     /; 

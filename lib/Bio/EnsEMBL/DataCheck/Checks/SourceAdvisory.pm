@@ -31,7 +31,7 @@ use constant {
   NAME           => 'SourceAdvisory',
   DESCRIPTION    => 'Source table contains descriptions and the same dbSNP version',
   DATACHECK_TYPE => 'advisory',
-  GROUPS         => ['variation'],
+  GROUPS         => ['variation_import'],
   DB_TYPES       => ['variation'],
   TABLES         => ['source']
 };
@@ -42,7 +42,7 @@ sub tests {
   my $desc_desc = 'Source description length';
   my $diag_desc = 'Source has long description'; 
   my $sql_desc = qq/
-      SELECT *
+      SELECT source_id
       FROM source
       WHERE length(description) > 100 
       AND data_types = 'variation'

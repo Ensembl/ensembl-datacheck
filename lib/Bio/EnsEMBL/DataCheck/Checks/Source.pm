@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'Source',
   DESCRIPTION => 'Source table has consistent URLs and no duplicated names',
-  GROUPS      => ['variation'], 
+  GROUPS      => ['variation_import'], 
   DB_TYPES    => ['variation'],
   TABLES      => ['source']
 };
@@ -41,7 +41,7 @@ sub tests {
   my $desc_url = 'Source URL is consistent'; 
   my $diag_url = 'Source URL not consistent'; 
   my $sql_url = qq/
-      SELECT * 
+      SELECT source_id
       FROM source
       WHERE url NOT REGEXP '^http[s]?:\/\/.*';    
   /;
@@ -50,10 +50,10 @@ sub tests {
   my $desc_dup = 'Source name is not duplicated';
   my $diag_dup = 'Source name is duplicated';
   my $sql_dup = qq/
-      SELECT *
-      FROM source t1, source t2 
-      WHERE t1.name = t2.name 
-      AND t1.source_id < t2.source_id 
+      SELECT name
+      FROM source
+      GROUP BY name
+      HAVING COUNT(*) > 1 
   /;  
   is_rows_zero($self->dba, $sql_dup, $desc_dup, $diag_dup);
 

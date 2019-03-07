@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'PublicationDisplay',
   DESCRIPTION => 'Publication cited variants display',
-  GROUPS      => ['variation'], 
+  GROUPS      => ['variation_import'], 
   DB_TYPES    => ['variation'],
   TABLES      => ['publication']
 };
@@ -47,7 +47,7 @@ sub checkDisplay {
   my ($self, $input, $desc, $diag) = @_; 
   
   my $sql_stmt = qq/
-      SELECT *
+      SELECT $input.variation_id
       FROM $input,variation_citation 
       WHERE $input.variation_id = variation_citation.variation_id  
       AND $input.display=0 

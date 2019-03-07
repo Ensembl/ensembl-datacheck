@@ -31,7 +31,7 @@ use constant {
   NAME           => 'PhenotypeFeatureAttrib',
   DESCRIPTION    => 'Imported phenotype_feature_attrib value is meaningful and well-formed',
   DATACHECK_TYPE => 'advisory',
-  GROUPS         => ['variation'],
+  GROUPS         => ['variation_import'],
   DB_TYPES       => ['variation'],
   TABLES         => ['phenotype_feature_attrib']
 };
@@ -42,7 +42,7 @@ sub tests {
   my $desc_non_term = 'Meaningful phenotype_feature_attrib value';
   my $diag_non_term = 'phenotype_feature_attrib value is not useful';
   my $sql_non_term = qq/
-      SELECT *
+      SELECT phenotype_feature_id
       FROM phenotype_feature_attrib
       WHERE lower(value) in ("none", "not specified", "not in omim", "variant of unknown significance", "?", ".")
   /;
@@ -51,7 +51,7 @@ sub tests {
   my $desc_ascii = 'ASCII chars printable in value';
   my $diag_ascii = "value with unsupported ASCII chars";
   my $sql_ascii = qq/
-      SELECT *
+      SELECT phenotype_feature_id
       FROM phenotype_feature_attrib
       WHERE value REGEXP '[^ -;=\?-~]'
       OR LEFT(value, 1) REGEXP '[^A-Za-z0-9]'

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'Publication',
   DESCRIPTION => 'There are no duplicated publication entries',
-  GROUPS      => ['variation'],
+  GROUPS      => ['variation_import'],
   DB_TYPES    => ['variation'],
   TABLES      => ['publication']
 };
@@ -45,7 +45,7 @@ sub tests {
   my $desc_ids = 'Publication with pmid, pmcid or doi';
   my $diag_ids = 'Publication with no pmid, pmcid and doi';
   my $sql_ids = qq/
-      SELECT *
+      SELECT publication_id
       FROM publication
       WHERE pmid IS NULL
       AND pmcid IS NULL
@@ -54,20 +54,20 @@ sub tests {
   is_rows_zero($self->dba, $sql_ids, $desc_ids, $diag_ids);
 
   my $desc = 'Publication duplicated pmid, pmcid, doi';
-  $self->checkDuplicatedValues('publication', 'pmid', 'publication_id', $desc, 'Publication is duplicated on pmid');
-  $self->checkDuplicatedValues('publication', 'pmcid', 'publication_id', $desc, 'Publication is duplicated on pmcid');
-  $self->checkDuplicatedValues('publication', 'doi', 'publication_id', $desc, 'Publication is duplicated on doi');
+  $self->checkDuplicatedValues('publication', 'pmid', $desc, 'Publication is duplicated on pmid');
+  $self->checkDuplicatedValues('publication', 'pmcid', $desc, 'Publication is duplicated on pmcid');
+  $self->checkDuplicatedValues('publication', 'doi', $desc, 'Publication is duplicated on doi');
 
 }
 
 sub checkDuplicatedValues {
-  my ($self, $table, $column, $id, $desc, $diag) = @_;
+  my ($self, $table, $column, $desc, $diag) = @_;
 
   my $sql = qq/
-      SELECT *
-      FROM $table t1, $table t2 
-      WHERE t1.$column = t2.$column 
-      AND t1.$id < t2.$id
+      SELECT $column
+      FROM $table
+      GROUP BY $column 
+      HAVING COUNT(*) > 1
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
 }
