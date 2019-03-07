@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ControlAlignmentNamingConvention',
-  DESCRIPTION => 'By convention all controls should have WCE in their name.',
+  DESCRIPTION => 'By convention all controls should have WCE in their name and signals should not.',
   GROUPS      => ['funcgen', 'funcgen_alignments', 'regulatory_build'],
   DB_TYPES    => ['funcgen']
 };
@@ -44,14 +44,31 @@ sub tests {
       alignment 
     where 
       is_control = true 
-      and name not like "%WCE%"
+      and name not like "%_WCE_%"
   ';
 
   is_rows_zero(
     $self->dba, 
     $sql, 
-    DESCRIPTION,
+    'All controls have _WCE_ in their name.',
     "Some control alignments don't have WCE in their name."
+  );
+
+  $sql = '
+    select 
+      * 
+    from 
+      alignment 
+    where 
+      is_control = false
+      and name like "%_WCE_%"
+  ';
+
+  is_rows_zero(
+    $self->dba, 
+    $sql, 
+    'None of the signals have _WCE_ in their name.',
+    "Some signal alignments have WCE in their name."
   );
   return;
 }
