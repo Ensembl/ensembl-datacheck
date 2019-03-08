@@ -703,7 +703,7 @@
       "datacheck_type" : "critical",
       "description" : "Phenotype does not have empty descriptions",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "Phenotype",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Phenotype"
@@ -712,7 +712,7 @@
       "datacheck_type" : "advisory",
       "description" : "Imported descriptions contain only supported characters",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
@@ -721,7 +721,7 @@
       "datacheck_type" : "advisory",
       "description" : "Imported phenotype_feature_attrib value is meaningful and well-formed",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "PhenotypeFeatureAttrib",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeFeatureAttrib"
@@ -740,7 +740,7 @@
       "datacheck_type" : "critical",
       "description" : "Population data is consistent",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "Population",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Population"
@@ -788,7 +788,7 @@
       "datacheck_type" : "critical",
       "description" : "There are no duplicated publication entries",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "Publication",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Publication"
@@ -796,7 +796,9 @@
    "PublicationDisplay" : {
       "datacheck_type" : "critical",
       "description" : "Publication cited variants display",
-      "groups" : [],
+      "groups" : [
+         "variation_import"
+      ],
       "name" : "PublicationDisplay",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PublicationDisplay"
    },
@@ -960,7 +962,7 @@
       "datacheck_type" : "critical",
       "description" : "Source table has consistent URLs and no duplicated names",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "Source",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Source"
@@ -969,7 +971,7 @@
       "datacheck_type" : "advisory",
       "description" : "Source table contains descriptions and the same dbSNP version",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "SourceAdvisory",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SourceAdvisory"
