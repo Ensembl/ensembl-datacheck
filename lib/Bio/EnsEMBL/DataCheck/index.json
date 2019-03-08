@@ -998,6 +998,15 @@
       "name" : "ValidTranslations",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranslations"
    },
+   "Variation" : {
+      "datacheck_type" : "critical",
+      "description" : "Variation table data is present and correct",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "Variation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Variation"
+   },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
       "description" : "Xrefs are only attached to one feature type.",
