@@ -1016,6 +1016,15 @@
       "name" : "VariationFeature",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeature"
    },
+   "VariationFeaturePAR" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variants do not map to Y PAR",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeaturePAR",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeaturePAR"
+   },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
       "description" : "Xrefs are only attached to one feature type.",
