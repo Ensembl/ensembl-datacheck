@@ -1007,6 +1007,15 @@
       "name" : "Variation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Variation"
    },
+   "VariationFeature" : {
+      "datacheck_type" : "critical",
+      "description" : "VariationFeature table data is present and correct",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeature",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeature"
+   },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
       "description" : "Xrefs are only attached to one feature type.",
