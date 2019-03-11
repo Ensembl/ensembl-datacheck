@@ -1016,6 +1016,15 @@
       "name" : "VariationFeature",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeature"
    },
+   "VariationFeatureAlleles" : {
+      "datacheck_type" : "critical",
+      "description" : "VariationFeature has alleles",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeatureAlleles",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeatureAlleles"
+   },
    "VariationFeaturePAR" : {
       "datacheck_type" : "advisory",
       "description" : "Variants do not map to Y PAR",
