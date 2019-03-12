@@ -50,7 +50,7 @@ sub tests {
       WHERE s.name LIKE '%HGMD%'
       AND s.source_id = v.source_id
     /;
-    cmp_rows($self->dba, $sql_hgmd, '>', '1', 'Number of variation classes is correct for source HGMD');
+    cmp_rows($self->dba, $sql_hgmd, '>', 1, 'Number of variation classes is correct for source HGMD');
   } 
 
   $self->checkClassAttrib('dbSNP', 'Number of variation classes is correct for source dbSNP');
@@ -66,7 +66,7 @@ sub checkClassAttrib {
       WHERE s.name = '$source'
       AND s.source_id = v.source_id
   /; 
-  cmp_rows($self->dba, $sql, '>', '1', $desc); 
+  cmp_rows($self->dba, $sql, '>', 1, $desc); 
 
 }
 
