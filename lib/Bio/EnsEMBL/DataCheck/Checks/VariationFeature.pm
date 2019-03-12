@@ -39,17 +39,19 @@ sub tests {
   my ($self) = @_;
   
   # In HC the check for duplicates was a COUNT
-  # With DataCheck displaying some examples and SQL
+  # The datacheck has used COUNT as this was quicker
+  # than using a GROUP BY and displaying example duplicates
   my $desc_1 = 'Variation features are unique';
-  my $diag_1 = 'Duplicate';
-  my $sql_1  = qq/
-    SELECT variation_id, seq_region_id, seq_region_start, 
-           seq_region_end, count(variation_feature_id)
-    FROM variation_feature
-    GROUP BY variation_id, seq_region_id, seq_region_start, seq_region_end
-    HAVING count(variation_feature_id) > 1
+  my $sql_1 = qq/
+   SELECT COUNT(DISTINCT vf1.variation_id)
+   FROM variation_feature vf1 JOIN variation_feature vf2
+    ON (vf2.variation_id = vf1.variation_id
+        AND vf2.variation_feature_id > vf1.variation_feature_id
+        AND vf2.seq_region_id = vf1.seq_region_id
+        AND vf2.seq_region_start = vf1.seq_region_start
+        AND vf2.seq_region_end = vf1.seq_region_end)
   /;
-  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
+  is_rows_zero($self->dba, $sql_1, $desc_1);
 
   # The MAF is also checked in Variation table
   # TODO combine the MAF checks
