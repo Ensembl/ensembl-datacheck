@@ -30,6 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'VariationClasses',
   DESCRIPTION    => 'Variation number of classes is correct',
+  DATACHECK_TYPE => 'advisory',
   GROUPS         => ['variation_import'],
   DB_TYPES       => ['variation'],
   TABLES         => ['variation', 'source']
