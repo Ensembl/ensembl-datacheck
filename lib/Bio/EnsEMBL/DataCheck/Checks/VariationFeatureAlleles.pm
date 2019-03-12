@@ -43,7 +43,8 @@ sub tests {
     SELECT COUNT(variation_feature_id) 
     FROM variation_feature 
     WHERE allele_string LIKE '%/' 
-       OR allele_string like '%//%'
+       OR allele_string LIKE '%//%'
+       OR allele_string LIKE '/%'
   );
   is_rows_zero($self->dba, $sql_1, $desc_1);
 }
