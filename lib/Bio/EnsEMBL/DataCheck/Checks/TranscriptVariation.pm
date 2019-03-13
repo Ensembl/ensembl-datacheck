@@ -20,10 +20,10 @@ package Bio::EnsEMBL::DataCheck::Checks::TranscriptVariation;
 
 use warnings;
 use strict;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
