@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 =head1 LICENSE
 
 Copyright [2018-2019] EMBL-European Bioinformatics Institute
