@@ -146,6 +146,8 @@ sub is_rows_zero {
 
   my ( $count, $rows ) = _query( $dbc, $sql );
 
+  my $result = $tb->is_eq( $count, 0, $name );
+
   if (defined $rows) {
     if (!defined $diag_msg) {
       $diag_msg = "Unexpected data";
@@ -163,15 +165,18 @@ sub is_rows_zero {
       last if ++$counter == MAX_DIAG_ROWS;
     }
 
+    $dbc = $dbc->dbc() if $dbc->can('dbc');
+    my $dbname = $dbc->dbname;
+
     if ($count > MAX_DIAG_ROWS) {
-      $dbc = $dbc->dbc() if $dbc->can('dbc');
-      my $dbname = $dbc->dbname;
       $tb->diag( 'Reached limit for number of diagnostic messages' );
       $tb->diag( "Execute $sql against $dbname to see all results" );
+    } elsif ($count > 0) {
+      $tb->diag( "Execute $sql against $dbname to replicate these results" );
     }
   }
 
-  return $tb->is_eq( $count, 0, $name );
+  return $result;
 }
 
 =item B<is_rows_nonzero>
