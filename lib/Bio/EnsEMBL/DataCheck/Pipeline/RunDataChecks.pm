@@ -80,10 +80,16 @@ sub fetch_input {
   }
 
   if ($self->param_is_defined('output_dir')) {
-    my $filename =
-      $self->param('dbname') . '.' .
-      $self->param('submission_job_id') . '.txt';
-    $self->param('output_file', $self->param('output_dir') . "/$filename");
+    my $subdir = $ENV{'USER'}.'_'.time;
+    my $filename;
+    if ($self->param_is_defined('dbname')) {
+      $filename = $self->param('dbname') . '.txt';
+    } else {
+      $filename = $self->param('submission_job_id') . '.txt';
+    }
+    my $output_file = path($self->param('output_dir'), $subdir, $filename);
+
+    $self->param('output_file', $output_file->stringify);
   }
 
   my %manager_params;
