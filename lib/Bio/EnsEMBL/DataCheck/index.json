@@ -990,6 +990,15 @@
       "name" : "TranscriptBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptBounds"
    },
+   "TranscriptVariation" : {
+      "datacheck_type" : "critical",
+      "description" : "TranscriptVariation data is present and correct",
+      "groups" : [
+         "variation_effect"
+      ],
+      "name" : "TranscriptVariation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptVariation"
+   },
    "UnlocatedTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Transcripts are linked to sequences",
