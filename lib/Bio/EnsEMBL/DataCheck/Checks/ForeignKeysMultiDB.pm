@@ -145,6 +145,17 @@ sub funcgen_core_fk {
     is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
   }
 
+  my ($gene_stable_ids) = $self->col_array($dna_dba, 'gene', 'stable_id');
+  my @gene_stable_id_tables = ('mirna_target_feature');
+
+  for my $table (@gene_stable_id_tables){
+    my $desc = "All gene stable IDs in $table exist in core database";
+    my ($ids, $label) = $self->col_array($self->dba, $table, 'gene_stable_id');
+    my $diff = array_diff($ids, $gene_stable_ids, $label);
+    my @diffs = @{$$diff{"In $label only"}};
+    is(scalar(@diffs), 0, $desc) || diag explain \@diffs;
+  }
+
   my ($seq_region_ids) = $self->col_array($dna_dba, 'seq_region', 'seq_region_id');
   my @seq_region_id_tables = qw/
     external_feature

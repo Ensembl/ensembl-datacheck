@@ -56,7 +56,7 @@ sub tests {
         $table INNER JOIN
         analysis_description ad USING (analysis_id)
       WHERE
-        ad.analysis_id.displayable = 0
+        ad.displayable = 0
     /;
     is_rows_zero($self->dba, $sql_2, $desc_2);
   }

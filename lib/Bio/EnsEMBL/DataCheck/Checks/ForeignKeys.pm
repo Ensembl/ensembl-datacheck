@@ -132,7 +132,6 @@ sub funcgen_fk {
   fk($self->dba, 'object_xref', 'ensembl_id', 'regulatory_feature',   'regulatory_feature_id',   'ensembl_object_type = "RegulatoryFeature"');
   fk($self->dba, 'object_xref', 'ensembl_id', 'external_feature',     'external_feature_id',     'ensembl_object_type = "ExternalFeature"');
   fk($self->dba, 'object_xref', 'ensembl_id', 'feature_type',         'feature_type_id',         'ensembl_object_type = "FeatureType"');
-  fk($self->dba, 'object_xref', 'ensembl_id', 'mirna_target_feature', 'mirna_target_feature_id', 'ensembl_object_type = "MirnaTargetFeature"');
   fk($self->dba, 'object_xref', 'ensembl_id', 'probe_set',            'probe_set_id',            'ensembl_object_type = "ProbeSet"');
   fk($self->dba, 'object_xref', 'ensembl_id', 'probe',                'probe_id',                'ensembl_object_type = "Probe"');
   fk($self->dba, 'object_xref', 'ensembl_id', 'probe_feature',        'probe_feature_id',        'ensembl_object_type = "ProbeFeature"');

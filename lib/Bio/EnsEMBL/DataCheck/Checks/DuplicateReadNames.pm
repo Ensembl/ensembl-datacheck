@@ -43,12 +43,9 @@ sub tests {
   my $sql = '
     select 
       read_file.name as read_file_name,
-      group_concat(experiment.name) experiment_names,
+      group_concat(read_file.name) read_file_names,
       count(read_file_id) count
-    from 
-      experiment 
-      join read_file_experimental_configuration using (experiment_id)
-      join read_file using (read_file_id)
+    from read_file
     group by
       read_file_name
     having 
