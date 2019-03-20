@@ -23,8 +23,8 @@ use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+
+use Data::Dumper;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -36,31 +36,45 @@ use constant {
   GROUPS         => ['core_handover'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
-  TABLES         => ['seq_region', 'seq_region_attrib']
+  TABLES         => ['seq_region', 'seq_region_attrib', 'attrib_type', 'coord_system']
 };
 
-sub tests {
+my @mts = ('MT', 'Mito', 'mitochondrion');
+
+sub skip_tests {
   my ($self) = @_;
 
-  my $desc_1 = 'MT seq_regions have associated seq_region_attrib '
-    . 'using correct codon table';
-  my $sql_1 = q/
-      SELECT COUNT(seq_region_id)
-        FROM seq_region
-       WHERE name like '%MT%'
-    /;
-
-  my $sql_2 = q/
-    SELECT COUNT(seq_region_attrib.seq_region_id)
-      FROM attrib_type
-INNER JOIN seq_region_attrib USING (attrib_type_id)
-INNER JOIN seq_region USING (seq_region_id)
-     WHERE attrib_type.code = 'codon_table'
-       AND seq_region_attrib.value = '2'
-       AND seq_region.name like '%MT%'
-    /;
-
-  row_totals($self->dba, undef, $sql_1, $sql_2, undef, $desc_1);
+  my $counter = 0;
+  foreach my $mt ( @mts ) {
+    my $slice = $self->dba->get_adaptor('Slice')->fetch_by_region('toplevel', $mt);
+    if (!defined($slice)) {
+      return (1, 'No mitochondrion seq_region.');
+    }
+  }
 }
+
+sub tests {
+
+  my ($self) = @_;
+  my $sa = $self->dba->get_adaptor('Slice');
+  my $aa = $self->dba->get_adaptor('Attribute');
+  my $code = 'codon_table';
+
+  my $slice;
+  foreach my $mt ( @mts ) {
+    $slice = $sa->fetch_by_region('toplevel', $mt);
+    if (defined $slice) {
+      my @attribs = @{$slice->get_all_Attributes()};
+      foreach my $attrib (@attribs) {
+        my $desc = "$mt has MT codon table attribute";
+        if ($attrib->code =~ $code) {
+          ok($attrib->code, $desc);
+          last;
+        }
+      }
+    }
+  }
+}
+
 
 1;
