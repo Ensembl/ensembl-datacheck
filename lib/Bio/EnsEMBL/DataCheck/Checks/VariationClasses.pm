@@ -39,7 +39,7 @@ use constant {
 sub tests {
   my ($self) = @_;
  
-  my $species = $self->dba->species;
+  my $species = $self->species;
 
   if($species =~ /homo_sapiens/) {
     $self->checkClassAttrib('COSMIC', 'Number of variation classes is correct for source COSMIC');
