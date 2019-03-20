@@ -42,13 +42,13 @@ sub tests {
   my $diag_length = 'Population has no stored size'; 
   my $sql_length = qq/
       SELECT p.population_id
-      FROM population p, sample_population sp
-      WHERE p.population_id = sp.population_id
-      AND p.size is NULL
+      FROM population p
+      INNER JOIN sample_population sp USING(population_id)
+      WHERE p.size is NULL
   /;
   is_rows_zero($self->dba, $sql_length, $desc_length, $diag_length); 
 
-  my $species = $self->dba->species; 
+  my $species = $self->species; 
 
   if($species =~ /homo_sapiens|mus_musculus/){ 
     my $desc = 'No populations have freqs_from_gts set'; 

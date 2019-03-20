@@ -40,7 +40,7 @@ our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
   fk denormalized denormalised
-  no_missing_value
+  missing_value
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -431,9 +431,9 @@ sub denormalised {
 
 =over 4
 
-=item B<no_missing_value>
+=item B<missing_value>
 
-no_missing_value($dbc, $table, $column, $id, $test_name, $diag_msg);
+missing_value($dbc, $table, $column, $id, $test_name, $diag_msg);
 
 Tests if a C<$table> contains C<$column> with null or empty values 
 by calling B<is_rows_zero>. Which means, if the number of 
@@ -445,7 +445,7 @@ them as a diagnostic message.
 
 =cut
 
-sub no_missing_value {
+sub missing_value {
   my ($dbc, $table, $column, $id, $test_name, $diag_msg) = @_;
   
   my $sql = qq/

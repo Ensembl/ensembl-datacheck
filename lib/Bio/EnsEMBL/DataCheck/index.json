@@ -724,15 +724,6 @@
       "name" : "PepstatsAttributes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PepstatsAttributes"
    },
-   "Phenotype" : {
-      "datacheck_type" : "critical",
-      "description" : "Phenotype does not have empty descriptions",
-      "groups" : [
-         "variation_import"
-      ],
-      "name" : "Phenotype",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Phenotype"
-   },
    "PhenotypeDescription" : {
       "datacheck_type" : "advisory",
       "description" : "Imported descriptions contain only supported characters",
@@ -741,6 +732,15 @@
       ],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
+   "PhenotypeDescriptionMissing" : {
+      "datacheck_type" : "critical",
+      "description" : "Phenotype does not have empty descriptions",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "PhenotypeDescriptionMissing",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescriptionMissing"
    },
    "PhenotypeFeatureAttrib" : {
       "datacheck_type" : "advisory",

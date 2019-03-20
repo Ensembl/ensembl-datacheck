@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::Phenotype;
+package Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescriptionMissing;
 
 use warnings;
 use strict;
@@ -28,7 +28,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'Phenotype',
+  NAME        => 'PhenotypeDescriptionMissing',
   DESCRIPTION => 'Phenotype does not have empty descriptions',
   GROUPS      => ['variation_import'], 
   DB_TYPES    => ['variation'],
@@ -40,7 +40,7 @@ sub tests {
 
   my $desc = 'Phenotype has description';
   my $diag = 'Phenotype description is missing';
-  no_missing_value($self->dba, 'phenotype', 'description', 'phenotype_id', $desc, $diag); 
+  missing_value($self->dba, 'phenotype', 'description', 'phenotype_id', $desc, $diag); 
 
 }
 

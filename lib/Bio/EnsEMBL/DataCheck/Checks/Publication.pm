@@ -40,7 +40,7 @@ sub tests {
 
   my $desc_title = 'Publication has title';
   my $diag_title = 'Publication title is missing';
-  no_missing_value($self->dba, 'publication', 'title', 'publication_id', $desc_title, $diag_title);
+  missing_value($self->dba, 'publication', 'title', 'publication_id', $desc_title, $diag_title);
 
   my $desc_ids = 'Publication with pmid, pmcid or doi';
   my $diag_ids = 'Publication with no pmid, pmcid and doi';
