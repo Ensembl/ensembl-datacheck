@@ -38,7 +38,7 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $species = $self->dba->species; 
+  my $species = $self->species; 
   my $desc = 'Individual type is correct';
   my $diag = 'Individual type is incorrect';
 
