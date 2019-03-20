@@ -581,6 +581,15 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "IndividualType" : {
+      "datacheck_type" : "critical",
+      "description" : "Individuals have the correct type for each species",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "IndividualType",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::IndividualType"
+   },
    "InterProFeatures" : {
       "datacheck_type" : "critical",
       "description" : "InterPro data is present and correct",
@@ -1104,6 +1113,15 @@
       ],
       "name" : "ValidTranslations",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranslations"
+   },
+   "VariationClasses" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variation number of classes is correct",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "VariationClasses",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationClasses"
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
