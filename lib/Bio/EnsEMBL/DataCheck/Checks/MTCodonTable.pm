@@ -24,57 +24,62 @@ use strict;
 use Moose;
 use Test::More;
 
-use Data::Dumper;
-
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
-
 
 use constant {
   NAME           => 'MTCodonTable',
-  DESCRIPTION    => 'MT seq region had associated seq_region attribute '
-    . 'and correct codon table',
-  GROUPS         => ['core_handover'],
+  DESCRIPTION    => 'MT seq region has codon table attribute',
+  GROUPS         => ['core'],
   DATACHECK_TYPE => 'critical',
-  DB_TYPES       => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
-  TABLES         => ['seq_region', 'seq_region_attrib', 'attrib_type', 'coord_system']
+  DB_TYPES       => ['core', 'otherfeatures'],
+  TABLES         => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };
-
-my @mts = ('MT', 'Mito', 'mitochondrion');
 
 sub skip_tests {
   my ($self) = @_;
 
-  my $counter = 0;
+  my $sa = $self->dba->get_adaptor('Slice');
+
+  # There's no good way to detect a mitochondrial sequence,
+  # have to rely on a set of likely names.
+  my @mts = ('MT', 'Mito', 'mitochondrion_genome');
+
+  my $has_mt = 0;
   foreach my $mt ( @mts ) {
-    my $slice = $self->dba->get_adaptor('Slice')->fetch_by_region('toplevel', $mt);
-    if (!defined($slice)) {
-      return (1, 'No mitochondrion seq_region.');
+    my $slice = $sa->fetch_by_region('toplevel', $mt);
+    if (defined $slice) {
+      $has_mt = 1;
+      last;
     }
+  }
+  
+  if (!$has_mt) {
+    return (1, 'No mitochondrional seq_region.');
   }
 }
 
 sub tests {
-
   my ($self) = @_;
-  my $sa = $self->dba->get_adaptor('Slice');
-  my $aa = $self->dba->get_adaptor('Attribute');
-  my $code = 'codon_table';
 
-  my $slice;
+  my $desc = 'MT region has codon table attribute';
+  my @mts  = ('MT', 'Mito', 'mitochondrion_genome');
+
+  my $sa = $self->dba->get_adaptor('Slice');
+
+  my $has_attribute = 0;
   foreach my $mt ( @mts ) {
-    $slice = $sa->fetch_by_region('toplevel', $mt);
+    my $slice = $sa->fetch_by_region('toplevel', $mt);
     if (defined $slice) {
-      my @attribs = @{$slice->get_all_Attributes()};
-      foreach my $attrib (@attribs) {
-        my $desc = "$mt has MT codon table attribute";
-        if ($attrib->code =~ $code) {
-          ok($attrib->code, $desc);
-          last;
-        }
+      my $attribs = $slice->get_all_Attributes('codon_table');
+
+      if (scalar @$attribs) {
+        $has_attribute = 1;
+        last;
       }
     }
   }
-}
 
+  ok($has_attribute, $desc);
+}
 
 1;
