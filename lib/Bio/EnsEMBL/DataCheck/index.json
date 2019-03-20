@@ -407,9 +407,9 @@
    },
    "MTCodonTable" : {
       "datacheck_type" : "critical",
-      "description" : "MT seq region had associated seq_region attribute and correct codon table",
+      "description" : "MT seq region has codon table attribute",
       "groups" : [
-         "core_handover"
+         "core"
       ],
       "name" : "MTCodonTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MTCodonTable"
