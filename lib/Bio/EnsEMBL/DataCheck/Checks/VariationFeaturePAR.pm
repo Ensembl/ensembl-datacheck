@@ -39,7 +39,9 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
 
-  return 1 if $self->species ne 'homo_sapiens';
+  if ($self->species ne 'homo_sapiens') {
+    return (1, 'PAR test only applicable to human');
+  }
 }
 
 # TODO: Review if PAR region can be looked up in core databases
