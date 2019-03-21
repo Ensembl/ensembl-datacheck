@@ -58,7 +58,7 @@ sub tests {
   my $desc_2 = 'VariationFeatures minor_allele_freq <= 0.5';
   my $sql_2  = qq/
     SELECT COUNT(*) 
-    FROM variation
+    FROM variation_feature
     WHERE minor_allele_freq > 0.5
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
