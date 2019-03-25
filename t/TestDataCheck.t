@@ -39,7 +39,7 @@ diag('Methods');
 can_ok($module,
   qw( is_rows cmp_rows is_rows_zero is_rows_nonzero
       row_totals row_subtotals
-      fk denormalized denormalised ));
+      fk denormalized denormalised has_data));
 
 subtest 'Counting Database Rows', sub {
   my $sql_1 = 'SELECT COUNT(*) FROM gene';
@@ -278,5 +278,26 @@ subtest 'Denormalized', sub {
   my $sql_fix = 'UPDATE variation SET display = display - 1';
   $dba->dbc->sql_helper->execute_update($sql_fix);
 };
+
+subtest 'Testing column data', sub {
+  my $table_3_id = 'meta_id'; 
+  my $table_3 = 'meta'; 
+  my $col_empty_value = 'species_id'; 
+  my $col_value = 'meta_key';
+
+  subtest 'has_data', sub {
+    check_tests(
+      sub {  
+        has_data($dba, $table_3, $col_value, $table_3_id, 'pass: no missing values');  
+        has_data($dba, $table_3, $col_empty_value, $table_3_id, 'fail: missing values');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef }, 
+      ], 
+      'has_data method' 
+    ); 
+  }; 
+}; 
 
 done_testing();

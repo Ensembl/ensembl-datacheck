@@ -743,13 +743,31 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PepstatsAttributes"
    },
    "PhenotypeDescription" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Imported descriptions contain only supported characters",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
+   "PhenotypeDescriptionMissing" : {
+      "datacheck_type" : "critical",
+      "description" : "Phenotype does not have empty descriptions",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "PhenotypeDescriptionMissing",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescriptionMissing"
+   },
+   "PhenotypeFeatureAttrib" : {
+      "datacheck_type" : "advisory",
+      "description" : "Imported phenotype_feature_attrib value is meaningful and well-formed",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "PhenotypeFeatureAttrib",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeFeatureAttrib"
    },
    "PolyploidAttribs" : {
       "datacheck_type" : "critical",
@@ -760,6 +778,15 @@
       ],
       "name" : "PolyploidAttribs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
+   },
+   "Population" : {
+      "datacheck_type" : "critical",
+      "description" : "Population data is consistent",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "Population",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Population"
    },
    "ProbeUnique" : {
       "datacheck_type" : "critical",
@@ -799,6 +826,24 @@
       ],
       "name" : "ProteinTranslation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinTranslation"
+   },
+   "Publication" : {
+      "datacheck_type" : "critical",
+      "description" : "There are no duplicated publication entries",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "Publication",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Publication"
+   },
+   "PublicationDisplay" : {
+      "datacheck_type" : "critical",
+      "description" : "Publication cited variants display",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "PublicationDisplay",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PublicationDisplay"
    },
    "ReadFileNames" : {
       "datacheck_type" : "critical",
@@ -965,6 +1010,24 @@
       ],
       "name" : "SignalControlMismatches",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SignalControlMismatches"
+   },
+   "Source" : {
+      "datacheck_type" : "critical",
+      "description" : "Source table has consistent URLs and no duplicated names",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "Source",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Source"
+   },
+   "SourceAdvisory" : {
+      "datacheck_type" : "advisory",
+      "description" : "Source table contains descriptions and the same dbSNP version",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "SourceAdvisory",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SourceAdvisory"
    },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
