@@ -49,7 +49,7 @@ sub tests {
     my $sql_1  = 'SELECT COUNT(*) FROM variation';
     row_totals($self->dba, $old_dba, $sql_1, undef, 1.00, $desc_1);
     
-    my $desc_2 = "Consistent variation source counts between ".
+    my $desc_2 = "Consistent variation counts by source between ".
                $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
     my $sql_2  = q/
       SELECT s.name, COUNT(*) 
@@ -59,7 +59,6 @@ sub tests {
     /;
     row_subtotals($self->dba, $old_dba, $sql_2, undef, 1.00, $desc_2);
   }
-
 }
 
 1;
