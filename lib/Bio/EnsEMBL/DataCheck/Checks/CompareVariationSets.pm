@@ -44,7 +44,7 @@ sub tests {
 
     skip 'No old version of database', 1 unless defined $old_dba;
     
-    my $desc = "Consistent variation set counts between ".
+    my $desc = "Consistent variation counts by variation set between ".
                $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
     my $sql  = q/
       SELECT vs.name, COUNT(*) 
