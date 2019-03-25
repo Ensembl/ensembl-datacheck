@@ -1140,6 +1140,7 @@
       ],
       "name" : "VariationClasses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationClasses"
+   },
    "VariationFeature" : {
       "datacheck_type" : "critical",
       "description" : "VariationFeature table data is present and correct",
