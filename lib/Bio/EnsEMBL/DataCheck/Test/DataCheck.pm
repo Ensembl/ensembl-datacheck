@@ -40,6 +40,7 @@ our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
   fk denormalized denormalised
+  has_data
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -424,6 +425,38 @@ sub denormalized {
 
 sub denormalised {
   return denormalized(@_);
+}
+
+=head2 Testing Database Columns  
+
+=over 4
+
+=item B<has_data>
+
+has_data($dbc, $table, $column, $id, $test_name, $diag_msg);
+
+Tests if the C<$column> in C<$table> has null or blank values.
+If all the rows have a non-NULL, non-blank value, the test will pass.
+The C<$id> parameter should be a column name that will be useful for
+diagnostics in the case of failure (typically this would be something
+that uniquely identifies a row, such as an auto-incremented ID). 
+
+=back
+
+=cut
+
+sub has_data {
+  my ($dbc, $table, $column, $id, $test_name, $diag_msg) = @_;
+
+  my $sql = qq/
+    SELECT $id
+    FROM $table 
+    WHERE $column IS NULL 
+    OR $column = 'NULL'
+    OR $column = '' 
+  /;  
+
+  is_rows_zero($dbc, $sql, $test_name, $diag_msg);  
 }
 
 1;

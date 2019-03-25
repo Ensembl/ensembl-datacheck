@@ -30,7 +30,8 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'PhenotypeDescription',
   DESCRIPTION => 'Imported descriptions contain only supported characters',
-  GROUPS      => ['variation'],
+  DATACHECK_TYPE => 'advisory',
+  GROUPS      => ['variation_import'],
   DB_TYPES    => ['variation'],
   TABLES      => ['phenotype']
 };
@@ -41,7 +42,7 @@ sub tests {
   my $desc_length = 'Phenotype description length';
   my $diag_length = "Row with suspiciously short description";
   my $sql_length = qq/
-      SELECT *
+      SELECT phenotype_id
       FROM phenotype
       WHERE description IS NOT NULL
       AND LENGTH(description) < 4
@@ -51,7 +52,7 @@ sub tests {
   my $desc_newline = 'Phenotype description with new line';
   my $diag_newline = "Row with unsupported new line";
   my $sql_newline = qq/
-      SELECT *
+      SELECT phenotype_id
       FROM phenotype
       WHERE description IS NOT NULL
       AND description LIKE '%\n%'
@@ -61,7 +62,7 @@ sub tests {
   my $desc_ascii = 'ASCII chars printable in description';
   my $diag_ascii = "Row with unsupported ASCII chars";
   my $sql_ascii = qq/
-      SELECT *
+      SELECT phenotype_id
       FROM phenotype
       WHERE description REGEXP '[^ -;=\?-~]'
       OR LEFT(description, 1) REGEXP '[^A-Za-z0-9]'
@@ -72,7 +73,7 @@ sub tests {
   my $desc_non_term = 'Meaningful phenotype description';
   my $diag_non_term = 'Row description is not useful';
   my $sql_non_term = qq/
-      SELECT *
+      SELECT phenotype_id
       FROM phenotype
       WHERE lower(description) in ("none", "not provided", "not specified", "not in omim", "variant of unknown significance", "not_provided", "?", ".")
   /;

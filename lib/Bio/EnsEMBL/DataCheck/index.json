@@ -218,6 +218,15 @@
       "name" : "CompareSynonym",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSynonym"
    },
+   "CompareVariationClasses" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare variation counts between two databases, categorised by variation class",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationClasses",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationClasses"
+   },
    "CompareXref" : {
       "datacheck_type" : "advisory",
       "description" : "Compare xref counts between two databases, categorised by external_db",
@@ -743,13 +752,31 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PepstatsAttributes"
    },
    "PhenotypeDescription" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Imported descriptions contain only supported characters",
       "groups" : [
-         "variation"
+         "variation_import"
       ],
       "name" : "PhenotypeDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescription"
+   },
+   "PhenotypeDescriptionMissing" : {
+      "datacheck_type" : "critical",
+      "description" : "Phenotype does not have empty descriptions",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "PhenotypeDescriptionMissing",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescriptionMissing"
+   },
+   "PhenotypeFeatureAttrib" : {
+      "datacheck_type" : "advisory",
+      "description" : "Imported phenotype_feature_attrib value is meaningful and well-formed",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "PhenotypeFeatureAttrib",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeFeatureAttrib"
    },
    "PolyploidAttribs" : {
       "datacheck_type" : "critical",
@@ -760,6 +787,15 @@
       ],
       "name" : "PolyploidAttribs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
+   },
+   "Population" : {
+      "datacheck_type" : "critical",
+      "description" : "Population data is consistent",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "Population",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Population"
    },
    "ProbeUnique" : {
       "datacheck_type" : "critical",
@@ -799,6 +835,24 @@
       ],
       "name" : "ProteinTranslation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinTranslation"
+   },
+   "Publication" : {
+      "datacheck_type" : "critical",
+      "description" : "There are no duplicated publication entries",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "Publication",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Publication"
+   },
+   "PublicationDisplay" : {
+      "datacheck_type" : "critical",
+      "description" : "Publication cited variants display",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "PublicationDisplay",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PublicationDisplay"
    },
    "ReadFileNames" : {
       "datacheck_type" : "critical",
@@ -966,6 +1020,24 @@
       "name" : "SignalControlMismatches",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SignalControlMismatches"
    },
+   "Source" : {
+      "datacheck_type" : "critical",
+      "description" : "Source table has consistent URLs and no duplicated names",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "Source",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Source"
+   },
+   "SourceAdvisory" : {
+      "datacheck_type" : "advisory",
+      "description" : "Source table contains descriptions and the same dbSNP version",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "SourceAdvisory",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SourceAdvisory"
+   },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
       "description" : "Species production_name and alias are unique across all databases in the registry",
@@ -1060,6 +1132,15 @@
       "name" : "ValidTranslations",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranslations"
    },
+   "Variation" : {
+      "datacheck_type" : "critical",
+      "description" : "Variation table data is present and correct",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "Variation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Variation"
+   },
    "VariationClasses" : {
       "datacheck_type" : "advisory",
       "description" : "Variation number of classes is correct",
@@ -1086,6 +1167,33 @@
       ],
       "name" : "VariationSetStructure",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSetStructure"
+   },
+   "VariationFeature" : {
+      "datacheck_type" : "critical",
+      "description" : "VariationFeature table data is present and correct",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeature",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeature"
+   },
+   "VariationFeatureAlleles" : {
+      "datacheck_type" : "critical",
+      "description" : "VariationFeature has alleles",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeatureAlleles",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeatureAlleles"
+   },
+   "VariationFeaturePAR" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variants do not map to Y PAR",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeaturePAR",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeaturePAR"
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
