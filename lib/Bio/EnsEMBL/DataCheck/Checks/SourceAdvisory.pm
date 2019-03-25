@@ -59,11 +59,11 @@ sub tests {
 
   my $desc_missing = 'Source has description';
   my $diag_missing = 'Source description is missing';
-  missing_value($self->dba, 'source', 'description', 'source_id', $desc_missing, $diag_missing); 
+  has_data($self->dba, 'source', 'description', 'source_id', $desc_missing, $diag_missing); 
 
   my $desc_url = 'Source has URL';
   my $diag_url = 'Source URL is missing';
-  missing_value($self->dba,'source', 'url', 'source_id', $desc_url, $diag_url);
+  has_data($self->dba,'source', 'url', 'source_id', $desc_url, $diag_url);
 
 }
 
