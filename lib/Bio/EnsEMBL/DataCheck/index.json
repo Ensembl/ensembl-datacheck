@@ -227,6 +227,15 @@
       "name" : "CompareVariationClasses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationClasses"
    },
+   "CompareVariationFeatures" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare variation feature counts between two databases, categorised by seq_region name",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationFeatures"
+   },
    "CompareXref" : {
       "datacheck_type" : "advisory",
       "description" : "Compare xref counts between two databases, categorised by external_db",
