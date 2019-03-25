@@ -40,25 +40,11 @@ sub tests {
 
   my $desc_name = 'Variation set has a name';
   my $diag_name = 'Variation set name is missing';
-  my $sql_name = q/
-      SELECT count(*) 
-      FROM variation_set
-      WHERE name is NULL
-      OR name = 'NULL'
-      OR name = ''
-  /;
-  is_rows_zero($self->dba, $sql_name, $desc_name, $diag_name);
+  has_data($self->dba, 'variation_set', 'name', 'variation_set_id', $desc_name, $diag_name);
 
   my $desc_description = 'Variation set has a description';
   my $diag_description = 'Variation set description is missing';
-  my $sql_description = q/
-      SELECT count(*)
-      FROM variation_set
-      WHERE description is NULL
-      OR description = 'NULL'
-      OR description = ''
-  /;
-  is_rows_zero($self->dba, $sql_description, $desc_description, $diag_description);
+  has_data($self->dba, 'variation_set', 'description', 'variation_set_id', $desc_description, $diag_description);
 
   my $desc_id = 'Variation set id is valid';
   my $diag_id = 'Variation set id is not valid to fit into variation_set_id column in variation_feature table';
