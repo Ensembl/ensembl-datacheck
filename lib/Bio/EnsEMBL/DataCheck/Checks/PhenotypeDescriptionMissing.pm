@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames;
+package Bio::EnsEMBL::DataCheck::Checks::PhenotypeDescriptionMissing;
 
 use warnings;
 use strict;
@@ -28,37 +28,20 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'DuplicateReadNames',
-  DESCRIPTION => 'Duplicate read names',
-  GROUPS      => ['funcgen', 'regulatory_build', 'funcgen_registration'],
-  DB_TYPES    => ['funcgen']
+  NAME        => 'PhenotypeDescriptionMissing',
+  DESCRIPTION => 'Phenotype does not have empty descriptions',
+  GROUPS      => ['variation_import'], 
+  DB_TYPES    => ['variation'],
+  TABLES      => ['phenotype']
 };
 
 sub tests {
-  my $self = shift;
+  my ($self) = @_;
 
-  my $desc = "Read file names should be unique";
-  my $diag = "Read file names have duplicates";
-  
-  my $sql = '
-    select 
-      read_file.name as read_file_name,
-      group_concat(read_file.name) read_file_names,
-      count(read_file_id) count
-    from read_file
-    group by
-      read_file_name
-    having 
-      count>1
-  ';
+  my $desc = 'Phenotype has description';
+  my $diag = 'Phenotype description is missing';
+  has_data($self->dba, 'phenotype', 'description', 'phenotype_id', $desc, $diag); 
 
-  is_rows_zero(
-    $self->dba, 
-    $sql, 
-    $desc, 
-    $diag
-  );
-  return;
 }
 
 1;

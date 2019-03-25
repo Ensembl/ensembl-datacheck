@@ -40,6 +40,7 @@ our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
   fk denormalized denormalised
+  has_data
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -146,6 +147,8 @@ sub is_rows_zero {
 
   my ( $count, $rows ) = _query( $dbc, $sql );
 
+  my $result = $tb->is_eq( $count, 0, $name );
+
   if (defined $rows) {
     if (!defined $diag_msg) {
       $diag_msg = "Unexpected data";
@@ -163,15 +166,18 @@ sub is_rows_zero {
       last if ++$counter == MAX_DIAG_ROWS;
     }
 
+    $dbc = $dbc->dbc() if $dbc->can('dbc');
+    my $dbname = $dbc->dbname;
+
     if ($count > MAX_DIAG_ROWS) {
-      $dbc = $dbc->dbc() if $dbc->can('dbc');
-      my $dbname = $dbc->dbname;
       $tb->diag( 'Reached limit for number of diagnostic messages' );
       $tb->diag( "Execute $sql against $dbname to see all results" );
+    } elsif ($count > 0) {
+      $tb->diag( "Execute $sql against $dbname to replicate these results" );
     }
   }
 
-  return $tb->is_eq( $count, 0, $name );
+  return $result;
 }
 
 =item B<is_rows_nonzero>
@@ -419,6 +425,38 @@ sub denormalized {
 
 sub denormalised {
   return denormalized(@_);
+}
+
+=head2 Testing Database Columns  
+
+=over 4
+
+=item B<has_data>
+
+has_data($dbc, $table, $column, $id, $test_name, $diag_msg);
+
+Tests if the C<$column> in C<$table> has null or blank values.
+If all the rows have a non-NULL, non-blank value, the test will pass.
+The C<$id> parameter should be a column name that will be useful for
+diagnostics in the case of failure (typically this would be something
+that uniquely identifies a row, such as an auto-incremented ID). 
+
+=back
+
+=cut
+
+sub has_data {
+  my ($dbc, $table, $column, $id, $test_name, $diag_msg) = @_;
+
+  my $sql = qq/
+    SELECT $id
+    FROM $table 
+    WHERE $column IS NULL 
+    OR $column = 'NULL'
+    OR $column = '' 
+  /;  
+
+  is_rows_zero($dbc, $sql, $test_name, $diag_msg);  
 }
 
 1;
