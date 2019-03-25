@@ -1132,6 +1132,15 @@
       "name" : "ValidTranslations",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ValidTranslations"
    },
+   "Variation" : {
+      "datacheck_type" : "critical",
+      "description" : "Variation table data is present and correct",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "Variation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Variation"
+   },
    "VariationClasses" : {
       "datacheck_type" : "advisory",
       "description" : "Variation number of classes is correct",
@@ -1140,6 +1149,33 @@
       ],
       "name" : "VariationClasses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationClasses"
+   },
+   "VariationFeature" : {
+      "datacheck_type" : "critical",
+      "description" : "VariationFeature table data is present and correct",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeature",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeature"
+   },
+   "VariationFeatureAlleles" : {
+      "datacheck_type" : "critical",
+      "description" : "VariationFeature has alleles",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeatureAlleles",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeatureAlleles"
+   },
+   "VariationFeaturePAR" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variants do not map to Y PAR",
+      "groups" : [
+         "variation_tables"
+      ],
+      "name" : "VariationFeaturePAR",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationFeaturePAR"
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
