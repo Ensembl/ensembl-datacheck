@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'DisplayableSampleGene',
-  DESCRIPTION => 'Sample genes is displayable and has web_data attached to its analysis',
+  DESCRIPTION => 'Sample gene is displayable and has web_data attached to its analysis',
   GROUPS      => ['core_handover'],
   DB_TYPES    => ['core'],
   TABLES      => ['analysis', 'analysis_description', 'gene', 'meta']
