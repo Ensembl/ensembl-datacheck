@@ -227,6 +227,15 @@
       "name" : "CompareVariationClasses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationClasses"
    },
+   "CompareVariationSets" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare variation counts between two databases, categorised by variation_set name",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationSets"
+   },
    "CompareVariationSources" : {
       "datacheck_type" : "advisory",
       "description" : "Compare variation counts between two databases, categorised by source",
