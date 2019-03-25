@@ -40,7 +40,7 @@ sub tests {
 
   my $desc = 'Phenotype has description';
   my $diag = 'Phenotype description is missing';
-  missing_value($self->dba, 'phenotype', 'description', 'phenotype_id', $desc, $diag); 
+  has_data($self->dba, 'phenotype', 'description', 'phenotype_id', $desc, $diag); 
 
 }
 
