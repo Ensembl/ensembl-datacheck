@@ -208,6 +208,15 @@
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
    },
+   "CompareSource" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare source counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareSource",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSource"
+   },
    "CompareStructuralVariationStudies" : {
       "datacheck_type" : "advisory",
       "description" : "Compare structural variation counts between two databases, categorised by study",
