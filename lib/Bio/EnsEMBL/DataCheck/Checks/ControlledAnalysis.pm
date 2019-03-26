@@ -71,12 +71,12 @@ sub tests {
       ad.logic_name,
       ad.display_label,
       ad.description,
-      (ad.default_displayable IS NOT NULL),
+      (ad.displayable IS NOT NULL),
       ad.db_version,
       wd.data
     FROM
       analysis_description ad LEFT OUTER JOIN
-      web_data wd ON ad.default_web_data_id = wd.web_data_id
+      web_data wd USING (web_data_id)
     WHERE 
       ad.is_current = 1
   /;
