@@ -41,7 +41,7 @@ sub tests {
 
   my $aa = $self->dba->get_adaptor('Attribute');
   my $attrib = $aa->fetch_by_code('trans_spliced');
-  my $attrib_type_id = $attrib->[0];
+  my $attrib_type_id = $attrib->[0] || 0;
 
   my $exon_transcript_sql = qq/
       exon e INNER JOIN
