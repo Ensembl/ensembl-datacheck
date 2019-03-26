@@ -195,6 +195,15 @@
       "name" : "CompareGOXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGOXref"
    },
+   "CompareGenotypes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare genotype counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareGenotypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGenotypes"
+   },
    "CompareReadCoverage" : {
       "datacheck_type" : "advisory",
       "description" : "Compare read coverage by sample between two databases",
