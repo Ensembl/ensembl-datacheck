@@ -195,6 +195,15 @@
       "name" : "CompareGOXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGOXref"
    },
+   "CompareReadCoverage" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare read coverage by sample between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareReadCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareReadCoverage"
+   },
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
