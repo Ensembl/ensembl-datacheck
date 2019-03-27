@@ -1258,6 +1258,15 @@
       "name" : "VariationSet",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSet"
    },
+   "VariationSetAttrib" : {
+      "datacheck_type" : "critical",
+      "description" : "The short name attrib for variation_set_id exists and is defined in attrib table",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "VariationSetAttrib",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSetAttrib"
+   },
    "VariationSetStructure" : {
       "datacheck_type" : "critical",
       "description" : "Variation set only has one super set attached to it",
