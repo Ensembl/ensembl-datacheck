@@ -195,6 +195,15 @@
       "name" : "CompareGOXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGOXref"
    },
+   "CompareGenotypes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare genotype counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareGenotypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGenotypes"
+   },
    "ComparePhenotypeFeatures" : {
       "datacheck_type" : "advisory",
       "description" : "Compare phenotype feature counts between two databases, categorised by source",
@@ -203,6 +212,15 @@
       ],
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
+   },
+   "CompareReadCoverage" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare read coverage by sample between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareReadCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareReadCoverage"
    },
    "CompareSchema" : {
       "datacheck_type" : "critical",
@@ -216,6 +234,24 @@
       ],
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
+   },
+   "CompareSource" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare source counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareSource",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSource"
+   },
+   "CompareStructuralVariationStudies" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare structural variation counts between two databases, categorised by study",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareStructuralVariationStudies",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareStructuralVariationStudies"
    },
    "CompareSynonym" : {
       "datacheck_type" : "advisory",
