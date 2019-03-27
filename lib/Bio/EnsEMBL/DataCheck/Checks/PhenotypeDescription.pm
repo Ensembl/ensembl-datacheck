@@ -75,7 +75,7 @@ sub tests {
   my $sql_non_term = qq/
       SELECT phenotype_id
       FROM phenotype
-      WHERE lower(description) in ("none", "not provided", "not specified", "not in omim", "variant of unknown significance", "not_provided", "?", ".")
+      WHERE lower(description) in ("none", "not provided", "not specified", "not in omim", "variant of unknown significance", "not_provided", "clinvar: phenotype not specified", "?", ".")
   /;
   is_rows_zero($self->dba, $sql_non_term, $desc_non_term, $diag_non_term);
 
