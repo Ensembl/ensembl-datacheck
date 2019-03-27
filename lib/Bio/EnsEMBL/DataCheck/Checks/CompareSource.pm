@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::VariationSetAttrib;
+package Bio::EnsEMBL::DataCheck::Checks::CompareSource;
 
 use warnings;
 use strict;
@@ -28,28 +28,27 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'VariationSetAttrib',
-  DESCRIPTION => 'The short name attrib for variation_set_id exists and is defined in attrib table',
-  GROUPS      => ['variation_import'], 
-  DB_TYPES    => ['variation'],
-  TABLES      => ['variation_set', 'attrib']
+  NAME           => 'CompareSource',
+  DESCRIPTION    => 'Compare source counts between two databases',
+  GROUPS         => ['compare_variation'],
+  DATACHECK_TYPE => 'advisory',
+  DB_TYPES       => ['variation'],
+  TABLES         => ['source']
 };
 
 sub tests {
   my ($self) = @_;
+  
+  SKIP: {
+    my $old_dba = $self->get_old_dba();
 
-  my $desc = 'The short name attrib for variation_set_id exists and is defined in attrib table';
-  my $diag = 'The short name attrib for variation_set_id is not defined in attrib table';
-  my $sql = q/
-      SELECT v.variation_set_id
-      FROM variation_set v
-      LEFT JOIN attrib a
-      ON (v.short_name_attrib_id = a.attrib_id)
-      WHERE a.value IS NULL
-  /;
-  is_rows_zero($self->dba, $sql, $desc, $diag);
+    skip 'No old version of database', 1 unless defined $old_dba;
 
+    my $desc = "Consistent source counts between ".
+               $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
+    my $sql  = 'SELECT COUNT(*) FROM source';
+    row_totals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
+  }
 }
 
 1;
-

@@ -195,6 +195,33 @@
       "name" : "CompareGOXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGOXref"
    },
+   "CompareGenotypes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare genotype counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareGenotypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGenotypes"
+   },
+   "ComparePhenotypeFeatures" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare phenotype feature counts between two databases, categorised by source",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "ComparePhenotypeFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
+   },
+   "CompareReadCoverage" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare read coverage by sample between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareReadCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareReadCoverage"
+   },
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
@@ -207,6 +234,24 @@
       ],
       "name" : "CompareSchema",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSchema"
+   },
+   "CompareSource" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare source counts between two databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareSource",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSource"
+   },
+   "CompareStructuralVariationStudies" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare structural variation counts between two databases, categorised by study",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareStructuralVariationStudies",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareStructuralVariationStudies"
    },
    "CompareSynonym" : {
       "datacheck_type" : "advisory",
@@ -226,6 +271,33 @@
       ],
       "name" : "CompareVariationClasses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationClasses"
+   },
+   "CompareVariationSets" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare variation counts between two databases, categorised by variation_set name",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationSets"
+   },
+   "CompareVariationSources" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare variation counts between two databases, categorised by source",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationSources",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationSources"
+   },
+   "CompareVariationSynonyms" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare variation synonym counts between two databases, categorised by source",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationSynonyms",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationSynonyms"
    },
    "CompareXref" : {
       "datacheck_type" : "advisory",
