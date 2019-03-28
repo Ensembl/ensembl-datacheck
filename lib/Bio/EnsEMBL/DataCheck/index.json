@@ -1278,7 +1278,7 @@
    },
    "VariationSubset" : {
       "datacheck_type" : "critical",
-      "description" : "Variation set is not a subset of itself",
+      "description" : "Variation set is not a subset of itself and variants are only present in set",
       "groups" : [
          "variation_import"
       ],

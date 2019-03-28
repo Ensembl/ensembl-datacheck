@@ -29,10 +29,10 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'VariationSubset',
-  DESCRIPTION => 'Variation set is not a subset of itself',
+  DESCRIPTION => 'Variation set is not a subset of itself and variants are only present in set',
   GROUPS      => ['variation_import'],
   DB_TYPES    => ['variation'],
-  TABLES      => ['variation_set','variation_set_structure']
+  TABLES      => ['variation_set','variation_set_structure', 'variation_set_variation']
 };
 
 sub tests {
