@@ -64,7 +64,7 @@ sub tests {
          AND m.meta_key = 'sample.gene_param'
   INNER JOIN analysis a ON g.analysis_id = a.analysis_id
   INNER JOIN analysis_description ad 
-          ON g.analysis_id = ad.analysis_id AND ad.web_data IS NOT NULL
+          ON g.analysis_id = ad.analysis_id AND ad.web_data IS NULL
     /;
 
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2); 
