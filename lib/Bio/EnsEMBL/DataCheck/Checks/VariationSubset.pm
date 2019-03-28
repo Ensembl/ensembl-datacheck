@@ -64,7 +64,7 @@ sub tests {
    my $helper = $self->dba->dbc->sql_helper;
    my $data = $helper->execute(-SQL => $sql_2);
    
-    my $test_result;
+    my $test_result = 0; 
     foreach my $element (@$data){
       my $set1 = @$element[0];
       my $set2 = @$element[1]; 
@@ -74,14 +74,17 @@ sub tests {
       
       if(!$related){
         my $data_set2 = $self->get_set($set2);
-        $related = $set1 ~~ $data_set2;
+        $related = $set1 ~~ $data_set2; 
+        my $aux = $set2; 
+        $set2 = $set1;
+        $set1 = $aux; 
       }
       if($related){
-        $test_result = 1; 
+        $test_result += 1; 
         diag("The variation set ($set1) contains variants that are present in the subset ($set2). Preferably only subset ($set2) should contain those variants"); 
       }
     }
-    ok(!defined($test_result), $desc_2);
+    is($test_result, 0, $desc_2);
   }
 
 }
