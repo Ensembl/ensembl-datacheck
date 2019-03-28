@@ -183,7 +183,7 @@ sub load_config {
 
     if (!defined $self->output_file) {
       if (defined $config{'output_file'} && exists $config{'output_file'}) {
-        $self->history_file($config{'output_file'});
+        $self->output_file($config{'output_file'});
       }
     }
   }
