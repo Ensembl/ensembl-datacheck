@@ -294,12 +294,6 @@ if (! defined $output_dir) {
   }
 }
 
-if (! defined $history_file) {
-  if (exists $config{history_file} && defined $config{history_file}) {
-    $history_file = $config{history_file};
-  }
-}
-
 # It doesn't make sense to use the default index file if a datacheck_dir
 # is specified (and vice versa).
 if (defined $datacheck_dir && ! defined $index_file) {
