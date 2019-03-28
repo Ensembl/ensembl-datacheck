@@ -40,7 +40,7 @@ our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
   fk denormalized denormalised
-  has_data get_data contains_value
+  has_data get_data
 );
 
 use constant MAX_DIAG_ROWS => 10;
