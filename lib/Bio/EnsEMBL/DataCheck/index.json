@@ -381,7 +381,8 @@
       "datacheck_type" : "critical",
       "description" : "Sample gene is displayable and has web_data attached to its analysis",
       "groups" : [
-         "core_handover"
+         "core",
+         "geneset"
       ],
       "name" : "DisplayableSampleGene",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSampleGene"
