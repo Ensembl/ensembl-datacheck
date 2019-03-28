@@ -469,6 +469,15 @@
       "name" : "DuplicateReadNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames"
    },
+   "EmptyVariationTables" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variation tables are not empty",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "EmptyVariationTables",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EmptyVariationTables"
+   },
    "EpigenomeHasSegmentationFile" : {
       "datacheck_type" : "critical",
       "description" : "All epigenomes in the current regulatory build have a segmentation file",
