@@ -70,11 +70,11 @@ sub tests {
       my $set2 = @$element[1]; 
 
       my $data_set1 = $self->get_set($set1);
-      my $related = $set2 ~~ $data_set1;
+      my $related = $self->contains_value($set2, $data_set1); 
       
       if(!$related){
-        my $data_set2 = $self->get_set($set2);
-        $related = $set1 ~~ $data_set2; 
+        my $data_set2 = $self->get_set($set2); 
+        $related = $self->contains_value($set1, $data_set2);
         my $aux = $set2; 
         $set2 = $set1;
         $set1 = $aux; 
@@ -102,6 +102,17 @@ sub get_set {
   my $data = $helper->execute(-SQL => $sql);
    
   return $data;
+}
+
+sub contains_value {
+  my ($self, $value, $array) = @_;
+
+  my $related; 
+  foreach my $i (@$array){ 
+    if (grep $_ eq $value, @$i) { $related = 1; } 
+  }
+
+  return $related; 
 }
 
 1;
