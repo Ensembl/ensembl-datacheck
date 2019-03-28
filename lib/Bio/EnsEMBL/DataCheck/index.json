@@ -1151,6 +1151,15 @@
       "name" : "StableIDUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
    },
+   "StructuralVariationFeature" : {
+      "datacheck_type" : "critical",
+      "description" : "StructuralVariationFeature table data is present and correct",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "StructuralVariationFeature",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationFeature"
+   },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
       "description" : "Gene and transcript bounds are consistent",
