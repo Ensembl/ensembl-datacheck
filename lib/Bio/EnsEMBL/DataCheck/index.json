@@ -809,6 +809,24 @@
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
    },
+   "MultipleSeqRegions" : {
+      "datacheck_type" : "critical",
+      "description" : "Tables have multiple seq regions",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "MultipleSeqRegions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleSeqRegions"
+   },
+   "MultipleVariationClasses" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variation table has multiple classes",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "MultipleVariationClasses",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleVariationClasses"
+   },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
       "description" : "Database schema matches expected MySQL storage engine",
