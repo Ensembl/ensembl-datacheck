@@ -40,7 +40,7 @@ our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
   fk denormalized denormalised
-  has_data get_data
+  has_data
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -457,29 +457,6 @@ sub has_data {
   /;  
 
   is_rows_zero($dbc, $sql, $test_name, $diag_msg);  
-}
-
-=head2 Get data from Database
-
-=over 4
-
-=item B<get_data>
-
-get_data($dbc, $sql);
-
-This runs an SQL statement C<$sql> against the database connection C<$dbc>.
-Returns the data resulting from the query.
-
-=back
-
-=cut
-
-sub get_data {
-  my ($dbc, $sql) = @_;
-
-  my ( $count, $rows ) = _query( $dbc, $sql );
-
-  return $rows;
 }
 
 1;

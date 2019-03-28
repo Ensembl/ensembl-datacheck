@@ -24,7 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-
+use Data::Dumper; 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
@@ -59,10 +59,11 @@ sub tests {
         FROM variation_set_variation vs1
         JOIN variation_set_variation vs2
         ON (vs2.variation_id = vs1.variation_id
-        AND vs2.variation_set_id > vs1.variation_set_id) limit 100
+        AND vs2.variation_set_id > vs1.variation_set_id)
     /;
-    my $data = get_data($self->dba, $sql_2);
-    
+   my $helper = $self->dba->dbc->sql_helper;
+   my $data = $helper->execute(-SQL => $sql_2);
+   
     my $test_result;
     foreach my $element (@$data){
       my $set1 = @$element[0];
@@ -93,8 +94,10 @@ sub get_set {
         FROM variation_set_structure
         WHERE variation_set_super = $value
       /;
-  my $data = get_data($self->dba, $sql);
 
+  my $helper = $self->dba->dbc->sql_helper;
+  my $data = $helper->execute(-SQL => $sql);
+   
   return $data;
 }
 
