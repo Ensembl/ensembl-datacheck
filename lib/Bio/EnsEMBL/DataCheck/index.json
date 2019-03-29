@@ -222,6 +222,15 @@
       "name" : "CompareReadCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareReadCoverage"
    },
+   "CompareSampleDisplays" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare sample counts between two databases, categorised by display",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareSampleDisplays",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSampleDisplays"
+   },
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
