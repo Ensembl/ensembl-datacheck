@@ -33,7 +33,7 @@ use constant {
   GROUPS         => ['compare_variation'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['variation'],
-  TABLES         => ['variation']
+  TABLES         => ['variation','attrib', 'attrib_type']
 };
 
 sub tests {
