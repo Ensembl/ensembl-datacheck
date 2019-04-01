@@ -33,7 +33,7 @@ use constant {
   GROUPS         => ['compare_variation'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['variation'],
-  TABLES         => ['variation_feature']
+  TABLES         => ['seq_region', 'variation_feature']
 };
 
 sub tests {
@@ -44,45 +44,44 @@ sub tests {
 
     skip 'No old version of database', 1 unless defined $old_dba;
   
+    my $curr_dna_dba = $self->get_dna_dba();
+    my $old_core_dba = $self->get_old_dba(undef, 'core');
+
     # Check the assembly version. Skip if not the same
     skip 'Different assemblies', 1 
-      unless $self->same_assembly($old_dba->dbc->dbname);
+      unless $self->same_assembly($curr_dna_dba, $old_core_dba);
     
-    my $desc = "Consistent variation feature counts between ".
+    my $desc = "Consistent variation feature counts by seq region name between ".
                $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
 
-    my ($core_dbname, $old_core_dbname);
-    ($core_dbname = $self->dba->dbc->dbname()) =~ s/variation/core/;
-    ($old_core_dbname = $old_dba->dbc->dbname()) =~ s/variation/core/;  
-        
-    my $sql_1 = $self->get_sql($core_dbname);
-    my $sql_2 = $self->get_sql($old_core_dbname);
-    row_subtotals($self->dba, $old_dba, $sql_1, $sql_2, 1.00, $desc);
+    my $sql  = q/
+      SELECT sr.name, COUNT(*)
+      FROM variation_feature vf JOIN seq_region sr
+        ON (vf.seq_region_id = sr.seq_region_id)
+      GROUP BY sr.name
+    /;
+    row_subtotals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
   }
 }
 
-sub get_sql {
-  my ($self, $dbname) = @_;
-  my $sql = qq/
-    SELECT src.name, COUNT(*) 
-    FROM $dbname.seq_region src, $dbname.coord_system cs, variation_feature vf 
-    WHERE cs.rank = 1 
-      AND cs.coord_system_id = src.coord_system_id 
-      AND src.seq_region_id = vf.seq_region_id 
-    GROUP BY src.name
-  /;
-}
-
 sub same_assembly {
-    my ($self, $prev_dbname) = @_;
-    
-    my $curr_assembly = (split(/_/, $self->dba->dbc->dbname))[4];
-    my $prev_assembly = (split(/_/, $prev_dbname))[4];
-    if ($curr_assembly eq $prev_assembly) {
+  my ($self, $new_core_dba, $old_core_dba) = @_;
+
+  # Get the assembly for the new_core_dba
+  my $gca_new = $new_core_dba->get_adaptor("GenomeContainer");
+  my $version_new = $gca_new->get_version();
+  die('No assembly version') if (!$version_new);
+
+  # Get the assembly for the old_core_dba
+  my $gca_old = $old_core_dba->get_adaptor("GenomeContainer");
+  my $version_old = $gca_old->get_version();
+  die('No assembly version') if (!$version_old);
+
+  if ($version_new eq $version_old) {
       return 1;
-    } else {
+  } else {
       return 0;
-    }
+  }
 }
 
 1;
