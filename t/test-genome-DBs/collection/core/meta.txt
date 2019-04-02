@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	96
+2	\N	schema_version	97
 3	\N	patch	patch_88_89_a.sql|schema_version
 4	1	schema.load_started	2017-05-08 19:14:41
 5	1	schema.load_started	2017-05-08 19:14:45
@@ -175,3 +175,8 @@
 547	\N	patch	patch_94_95_a.sql|schema_version
 548	\N	patch	patch_94_95_b.sql|vertebrate_division_rename
 549	\N	patch	patch_95_96_a.sql|schema_version
+550	\N	patch	patch_96_97_a.sql|schema_version
+551	\N	patch	patch_96_97_b.sql|biotype_so_term
+552	\N	patch	patch_96_97_c.sql|rnaproduct_tables
+553	\N	patch	patch_96_97_d.sql|add_object_type_rnaproduct
+554	\N	patch	patch_96_97_e.sql|add_stable_id_event_type_rnaproduct

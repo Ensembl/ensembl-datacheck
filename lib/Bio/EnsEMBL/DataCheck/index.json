@@ -222,6 +222,15 @@
       "name" : "CompareReadCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareReadCoverage"
    },
+   "CompareSampleDisplays" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare sample counts between two databases, categorised by display",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareSampleDisplays",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSampleDisplays"
+   },
    "CompareSchema" : {
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
@@ -271,6 +280,15 @@
       ],
       "name" : "CompareVariationClasses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationClasses"
+   },
+   "CompareVariationEvidence" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare variation counts between two databases, categorised by evidence",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationEvidence",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationEvidence"
    },
    "CompareVariationSets" : {
       "datacheck_type" : "advisory",
@@ -458,6 +476,16 @@
       "name" : "DisplayableGenes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableGenes"
    },
+   "DisplayableSampleGene" : {
+      "datacheck_type" : "critical",
+      "description" : "Sample gene is displayable and has web_data attached to its analysis",
+      "groups" : [
+         "core",
+         "geneset"
+      ],
+      "name" : "DisplayableSampleGene",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSampleGene"
+   },
    "DuplicateReadNames" : {
       "datacheck_type" : "critical",
       "description" : "Duplicate read names",
@@ -468,6 +496,15 @@
       ],
       "name" : "DuplicateReadNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames"
+   },
+   "EmptyVariationTables" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variation tables are not empty",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "EmptyVariationTables",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EmptyVariationTables"
    },
    "EpigenomeHasSegmentationFile" : {
       "datacheck_type" : "critical",
@@ -798,6 +835,24 @@
       ],
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
+   },
+   "MultipleSeqRegions" : {
+      "datacheck_type" : "critical",
+      "description" : "Tables have multiple seq regions",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "MultipleSeqRegions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleSeqRegions"
+   },
+   "MultipleVariationClasses" : {
+      "datacheck_type" : "advisory",
+      "description" : "Variation table has multiple classes",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "MultipleVariationClasses",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleVariationClasses"
    },
    "MySQLStorageEngine" : {
       "datacheck_type" : "critical",
@@ -1140,6 +1195,15 @@
       ],
       "name" : "StableIDUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
+   },
+   "StructuralVariationFeature" : {
+      "datacheck_type" : "critical",
+      "description" : "StructuralVariationFeature table data is present and correct",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "StructuralVariationFeature",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationFeature"
    },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
