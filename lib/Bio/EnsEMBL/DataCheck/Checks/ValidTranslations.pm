@@ -65,7 +65,7 @@ sub tests {
       coord_system cs USING (coord_system_id)
     WHERE
       tn.start_exon_id = tn.end_exon_id AND
-      (tn.seq_end - tn.seq_start) + 1 < 3 AND
+      (CAST(tn.seq_end AS SIGNED) - CAST(tn.seq_start AS SIGNED)) + 1 < 3 AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
@@ -79,7 +79,7 @@ sub tests {
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
     WHERE
-      (e.seq_region_end - e.seq_region_start) + 1 < tn.seq_start AND
+      (CAST(e.seq_region_end AS SIGNED) - CAST(e.seq_region_start AS SIGNED)) + 1 < tn.seq_start AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_3, $desc_3, $diag_3);
@@ -93,7 +93,7 @@ sub tests {
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
     WHERE
-      (e.seq_region_end - e.seq_region_start) + 1 < tn.seq_end AND
+      (CAST(e.seq_region_end AS SIGNED) - CAST(e.seq_region_start AS SIGNED)) + 1 < tn.seq_end AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_4, $desc_4, $diag_4);
