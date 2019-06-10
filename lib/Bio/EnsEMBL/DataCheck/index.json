@@ -444,6 +444,19 @@
       "name" : "DatabaseCollation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseCollation"
    },
+   "DatabaseSpeciesName" : {
+      "datacheck_type" : "advisory",
+      "description" : "The species.production_name meta key matches the DB name",
+      "groups" : [
+         "core",
+         "corelike",
+         "funcgen",
+         "meta",
+         "variation"
+      ],
+      "name" : "DatabaseSpeciesName",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseSpeciesName"
+   },
    "Denormalized" : {
       "datacheck_type" : "critical",
       "description" : "Denormalized columns are synchronised",
