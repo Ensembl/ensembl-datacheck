@@ -303,6 +303,14 @@ if (! defined $datacheck_dir && defined $index_file) {
   die "datacheck_dir is mandatory if index_file is specified";
 }
 
+# If species parameters have been specified as comma-separated strings,
+# convert them into arrays.
+@species = map { split(/[,\s]+/, $_) } @species if scalar @species;
+@taxons = map { split(/[,\s]+/, $_) } @taxons if scalar @taxons;
+@divisions = map { split(/[,\s]+/, $_) } @divisions if scalar @divisions;
+@antispecies = map { split(/[,\s]+/, $_) } @antispecies if scalar @antispecies;
+@antitaxons = map { split(/[,\s]+/, $_) } @antitaxons if scalar @antitaxons;
+
 # If datacheck parameters have been specified as comma-separated strings,
 # convert them into arrays.
 @names = map { split(/[,\s]+/, $_) } @names if scalar @names;
@@ -382,7 +390,7 @@ my $seed_return = system($seed_cmd);
 
 if (! $seed_return) {
   say "If a beekeeper is not already running, start one with:";
-  say "beekeeper.pl -url $url -loop";
+  say "beekeeper.pl -url $url -loop_until FOREVER";
 }
 
 exit $seed_return;

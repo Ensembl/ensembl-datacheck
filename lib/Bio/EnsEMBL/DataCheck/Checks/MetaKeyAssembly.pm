@@ -137,7 +137,8 @@ sub tests {
     my $sql_liftover_count = qq/
       SELECT COUNT(*) FROM coord_system cs
       WHERE
-        cs.attrib NOT RLIKE 'default_version' AND
+        (cs.attrib IS NULL OR
+         cs.attrib NOT RLIKE 'default_version') AND
         cs.species_id = $species_id
     /;
     my $liftover_count = sql_count($self->dba, $sql_liftover_count);
