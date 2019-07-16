@@ -3,5 +3,5 @@
   'driver' => 'mysql',
   'user'   => 'travis',
   'pass'   => '',
-  'host'   => 'localhost',
+  'host'   => '127.0.0.1',
 }
