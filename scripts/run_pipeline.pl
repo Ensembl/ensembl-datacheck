@@ -168,7 +168,7 @@ But it is possible to parallelize across datachecks, if you're in a hurry.
 
 =item B<-tag> <tag>
 
-A short description to associate with a batch of healthchecks.
+A short description to associate with a batch of datachecks.
 
 =item B<-email> <email>
 

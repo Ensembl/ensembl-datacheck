@@ -1,5 +1,5 @@
 1	\N	schema_type	variation
-2	\N	schema_version	97
+2	\N	schema_version	98
 3	1	species.production_name	homo_sapiens
 4	\N	patch	patch_94_95_a.sql|schema version
 5	\N	patch	patch_94_95_b.sql|create table to store allele synonyms
@@ -11,3 +11,4 @@
 28	\N	patch	patch_96_97_a.sql|schema version
 29	\N	patch	patch_96_97_b.sql|move ancestral allele column to variation_feature
 30	\N	patch	patch_96_97_c.sql|add an unique index on the name column
+31	\N	patch	patch_97_98_a.sql|schema version
