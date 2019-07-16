@@ -1,7 +1,9 @@
+dist: trusty
+
 language: "perl"
 
 perl:
-  - "5.22"
+  - "5.14"
 
 env:
   - COVERALLS=true  DB=mysql
