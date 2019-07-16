@@ -108,10 +108,20 @@ sub pipeline_create_commands {
     );
   /;
 
+  my $drop_input_id_index = q/
+    ALTER TABLE job DROP KEY input_id_stacks_analysis;
+  /;
+
+  my $extend_input_id = q/
+    ALTER TABLE job MODIFY input_id TEXT;
+  /;
+
   return [
     @{$self->SUPER::pipeline_create_commands},
     $self->db_cmd($submission_table_sql),
     $self->db_cmd($results_table_sql),
+    $self->db_cmd($drop_input_id_index),
+    $self->db_cmd($extend_input_id),
   ];
 }
 
