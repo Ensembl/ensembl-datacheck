@@ -274,6 +274,8 @@ if (! defined $config_file) {
 if (-e $config_file) {
   my $json = path($config_file)->slurp;
   %config = %{ JSON->new->decode($json) };
+} else {
+  $config_file = undef;
 }
 
 if (! defined $registry_file) {
