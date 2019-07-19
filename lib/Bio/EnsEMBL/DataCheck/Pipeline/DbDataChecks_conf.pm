@@ -108,10 +108,18 @@ sub pipeline_create_commands {
     );
   /;
 
+  my $result_table_sql = q/
+    CREATE TABLE result (
+      job_id INT PRIMARY KEY,
+      output TEXT
+    );
+  /;
+
   return [
     @{$self->SUPER::pipeline_create_commands},
     $self->db_cmd($submission_table_sql),
     $self->db_cmd($results_table_sql),
+    $self->db_cmd($result_table_sql),
   ];
 }
 
@@ -176,7 +184,7 @@ sub pipeline_analyses {
                                 ELSE 
                                   ['RunDataChecks']
                                 ),
-                              'A->1' => ['DataChecksFinished'],
+                              'A->1' => ['DataCheckSummary'],
                             },
       -rc_name           => 'default',
     },
@@ -249,20 +257,14 @@ sub pipeline_analyses {
     },
 
     {
-      -logic_name        => 'DataChecksFinished',
-      -module            => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
+      -logic_name        => 'DataCheckSummary',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSummary',
       -analysis_capacity => 10,
       -max_retry_count   => 0,
       -rc_name           => 'default',
-      -flow_into         => WHEN('defined #email#' => ['EmailSummary']),
-    },
-
-    {
-      -logic_name        => 'EmailSummary',
-      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::EmailSummary',
-      -analysis_capacity => 10,
-      -max_retry_count   => 0,
-      -rc_name           => 'default',
+      -flow_into         => {
+                              '1' => ['?table_name=result'],
+                            },
     },
 
   ];
