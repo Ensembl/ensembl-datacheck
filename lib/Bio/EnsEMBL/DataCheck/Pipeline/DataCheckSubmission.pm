@@ -27,6 +27,8 @@ use strict;
 use warnings;
 use feature 'say';
 
+use JSON;
+use Path::Tiny;
 use Time::Piece;
 
 use base ('Bio::EnsEMBL::Hive::Process');
@@ -42,7 +44,28 @@ sub write_output {
   # parameters in a data structure, so need to do it the long-winded way,
   # which does at least make it explicit what we're doing...
   # We also add the job_id for this analysis, in order to be able to
-  # associate results summaries with the relvant submission.
+  # associate results summaries with the relevant submission.
+
+  # The history_file and output_dir might be provided via the config_file.
+  # The DataCheck::Manager module deals with this fine in terms of running
+  # the datachecks - but we want to be able to store this information in
+  # the 'datacheck_submission' table, and report it in email reports. So
+  #it's easiest to just extract it here, and then flow the parameters...
+  if ($self->param('config_file') && -e $self->param('config_file')) {
+    my $json = path($self->param('config_file'))->slurp;
+    my %config = %{ JSON->new->decode($json) };
+
+    if (! defined $self->param('history_file')) {
+      if (exists $config{history_file} && defined $config{history_file}) {
+        $self->param('history_file', $config{history_file});
+      }
+    }
+    if (! defined $self->param('output_dir')) {
+      if (exists $config{output_dir} && defined $config{output_dir}) {
+        $self->param('output_dir', $config{output_dir});
+      }
+    }
+  }
 
   my $params = {
     species      => $self->param('species'),
