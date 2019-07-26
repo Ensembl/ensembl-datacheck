@@ -81,18 +81,6 @@ sub tests {
       coord_system.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_3, $desc_3);
-
-  my $desc_4 = 'Repeat start > 0';
-  my $sql_4  = qq/
-    SELECT COUNT(*) FROM
-      repeat_feature INNER JOIN
-      seq_region USING (seq_region_id) INNER JOIN
-      coord_system USING (coord_system_id)
-    WHERE
-      repeat_start < 1 AND
-      coord_system.species_id = $species_id
-  /;
-  is_rows_zero($self->dba, $sql_4, $desc_4);
 }
 
 1;
