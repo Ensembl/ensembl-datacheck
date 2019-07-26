@@ -54,17 +54,6 @@ sub tests {
   /;
   is_rows_nonzero($self->dba, $sql_1, $desc_1);
 
-  my $sql = qq/
-    SELECT COUNT(*) FROM
-      protein_feature INNER JOIN
-      translation USING (translation_id) INNER JOIN
-      transcript USING (transcript_id) INNER JOIN
-      seq_region USING (seq_region_id) INNER JOIN
-      coord_system USING (coord_system_id)
-    WHERE
-      coord_system.species_id = $species_id
-  /;
-
   my $desc_2 = 'Protein feature seq start <= end';
   my $sql_2  = $sql.' AND protein_feature.seq_start > protein_feature.seq_end';
   is_rows_zero($self->dba, $sql_2, $desc_2);
