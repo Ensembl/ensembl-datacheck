@@ -14,22 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =head1 NAME
-Bio::EnsEMBL::DataCheck::Pipeline::EmailSummary
+Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSummary
 
 =head1 DESCRIPTION
-Send an email with the overall summary for all datachecks.
+Store summary of datacheck results, and optionally send it via email.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Pipeline::EmailSummary;
+package Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSummary;
 
 use strict;
 use warnings;
 use feature 'say';
 
+use JSON;
+
 use base ('Bio::EnsEMBL::Hive::RunnableDB::NotifyByEmail');
 
-sub fetch_input {
+sub run {
   my $self = shift;
 
   my $submission_job_id = $self->param('submission_job_id');
@@ -37,9 +39,7 @@ sub fetch_input {
   my $tag          = $self->param('tag');
   my $history_file = $self->param('history_file');
   my $output_dir   = $self->param('output_dir');
-
-  my ($passed_total, $failed_total) = (0, 0);
-  my $db_text = '';
+  my $email        = $self->param('email');
 
   my $sql = q/
     SELECT dbname, passed, failed, skipped FROM datacheck_results
@@ -49,32 +49,76 @@ sub fetch_input {
   my $sth = $self->dbc->prepare($sql);
   $sth->execute($submission_job_id);
 
+  my ($passed_total, $failed_total) = (0, 0);
+  my %results;
+
   my $results = $sth->fetchall_arrayref();
   foreach my $result (@$results) {
     my ($dbname, $passed, $failed, $skipped) = @$result;
 
     $failed ? $failed_total++ : $passed_total++;
 
-    $db_text .= "\tpassed: $passed";
-    $db_text .= "\tfailed: $failed";
-    $db_text .= "\tskipped: $skipped";
+    $results{$dbname}{passed}  = $passed;
+    $results{$dbname}{failed}  = $failed;
+    $results{$dbname}{skipped} = $skipped;
+  }
+
+  my %output = (
+    databases    => \%results,
+    passed_total => $passed_total,
+    failed_total => $failed_total,
+    tag          => $tag,
+    history_file => $history_file,
+    output_dir   => $output_dir,
+  );
+
+  $self->param('output', \%output);
+
+  if (defined $email) {
+    $self->set_email_parameters();
+    $self->SUPER::run();
+  }
+}
+
+sub write_output {
+  my $self = shift;
+
+  my $output = {
+    job_id => $self->param('submission_job_id'),
+    output => JSON->new->pretty->encode($self->param('output')),
+  };
+
+  $self->dataflow_output_id($output, 1);
+}
+
+sub set_email_parameters {
+  my $self = shift;
+  
+  my %output = %{ $self->param('output') };
+
+  my $db_text;
+  foreach my $dbname (keys %{$output{databases}}) {
+    $db_text .= "\tpassed: "  . $output{databases}{$dbname}{passed};
+    $db_text .= "\tfailed: "  . $output{databases}{$dbname}{failed};
+    $db_text .= "\tskipped: " . $output{databases}{$dbname}{skipped};
     $db_text .= "\t$dbname\n";
   }
 
   my $subject;
-  if ($failed_total) {
+  if ($output{failed_total}) {
     $subject = "FAIL: Datacheck Summary";
   } else {
     $subject = "PASS: Datacheck Summary";
   }
 
-  my $passed_db = $passed_total == 1 ? 'database' : 'databases';
-  my $failed_db = $failed_total == 1 ? 'database' : 'databases';
+  my $passed_db = $output{passed_total} == 1 ? 'database' : 'databases';
+  my $failed_db = $output{failed_total} == 1 ? 'database' : 'databases';
 
   my $text = "All datachecks have completed.\n".
-    "$passed_total $passed_db passed all datachecks, ".
-    "$failed_total $failed_db failed one or more datachecks.\n";
+    $output{passed_total} . " $passed_db passed all datachecks, ".
+    $output{failed_total} . " $failed_db failed one or more datachecks.\n";
 
+  my $tag = $output{tag};
   if (defined $tag) {
     $subject .= " ($tag)";
     $text    .= "Submission tag: $tag\n";
@@ -83,12 +127,14 @@ sub fetch_input {
 
   $text .= "Details:\n$db_text";
 
+  my $history_file = $output{history_file};
   if (defined $history_file) {
     $text .= "The datacheck results were stored in a history file: $history_file.\n";
   } else {
     $text .= "The datacheck results were not stored in a history file.\n";
   }
 
+  my $output_dir = $output{output_dir};
   if (defined $output_dir) {
     $text .= "The full output of the datachecks were stored in: $output_dir.\n";
   } else {
@@ -99,3 +145,4 @@ sub fetch_input {
 }
 
 1;
+  
