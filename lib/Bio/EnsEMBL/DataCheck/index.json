@@ -1211,9 +1211,7 @@
       "datacheck_type" : "critical",
       "description" : "Stable IDs are unique, both within a database, and across all databases in the registry",
       "groups" : [
-         "core",
-         "corelike",
-         "geneset"
+         "multi_db"
       ],
       "name" : "StableIDUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
