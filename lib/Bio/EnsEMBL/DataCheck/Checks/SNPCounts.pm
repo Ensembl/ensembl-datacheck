@@ -45,6 +45,7 @@ sub tests {
     my $sa = $self->dba->get_adaptor('Slice');
 
     my $slices = $sa->fetch_all_karyotype();
+    skip 'No chromosomes, therefore no SNP counts', 1 unless scalar(@$slices);
 
     foreach my $slice (@$slices) {
       my $sr_name = $slice->coord_system_name . ' ' . $slice->seq_region_name;
