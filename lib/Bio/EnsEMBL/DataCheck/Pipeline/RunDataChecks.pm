@@ -80,14 +80,13 @@ sub fetch_input {
   }
 
   if ($self->param_is_defined('output_dir')) {
-    my $subdir = $ENV{'USER'}.'_'.time;
     my $filename;
     if ($self->param_is_defined('dbname')) {
       $filename = $self->param('dbname') . '.txt';
     } else {
       $filename = $self->param('submission_job_id') . '.txt';
     }
-    my $output_file = path($self->param('output_dir'), $subdir, $filename);
+    my $output_file = path($self->param('output_dir'), $filename);
 
     $self->param('output_file', $output_file->stringify);
   }
