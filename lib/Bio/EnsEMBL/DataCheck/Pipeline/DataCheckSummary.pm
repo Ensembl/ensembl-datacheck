@@ -137,7 +137,6 @@ sub set_email_parameters {
   }
 
   my $output_dir = $output{output_dir};
-  my $timestamp  = $output{timestamp};
   if (defined $output_dir) {
     $text .= "The full output of the datachecks were stored in: $output_dir.\n";
   } else {
