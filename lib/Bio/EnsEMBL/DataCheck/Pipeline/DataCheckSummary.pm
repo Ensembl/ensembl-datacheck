@@ -36,10 +36,11 @@ sub run {
 
   my $submission_job_id = $self->param('submission_job_id');
 
-  my $tag          = $self->param('tag');
   my $history_file = $self->param('history_file');
   my $output_dir   = $self->param('output_dir');
+  my $tag          = $self->param('tag');
   my $email        = $self->param('email');
+  my $timestamp    = $self->param('timestamp');
 
   my $sql = q/
     SELECT dbname, passed, failed, skipped FROM datacheck_results
@@ -67,9 +68,10 @@ sub run {
     databases    => \%results,
     passed_total => $passed_total,
     failed_total => $failed_total,
-    tag          => $tag,
     history_file => $history_file,
     output_dir   => $output_dir,
+    tag          => $tag,
+    timestamp    => $timestamp,
   );
 
   $self->param('output', \%output);

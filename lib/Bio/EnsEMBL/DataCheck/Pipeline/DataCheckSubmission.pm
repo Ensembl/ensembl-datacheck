@@ -50,7 +50,7 @@ sub write_output {
   # The DataCheck::Manager module deals with this fine in terms of running
   # the datachecks - but we want to be able to store this information in
   # the 'datacheck_submission' table, and report it in email reports. So
-  #it's easiest to just extract it here, and then flow the parameters...
+  # it's easiest to just extract it here, and then flow the parameters...
   if ($self->param('config_file') && -e $self->param('config_file')) {
     my $json = path($self->param('config_file'))->slurp;
     my %config = %{ JSON->new->decode($json) };
@@ -65,6 +65,18 @@ sub write_output {
         $self->param('output_dir', $config{output_dir});
       }
     }
+  }
+
+  # In order to prevent people from inadvertently overwriting existing
+  # output, append a subdirectory. 
+  if (defined $self->param('output_dir')) {
+    my $subdir = $ENV{'USER'}.'_'.time;
+    my $dir = path($self->param('output_dir'), $subdir)->stringify;
+    $self->param('output_dir', $dir);
+  }
+
+  unless (defined $self->param('timestamp')) {
+    $self->param('timestamp', localtime->cdate);
   }
 
   my $params = {
@@ -97,15 +109,13 @@ sub write_output {
 
     tag           => $self->param('tag'),
     email         => $self->param('email'),
+    timestamp     => $self->param('timestamp'),
     report_per_db => $self->param('report_per_db'),
     report_all    => $self->param('report_all'),
 
     submission_job_id => $self->input_job->dbID,
   };
   $self->dataflow_output_id($params, 1);
-
-  my $timestamp = $self->param('timestamp');
-  $timestamp = localtime->cdate unless defined $timestamp;
 
   # A subset of the input parameters are stored in the 'datacheck_submission'
   # table, for easier subsequent retrieval than querying the native hive tables.
@@ -115,7 +125,7 @@ sub write_output {
     output_dir        => $self->param('output_dir'),
     tag               => $self->param('tag'),
     email             => $self->param('email'),
-    submitted         => $timestamp,
+    submitted         => $self->param('timestamp'),
   };
   $self->dataflow_output_id($datacheck_submission, 3);
 
