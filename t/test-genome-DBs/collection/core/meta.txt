@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	97
+2	\N	schema_version	98
 3	\N	patch	patch_88_89_a.sql|schema_version
 4	1	schema.load_started	2017-05-08 19:14:41
 5	1	schema.load_started	2017-05-08 19:14:45
@@ -180,3 +180,4 @@
 552	\N	patch	patch_96_97_c.sql|rnaproduct_tables
 553	\N	patch	patch_96_97_d.sql|add_object_type_rnaproduct
 554	\N	patch	patch_96_97_e.sql|add_stable_id_event_type_rnaproduct
+555	\N	patch	patch_97_98_a.sql|schema_version

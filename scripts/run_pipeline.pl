@@ -168,7 +168,7 @@ But it is possible to parallelize across datachecks, if you're in a hurry.
 
 =item B<-tag> <tag>
 
-A short description to associate with a batch of healthchecks.
+A short description to associate with a batch of datachecks.
 
 =item B<-email> <email>
 
@@ -274,6 +274,8 @@ if (! defined $config_file) {
 if (-e $config_file) {
   my $json = path($config_file)->slurp;
   %config = %{ JSON->new->decode($json) };
+} else {
+  $config_file = undef;
 }
 
 if (! defined $registry_file) {
@@ -286,12 +288,6 @@ if (! defined $registry_file) {
 
 if (! -e $registry_file) {
   die "registry_file '$registry_file' does not exist";
-}
-
-if (! defined $output_dir) {
-  if (exists $config{output_dir} && defined $config{output_dir}) {
-    $output_dir = $config{output_dir};
-  }
 }
 
 # It doesn't make sense to use the default index file if a datacheck_dir
