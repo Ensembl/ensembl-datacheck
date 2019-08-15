@@ -59,7 +59,7 @@ sub tests {
       interpro INNER JOIN
       xref ON interpro_ac = dbprimary_acc
     WHERE
-      dbprimary_acc = display_label IS NULL OR
+      display_label IS NULL OR
       description = '' OR
       description IS NULL
   /;
