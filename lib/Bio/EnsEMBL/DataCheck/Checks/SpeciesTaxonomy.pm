@@ -42,21 +42,29 @@ sub tests {
   my $taxon_id = $mca->single_value_by_key('species.taxonomy_id');
   my $sci_name = $mca->single_value_by_key('species.scientific_name');
 
-  # In collection dbs, sometimes the accession is added to the
+  # In collection dbs, sometimes a strain or the accession is added to the
   # scientific name, to disambiguate in the case of multiple strains
-  # or assemblies of the same species.
+  # or assemblies of the same species. Since the taxonomy database does
+  # not have that information, remove it before comparing.
   $sci_name =~ s/ \(GCA_\d+\)//;
+  $sci_name =~ s/ str\. .*//;
 
   my $desc_1 = 'Species-related meta data exists';
   ok(defined $taxon_id && defined $sci_name, $desc_1);
 
   if (defined $taxon_id && defined $sci_name) {
-    my $desc_2 = "Species name correct for taxonomy ID ($taxon_id)";
+    my $desc_2 = "Taxonomy ID ($taxon_id) for $sci_name is valid";
+    my $desc_3 = "Species name correct for taxonomy ID ($taxon_id)";
 
     my $taxonomy_dba = $self->registry->get_DBAdaptor('multi', 'taxonomy');
     my $tna  = $taxonomy_dba->get_TaxonomyNodeAdaptor();
+
     my $node = $tna->fetch_by_taxon_id($taxon_id);
-    is($sci_name, $node->name, $desc_2);
+    ok(defined $node, $desc_2);
+
+    if (defined $node) {
+      is($sci_name, $node->name, $desc_3);
+    }
   }
 }
 

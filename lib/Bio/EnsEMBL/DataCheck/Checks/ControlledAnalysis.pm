@@ -71,7 +71,7 @@ sub tests {
       ad.logic_name,
       ad.display_label,
       ad.description,
-      (ad.displayable IS NOT NULL),
+      ad.displayable,
       ad.db_version,
       wd.data
     FROM
