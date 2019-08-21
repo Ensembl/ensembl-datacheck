@@ -946,6 +946,16 @@
       "name" : "Population",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Population"
    },
+   "PredictedXrefs" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that RefSeqs xrefs are predictions",
+      "groups" : [
+         "compare_core",
+         "xref"
+      ],
+      "name" : "PredictedXrefs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PredictedXrefs"
+   },
    "ProbeUnique" : {
       "datacheck_type" : "critical",
       "description" : "Probe IDs and mappings are unique",
