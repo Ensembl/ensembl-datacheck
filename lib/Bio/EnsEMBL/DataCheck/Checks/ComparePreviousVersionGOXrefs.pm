@@ -32,7 +32,8 @@ use constant {
   DESCRIPTION    => 'Compare GO xref counts between two databases, categorised by source coming from the info_type',
   GROUPS         => ['compare_core', 'xref'],
   DATACHECK_TYPE => 'advisory',
-  DB_TYPES       => ['core']
+  DB_TYPES       => ['core'],
+  TABLES         => ['xref']
 };
 
 sub tests {
