@@ -1371,7 +1371,7 @@
    },
    "XrefPrefixes" : {
       "datacheck_type" : "critical",
-      "description" : "Check that xrefs from a defined list have the correct prefix for their dbprimary_acc",
+      "description" : "Check that xrefs have the correct prefix for their dbprimary_acc",
       "groups" : [
          "compare_core",
          "xref"
