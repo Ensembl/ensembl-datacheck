@@ -213,6 +213,16 @@
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
    },
+   "ComparePreviousVersionSynonyms" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare xref synonyms counts between two databases, categorised by source",
+      "groups" : [
+         "compare_core",
+         "xref"
+      ],
+      "name" : "ComparePreviousVersionSynonyms",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionSynonyms"
+   },
    "CompareReadCoverage" : {
       "datacheck_type" : "advisory",
       "description" : "Compare read coverage by sample between two databases",
