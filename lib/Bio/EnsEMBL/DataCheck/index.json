@@ -1369,6 +1369,15 @@
       "name" : "VariationSubset",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSubset"
    },
+   "XrefHTML" : {
+      "datacheck_type" : "critical",
+      "description" : "Xrefs dont have HTML markups",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "XrefHTML",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefHTML"
+   },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
       "description" : "Xrefs are only attached to one feature type.",
