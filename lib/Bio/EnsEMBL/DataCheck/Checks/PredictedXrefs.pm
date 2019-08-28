@@ -32,7 +32,8 @@ use constant {
   DESCRIPTION    => 'Check that RefSeqs xrefs are predictions',
   GROUPS         => ['compare_core', 'xref'],
   DB_TYPES       => ['core'],
-  TABLES         => ['xref', 'external_db']
+  TABLES         => ['xref', 'external_db'],
+  PER_DB         => 1
 };
 
 sub tests {
