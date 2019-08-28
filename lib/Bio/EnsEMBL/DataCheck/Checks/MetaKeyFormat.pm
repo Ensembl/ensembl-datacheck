@@ -51,7 +51,7 @@ sub tests {
     'genebuild.method'               => '(full_genebuild|projection_build|import|mixed_strategy_build|external_annotation_import|maker_genebuild)',
     'genebuild.start_date'           => '\d{4}\-\d{2}\-\S+',
     'patch'                          => '[^\n]+',
-    'sample.location_param'          => '\w+:\d+\-\d+',
+    'sample.location_param'          => '[\w\.\-]+:\d+\-\d+',
     'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates)',
     'species.production_name'        => '[a-z0-9]+_[a-z0-9_]+',
     'species.scientific_name'        => '[A-Z][a-z0-9]+ [\w \(\)]+',
