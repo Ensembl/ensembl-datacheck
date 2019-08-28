@@ -63,6 +63,13 @@ sub tests {
   foreach my $cs_name (@chromosomal) {
     my $slices = $sa->fetch_all($cs_name);
     foreach (@$slices) {
+      # seq_regions that are not genuine biological chromosomes,
+      # but are instead collections of unmapped sequence,
+      # have a 'chromosome' attribute - these regions do not
+      # necessarily need a karyotype_rank attribute.
+      my @non_bio_chr = @{$_->get_all_Attributes('chromosome')};
+      next if scalar(@non_bio_chr);
+
       my $sr_name = $_->seq_region_name;
       my $desc = "$cs_name $sr_name has 'karyotype_rank' attribute";
       ok($_->has_karyotype, $desc);
