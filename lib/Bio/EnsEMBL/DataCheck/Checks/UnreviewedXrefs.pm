@@ -32,7 +32,8 @@ use constant {
   DESCRIPTION    => 'Uniprot xrefs do not have Unreviewed as their primary DB accession',
   GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
-  TABLES         => ['xref','external_db']
+  TABLES         => ['xref','external_db'],
+  PER_DB         => 1
 };
 
 sub tests {
