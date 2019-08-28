@@ -60,19 +60,23 @@ sub go_xref_counts {
              $old_dba->dbc->dbname.
              ' (species_id '.$old_dba->species_id.')';
   my $sql  = qq/
-      SELECT e.db_name, COUNT(*) FROM 
-        external_db e, 
-        external_synonym es, 
-        xref x, 
-        object_xref ox
+      SELECT db_name, COUNT(*) FROM
+        external_synonym INNER JOIN
+        xref USING (xref_id) INNER JOIN
+        external_db USING (external_db_id) INNER JOIN
+        object_xref USING (xref_id) INNER JOIN
+        gene ON ensembl_id = gene_id INNER JOIN
+        seq_region USING (seq_region_id) INNER JOIN
+        coord_system USING (coord_system_id)
       WHERE
-        x.xref_id=ox.xref_id AND 
-        e.external_db_id=x.external_db_id AND 
-        x.xref_id=es.xref_id AND 
-        x.info_type <> 'PROJECTION'
-      GROUP BY e.db_name 
+        info_type <> 'PROJECTION' AND
+        ensembl_object_type = 'Gene' AND
+        species_id = %d
+      GROUP BY db_name
       HAVING COUNT(*) > $minimum_count
   /;
-  row_subtotals($self->dba, $old_dba, $sql, undef, $threshold, $desc);
+  my $sql1 = sprintf($sql, $self->dba->species_id);
+  my $sql2 = sprintf($sql, $old_dba->species_id);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc);
 }
 1;
