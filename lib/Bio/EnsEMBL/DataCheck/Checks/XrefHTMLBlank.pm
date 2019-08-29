@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::XrefHTML;
+package Bio::EnsEMBL::DataCheck::Checks::XrefHTMLBlank;
 
 use warnings;
 use strict;
@@ -28,8 +28,8 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'XrefHTML',
-  DESCRIPTION    => 'Xrefs dont have HTML markups',
+  NAME           => 'XrefHTMLBlank',
+  DESCRIPTION    => 'Xrefs dont have HTML markups nor blank rows',
   GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
   TABLES         => ['xref'],
@@ -46,6 +46,15 @@ sub tests {
     WHERE display_label LIKE '%<%>%<\/%>%'/;
 
   is_rows_zero($self->dba, $sql, $desc, $diag);
+
+  foreach my $column ('dbprimary_acc','display_label'){
+    my $desc = "$column has no empty string values";
+    my $sql  = qq/
+      SELECT COUNT(*) FROM xref
+      WHERE $column = ''
+    /;
+    is_rows_zero($self->dba, $sql, $desc);
+  }
 }
 
 1;
