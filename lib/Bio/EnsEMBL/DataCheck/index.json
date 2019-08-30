@@ -699,6 +699,15 @@
       "name" : "GeneStableID",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStableID"
    },
+   "GeneStableIdDisplayXref" : {
+      "datacheck_type" : "critical",
+      "description" : "Genes display_xref does not have display_label set as stable_id",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "GeneStableIdDisplayXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStableIdDisplayXref"
+   },
    "GeneStrands" : {
       "datacheck_type" : "critical",
       "description" : "Genes have valid strand values",
