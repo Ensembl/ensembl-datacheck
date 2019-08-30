@@ -519,6 +519,15 @@
       "name" : "DuplicateReadNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames"
    },
+   "DuplicateXref" : {
+      "datacheck_type" : "critical",
+      "description" : "Xrefs have been added twice with different descriptions or versions",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "DuplicateXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateXref"
+   },
    "EmptyVariationTables" : {
       "datacheck_type" : "advisory",
       "description" : "Variation tables are not empty",
