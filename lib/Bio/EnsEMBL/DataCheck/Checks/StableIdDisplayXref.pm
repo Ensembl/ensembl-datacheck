@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::GeneStableIdDisplayXref;
+package Bio::EnsEMBL::DataCheck::Checks::StableIdDisplayXref;
 
 use warnings;
 use strict;
@@ -28,25 +28,31 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'GeneStableIdDisplayXref',
-  DESCRIPTION    => 'Genes display_xref does not have display_label set as stable_id',
+  NAME           => 'StableIdDisplayXref',
+  DESCRIPTION    => 'Genes/Transcript display_xref does not have display_label set as stable_id',
   GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
-  TABLES         => ['gene', 'xref']
+  TABLES         => ['gene','transcript','xref']
 };
 
 sub tests {
   my ($self) = @_;
+  $self->check_display_xref('gene');
+  $self->check_display_xref('transcript');
+}
+
+sub check_display_xref {
+  my ($self, $table) = @_;
   my $species_id = $self->dba->species_id;
-  my $desc = 'No Genes found with stable_id set as display_xrefs';
-  my $diag = 'Genes found with stable_id set as display_xrefs';
+  my $desc = "No $table found with stable_id set as display_xrefs";
+  my $diag = "$table found with stable_id set as display_xrefs";
   my $sql  = qq/
     SELECT stable_id FROM
-      gene g JOIN 
-      xref x on (g.display_xref_id=x.xref_id) JOIN
+      $table tb JOIN 
+      xref x on (tb.display_xref_id=x.xref_id) JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
-    WHERE x.display_label=g.stable_id AND
+    WHERE x.display_label=tb.stable_id AND
       cs.species_id = $species_id
   /;
 
