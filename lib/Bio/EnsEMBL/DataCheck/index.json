@@ -1225,6 +1225,15 @@
       "name" : "StableIDUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
    },
+   "StableIdDisplayXref" : {
+      "datacheck_type" : "critical",
+      "description" : "Genes/Transcript display_xref does not have display_label set as stable_id",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "StableIdDisplayXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIdDisplayXref"
+   },
    "StructuralVariationFeature" : {
       "datacheck_type" : "critical",
       "description" : "StructuralVariationFeature table data is present and correct",
