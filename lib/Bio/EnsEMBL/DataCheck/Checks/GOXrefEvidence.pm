@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::EvidenceFreeGO;
+package Bio::EnsEMBL::DataCheck::Checks::GOXrefEvidence;
 
 use warnings;
 use strict;
@@ -29,9 +29,9 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'EvidenceFreeGO',
+  NAME        => 'GOXrefEvidence',
   DESCRIPTION => 'All GO xrefs have an evidence',
-  GROUPS         => ['compare_core', 'xref'],
+  GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
   TABLES         => ['object_xref','xref', 'external_db', 'ontology_xref']
 };

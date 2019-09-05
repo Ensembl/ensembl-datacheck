@@ -538,16 +538,6 @@
       "name" : "EpigenomeHasSegmentationFile",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
    },
-   "EvidenceFreeGO" : {
-      "datacheck_type" : "critical",
-      "description" : "All GO xrefs have an evidence",
-      "groups" : [
-         "compare_core",
-         "xref"
-      ],
-      "name" : "EvidenceFreeGO",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EvidenceFreeGO"
-   },
    "ExonBounds" : {
       "datacheck_type" : "critical",
       "description" : "Exon regions are non-overlapping, and are consistent with their transcripts",
@@ -656,6 +646,15 @@
       ],
       "name" : "FuncgenAnalysisDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FuncgenAnalysisDescription"
+   },
+   "GOXrefEvidence" : {
+      "datacheck_type" : "critical",
+      "description" : "All GO xrefs have an evidence",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "GOXrefEvidence",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GOXrefEvidence"
    },
    "GeneBiotypes" : {
       "datacheck_type" : "critical",
