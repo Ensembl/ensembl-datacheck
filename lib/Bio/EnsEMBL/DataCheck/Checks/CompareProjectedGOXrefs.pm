@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionGOXrefs;
+package Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGOXrefs;
 
 use warnings;
 use strict;
@@ -28,7 +28,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'ComparePreviousVersionGOXrefs',
+  NAME           => 'CompareProjectedGOXrefs',
   DESCRIPTION    => 'Compare GO xref counts between two databases, categorised by source coming from the info_type',
   GROUPS         => ['compare_core', 'xref'],
   DATACHECK_TYPE => 'advisory',
@@ -52,7 +52,7 @@ sub go_xref_counts {
   my ($self, $old_dba) = @_;
 
   my $minimum_count = 1000;
-  my $threshold = 0.1;
+  my $threshold = 0.9;
 
   my $desc = "Checking GO xref version between ".
              $self->dba->dbc->dbname.

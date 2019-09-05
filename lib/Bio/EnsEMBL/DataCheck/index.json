@@ -213,15 +213,15 @@
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
    },
-   "ComparePreviousVersionGOXrefs" : {
+   "CompareProjectedGOXrefs" : {
       "datacheck_type" : "advisory",
       "description" : "Compare GO xref counts between two databases, categorised by source coming from the info_type",
       "groups" : [
          "compare_core",
          "xref"
       ],
-      "name" : "ComparePreviousVersionGOXrefs",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionGOXrefs"
+      "name" : "CompareProjectedGOXrefs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGOXrefs"
    },
    "CompareReadCoverage" : {
       "datacheck_type" : "advisory",
