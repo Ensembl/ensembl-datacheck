@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION    => 'Protein coding Gene/Transcript display_xref are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species',
   GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
-  TABLES         => ['gene', 'transcript', 'seq_region', 'coord_system'],
+  TABLES         => ['gene', 'transcript', 'seq_region', 'coord_system','xref'],
   PER_DB         => 1,
 };
 
@@ -53,13 +53,15 @@ sub shared_display_xref {
   my ($self, $dba, $table) = @_;
 
   my $desc = "No Protein coding $table display_xref shared between species inside a collection database";
-  my $diag = "Protein coding $table display_xref shared between species inside a collection database";
+  my $diag = "Xref accession";
   my $sql  = qq/
     SELECT x.dbprimary_acc FROM
       xref x JOIN 
-      $table tb on (tb.display_xref_id=x.xref_id AND tb.biotype='protein_coding') JOIN
+      $table tb ON tb.display_xref_id=x.xref_id JOIN
       seq_region sr USING (seq_region_id) JOIN
-      coord_system cs USING (coord_system_id) 
+      coord_system cs USING (coord_system_id)
+    WHERE
+      tb.biotype='protein_coding'
     GROUP BY x.dbprimary_acc
     HAVING COUNT(DISTINCT (cs.species_id)) > 1
   /;
