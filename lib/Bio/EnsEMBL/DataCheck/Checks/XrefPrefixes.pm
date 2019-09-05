@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'XrefPrefixes',
   DESCRIPTION    => 'Check that xrefs have the correct prefix for their dbprimary_acc',
-  GROUPS         => ['compare_core', 'xref'],
+  GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
   TABLES         => ['xref', 'external_db'],
   PER_DB         => 1
