@@ -1396,14 +1396,14 @@
       "name" : "VariationSubset",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSubset"
    },
-   "XrefHTMLBlank" : {
+   "XrefHTMLBlankSpecialChars" : {
       "datacheck_type" : "critical",
-      "description" : "Xrefs dont have HTML markups nor blank rows",
+      "description" : "Xrefs dont have HTML markups, newlines, tabs, carriage nor blank rows",
       "groups" : [
          "xref"
       ],
-      "name" : "XrefHTMLBlank",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefHTMLBlank"
+      "name" : "XrefHTMLBlankSpecialChars",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefHTMLBlankSpecialChars"
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
