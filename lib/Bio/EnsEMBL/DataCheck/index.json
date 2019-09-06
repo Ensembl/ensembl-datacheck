@@ -1236,6 +1236,15 @@
       "name" : "TranscriptBounds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptBounds"
    },
+   "TranscriptDisplayXrefSuffix" : {
+      "datacheck_type" : "critical",
+      "description" : "Transcripts do not have a display xref with a -20* suffix. These are created by the non-vert Xref pipeline unless a flag is enabled: http://www.ebi.ac.uk/seqdb/confluence/display/EnsGen/Xref+mapping#Xrefmapping-CustomisingXrefMapping(DisplayXrefs)",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "TranscriptDisplayXrefSuffix",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptDisplayXrefSuffix"
+   },
    "TranscriptVariation" : {
       "datacheck_type" : "critical",
       "description" : "TranscriptVariation data is present and correct",
