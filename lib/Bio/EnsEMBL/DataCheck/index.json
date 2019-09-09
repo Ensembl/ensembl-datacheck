@@ -1433,14 +1433,14 @@
       "name" : "VariationSubset",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSubset"
    },
-   "XrefHTMLBlank" : {
+   "XrefFormat" : {
       "datacheck_type" : "critical",
-      "description" : "Xrefs dont have HTML markups nor blank rows",
+      "description" : "Xrefs do not have HTML markup, non-printing characters, or blank values",
       "groups" : [
          "xref"
       ],
-      "name" : "XrefHTMLBlank",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefHTMLBlank"
+      "name" : "XrefFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefFormat"
    },
    "XrefPrefixes" : {
       "datacheck_type" : "critical",
