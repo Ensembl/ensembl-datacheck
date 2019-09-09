@@ -54,16 +54,17 @@ sub tests {
   my $sql  = qq/
     SELECT distinct t.stable_id FROM
       transcript t INNER JOIN 
-			xref x on t.display_xref_id = x.xref_id INNER JOIN
-			object_xref USING (xref_id) INNER JOIN
+      xref x on t.display_xref_id = x.xref_id INNER JOIN
+      object_xref USING (xref_id) INNER JOIN
       seq_region USING (seq_region_id) INNER JOIN
       coord_system USING (coord_system_id)
     WHERE x.dbprimary_acc regexp '-20[[:digit:]]\$' AND
-		  x.dbprimary_acc = x.display_label AND
-			ensembl_object_type = 'Transcript' AND
+      x.dbprimary_acc = x.display_label AND
+      ensembl_object_type = 'Transcript' AND
       species_id = %d
   /;
-	my $sql1 = sprintf($sql, $self->dba->species_id);
+  my $sql1 = sprintf($sql, $self->dba->species_id);
+
   is_rows_zero($self->dba, $sql1, $desc, $diag);
 }
 
