@@ -1396,15 +1396,6 @@
       "name" : "VariationSubset",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSubset"
    },
-   "XrefPrefixes" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that xrefs have the correct prefix for their dbprimary_acc",
-      "groups" : [
-         "xref"
-      ],
-      "name" : "XrefPrefixes",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefPrefixes"
-
    "XrefHTMLBlank" : {
       "datacheck_type" : "critical",
       "description" : "Xrefs dont have HTML markups nor blank rows",
@@ -1413,6 +1404,15 @@
       ],
       "name" : "XrefHTMLBlank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefHTMLBlank"
+   },
+   "XrefPrefixes" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that xrefs have the correct prefix for their dbprimary_acc",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "XrefPrefixes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefPrefixes"
    },
    "XrefTypes" : {
       "datacheck_type" : "advisory",
