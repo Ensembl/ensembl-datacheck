@@ -666,6 +666,15 @@
       "name" : "FuncgenAnalysisDescription",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::FuncgenAnalysisDescription"
    },
+   "GOXrefEvidence" : {
+      "datacheck_type" : "critical",
+      "description" : "All GO xrefs have an evidence",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "GOXrefEvidence",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GOXrefEvidence"
+   },
    "GeneBiotypes" : {
       "datacheck_type" : "critical",
       "description" : "Genes and transcripts have valid biotypes",
