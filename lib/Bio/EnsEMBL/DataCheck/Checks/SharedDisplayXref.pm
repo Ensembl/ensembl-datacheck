@@ -29,30 +29,32 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'SharedDisplayXref',
-  DESCRIPTION    => 'Protein coding Gene/Transcript display_xref are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species',
+  DESCRIPTION    => 'Protein coding gene/transcript display xrefs are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species',
   GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
   TABLES         => ['gene', 'transcript', 'seq_region', 'coord_system','xref'],
   PER_DB         => 1,
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  if (! $self->dba->is_multispecies) {
+    return (1, 'Only applies to collection databases.');
+  }
+}
+
 sub tests {
   my ($self) = @_;
 
-    SKIP: {
-    my $dba = $self->dba();
-
-    skip 'This test only applies to collection databases', 1 unless $dba->is_multispecies;
-
-    $self->shared_display_xref($dba,'gene');
-    $self->shared_display_xref($dba,'transcript');
-  }
+  $self->shared_display_xref($self->dba,'gene');
+  $self->shared_display_xref($self->dba,'transcript');
 }
 
 sub shared_display_xref {
   my ($self, $dba, $table) = @_;
 
-  my $desc = "No Protein coding $table display_xref shared between species inside a collection database";
+  my $desc = "No protein-coding $table display xrefs shared between species";
   my $diag = "Xref accession";
   my $sql  = qq/
     SELECT x.dbprimary_acc FROM

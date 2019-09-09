@@ -1160,7 +1160,7 @@
    },
    "SharedDisplayXref" : {
       "datacheck_type" : "critical",
-      "description" : "Protein coding Gene/Transcript display_xref are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species",
+      "description" : "Protein coding gene/transcript display xrefs are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species",
       "groups" : [
          "xref"
       ],
