@@ -239,7 +239,7 @@ sub pipeline_analyses {
       -analysis_capacity => 10,
       -batch_size        => 100,
       -max_retry_count   => 0,
-      -rc_name           => 'default',
+      -rc_name           => '2GB',
       -flow_into         => {
                               '1' => ['StoreResults'],
                             },

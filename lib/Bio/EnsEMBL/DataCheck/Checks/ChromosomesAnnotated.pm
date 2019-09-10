@@ -37,18 +37,27 @@ use constant {
 
 sub skip_tests {
   my ($self) = @_;
-  my $species_id = $self->dba->species_id;
 
-  my $sql = qq/
-    SELECT COUNT(*) FROM
-      coord_system cs INNER JOIN
-      seq_region sr USING (coord_system_id)
-    WHERE
-      cs.name IN ('chromosome', 'chromosome_group', 'plasmid') AND
-      cs.species_id = $species_id
-  /;
+  my $sa = $self->dba->get_adaptor('Slice');
 
-  if ( sql_count($self->dba, $sql) <= 1 ) {
+  my @chromosomal = ('chromosome', 'chromosome_group', 'plasmid');
+
+  my $chr_count = 0;
+  foreach my $cs_name (@chromosomal) {
+    my $slices = $sa->fetch_all($cs_name);
+    foreach (@$slices) {
+      # seq_regions that are not genuine biological chromosomes,
+      # but are instead collections of unmapped sequence,
+      # have a 'chromosome' attribute - these regions do not
+      # necessarily need a karyotype_rank attribute.
+      my @non_bio_chr = @{$_->get_all_Attributes('chromosome')};
+      if (! scalar(@non_bio_chr)) {
+        $chr_count++;
+      }
+    }
+  }
+
+  if ( $chr_count <= 1 ) {
     return (1, 'Zero or one chromosomal seq_regions.');
   }
 }
@@ -63,6 +72,9 @@ sub tests {
   foreach my $cs_name (@chromosomal) {
     my $slices = $sa->fetch_all($cs_name);
     foreach (@$slices) {
+      my @non_bio_chr = @{$_->get_all_Attributes('chromosome')};
+      next if scalar(@non_bio_chr);
+
       my $sr_name = $_->seq_region_name;
       my $desc = "$cs_name $sr_name has 'karyotype_rank' attribute";
       ok($_->has_karyotype, $desc);

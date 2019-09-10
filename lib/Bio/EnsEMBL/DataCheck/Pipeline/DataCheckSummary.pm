@@ -99,7 +99,7 @@ sub set_email_parameters {
   my %output = %{ $self->param('output') };
 
   my $db_text;
-  foreach my $dbname (keys %{$output{databases}}) {
+  foreach my $dbname (sort keys %{$output{databases}}) {
     $db_text .= "\tpassed: "  . $output{databases}{$dbname}{passed};
     $db_text .= "\tfailed: "  . $output{databases}{$dbname}{failed};
     $db_text .= "\tskipped: " . $output{databases}{$dbname}{skipped};

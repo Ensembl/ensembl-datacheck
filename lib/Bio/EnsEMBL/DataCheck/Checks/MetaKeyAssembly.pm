@@ -75,85 +75,95 @@ sub tests {
 
     skip 'No assemblies defined', 1 unless $assembly_count;
 
-    my $mca = $self->dba->get_adaptor("MetaContainer");
-    my $mappings = $mca->list_value_by_key('assembly.mapping');
-
-    my $desc_1 = 'Assembly mapping(s) exists';
-    ok(scalar(@$mappings), $desc_1);
-
-    my $desc_2 = 'Assembly mapping has correct format';
-    my $desc_3 = 'Assembly mapping has valid coordinate system';
-
-    my $assembly_pattern = qr/([^:]+)(:(.+))?/;
-    my $csa = $self->dba->get_adaptor("CoordSystem");
-
-    foreach my $mapping (@$mappings) {
-      foreach my $map_element (split(/[|#]/, $mapping)) {
-        my ($name, undef, $version) = $map_element =~ $assembly_pattern;
-        my $cs = $csa->fetch_by_name($name, $version);
-
-        like($map_element, $assembly_pattern, "$desc_2 ('$map_element' part of '$mapping')");
-
-        ok(defined $cs, "$desc_3 ($name)");
-      }
-    }
-
-    my $desc_4 = 'Assembly mapping has corresponding meta key';
-    my $sql_implicit_mappings = qq/
-      SELECT
-        cs1.name, cs1.version, cs2.name, cs2.version
-      FROM
-        coord_system cs1 INNER JOIN
-        seq_region sr1 ON cs1.coord_system_id = sr1.coord_system_id INNER JOIN
-        assembly a ON sr1.seq_region_id = a.asm_seq_region_id INNER JOIN
-        seq_region sr2 ON a.cmp_seq_region_id = sr2.seq_region_id INNER JOIN
-        coord_system cs2 ON sr2.coord_system_id = cs2.coord_system_id
-      WHERE
-        cs1.coord_system_id <> cs2.coord_system_id AND
-        cs1.species_id = $species_id
-      GROUP BY
-        cs1.name, cs1.version, cs2.name, cs2.version;
-    /;
-    my $helper = $self->dba->dbc->sql_helper;
-    my $implicit_mappings = $helper->execute(-SQL => $sql_implicit_mappings);
-
-    foreach my $implicit (@$implicit_mappings) {
-      my ($name1, $version1, $name2, $version2) = @$implicit;
-      $name1 .= ":$version1" if defined $version1;
-      $name2 .= ":$version2" if defined $version2;
-
-      my $match = 0;
-      foreach my $mapping (@$mappings) {
-        if ($mapping =~ /$name1[\|#]$name2/) {
-          $match = 1;
-          last;
-        }
-      }
-      ok($match, "$desc_4 ($name1#$name2)");
-    }
+    $self->mapping_test('assembly');
   }
 
   SKIP: {
-    my $sql_liftover_count = qq/
+    my $sql_old_assembly_count = qq/
       SELECT COUNT(*) FROM coord_system cs
       WHERE
         (cs.attrib IS NULL OR
          cs.attrib NOT RLIKE 'default_version') AND
         cs.species_id = $species_id
     /;
-    my $liftover_count = sql_count($self->dba, $sql_liftover_count);
+    my $old_assembly_count = sql_count($self->dba, $sql_old_assembly_count);
 
-    skip 'No mappings between assemblies', 1 unless $liftover_count;
+    skip 'No old assemblies to map', 1 unless $old_assembly_count;
 
-    my $desc = 'Liftover mapping(s) exists';
-    my $sql_meta_count = qq/
-      SELECT COUNT(*) FROM meta m
-      WHERE
-        m.meta_key = 'liftover.mapping' AND
-        m.species_id = $species_id
-    /;
-    my $meta_count = sql_count($self->dba, $sql_meta_count);
-    is($liftover_count, $meta_count, $desc);
+    $self->mapping_test('liftover');
+  }
+}
+
+sub mapping_test {
+  my ($self, $mapping_type) = @_;
+
+  my $species_id = $self->dba->species_id;
+  my $mapping_type_name = ucfirst($mapping_type);
+
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+  my $mappings = $mca->list_value_by_key("$mapping_type.mapping");
+
+  my $desc_1 = "$mapping_type_name mapping(s) exists";
+  ok(scalar(@$mappings), $desc_1);
+
+  my $desc_2 = "$mapping_type_name mapping has correct format";
+  my $desc_3 = "$mapping_type_name mapping has valid coordinate system";
+
+  my $assembly_pattern = qr/([^:]+)(:(.+))?/;
+  my $csa = $self->dba->get_adaptor("CoordSystem");
+
+  foreach my $mapping (@$mappings) {
+    foreach my $map_element (split(/[|#]/, $mapping)) {
+      my ($name, undef, $version) = $map_element =~ $assembly_pattern;
+      my $cs = $csa->fetch_by_name($name, $version);
+
+      like($map_element, $assembly_pattern, "$desc_2 ('$map_element' part of '$mapping')");
+
+      ok(defined $cs, "$desc_3 ($name)");
+    }
+  }
+
+  my $desc_4 = "$mapping_type_name mapping has corresponding meta key";
+  
+  my $condition = '';
+  if ($mapping_type eq 'assembly') {
+    $condition = 'cs1.attrib rlike "default_version" AND cs2.attrib rlike "default_version" AND';
+  } elsif ($mapping_type eq 'liftover') {
+    $condition = '(cs1.attrib IS NULL OR cs2.attrib IS NULL) AND';
+  }
+
+  my $sql_implicit_mappings = qq/
+    SELECT
+      cs1.name, cs1.version, cs2.name, cs2.version
+    FROM
+      coord_system cs1 INNER JOIN
+      seq_region sr1 ON cs1.coord_system_id = sr1.coord_system_id INNER JOIN
+      assembly a ON sr1.seq_region_id = a.asm_seq_region_id INNER JOIN
+      seq_region sr2 ON a.cmp_seq_region_id = sr2.seq_region_id INNER JOIN
+      coord_system cs2 ON sr2.coord_system_id = cs2.coord_system_id
+    WHERE
+      cs1.coord_system_id <> cs2.coord_system_id AND
+      $condition
+      cs1.species_id = $species_id
+    GROUP BY
+      cs1.name, cs1.version, cs2.name, cs2.version;
+  /;
+  my $helper = $self->dba->dbc->sql_helper;
+  my $implicit_mappings = $helper->execute(-SQL => $sql_implicit_mappings);
+
+  foreach my $implicit (@$implicit_mappings) {
+    my ($name1, $version1, $name2, $version2) = @$implicit;
+    $name1 .= ":$version1" if defined $version1;
+    $name2 .= ":$version2" if defined $version2;
+
+    my $match = 0;
+    foreach my $mapping (@$mappings) {
+      if ($mapping =~ /$name1[\|#]$name2/) {
+        $match = 1;
+        last;
+      }
+    }
+    ok($match, "$desc_4 ($name1#$name2)");
   }
 }
 
