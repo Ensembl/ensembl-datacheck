@@ -1263,6 +1263,15 @@
       "name" : "TranscriptVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptVariation"
    },
+   "UniProtDisplayXref" : {
+      "datacheck_type" : "critical",
+      "description" : "Genes display_xref are attached to Uniprot/*, instead of UniProtKB Gene Name (Uniprot_gn)",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "UniProtDisplayXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UniProtDisplayXref"
+   },
    "UnlocatedTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Transcripts are linked to sequences",
