@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION    => 'Genes display_xref are attached to Uniprot/*, instead of UniProtKB Gene Name (Uniprot_gn)',
   GROUPS         => ['xref'],
   DB_TYPES       => ['core'],
-  TABLES         => ['gene', 'xref', 'external_db'],
+  TABLES         => ['gene', 'xref', 'external_db','seq_region','coord_system'],
 };
 
 sub tests {
