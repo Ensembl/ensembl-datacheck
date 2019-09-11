@@ -1265,7 +1265,7 @@
    },
    "UniProtDisplayXref" : {
       "datacheck_type" : "critical",
-      "description" : "Genes display_xref are attached to Uniprot/*, instead of UniProtKB Gene Name (Uniprot_gn)",
+      "description" : "Gene display xrefs are only attached to UniProtKB Gene Names (Uniprot_gn)",
       "groups" : [
          "xref"
       ],
