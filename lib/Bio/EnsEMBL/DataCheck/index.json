@@ -213,6 +213,16 @@
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
    },
+   "CompareProjectedGeneNames" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare Projected Gene Name counts between two databases",
+      "groups" : [
+         "compare_core",
+         "xref"
+      ],
+      "name" : "CompareProjectedGeneNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGeneNames"
+   },
    "CompareProjectedGOXrefs" : {
       "datacheck_type" : "advisory",
       "description" : "Compare GO xref counts between two databases, categorised by source coming from the info_type",
@@ -1309,6 +1319,15 @@
       ],
       "name" : "TranscriptVariation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptVariation"
+   },
+   "UniProtDisplayXref" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene display xrefs are only attached to UniProtKB Gene Names (Uniprot_gn)",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "UniProtDisplayXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UniProtDisplayXref"
    },
    "UnlocatedTranscripts" : {
       "datacheck_type" : "critical",
