@@ -1206,6 +1206,15 @@
       "name" : "SignalControlMismatches",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SignalControlMismatches"
    },
+   "SimpleFeatureAnalysisTypes" : {
+      "datacheck_type" : "critical",
+      "description" : "Simple features are not from analysis type gene, mrna and cds",
+      "groups" : [
+         "core"
+      ],
+      "name" : "SimpleFeatureAnalysisTypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SimpleFeatureAnalysisTypes"
+   },
    "Source" : {
       "datacheck_type" : "critical",
       "description" : "Source table has consistent URLs and no duplicated names",
