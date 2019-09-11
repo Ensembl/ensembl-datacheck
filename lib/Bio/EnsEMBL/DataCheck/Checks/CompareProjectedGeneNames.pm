@@ -51,7 +51,7 @@ sub tests {
 sub projected_gene_name_counts {
   my ($self, $old_dba) = @_;
 
-  my $threshold = 0.9;
+  my $threshold = 0.80;
 
   my $desc = "Checking Projected Gene Names between ".
              $self->dba->dbc->dbname.
