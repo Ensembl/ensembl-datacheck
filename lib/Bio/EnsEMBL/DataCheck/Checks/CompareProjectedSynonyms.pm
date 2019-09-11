@@ -51,7 +51,7 @@ sub tests {
 sub projected_synonyms_counts {
   my ($self, $old_dba) = @_;
 
-  my $threshold = 0.78;
+  my $threshold = 0.80;
 
   my $desc = "Checking Projected Synonyms between ".
              $self->dba->dbc->dbname.

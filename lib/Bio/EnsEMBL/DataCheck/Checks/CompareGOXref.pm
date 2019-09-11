@@ -77,7 +77,7 @@ sub go_xref_counts {
   /;
   my $sql1 = sprintf($sql, $self->dba->species_id);
   my $sql2 = sprintf($sql, $old_dba->species_id);
-  row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.70, $desc);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.80, $desc);
 }
 
 1;
