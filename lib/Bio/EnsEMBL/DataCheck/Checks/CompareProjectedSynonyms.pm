@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CompareGOXref;
+package Bio::EnsEMBL::DataCheck::Checks::CompareProjectedSynonyms;
 
 use warnings;
 use strict;
@@ -28,11 +28,12 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CompareGOXref',
-  DESCRIPTION    => 'Compare GO xref counts between two databases, categorised by source',
+  NAME           => 'CompareProjectedSynonyms',
+  DESCRIPTION    => 'Compare Projected Synonyms counts between two databases, categorised by db_name coming from the external_db',
   GROUPS         => ['compare_core', 'xref'],
   DATACHECK_TYPE => 'advisory',
-  DB_TYPES       => ['core']
+  DB_TYPES       => ['core'],
+  TABLES         => ['xref','external_db','external_synonym','object_xref']
 };
 
 sub tests {
@@ -43,41 +44,37 @@ sub tests {
 
     skip 'No old version of database', 1 unless defined $old_dba;
 
-    $self->go_xref_counts($old_dba);
+    $self->projected_synonyms_counts($old_dba);
   }
 }
 
-sub go_xref_counts {
+sub projected_synonyms_counts {
   my ($self, $old_dba) = @_;
 
-  my $minimum_count = 500;
+  my $threshold = 0.80;
 
-  my $desc = "Consistent GO xref counts between ".
+  my $desc = "Checking Projected Synonyms between ".
              $self->dba->dbc->dbname.
              ' (species_id '.$self->dba->species_id.') and '.
              $old_dba->dbc->dbname.
              ' (species_id '.$old_dba->species_id.')';
   my $sql  = qq/
-    SELECT edb2.db_name, COUNT(*) FROM
-      external_db edb1 INNER JOIN
-      xref x1 ON edb1.external_db_id = x1.external_db_id INNER JOIN
-      object_xref ox ON x1.xref_id = ox.xref_id INNER JOIN
-      ontology_xref ontx ON ox.object_xref_id = ontx.object_xref_id INNER JOIN
-      xref x2 ON ontx.source_xref_id = x2.xref_id INNER JOIN
-      external_db edb2 ON x2.external_db_id = edb2.external_db_id INNER JOIN
-      transcript t ON ox.ensembl_id = t.transcript_id INNER JOIN 
-      seq_region sr USING (seq_region_id) INNER JOIN
-      coord_system cs USING (coord_system_id)
-    WHERE
-      edb1.db_name = 'GO' AND
-      ox.ensembl_object_type = 'Transcript' AND
-      cs.species_id = %d
-    GROUP BY edb2.db_name
-    HAVING COUNT(*) > $minimum_count
+      SELECT e.db_name, COUNT(*) FROM 
+        xref x INNER JOIN
+        external_db e USING (external_db_id) INNER JOIN
+        external_synonym es USING (xref_id) INNER JOIN        
+        object_xref ox USING (xref_id)  INNER JOIN
+        gene g ON ox.ensembl_id = g.gene_id INNER JOIN 
+        seq_region sr USING (seq_region_id) INNER JOIN
+        coord_system cs USING (coord_system_id)
+      WHERE 
+        x.info_type = 'PROJECTION' AND
+        ox.ensembl_object_type = 'Gene' AND
+        cs.species_id = %d
+      GROUP BY e.db_name 
   /;
   my $sql1 = sprintf($sql, $self->dba->species_id);
   my $sql2 = sprintf($sql, $old_dba->species_id);
-  row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.80, $desc);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc);
 }
-
 1;

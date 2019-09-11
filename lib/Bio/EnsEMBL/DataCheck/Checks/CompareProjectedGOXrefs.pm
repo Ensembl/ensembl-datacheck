@@ -52,7 +52,7 @@ sub go_xref_counts {
   my ($self, $old_dba) = @_;
 
   my $minimum_count = 1000;
-  my $threshold = 0.9;
+  my $threshold = 0.80;
 
   my $desc = "Checking GO xref version between ".
              $self->dba->dbc->dbname.

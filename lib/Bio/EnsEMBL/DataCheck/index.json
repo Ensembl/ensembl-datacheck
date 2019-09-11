@@ -213,6 +213,16 @@
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
    },
+   "CompareProjectedGeneNames" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare Projected Gene Name counts between two databases",
+      "groups" : [
+         "compare_core",
+         "xref"
+      ],
+      "name" : "CompareProjectedGeneNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGeneNames"
+   },
    "CompareProjectedGOXrefs" : {
       "datacheck_type" : "advisory",
       "description" : "Compare GO xref counts between two databases, categorised by source coming from the info_type",
@@ -223,15 +233,15 @@
       "name" : "CompareProjectedGOXrefs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGOXrefs"
    },
-   "CompareProjectedGeneNames" : {
+   "CompareProjectedSynonyms" : {
       "datacheck_type" : "advisory",
-      "description" : "Compare Projected Gene Name counts between two databases",
+      "description" : "Compare Projected Synonyms counts between two databases, categorised by db_name coming from the external_db",
       "groups" : [
          "compare_core",
          "xref"
       ],
-      "name" : "CompareProjectedGeneNames",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGeneNames"
+      "name" : "CompareProjectedSynonyms",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedSynonyms"
    },
    "CompareReadCoverage" : {
       "datacheck_type" : "advisory",
