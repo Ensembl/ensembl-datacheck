@@ -71,12 +71,12 @@ sub tests {
   # The test stops on the first error, so if there are problems with
   # several tables this avoids an annoying fix/re-run/fix cycle.
   my $desc = "Database schema matches schema defined in file";
-  my $pass = is_deeply(\%file_schema, \%db_schema, $desc);
+  my $pass = is_deeply(\%db_schema, \%file_schema, $desc);
   if (!$pass) {
     foreach my $table_name (sort keys %file_schema) {
       if (exists $db_schema{$table_name}) {
         my $desc_table = "Table definition matches for $table_name";
-        is_deeply($file_schema{$table_name}, $db_schema{$table_name}, $desc_table);
+        is_deeply($db_schema{$table_name}, $file_schema{$table_name}, $desc_table);
       }
     }
   }
@@ -91,6 +91,7 @@ sub normalise_table_def {
   # Remove whitespace.
   $table =~ s/^\s+//gm;
   $table =~ s/[ \t]+/ /gm;
+  $table =~ s/ +$//gm;
   $table =~ s/, +/,/gm;
   $table =~ s/ +,/,/gm;
   $table =~ s/\( /\(/gm;

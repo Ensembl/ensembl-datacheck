@@ -236,7 +236,7 @@ sub pipeline_analyses {
     {
       -logic_name        => 'DataCheckFunnel',
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFunnel',
-      -analysis_capacity => 10,
+      -analysis_capacity => 1,
       -batch_size        => 100,
       -max_retry_count   => 0,
       -rc_name           => '2GB',
