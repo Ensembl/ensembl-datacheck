@@ -1014,6 +1014,15 @@
       "name" : "ProteinCodingGenes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinCodingGenes"
    },
+   "ProteinFeatureLength" : {
+      "datacheck_type" : "critical",
+      "description" : "Protein features do not extend beyond the bounds of the translated sequence",
+      "groups" : [
+         "protein_features"
+      ],
+      "name" : "ProteinFeatureLength",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinFeatureLength"
+   },
    "ProteinFeatures" : {
       "datacheck_type" : "critical",
       "description" : "Protein features are present and correct",

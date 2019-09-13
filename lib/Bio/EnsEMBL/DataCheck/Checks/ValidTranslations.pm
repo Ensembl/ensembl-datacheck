@@ -127,6 +127,25 @@ sub tests {
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_6, $desc_6, $diag_6);
+
+  # The non_translating_CDS biotype is a bit odd; it is classed as
+  # protein-coding, because the originating annotator says it is.
+  # But for whatever reason it does not have a valid translation,
+  # and we don't want to give the impression it does, or have it
+  # processed by, for example, compara.
+  my $desc_7 = 'Non-translating CDS transcripts do not have translations';
+  my $diag_7 = "Transcript";
+  my $sql_7  = qq/
+    SELECT t.stable_id FROM
+  	  transcript t INNER JOIN
+      translation tn USING (transcript_id) INNER JOIN
+      seq_region sr ON t.seq_region_id = sr.seq_region_id INNER JOIN
+      coord_system cs USING (coord_system_id)
+  WHERE
+      t.biotype = 'nontranslating_CDS' AND
+      cs.species_id = $species_id
+  /;
+  is_rows_zero($self->dba, $sql_7, $desc_7, $diag_7);
 }
 
 1;

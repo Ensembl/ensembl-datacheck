@@ -56,7 +56,8 @@ sub tests {
 
   my $sql = qq/
     SELECT COUNT(*) FROM
-      protein_feature INNER JOIN
+      analysis INNER JOIN
+      protein_feature USING (analysis_id) INNER JOIN
       translation USING (translation_id) INNER JOIN
       transcript USING (transcript_id) INNER JOIN
       seq_region USING (seq_region_id) INNER JOIN
@@ -76,6 +77,28 @@ sub tests {
   my $desc_4 = 'Protein feature seq start > 0';
   my $sql_4  = $sql.' AND protein_feature.seq_start < 1';
   is_rows_zero($self->dba, $sql_4, $desc_4);
+
+  my $desc_5 = 'protein feature accessions have correct format';
+  my %format = (
+    cdd =>         '^cd[[:digit:]]{5}',
+    gene3d =>      '^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+',
+    hamap =>       '^MF\_[[:digit:]]{5}',
+    hmmpanther =>  '^PTHR[[:digit:]]{5}',
+    pfam =>        '^PF[[:digit:]]{5}',
+    pfscan =>      '^PS[[:digit:]]{5}',
+    pirsf =>       '^PIRSF[[:digit:]]{6}',
+    prints =>      '^PR[[:digit:]]{5}',
+    scanprosite => '^PS[[:digit:]]{5}',
+    sfld =>        '^SFLD[FGS][[:digit:]]{5}',
+    smart =>       '^SM[[:digit:]]{5}',
+    superfamily => '^SSF[[:digit:]]{5}',
+    tigrfam =>     '^TIGR[[:digit:]]{5}',
+  );
+  foreach my $source (sort keys %format) {
+    my $regexp = $format{$source};
+    my $sql_5 = $sql." AND logic_name = '$source' AND hit_name NOT REGEXP '$regexp'";
+    is_rows_zero($self->dba, $sql_5, "$source $desc_5");
+  }
 }
 
 1;
