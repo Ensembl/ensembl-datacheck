@@ -91,6 +91,7 @@ sub normalise_table_def {
   # Remove whitespace.
   $table =~ s/^\s+//gm;
   $table =~ s/[ \t]+/ /gm;
+  $table =~ s/ +$//gm;
   $table =~ s/, +/,/gm;
   $table =~ s/ +,/,/gm;
   $table =~ s/\( /\(/gm;
