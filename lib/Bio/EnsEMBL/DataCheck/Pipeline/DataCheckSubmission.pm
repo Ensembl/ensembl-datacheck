@@ -66,7 +66,6 @@ sub write_output {
       }
     }
   }
-
   # In order to prevent people from inadvertently overwriting existing
   # output, append a subdirectory. 
   if (defined $self->param('output_dir')) {
