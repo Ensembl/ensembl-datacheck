@@ -529,6 +529,15 @@
       "name" : "DuplicateReadNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames"
    },
+   "DuplicateTranscriptNames" : {
+      "datacheck_type" : "advisory",
+      "description" : "Protein coding Transcript Names are unique",
+      "groups" : [
+         "xref"
+      ],
+      "name" : "DuplicateTranscriptNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateTranscriptNames"
+   },
    "DuplicateXref" : {
       "datacheck_type" : "critical",
       "description" : "Xrefs have been added twice with different descriptions or versions",
