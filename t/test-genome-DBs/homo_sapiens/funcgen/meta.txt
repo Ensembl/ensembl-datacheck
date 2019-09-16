@@ -1,5 +1,5 @@
 1	1	schema_type	funcgen
-2	\N	schema_version	98
+2	\N	schema_version	99
 3	\N	patch	patch_87_88_a.sql|schema_version
 4	\N	patch	patch_87_88_b.sql|seq_region_name_255
 5	\N	patch	patch_87_88_c.sql|sample_regulatory_feature_id field for regulatory build
@@ -124,3 +124,5 @@
 124	\N	patch	patch_96_97_g.sql|Modify column in regulatory_activity
 125	\N	patch	patch_97_98_a.sql|schema_version
 126	\N	patch	patch_97_98_b.sql|Update unique constraint in mirna_target_feature table
+127	\N	patch	patch_98_99_a.sql|schema_version
+128	\N	patch	patch_98_99_b.sql|update datetime default value
