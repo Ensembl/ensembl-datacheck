@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION => 'Tables have multiple seq regions',
   GROUPS      => ['variation'],
   DB_TYPES    => ['variation'],
-  TABLES      => ['phenotype_feature', 'structural_variation_feature', 'variation_feature']
+  TABLES      => ['structural_variation_feature', 'variation_feature']
 };
 
 sub tests {
