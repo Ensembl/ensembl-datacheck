@@ -213,16 +213,6 @@
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
    },
-   "CompareProjectedGeneNames" : {
-      "datacheck_type" : "advisory",
-      "description" : "Compare Projected Gene Name counts between two databases",
-      "groups" : [
-         "compare_core",
-         "xref"
-      ],
-      "name" : "CompareProjectedGeneNames",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGeneNames"
-   },
    "CompareProjectedGOXrefs" : {
       "datacheck_type" : "advisory",
       "description" : "Compare GO xref counts between two databases, categorised by source coming from the info_type",
@@ -232,6 +222,16 @@
       ],
       "name" : "CompareProjectedGOXrefs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGOXrefs"
+   },
+   "CompareProjectedGeneNames" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare Projected Gene Name counts between two databases",
+      "groups" : [
+         "compare_core",
+         "xref"
+      ],
+      "name" : "CompareProjectedGeneNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGeneNames"
    },
    "CompareProjectedSynonyms" : {
       "datacheck_type" : "advisory",
@@ -983,6 +983,15 @@
       ],
       "name" : "PhenotypeFeatureAttrib",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeFeatureAttrib"
+   },
+   "PhenotypeMultipleSeqRegions" : {
+      "datacheck_type" : "critical",
+      "description" : "Phenotypes on multiple seq regions",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "PhenotypeMultipleSeqRegions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeMultipleSeqRegions"
    },
    "PolyploidAttribs" : {
       "datacheck_type" : "critical",
