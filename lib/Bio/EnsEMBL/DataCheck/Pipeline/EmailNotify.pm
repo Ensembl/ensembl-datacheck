@@ -31,14 +31,18 @@ use base ('Bio::EnsEMBL::Hive::RunnableDB::NotifyByEmail');
 
 sub fetch_input {
   my $self = shift;
-  my $datacheck_name       = $self->param('datacheck_name');
-  my $datacheck_output       = $self->param('datacheck_output');
-  my $datacheck_params       = $self->param('datacheck_params');
+  my $datacheck_name   = $self->param('datacheck_name');
+  my $datacheck_output = $self->param('datacheck_output');
+  my $datacheck_params = $self->param('datacheck_params');
+  my $pipeline_name    = $self->param('pipeline_name');
+
   my $dbname = $datacheck_params->{dba_params}->{-DBNAME};
+
   my $subject = "FAILED: Datacheck $datacheck_name for $dbname";
   $self->param('subject', $subject);
   my $text =
-    "Datacheck $datacheck_name failed for $dbname. See full output below: \n $datacheck_output";
+    "Datacheck $datacheck_name failed for $dbname in $pipeline_name pipeline.".
+    "See full output below: \n $datacheck_output";
   $self->param('text', $text);
 }
 1;
