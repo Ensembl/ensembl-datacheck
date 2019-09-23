@@ -141,6 +141,26 @@ sub pipeline_analyses {
                               failures_fatal     => $self->o('failures_fatal'),
                             },
       -rc_name           => 'default',
+      -flow_into         => {
+                              '1' => ['AllJobs'],
+                              '3' => ['PassedJobs'],
+                              '4' => ['FailedJobs'],
+                            },
+    },
+
+    {
+      -logic_name        => 'AllJobs',
+      -module            => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
+    },
+
+    {
+      -logic_name        => 'PassedJobs',
+      -module            => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
+    },
+
+    {
+      -logic_name        => 'FailedJobs',
+      -module            => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
     },
 
     {
