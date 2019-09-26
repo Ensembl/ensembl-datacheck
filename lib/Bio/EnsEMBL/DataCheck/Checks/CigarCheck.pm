@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'CigarCheck',
-  DESCRIPTION    => 'The cigar_line length must not have negative numbers and match number equals sequence length',
+  DESCRIPTION    => 'The cigar_line must not have negative numbers or zeros in it',
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
   TABLES         => ['family_member', 'gene_align_member', 'genomic_align', 'homology_member', 'peptide_align_feature'],

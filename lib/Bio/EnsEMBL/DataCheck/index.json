@@ -160,7 +160,7 @@
    },
    "CigarCheck" : {
       "datacheck_type" : "advisory",
-      "description" : "The cigar_line length must not have negative numbers and match number equals sequence length",
+      "description" : "The cigar_line must not have negative numbers or zeros in it",
       "groups" : [],
       "name" : "CigarCheck",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
