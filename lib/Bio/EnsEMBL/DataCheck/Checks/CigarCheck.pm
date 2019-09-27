@@ -29,10 +29,10 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CigarCheck',
   DESCRIPTION    => 'The cigar_line must not have negative numbers or zeros in it',
-  DATACHECK_TYPE => 'advisory',
+  GROUPS        => ['compara', 'compara_pairwise_alignments'],
+  DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['family_member', 'gene_align_member', 'genomic_align', 'homology_member', 'peptide_align_feature'],
-  PER_DB         => 0
 };
 
 sub tests {
