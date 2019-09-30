@@ -163,8 +163,10 @@ sub write_output {
     # we have to delete it otherwise it causes errors. But it's
     # very useful for diagnostics to have some db information.
     my $output_params = $self->param('datacheck_params');
-    $$output_params{'dba_params'} = $$output_params{'dba'}->to_hash;
-    delete $$output_params{'dba'};
+    if (exists $$output_params{'dba'}) {
+      $$output_params{'dba_params'} = $$output_params{'dba'}->to_hash;
+      delete $$output_params{'dba'};
+    }
 
     my $output = {
       datacheck_name   => $datacheck->name,
