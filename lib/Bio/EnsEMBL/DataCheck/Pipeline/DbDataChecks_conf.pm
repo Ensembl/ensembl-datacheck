@@ -227,7 +227,7 @@ sub pipeline_analyses {
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
       -analysis_capacity => 100,
       -max_retry_count   => 0,
-      -rc_name           => '2GB',
+      -rc_name           => '4GB',
       -flow_into         => {
                               '1' => ['?accu_name=results&accu_address=[]'],
                             },
@@ -284,11 +284,11 @@ sub resource_classes {
   my ($self) = @_;
 
   return {
-    'default' => {LSF => '-q production-rh7 -M 500 -R "rusage[mem=500]"'},
-    '2GB'     => {LSF => '-q production-rh7 -M 2000 -R "rusage[mem=2000]"'},
-    '4GB'     => {LSF => '-q production-rh7 -M 4000 -R "rusage[mem=4000]"'},
-    '8GB'     => {LSF => '-q production-rh7 -M 8000 -R "rusage[mem=8000]"'},
-    '16GB'    => {LSF => '-q production-rh7 -M 16000 -R "rusage[mem=16000]"'},
+    'default' => {LSF => '-q production-rh74 -M 500 -R "rusage[mem=500]"'},
+    '2GB'     => {LSF => '-q production-rh74 -M 2000 -R "rusage[mem=2000]"'},
+    '4GB'     => {LSF => '-q production-rh74 -M 4000 -R "rusage[mem=4000]"'},
+    '8GB'     => {LSF => '-q production-rh74 -M 8000 -R "rusage[mem=8000]"'},
+    '16GB'    => {LSF => '-q production-rh74 -M 16000 -R "rusage[mem=16000]"'},
   }
 }
 
