@@ -17,7 +17,10 @@ use warnings;
 use feature 'say';
 
 use Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks;
+use Bio::EnsEMBL::Hive::Analysis;
 use Bio::EnsEMBL::Hive::AnalysisJob;
+use Bio::EnsEMBL::Hive::HivePipeline;
+use Bio::EnsEMBL::Hive::Worker;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
@@ -43,8 +46,19 @@ can_ok($module, @hive_methods);
 can_ok($module, @module_methods);
 
 my $obj = $module->new();
+
+# We need to instantiate some dummy objects, so that when we
+# call hive methods we do not get 'undefined' errors.
 my $job_obj = Bio::EnsEMBL::Hive::AnalysisJob->new;
+my $pipeline_obj = Bio::EnsEMBL::Hive::HivePipeline->new;
+my $analysis_obj = Bio::EnsEMBL::Hive::Analysis->new;
+$job_obj->hive_pipeline($pipeline_obj);
+$analysis_obj->hive_pipeline($pipeline_obj);
+$job_obj->analysis($analysis_obj);
 $obj->input_job($job_obj);
+
+my $worker_obj = Bio::EnsEMBL::Hive::Worker->new;
+$obj->worker($worker_obj);
 
 subtest 'Default attributes', sub {
   my $param_defaults = $obj->param_defaults();
@@ -229,6 +243,15 @@ foreach my $species (@species) {
     is($passed,  1, "Pass count correct");
     is($skipped, 1, "Skip count correct");
     is($failed,  1, "Fail count correct");
+
+    $obj->write_output();
+
+    # Check the parameters that will be dataflowed to subsequent modules.
+    my $output_params = $obj->param('datacheck_params');
+    ok(exists $$output_params{'dba_params'}, 'Output dba_params');
+    ok(exists $$output_params{'dba_params'}{'-SPECIES'}, 'Output a species');
+    ok(exists $$output_params{'dba_params'}{'-DBNAME'}, 'Output a database name');
+    is($$output_params{'dba_params'}{'-SPECIES'}, $species, 'Output correct species');
   };
 
   subtest 'Running datachecks: Fail', sub {
