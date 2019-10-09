@@ -388,6 +388,17 @@
       "name" : "ControlledAnalysis",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis"
    },
+   "ControlledAnalysisVersion" : {
+      "datacheck_type" : "advisory",
+      "description" : "Analysis db_verion is consistent with production database",
+      "groups" : [
+         "controlled_tables",
+         "core",
+         "corelike"
+      ],
+      "name" : "ControlledAnalysisVersion",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysisVersion"
+   },
    "ControlledMetaKeys" : {
       "datacheck_type" : "critical",
       "description" : "Meta keys are consistent with production database",
