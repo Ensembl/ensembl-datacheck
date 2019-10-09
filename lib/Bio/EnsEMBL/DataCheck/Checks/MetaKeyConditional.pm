@@ -129,9 +129,25 @@ sub repeat_analysis {
   my ($self) = @_;
 
   SKIP: {
-    my $aa = $self->dba->get_adaptor('Analysis');
-    my $analyses = $aa->fetch_all_by_feature_class('RepeatFeature');
-    my @logic_names = sort map { $_->logic_name } @$analyses;
+    # For collection dbs, we might have an analysis in the database,
+    # but no associated features for some of the species.
+    # To save the significant overhead of retrieving all repeat features
+    # in order to do a count, use SQL rather than API.
+    my $helper = $self->dba->dbc->sql_helper;
+    my $species_id = $self->dba->species_id;
+    my $sql = qq/
+      SELECT logic_name FROM
+        coord_system INNER JOIN
+        seq_region USING (coord_system_id) INNER JOIN
+        repeat_feature USING (seq_region_id) INNER JOIN
+        analysis USING (analysis_id)
+      WHERE
+        species_id = $species_id
+      GROUP BY
+        logic_name
+      ORDER BY logic_name
+    /;
+    my @logic_names = @{$helper->execute_simple(-SQL => $sql)};
 
     skip 'No repeat features', 1 unless scalar(@logic_names);
 
