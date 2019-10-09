@@ -50,8 +50,6 @@ sub tests {
     genebuild.initial_release_date
     genebuild.last_geneset_update
     genebuild.version
-    provider.name
-    provider.url
     sample.gene_param
     sample.gene_text
     sample.location_param
