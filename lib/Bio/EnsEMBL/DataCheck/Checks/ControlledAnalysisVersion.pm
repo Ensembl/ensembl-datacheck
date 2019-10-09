@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis;
+package Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysisVersion;
 
 use warnings;
 use strict;
@@ -27,12 +27,13 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'ControlledAnalysis',
-  DESCRIPTION => 'Analysis descriptions and display settings are consistent with production database',
-  GROUPS      => ['controlled_tables', 'core', 'corelike'],
-  DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
-  TABLES      => ['analysis', 'analysis_description'],
-  PER_DB      => 1
+  NAME           => 'ControlledAnalysisVersion',
+  DESCRIPTION    => 'Analysis db_verion is consistent with production database',
+  GROUPS         => ['controlled_tables', 'core', 'corelike'],
+  DATACHECK_TYPE => 'advisory',
+  DB_TYPES       => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
+  TABLES         => ['analysis', 'analysis_description'],
+  PER_DB         => 1
 };
 
 sub tests {
@@ -42,10 +43,7 @@ sub tests {
   my $mapper = sub {
     my ($row, $value) = @_;
     my %row = (
-      display_label => $$row[1],
-      description   => $$row[2],
-      displayable   => $$row[3],
-      web_data      => $$row[4],
+      db_version => $$row[1],
     );
     return \%row;
   };
@@ -53,10 +51,7 @@ sub tests {
   my $sql = qq/
     SELECT
       a.logic_name,
-      ad.display_label,
-      ad.description,
-      ad.displayable,
-      ad.web_data
+      (a.db_version IS NOT NULL)
     FROM
       analysis a LEFT OUTER JOIN
       analysis_description ad USING (analysis_id)
@@ -67,13 +62,9 @@ sub tests {
   my $prod_sql = qq/
     SELECT
       ad.logic_name,
-      ad.display_label,
-      ad.description,
-      ad.displayable,
-      wd.data
+      ad.db_version
     FROM
-      analysis_description ad LEFT OUTER JOIN
-      web_data wd USING (web_data_id)
+      analysis_description ad
     WHERE 
       ad.is_current = 1
   /;
@@ -85,7 +76,7 @@ sub tests {
     my $desc_1 = "Analysis '$logic_name' in production database";
     ok(exists $prod_analyses{$logic_name}, $desc_1);
     if (exists $prod_analyses{$logic_name}) {
-      my $desc_2 = "Correct display properties for '$logic_name' analysis";
+      my $desc_2 = "Correct db_version setting for '$logic_name' analysis";
       is_deeply($analyses{$logic_name}, $prod_analyses{$logic_name}, $desc_2);
     }
   }
