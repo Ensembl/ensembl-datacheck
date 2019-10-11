@@ -158,6 +158,16 @@
       "name" : "ChromosomesAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
    },
+   "CigarCheck" : {
+      "datacheck_type" : "critical",
+      "description" : "The cigar_line must not have negative numbers or zeros in it",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CigarCheck",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
+   },
    "CompareAllele" : {
       "datacheck_type" : "advisory",
       "description" : "Compare allele counts between two databases",
@@ -1326,6 +1336,16 @@
       ],
       "name" : "StructuralVariationFeature",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationFeature"
+   },
+   "TagCoverageStats" : {
+      "datacheck_type" : "critical",
+      "description" : "The coverage must not exceed the genome lengths",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "TagCoverageStats",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TagCoverageStats"
    },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
