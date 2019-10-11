@@ -54,7 +54,7 @@ sub tests {
     'sample.location_param'          => '[\w\.\-]+:\d+\-\d+',
     'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates)',
     'species.production_name'        => '[a-z0-9]+_[a-z0-9_]+',
-    'species.scientific_name'        => '[A-Z][a-z0-9]+ [\w \(\)]+',
+    'species.scientific_name'        => '[A-Z][a-z0-9]+ [\w \(\)\.]+',
     'species.url'                    => '[A-Z][a-z0-9]+_[A-Za-z0-9_]+',
     'web_accession_type'             => '(GenBank Assembly ID|EMBL\-Bank|WGS Master)',
     'web_accession_source'           => '(NCBI|ENA|DDBJ)',
