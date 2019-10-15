@@ -82,34 +82,8 @@ sub tests {
     is_rows_nonzero($dba, $sql_3b, $desc_3);
   }
 
-  my $desc_4 = 'Non-PAR assembly exceptions have "alt_seq_mapping" dna_align_features';
-  my $sql_4a = q/
-    SELECT DISTINCT sr.name FROM
-      seq_region sr INNER JOIN
-      assembly_exception ax ON sr.seq_region_id = ax.seq_region_id
-    WHERE ax.exc_type <> 'PAR'
-  /;
-  my $sql_4b = q/
-    SELECT DISTINCT sr.name FROM
-      seq_region sr INNER JOIN 
-      assembly_exception ax ON sr.seq_region_id = ax.seq_region_id INNER JOIN
-      dna_align_feature daf ON sr.seq_region_id = daf.seq_region_id INNER JOIN
-      analysis a ON daf.analysis_id = a.analysis_id
-    WHERE ax.exc_type <> 'PAR' AND a.logic_name = 'alt_seq_mapping'
-  /;
-  my @all_regions = sort @{$helper->execute_simple(-SQL => $sql_4a)};
-  my @alt_seq_regions = sort @{$helper->execute_simple(-SQL => $sql_4b)};
-  is_deeply(\@all_regions, \@alt_seq_regions, $desc_4);
-
-  my %all_regions = map { $_ => 1 } @all_regions;
-  foreach my $name (@alt_seq_regions) {
-    if (! exists $all_regions{$name} ) {
-      diag("Assembly exception '$name' does not have results in dna_align_feature table for analysis alt_seq_mapping");
-    }
-  }
-
-  my $desc_5 = 'Assembly exceptions map to just one reference region';
-  my $sql_5  = q/
+  my $desc_4 = 'Assembly exceptions map to just one reference region';
+  my $sql_4  = q/
     SELECT COUNT(DISTINCT sr.name) FROM
       seq_region sr INNER JOIN
       assembly_exception ax ON sr.seq_region_id = ax.seq_region_id INNER JOIN
@@ -118,10 +92,10 @@ sub tests {
       analysis a ON daf.analysis_id = a.analysis_id
     WHERE ax.exc_type <> 'PAR' AND a.logic_name = 'alt_seq_mapping' AND sr2.name <> daf.hit_name
   /;
-  is_rows_zero($dba, $sql_5, $desc_5);
+  is_rows_zero($dba, $sql_4, $desc_4);
 
-  my $desc_6 = 'Assembly exceptions only have mappings for "GRC_primary_assembly"';
-  my $sql_6  = q/
+  my $desc_5 = 'Assembly exceptions only have mappings for "GRC_primary_assembly"';
+  my $sql_5  = q/
     SELECT COUNT(DISTINCT sr.name) FROM
       seq_region sr INNER JOIN
       assembly_exception ax ON sr.seq_region_id = ax.seq_region_id INNER JOIN
@@ -130,7 +104,7 @@ sub tests {
       external_db e ON daf.external_db_id = e.external_db_id
     WHERE ax.exc_type <> 'PAR' AND a.logic_name = 'alt_seq_mapping' AND e.db_name <> 'GRC_primary_assembly'
   /;
-  is_rows_zero($dba, $sql_6, $desc_6);
+  is_rows_zero($dba, $sql_5, $desc_5);
 }
 
 1;

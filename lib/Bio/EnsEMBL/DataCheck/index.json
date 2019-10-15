@@ -91,6 +91,16 @@
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
    },
+   "AssemblyExceptionsMapping" : {
+      "datacheck_type" : "advisory",
+      "description" : "Assembly exceptions have alignment mappings",
+      "groups" : [
+         "assembly",
+         "core"
+      ],
+      "name" : "AssemblyExceptionsMapping",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptionsMapping"
+   },
    "AssemblySeqregion" : {
       "datacheck_type" : "critical",
       "description" : "Assembly and seq_region tables are consistent",
