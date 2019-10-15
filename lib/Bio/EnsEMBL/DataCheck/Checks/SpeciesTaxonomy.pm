@@ -41,11 +41,12 @@ sub tests {
 
   my $taxon_id = $mca->single_value_by_key('species.taxonomy_id');
   my $sci_name = $mca->single_value_by_key('species.scientific_name');
+  my $strain   = $mca->single_value_by_key('species.strain');
 
   # In collection dbs, sometimes a strain or the accession is added to the
   # scientific name, to disambiguate in the case of multiple strains
   # or assemblies of the same species. Since the taxonomy database does
-  # not have that information, remove it before comparing.
+  # not always have that information, remove it before comparing.
   $sci_name =~ s/ \(GCA_\d+\)//;
   $sci_name =~ s/ str\. .*//;
 
@@ -63,7 +64,37 @@ sub tests {
     ok(defined $node, $desc_2);
 
     if (defined $node) {
-      is($sci_name, $node->name, $desc_3);
+      # For species in the NCBI taxonomy that have strain details,
+      # we typically split that out into a separate meta_key.
+      # So we remove that here, if necessary. 
+      my $tax_name = $node->name;
+      if ($sci_name ne $tax_name) {
+        $tax_name =~ s/ $strain// if defined $strain;
+      }
+
+      my $alias = 0;
+
+      if ($sci_name ne $tax_name) {
+        my @synonyms = ();
+        my $synonyms = $node->names->{'synonym'};
+        my $genbank_synonyms = $node->names->{'genbank synonym'};
+        push @synonyms, @{$synonyms} if defined $synonyms;
+        push @synonyms, @{$genbank_synonyms} if defined $genbank_synonyms;
+
+        foreach my $synonym (@synonyms) {
+          if ($sci_name ne $synonym) {
+            $synonym =~ s/ $strain// if defined $strain;
+          }
+
+          if ($sci_name eq $synonym) {
+            $tax_name = $synonym;
+            $alias = 1;
+            last;
+          }
+        }
+      }
+      is($sci_name, $tax_name, $desc_3);
+      diag('Species name matches alias, not scientific name') if $alias;
     }
   }
 }
