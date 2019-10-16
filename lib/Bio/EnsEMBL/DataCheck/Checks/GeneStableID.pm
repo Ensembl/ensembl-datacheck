@@ -100,6 +100,7 @@ sub translation_stable_id_check {
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
     WHERE cs.species_id = $species_id
+      AND cs.name <> 'lrg'
     GROUP BY tn.stable_id
     HAVING COUNT(*) > 1
   /;
