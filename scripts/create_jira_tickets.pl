@@ -24,7 +24,7 @@ for each failure.
 
 =head1 SYNOPSIS
 
-perl create_datacheck_tickets.pl [options]
+perl create_jira_tickets.pl [options]
 
 =head1 OPTIONS
 
