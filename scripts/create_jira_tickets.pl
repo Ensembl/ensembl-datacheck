@@ -30,7 +30,7 @@ perl create_jira_tickets.pl [options]
 
 =over 8
 
-=item B<-i[nput]> <datacheck_TAP_file>
+=item B<-i[nput]> F<datacheck_TAP_file>
 
 Mandatory. Path to a datacheck output TAP file.
 
@@ -47,10 +47,14 @@ Mandatory. JIRA project name, e.g. 'ENSPROD'.
 Optional. JIRA username. If not given, uses environment variable $USER 
 as default.
 
-=item B<-components> <>
+=item B<-components> <JIRA_component(s)>
 
 Optional. JIRA component tags. Multiple values can be given as separate 
 -components parameters, or as a single comma-separated string.
+
+=item B<-priority> <JIRA_priority>
+
+Optional. JIRA priority given to each ticket. By default, 'Blocker'.
 
 =item B<-dry_run>, B<-dry-run>
 
@@ -77,9 +81,7 @@ use POSIX;
 
 use Bio::EnsEMBL::Compara::Utils::JIRA;
 
-use Data::Dumper;
-
-my ( $dc_file, $release, $project, $user, @components, $dry_run, $help );
+my ( $dc_file, $release, $project, $user, @components, $priority, $dry_run, $help );
 $dry_run = 0;
 $help    = 0;
 GetOptions(
@@ -88,6 +90,7 @@ GetOptions(
     "p|project=s"     => \$project,
     "user=s",         => \$user,
     "components:s"    => \@components,
+    "priority=s"      => \$priority,
     'dry_run|dry-run' => \$dry_run,
     "h|help"          => \$help,
 );
@@ -129,7 +132,7 @@ $dc_task_json_ticket->[0]->{subtasks} = \@json_subtasks;
 # Create all JIRA tickets
 my $dc_task_keys = $jira_adaptor->create_tickets(
     -JSON_OBJ         => $dc_task_json_ticket,
-    -DEFAULT_PRIORITY => 'Blocker',
+    -DEFAULT_PRIORITY => $priority || 'Blocker',
     -EXTRA_COMPONENTS => \@components,
     -DRY_RUN          => $dry_run
 );
