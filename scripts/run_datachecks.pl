@@ -134,10 +134,6 @@ use strict;
 use feature 'say';
 
 use Bio::EnsEMBL::DataCheck::Manager;
-use Bio::EnsEMBL::DBSQL::DBAdaptor;
-use Bio::EnsEMBL::Compara::DBSQL::DBAdaptor;
-use Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor;
-use Bio::EnsEMBL::Variation::DBSQL::DBAdaptor;
 use Bio::EnsEMBL::Registry;
 
 use DBI;
@@ -192,6 +188,10 @@ if ($dbname) {
   $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbtype eq 'compara';
   $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbtype eq 'funcgen';
   $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbtype eq 'variation';
+
+  # Load the DBAdaptor module
+  my $test_eval = eval "require $adaptor"; ## no critic
+  if ($@ or (!$test_eval)) { die($@) }
 
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
 
