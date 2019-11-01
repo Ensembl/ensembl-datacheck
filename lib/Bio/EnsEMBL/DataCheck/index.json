@@ -158,6 +158,16 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
+   "CheckConservationScorePerBlock" : {
+      "datacheck_type" : "critical",
+      "description" : "Multiple alignments with >3 species and >3 sequences must have a conservation score",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckConservationScorePerBlock",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomal seq_regions have appropriate attribute",
