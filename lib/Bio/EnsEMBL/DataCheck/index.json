@@ -1008,6 +1008,19 @@
       "name" : "MySQLStorageEngine",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MySQLStorageEngine"
    },
+   "NoDataOnGenomeComponents" : {
+      "datacheck_type" : "critical",
+      "description" : "Data is only allowed on principle genomes and not components",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments",
+         "compara_pairwise_alignments",
+         "compara_protein_trees",
+         "compara_syntenies"
+      ],
+      "name" : "NoDataOnGenomeComponents",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NoDataOnGenomeComponents"
+   },
    "PepstatsAttributes" : {
       "datacheck_type" : "critical",
       "description" : "All translations have peptide statistics",
