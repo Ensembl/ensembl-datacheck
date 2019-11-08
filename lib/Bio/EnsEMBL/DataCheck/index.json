@@ -168,6 +168,26 @@
       "name" : "CheckConservationScorePerBlock",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
    },
+   "CheckLastZCoverage" : {
+      "datacheck_type" : "critical",
+      "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckLastZCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckLastZCoverage"
+   },
+   "CheckMultipleAlignCoverage" : {
+      "datacheck_type" : "critical",
+      "description" : "Coverage for a multiple whole genome alignment MLSS matches the coverage recorded in the  mlss_tag table",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckMultipleAlignCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomal seq_regions have appropriate attribute",
