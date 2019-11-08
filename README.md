@@ -4,6 +4,13 @@
 Code for checking Ensembl data
 * [Framework details](framework.md)
 
+## Repository dependencies
+The datachecks require the following repositories to be checked out and their libraries available in your environment:
+* [ensembl](https://github.com/Ensembl/ensembl)
+* [ensembl-compara](https://github.com/Ensembl/ensembl-compara)
+* [ensembl-funcgen](https://github.com/Ensembl/ensembl-funcgen)
+* [ensembl-variation](https://github.com/Ensembl/ensembl-variation)
+
 ## Using git hooks to synchronise the datacheck index
 It's easy to get out of sync between datachecks and the index. There's a
 test for this, so it would eventually get detected, but we can proactively
