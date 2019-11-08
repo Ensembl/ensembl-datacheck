@@ -158,25 +158,15 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
-   "CheckLastZCoverage" : {
+   "CheckConservationScorePerBlock" : {
       "datacheck_type" : "critical",
-      "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
-      "groups" : [
-         "compara",
-         "compara_pairwise_alignments"
-      ],
-      "name" : "CheckLastZCoverage",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckLastZCoverage"
-   },
-   "CheckMultipleAlignCoverage" : {
-      "datacheck_type" : "critical",
-      "description" : "Coverage for a multiple whole genome alignment MLSS matches the coverage recorded in the  mlss_tag table",
+      "description" : "Multiple alignments with >3 species and >3 sequences must have a conservation score",
       "groups" : [
          "compara",
          "compara_multiple_alignments"
       ],
-      "name" : "CheckMultipleAlignCoverage",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
+      "name" : "CheckConservationScorePerBlock",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
    },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
