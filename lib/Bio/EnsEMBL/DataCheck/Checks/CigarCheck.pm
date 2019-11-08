@@ -67,7 +67,7 @@ sub tests {
         (cigar_line REGEXP '^[0]' OR cigar_line REGEXP '[A-Z][0]')
     /;
     if ($table eq "gene_align_member") {
-      $sql_2 = qq/
+      $sql_3 = qq/
       SELECT COUNT(*) FROM
         gene_align_member g INNER JOIN
         gene_align a ON a.gene_align_id=g.gene_align_id
