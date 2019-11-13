@@ -91,6 +91,16 @@
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
    },
+   "AssemblyExceptionsMapping" : {
+      "datacheck_type" : "advisory",
+      "description" : "Assembly exceptions have alignment mappings",
+      "groups" : [
+         "assembly",
+         "core"
+      ],
+      "name" : "AssemblyExceptionsMapping",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptionsMapping"
+   },
    "AssemblySeqregion" : {
       "datacheck_type" : "critical",
       "description" : "Assembly and seq_region tables are consistent",
@@ -148,6 +158,36 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
+   "CheckConservationScorePerBlock" : {
+      "datacheck_type" : "critical",
+      "description" : "Multiple alignments with >3 species and >3 sequences must have a conservation score",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckConservationScorePerBlock",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
+   },
+   "CheckLastZCoverage" : {
+      "datacheck_type" : "critical",
+      "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckLastZCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckLastZCoverage"
+   },
+   "CheckMultipleAlignCoverage" : {
+      "datacheck_type" : "critical",
+      "description" : "Coverage for a multiple whole genome alignment MLSS matches the coverage recorded in the  mlss_tag table",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckMultipleAlignCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomal seq_regions have appropriate attribute",
@@ -157,6 +197,16 @@
       ],
       "name" : "ChromosomesAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
+   },
+   "CigarCheck" : {
+      "datacheck_type" : "critical",
+      "description" : "The cigar_line must not have negative numbers or zeros in it",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CigarCheck",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
    },
    "CompareAllele" : {
       "datacheck_type" : "advisory",
@@ -387,6 +437,17 @@
       ],
       "name" : "ControlledAnalysis",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysis"
+   },
+   "ControlledAnalysisVersion" : {
+      "datacheck_type" : "advisory",
+      "description" : "Analysis db_verion is consistent with production database",
+      "groups" : [
+         "controlled_tables",
+         "core",
+         "corelike"
+      ],
+      "name" : "ControlledAnalysisVersion",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysisVersion"
    },
    "ControlledMetaKeys" : {
       "datacheck_type" : "critical",
@@ -1326,6 +1387,16 @@
       ],
       "name" : "StructuralVariationFeature",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationFeature"
+   },
+   "TagCoverageStats" : {
+      "datacheck_type" : "critical",
+      "description" : "The coverage must not exceed the genome lengths",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "TagCoverageStats",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TagCoverageStats"
    },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
