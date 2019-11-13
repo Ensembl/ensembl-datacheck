@@ -63,7 +63,7 @@ sub biotypes {
       seq_region USING (seq_region_id) INNER JOIN
       coord_system USING (coord_system_id) LEFT OUTER JOIN
       biotype t2 ON (
-        t1.biotype = t2.name AND
+        t1.biotype = t2.name COLLATE latin1_bin AND
         t2.object_type = '$feature' AND
         FIND_IN_SET('$db_type', db_type)
       )
