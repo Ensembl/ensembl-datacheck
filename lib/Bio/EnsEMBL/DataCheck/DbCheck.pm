@@ -318,12 +318,13 @@ sub get_dna_dba {
   my $self = shift;
 
   $self->load_registry();
-  my $dna_dba = $self->dba->dnadb();
-  if ($dna_dba->group ne 'core') {
+  my $dna_dba = $self->registry->get_DBAdaptor($self->species, 'core');
+  if (defined $dna_dba) {
+    $self->registry->add_DNAAdaptor($self->species, $self->dba->group, $self->species, 'core');
+    push @{$self->dba_list}, $dna_dba;
+  } else {
     die "Could not retrieve DNA database for ".$self->dba->dbc->dbname;
   }
-
-  push @{$self->dba_list}, $dna_dba if defined $dna_dba;
 
   return $dna_dba;
 }
