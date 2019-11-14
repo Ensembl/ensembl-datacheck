@@ -23,9 +23,7 @@ use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::Utils::SqlHelper;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::Compara::DBSQL::MethodLinkSpeciesSetAdaptor;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -44,67 +42,53 @@ sub tests {
   my $dba = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my $mlss_adap = $dba->get_MethodLinkSpeciesSetAdaptor;
+  
   #Collect mlss_ids for synteny methods
-  my $mlss_ids = $mlss_adap->fetch_all_by_method_link_type("SYNTENY");
+  my $mlss = $mlss_adap->fetch_all_by_method_link_type("SYNTENY");
 
-  foreach my $mlss_id ( @$mlss_ids ) {
-    my $mlss = $mlss_id->dbID;
-    #Collect genome_db_ids in mlss_id
-    my $gdb_sql = qq/
-      SELECT genome_db_id 
-        FROM method_link_species_set 
-          LEFT JOIN species_set USING(species_set_id) 
-      WHERE method_link_species_set_id = $mlss
-    /;
-
-    my $gdb_ids = $helper->execute_simple( -SQL => $gdb_sql );
-    #Look for synteny_regions and GenomicAlignBlocks in mlss
-    my $mlss_sql = qq/
-      SELECT mlss2.method_link_species_set_id 
-        FROM method_link_species_set mlss1, method_link_species_set mlss2, method_link ml 
-      WHERE mlss1.method_link_species_set_id = $mlss
-        AND mlss1.species_set_id = mlss2.species_set_id
-        AND mlss2.method_link_id = ml.method_link_id 
-        AND ml.class LIKE 'GenomicAlignBlock%'
-    /;
-
-    my $synteny_mlss = $helper->execute_simple( -SQL => $mlss_sql );
+  foreach my $mlss ( @$mlss ) {
+    my $mlss_id = $mlss->dbID;
+    
+    my $gab_mlss_list = $mlss->get_all_sister_mlss_by_class('GenomicAlignBlock.pairwise_alignment');
+    
+    my $gdb_ids = $mlss->species_set->genome_dbs;
+        
     #Collect dnafrag_ids longer than 1Mb with exceptions
-    foreach my $gdb_id ( @$gdb_ids ) {
+    foreach my $gdb ( @$gdb_ids ) {
+      my $gdb_id = $gdb->dbID;
       my $dnafrag_sql = qq/
       SELECT dnafrag_id 
         FROM dnafrag 
       WHERE genome_db_id = $gdb_id
-        AND coord_system_name IN ('chromosome', 'group')
-        AND name NOT LIKE '%\\_%'
-        AND name NOT LIKE '%Un%'
-        AND name NOT IN ('MT') 
+        AND cellular_component!='MT' 
         AND length > 1000000
       /;
 
-      my $dnafrag_ids = $helper->execute_simple( -SQL => $mlss_sql );
+      my $dnafrag_ids = $helper->execute_simple( -SQL => $dnafrag_sql );
+      
       #Check for reasonable count of synteny regions, fine if more than none
       foreach my $dnafrag_id ( @$dnafrag_ids ) {
         my $synteny_sql = qq/
           SELECT COUNT(*) 
             FROM synteny_region
-              LEFT JOIN dnafrag_region USING (synteny_region_id) 
-          WHERE method_link_species_set_id = $mlss
+              JOIN dnafrag_region USING (synteny_region_id) 
+          WHERE method_link_species_set_id = $mlss_id
             AND dnafrag_id = $dnafrag_id
         /;
+        
         #If no synteny regions counted, check genomic_alignment_blocks
         my $synteny_count = $helper->execute_single_result( -SQL => $synteny_sql );
         my $alignment_count = 0;
         if ( $synteny_count == 0 ) {
-          foreach my $alignment_mlss ( @$synteny_mlss ) {
+          foreach my $gab_mlss ( @$gab_mlss_list ) {
+            #print Dumper($gab_mlss);
+            my $gab_mlss_id = $gab_mlss->method->dbID;
             my $dnafrag_count_sql = qq/
-              SELECT dnafrag.name, count(*) as counter 
+              SELECT ga2.dnafrag_id, count(*) as count 
                 FROM genomic_align ga1 
-                  LEFT JOIN genomic_align ga2 USING (genomic_align_block_id)
-                  LEFT JOIN dnafrag ON (ga2.dnafrag_id = dnafrag.dnafrag_id) 
+                  JOIN genomic_align ga2 USING (genomic_align_block_id)
               WHERE ga1.dnafrag_id = $dnafrag_id
-                AND dnafrag.coord_system_name IN ('chromosome', 'group')
-                AND ga1.method_link_species_set_id = $alignment_mlss
+                AND ga1.method_link_species_set_id = $gab_mlss_id
                 AND ga1.dnafrag_id <> ga2.dnafrag_id 
               GROUP BY ga2.dnafrag_id
               ORDER BY count(*) DESC LIMIT 1
@@ -114,16 +98,19 @@ sub tests {
               -USE_HASHREFS => 1,
               -CALLBACK     => sub {
                 my $row = shift @_;
-                return { dnafrag_name => $row->{name}, count => $row->{counter} };
+                return { dnafrag_id => $row->{dnafrag_id}, count => $row->{count} };
               },
             );
             if ( ( scalar @$aln_array > 0 ) && ( @$aln_array[0]->{count} > $alignment_count ) ) {
               $alignment_count = @$aln_array[0]->{count};
             } 
           }
+
           #Error is reported if there are too many alignments to a dnafrag_id
-          my $desc = "genome_db_id: $gdb_id dnafrag_id.$dnafrag_id has syntenies for MLSS $mlss with <1000 foreign alignments";
+          my $desc = "genome_db_id: $gdb_id dnafrag_id: $dnafrag_id has no syntenies for MLSS: $mlss_id with >1000 inappropriate alignments";
+          
           cmp_ok( $alignment_count, '<', 1000, $desc );
+
         }
       }
     }

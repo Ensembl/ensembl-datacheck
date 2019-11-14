@@ -169,8 +169,8 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
    },
    "CheckGenomicAlignMTs" : {
-      "datacheck_type" : "critical",
-      "description" : "There should be an entry in genomic_align per genome with multiple alignment MLSS",
+      "datacheck_type" : "advisory",
+      "description" : "There should be an entry in genomic_align per genome with MT cellular components",
       "groups" : [
          "compara",
          "compara_multiple_alignments"

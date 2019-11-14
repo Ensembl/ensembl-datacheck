@@ -49,7 +49,7 @@ sub tests {
       AND method_link_id != 401;
   /;
   #The only MLSS that is allowed to have component GenomeDBs is protein-trees (401)
-  my $desc_1 = "The method_link_species_set table has data assigned only to principle genome_db_ids";
+  my $desc_1 = "The only MLSS that is allowed to have component GenomeDBs is protein-trees (401)";
   is_rows_zero($self->dba, $sql_1, $desc_1);
   #The following tables have no exceptions when it comes to component_genome_dbs
   my @tables = qw(genomic_align dnafrag_region constrained_element gene_member seq_member);
@@ -63,7 +63,7 @@ sub tests {
       WHERE genome_component IS NOT NULL;
     /;
     
-    my $desc_2 = "The $table table has data assigned only to principle genome_db_ids";
+    my $desc_2 = "The $table table has no data assigned to component genome_db_ids";
     is_rows_zero($self->dba, $sql_2, $desc_2);
     
   }
