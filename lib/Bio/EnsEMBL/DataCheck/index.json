@@ -168,6 +168,16 @@
       "name" : "CheckConservationScorePerBlock",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
    },
+   "CheckGenomicAlignMTs" : {
+      "datacheck_type" : "critical",
+      "description" : "There should be an entry in genomic_align per genome with multiple alignment MLSS",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckGenomicAlignMTs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignMTs"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
@@ -187,6 +197,26 @@
       ],
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
+   },
+   "CheckSyntenySanity" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check for missing syntenies in the compara database",
+      "groups" : [
+         "compara",
+         "compara_syntenies"
+      ],
+      "name" : "CheckSyntenySanity",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSyntenySanity"
+   },
+   "CheckTableSizes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Tables must be populated and not differ significantly in row numbers",
+      "groups" : [
+         "compara",
+         "compara_tables"
+      ],
+      "name" : "CheckTableSizes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckTableSizes"
    },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
@@ -253,6 +283,16 @@
       ],
       "name" : "CompareGenotypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGenotypes"
+   },
+   "CompareMSANames" : {
+      "datacheck_type" : "advisory",
+      "description" : "The species_sets from the previous database are still present",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CompareMSANames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMSANames"
    },
    "ComparePhenotypeFeatures" : {
       "datacheck_type" : "advisory",
