@@ -36,11 +36,9 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  
-  Bio::EnsEMBL::Registry->load_all($self->registry_file);
 
   my $curr_dba = $self->dba;
-  my $prev_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->go_figure_compara_dba('compara_prev');
+  my $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara');
   my $curr_db_name = $curr_dba->dbc->dbname;
   my $prev_db_name = $prev_dba->dbc->dbname;
   my $curr_mlss_adap = $curr_dba->get_MethodLinkSpeciesSetAdaptor;

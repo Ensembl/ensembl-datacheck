@@ -40,11 +40,9 @@ use constant {
 sub tests {
   my ($self) = @_;
   
-  my $registry = $self->registry;
-  
   my $curr_dba = $self->dba;
   my $curr_helper = $curr_dba->dbc->sql_helper;
-  my $prev_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->go_figure_compara_dba('compara_prev');
+  my $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara');
   my $prev_helper = $prev_dba->dbc->sql_helper;
   
   my $table_sql = "SHOW TABLES";
