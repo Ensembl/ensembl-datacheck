@@ -10,6 +10,17 @@
       "name" : "AlignFeatureExternalDB",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignFeatureExternalDB"
    },
+   "AlignmentCoordinates" : {
+      "datacheck_type" : "critical",
+      "description" : "Alignment coordinates are within the length of their dnafrag",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments",
+         "compara_multiple_alignments"
+      ],
+      "name" : "AlignmentCoordinates",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentCoordinates"
+   },
    "AlignmentReadFileOrphans" : {
       "datacheck_type" : "critical",
       "description" : "Check that all read files are used in an alignment",
@@ -157,6 +168,17 @@
       ],
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
+   },
+   "CheckComparaStableIDs" : {
+      "datacheck_type" : "critical",
+      "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
+      "groups" : [
+         "compara",
+         "compara_families",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckComparaStableIDs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
    },
    "CheckConservationScorePerBlock" : {
       "datacheck_type" : "critical",
