@@ -170,7 +170,7 @@
    },
    "CheckGenomicAlignMTs" : {
       "datacheck_type" : "advisory",
-      "description" : "There should be an entry in genomic_align per genome with MT cellular components",
+      "description" : "The multiple alignments should include all the MT sequences",
       "groups" : [
          "compara",
          "compara_multiple_alignments"

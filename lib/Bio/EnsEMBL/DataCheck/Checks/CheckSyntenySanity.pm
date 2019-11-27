@@ -38,36 +38,30 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  
+  # Make sure the registry is loaded
+  $self->registry;
+
   my $dba = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my $mlss_adap = $dba->get_MethodLinkSpeciesSetAdaptor;
+  my $dnafrag_adap = $dba->get_DnaFragAdaptor;
   
   #Collect mlss_ids for synteny methods
   my $mlss = $mlss_adap->fetch_all_by_method_link_type("SYNTENY");
 
   foreach my $mlss ( @$mlss ) {
     my $mlss_id = $mlss->dbID;
-    
     my $gab_mlss_list = $mlss->get_all_sister_mlss_by_class('GenomicAlignBlock.pairwise_alignment');
+    my $gdbs = $mlss->species_set->genome_dbs;
     
-    my $gdb_ids = $mlss->species_set->genome_dbs;
-        
     #Collect dnafrag_ids longer than 1Mb with exceptions
-    foreach my $gdb ( @$gdb_ids ) {
+    foreach my $gdb ( @$gdbs ) {
       my $gdb_id = $gdb->dbID;
-      my $dnafrag_sql = qq/
-      SELECT dnafrag_id 
-        FROM dnafrag 
-      WHERE genome_db_id = $gdb_id
-        AND cellular_component!='MT' 
-        AND length > 1000000
-      /;
-
-      my $dnafrag_ids = $helper->execute_simple( -SQL => $dnafrag_sql );
+      my $karyo_dnafrags = $dnafrag_adap->fetch_all_karyotype_DnaFrags_by_GenomeDB($gdb);
       
       #Check for reasonable count of synteny regions, fine if more than none
-      foreach my $dnafrag_id ( @$dnafrag_ids ) {
+      foreach my $dnafrag ( @$karyo_dnafrags ) {
+        my $dnafrag_id = $dnafrag->dbID;
         my $synteny_sql = qq/
           SELECT COUNT(*) 
             FROM synteny_region
@@ -78,11 +72,10 @@ sub tests {
         
         #If no synteny regions counted, check genomic_alignment_blocks
         my $synteny_count = $helper->execute_single_result( -SQL => $synteny_sql );
-        my $alignment_count = 0;
         if ( $synteny_count == 0 ) {
+
           foreach my $gab_mlss ( @$gab_mlss_list ) {
-            #print Dumper($gab_mlss);
-            my $gab_mlss_id = $gab_mlss->method->dbID;
+            my $gab_mlss_id = $gab_mlss->dbID;
             my $dnafrag_count_sql = qq/
               SELECT ga2.dnafrag_id, count(*) as count 
                 FROM genomic_align ga1 
@@ -96,21 +89,14 @@ sub tests {
             my $aln_array = $helper->execute(  
               -SQL => $dnafrag_count_sql, 
               -USE_HASHREFS => 1,
-              -CALLBACK     => sub {
-                my $row = shift @_;
-                return { dnafrag_id => $row->{dnafrag_id}, count => $row->{count} };
-              },
             );
-            if ( ( scalar @$aln_array > 0 ) && ( @$aln_array[0]->{count} > $alignment_count ) ) {
-              $alignment_count = @$aln_array[0]->{count};
-            } 
+            
+            next if ( scalar @$aln_array == 0 );
+            
+            my $desc_1 = "genome_db_id: $gdb_id (" . $gdb->name . ") dnafrag_id: $dnafrag_id has no syntenies for mlss: $mlss_id but has <1000 alignments in the genomic_align_block mlss: $gab_mlss_id with dnafrag_id: " . @$aln_array[0]->{dnafrag_id};
+            
+            cmp_ok( @$aln_array[0]->{count}, '<', 1000, $desc_1 );
           }
-
-          #Error is reported if there are too many alignments to a dnafrag_id
-          my $desc = "genome_db_id: $gdb_id dnafrag_id: $dnafrag_id has no syntenies for MLSS: $mlss_id with >1000 inappropriate alignments";
-          
-          cmp_ok( $alignment_count, '<', 1000, $desc );
-
         }
       }
     }
@@ -118,4 +104,3 @@ sub tests {
 }
 
 1;
-

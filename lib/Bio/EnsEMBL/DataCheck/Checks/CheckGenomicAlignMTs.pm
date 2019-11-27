@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'CheckGenomicAlignMTs',
-  DESCRIPTION => 'There should be an entry in genomic_align per genome with MT cellular components',
+  DESCRIPTION => 'The multiple alignments should include all the MT sequences',
   GROUPS      => ['compara', 'compara_multiple_alignments'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES    => ['compara'],
@@ -41,9 +41,12 @@ sub tests {
   
   my $helper  = $self->dba->dbc->sql_helper;
   
-  #Collect all the dnafrags that have a mitochondrion component only in the genomic align methods
+  #Collect all the dnafrags that have a mitochondrion component and should be in a multiple alignment
   my $mlss_sql = q/
-    SELECT genome_db.name, method_link_species_set_id, dnafrag_id
+    SELECT genome_db.name AS gdb_name, 
+        method_link_species_set_id, 
+        dnafrag_id, 
+        method_link_species_set.name AS mlss_name
       FROM method_link_species_set 
         JOIN method_link USING(method_link_id)
         JOIN species_set USING(species_set_id)
@@ -57,14 +60,10 @@ sub tests {
   
   my $entries_array = $helper->execute(  
     -SQL => $mlss_sql, 
-    -USE_HASHREFS => 1,
-    -CALLBACK     => sub {
-      my $row = shift @_;
-      return { name => $row->{name}, method_link_species_set_id => $row->{method_link_species_set_id}, dnafrag_id => $row->{dnafrag_id} };
-    },
+    -USE_HASHREFS => 1
   );
   
-  #Checking to makesure that there is at least one row in genomic for each mlss with dnafrag_id linked to MT
+  #Checking to make sure that there is at least one row in genomic for each mlss with dnafrag_id linked to MT
   foreach my $row (@$entries_array) {
     my $sql = qq/
       SELECT count(*) 
@@ -73,11 +72,10 @@ sub tests {
         AND dnafrag_id = $row->{dnafrag_id}
     /;
     
-    my $desc = "For genome: $row->{name} the mlss_id $row->{method_link_species_set_id} with dnafrag_id $row->{dnafrag_id} is present in genomic_align";
+    my $desc = "The MT of $row->{gdb_name} (dnafrag_id $row->{dnafrag_id}) is not present in the genomic_align table for alignment mlss_id $row->{method_link_species_set_id} ($row->{mlss_name})";
     
     is_rows_nonzero($self->dba, $sql, $desc);
   }
 }
 
 1;
-
