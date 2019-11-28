@@ -229,6 +229,16 @@
       "name" : "CheckDuplicatedTaxaNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
    },
+   "CheckFlatProteinTrees" : {
+      "datacheck_type" : "critical",
+      "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckFlatProteinTrees",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
