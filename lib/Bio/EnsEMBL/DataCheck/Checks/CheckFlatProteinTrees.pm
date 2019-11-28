@@ -24,8 +24,6 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Data::Dumper;
-$Data::Dumper::Maxdepth=2;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 

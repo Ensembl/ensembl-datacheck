@@ -239,6 +239,16 @@
       "name" : "CheckFlatProteinTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
    },
+   "CheckGeneGainLossData" : {
+      "datacheck_type" : "critical",
+      "description" : "ncRNA and protein trees must have gene Gain/Loss trees",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckGeneGainLossData",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
