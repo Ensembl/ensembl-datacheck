@@ -220,6 +220,15 @@
       "name" : "CheckConstrainedElementTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConstrainedElementTable"
    },
+   "CheckDuplicatedTaxaNames" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the ncbi_taxa_name contains only unique rows",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckDuplicatedTaxaNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
