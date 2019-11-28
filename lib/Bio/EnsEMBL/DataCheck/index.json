@@ -180,6 +180,16 @@
       "name" : "CheckComparaStableIDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
    },
+   "CheckConservationScore" : {
+      "datacheck_type" : "critical",
+      "description" : "The MLSS for GERP_CONSERVATION_SCORE should have conservation score entries",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckConservationScore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScore"
+   },
    "CheckConservationScorePerBlock" : {
       "datacheck_type" : "critical",
       "description" : "Multiple alignments with >3 species and >3 sequences must have a conservation score",
