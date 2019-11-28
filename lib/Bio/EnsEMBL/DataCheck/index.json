@@ -169,6 +169,16 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
+   "CheckCAFETable" : {
+      "datacheck_type" : "critical",
+      "description" : "Each row should show a one-to-many relationship",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckCAFETable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckCAFETable"
+   },
    "CheckComparaStableIDs" : {
       "datacheck_type" : "critical",
       "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
@@ -199,6 +209,16 @@
       ],
       "name" : "CheckConservationScorePerBlock",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
+   },
+   "CheckConstrainedElementTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Each row should show a one-to-many relationship",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckConstrainedElementTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConstrainedElementTable"
    },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
