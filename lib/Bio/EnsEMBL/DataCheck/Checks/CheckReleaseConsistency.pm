@@ -40,7 +40,6 @@ sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
   
-  my @sql_conditions;
   my $desc_1 = "Both species-set and GenomeDB has been released";
   my $c_sql_1 = "t1.first_release IS NULL AND t2.first_release IS NOT NULL";
   my $desc_2 = "Both the Genomedb and species_set are current";
@@ -50,7 +49,6 @@ sub tests {
   my $desc_4 = "The GenomeDB has not been retired before the species-set";
   my $c_sql_4 = "t1.last_release IS NOT NULL AND t2.last_release IS NOT NULL AND t2.last_release > t1.last_release"; 
     
-  #push @sql_conditions, ($c_sql_1, $c_sql_2, $c_sql_3, $c_sql_4);
   my %sql_conditions = (
     $c_sql_1 => $desc_1,
     $c_sql_2 => $desc_2,
@@ -58,7 +56,6 @@ sub tests {
     $c_sql_4 => $desc_4
   );
   
-  #foreach my $condition ( @sql_conditions ) {
   while ( my ( $condition, $desc ) = each %sql_conditions ) {
     my $sql_1 = qq/
     SELECT COUNT(*) 
@@ -81,7 +78,7 @@ sub tests {
           USING (species_set_id)
     WHERE $condition
     /;
-    my $detail_desc = $desc . " for rows in genome_db, species_set and method_link_species_set";
+    $detail_desc = $desc . " for rows in genome_db, species_set and method_link_species_set";
     is_rows_zero($dbc, $sql_2, $detail_desc);
     
     my $sql_3 = qq/
@@ -91,7 +88,7 @@ sub tests {
           USING (species_set_id)
     WHERE $condition;
     /;
-    my $detail_desc = $desc . " for rows in method_link_species_set and species_set_header";
+    $detail_desc = $desc . " for rows in method_link_species_set and species_set_header";
     is_rows_zero($dbc, $sql_3, $detail_desc);
     
   }

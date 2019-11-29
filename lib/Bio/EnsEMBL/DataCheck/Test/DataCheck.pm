@@ -40,7 +40,7 @@ our @EXPORT  = qw(
   is_rows cmp_rows is_rows_zero is_rows_nonzero 
   row_totals row_subtotals
   fk denormalized denormalised
-  has_data 
+  has_data
   is_one_to_many
 );
 

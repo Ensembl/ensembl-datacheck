@@ -249,6 +249,17 @@
       "name" : "CheckGeneGainLossData",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
    },
+   "CheckGenomicAlignGenomeDBs" : {
+      "datacheck_type" : "critical",
+      "description" : "Check all genome_dbs for each method_link_species_set is present in genomic_aligns",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckGenomicAlignGenomeDBs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignGenomeDBs"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
