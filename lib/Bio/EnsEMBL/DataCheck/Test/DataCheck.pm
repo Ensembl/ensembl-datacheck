@@ -41,7 +41,7 @@ our @EXPORT  = qw(
   row_totals row_subtotals
   fk denormalized denormalised
   has_data 
-  has_one_to_many
+  is_one_to_many
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -464,9 +464,9 @@ sub has_data {
 
 =over 4
 
-=item B<has_one_to_many>
+=item B<is_one_to_many>
 
-has_one_to_many($dbc, $table, $column, $test_name);
+is_one_to_many($dbc, $table, $column, $test_name);
 
 Tests that each C<$column> member is present in the table more than once.
 If all the rows have a count>1, the test will pass.
@@ -475,7 +475,7 @@ If all the rows have a count>1, the test will pass.
 
 =cut
 
-sub has_one_to_many {
+sub is_one_to_many {
   my ($dbc, $table, $column, $test_name) = @_;
   
   my $sql = qq/

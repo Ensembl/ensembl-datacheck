@@ -42,7 +42,7 @@ sub tests {
   
   my $desc = "All the rows in constrained_element have a one-to-many relationship for constrained_element_id";
   
-  has_one_to_many($dba->dbc, "constrained_element", "constrained_element_id", $desc);
+  is_one_to_many($dba->dbc, "constrained_element", "constrained_element_id", $desc);
   
 }
 

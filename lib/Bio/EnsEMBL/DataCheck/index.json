@@ -269,6 +269,24 @@
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
    },
+   "CheckReleaseConsistency" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for consistency between retired genomes and species_sets",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckReleaseConsistency",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseConsistency"
+   },
+   "CheckReleaseNulls" : {
+      "datacheck_type" : "critical",
+      "description" : "For release DB the last_release must be NULL but cannot have a NULL first_release",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckReleaseNulls",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseNulls"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomal seq_regions have appropriate attribute",

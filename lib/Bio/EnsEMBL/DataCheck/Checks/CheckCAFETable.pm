@@ -42,7 +42,7 @@ sub tests {
   
   my $desc = "All the rows in CAFE_species_gene have a one-to-many relationship for cafe_gene_family_id";
   
-  has_one_to_many($dba->dbc, "CAFE_species_gene", "cafe_gene_family_id", $desc);
+  is_one_to_many($dba->dbc, "CAFE_species_gene", "cafe_gene_family_id", $desc);
 }
 
 1;
