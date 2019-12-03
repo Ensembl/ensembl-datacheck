@@ -738,6 +738,16 @@
       "name" : "DuplicateXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateXref"
    },
+   "EGHighConfidence" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "EGHighConfidence",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EGHighConfidence"
+   },
    "EmptyVariationTables" : {
       "datacheck_type" : "advisory",
       "description" : "Variation tables are not empty",
