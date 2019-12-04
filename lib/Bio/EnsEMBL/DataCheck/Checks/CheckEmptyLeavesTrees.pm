@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::EGHighConfidence;
+package Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees;
 
 use warnings;
 use strict;
@@ -28,12 +28,12 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'EGHighConfidence',
-  DESCRIPTION    => 'Checks that the HighConfidenceOrthologs pipeline has been run',
+  NAME           => 'CheckEmptyLeavesTrees',
+  DESCRIPTION    => 'Check that none of the gene tree leaves have children',
   GROUPS         => ['compara', 'compara_protein_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['homology']
+  TABLES         => ['gene_tree_node']
 };
 
 sub tests {
@@ -41,13 +41,16 @@ sub tests {
   my $dbc = $self->dba->dbc;
   
   my $sql = q/
-    SELECT COUNT(*) 
-      FROM homology 
-    WHERE is_high_confidence IS NULL
+    SELECT DISTINCT g1.root_id 
+      FROM gene_tree_node g1 
+        JOIN gene_tree_node g2 
+          ON (g1.node_id=g2.parent_id) 
+    WHERE g2.node_id IS NULL 
+      AND (g1.right_index-g1.left_index) > 1
   /;
   
-  my $desc = "Homologies have been annotated with a confidence value";
   
+  my $desc = "None of the gene trees have leaves with children";
   is_rows_zero($dbc, $sql, $desc);
 }
 

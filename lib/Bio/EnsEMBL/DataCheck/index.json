@@ -229,6 +229,16 @@
       "name" : "CheckDuplicatedTaxaNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
    },
+   "CheckEmptyLeavesTrees" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that none of the gene tree leaves have children",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckEmptyLeavesTrees",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees"
+   },
    "CheckFlatProteinTrees" : {
       "datacheck_type" : "critical",
       "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
