@@ -41,7 +41,7 @@ our @EXPORT  = qw(
   row_totals row_subtotals
   fk denormalized denormalised
   has_data
-  is_one_to_many has_no_orphans
+  is_one_to_many
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -492,37 +492,6 @@ sub is_one_to_many {
     $constraint
     GROUP BY $column 
     HAVING COUNT(*) = 1
-  /;
-  
-  is_rows_zero($dbc, $sql, $test_name);
-}
-
-=head2 Testing for orphan IDs  
-
-=over 4
-
-=item B<has_no_orphans>
-
-has_no_orphans($dbc, $table1, $column1, $table2, $column2, $test_name);
-
-Tests that each C<$column1> of C<$table1> is present in C<$table2> as 
-C<$column2>. As long as C<$column1> of C<$table1> exists in C<$column2> 
-from C<$table2>, the test will pass. 
-
-=back
-
-=cut
-
-sub has_no_orphans {
-  my ($dbc, $table1, $column1, $table2, $column2, $test_name) = @_;
-
-  my $sql = qq/
-    SELECT * FROM 
-      $table1 
-    WHERE $column1 NOT IN (
-      SELECT DISTINCT $column2 
-        FROM $table2
-      )
   /;
   
   is_rows_zero($dbc, $sql, $test_name);

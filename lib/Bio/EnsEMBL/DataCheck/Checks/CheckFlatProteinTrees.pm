@@ -100,11 +100,9 @@ sub tests {
     my $count = $flat_member->{root_members};
     # Check if $node_id is present in $nonrooted_trees
     if (exists $internal_node->{$node_id} ) {
-     # if ( $internal_node->{$node_id} > 0 ) {
-        if ( !exists $nonrooted_trees->{$node_id} ) {
-          push @flat_trees_w_structure, $node_id;
-        }
-      #}
+      if ( !exists $nonrooted_trees->{$node_id} ) {
+        push @flat_trees_w_structure, $node_id;
+      }
     } # Check that root has no more than 2 members
     elsif ( defined $count ) {
       if ( ($count > 2) && ($count == $all_members->{$node_id} )) {

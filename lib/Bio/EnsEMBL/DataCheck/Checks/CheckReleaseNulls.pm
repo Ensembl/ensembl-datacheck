@@ -38,7 +38,7 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $db_release = $self->get_db_version;
+  my $db_release = $self->dba->get_MetaContainerAdaptor->schema_version;
   my $dbc = $self->dba->dbc;
   my $db_name = $dbc->dbname;
   

@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AlignmentCoordinates;
+package Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable;
 
 use warnings;
 use strict;
@@ -28,34 +28,33 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'AlignmentCoordinates',
-  DESCRIPTION    => 'Alignment coordinates are within the length of their dnafrag',
+  NAME           => 'CheckSpeciesSetTable',
+  DESCRIPTION    => 'Check species_set_tags have no orphans and species_sets are unique',
+  GROUPS         => ['compara'],
   DATACHECK_TYPE => 'critical',
-  GROUPS         => ['compara', 'compara_pairwise_alignments', 'compara_multiple_alignments'],
   DB_TYPES       => ['compara'],
-  TABLES         => ['dnafrag', 'genomic_align']
+  TABLES         => ['species_set', 'species_set_tag']
 };
 
 sub tests {
   my ($self) = @_;
+  my $dbc = $self->dba->dbc;
   
-  my $desc_1 = "All dnafrag_starts are >= 1";
-  my $sql_1 = q/
-    SELECT * 
-      FROM genomic_align 
-    WHERE dnafrag_start < 1
-  /;
-  is_rows_zero($self->dba, $sql_1, $desc_1);
+  fk($dbc, "species_set_tag", "species_set_id", "species_set_header", "species_set_id");
   
-  my $desc_2 = "Alignment coordinates are within the length of their dnafrag";
-  my $sql_2 = q/
-    SELECT * 
-      FROM genomic_align ga 
-        JOIN dnafrag df 
-          USING (dnafrag_id) 
-    WHERE ga.dnafrag_end > length
+  my $sql = q/
+    SELECT gdb_ids, count(*) num, GROUP_CONCAT(species_set_id ORDER BY species_set_id) AS species_set_ids 
+    FROM (
+      SELECT species_set_id, GROUP_CONCAT(genome_db_id ORDER BY genome_db_id) AS gdb_ids 
+        FROM species_set GROUP BY species_set_id
+   	) t1 
+    GROUP BY gdb_ids 
+    HAVING COUNT(*)>1
   /;
-  is_rows_zero($self->dba, $sql_2, $desc_2);
+  
+  my $desc = "All of the species_set entries are unique";
+  is_rows_zero($dbc, $sql, $desc);
+  
 }
 
 1;

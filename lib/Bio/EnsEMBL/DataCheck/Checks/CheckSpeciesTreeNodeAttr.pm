@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees;
+package Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr;
 
 use warnings;
 use strict;
@@ -28,30 +28,39 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CheckEmptyLeavesTrees',
-  DESCRIPTION    => 'Check that none of the gene tree leaves have children',
+  NAME           => 'CheckSpeciesTreeNodeAttr',
+  DESCRIPTION    => 'Check some entries in species_tree_node_attr are > 0',
   GROUPS         => ['compara', 'compara_protein_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['gene_tree_node']
+  TABLES         => ['species_tree_node_attr', 'species_tree_root']
 };
 
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
+  my @tables = qw(species_tree_node_attr species_tree_root);
+  my @columns = qw(root_nb_trees nb_genes);
   
-  my $sql = q/
-    SELECT DISTINCT g1.root_id 
-      FROM gene_tree_node g1 
-        LEFT JOIN gene_tree_node g2 
-          ON (g1.node_id=g2.parent_id) 
-    WHERE g2.node_id IS NULL 
-      AND (g1.right_index-g1.left_index) > 1
-  /;
+  foreach my $table ( @tables ) {
+    my $sql_1 = qq/
+      SELECT COUNT(*)
+        FROM $table
+    /;
+    my $desc_1 = "$table is populated";
+    is_rows_nonzero($dbc, $sql_1, $desc_1);
+  }
   
+  foreach my $column ( @columns ) {
+    my $sql_2 = qq/
+      SELECT COUNT(*) 
+        FROM species_tree_node_attr 
+      WHERE $column > 0;
+    /;
+    my $desc_2 = "$column in species_tree_node_attr is sometimes > 0";
+    is_rows_nonzero($dbc, $sql_2, $desc_2);
+  }
   
-  my $desc = "None of the gene trees have leaves with children";
-  is_rows_zero($dbc, $sql, $desc);
 }
 
 1;

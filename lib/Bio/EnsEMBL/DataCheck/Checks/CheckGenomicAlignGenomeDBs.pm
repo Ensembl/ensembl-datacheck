@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/ array_diff /;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -82,7 +83,10 @@ sub tests {
     my $gab_gdb_ids = $helper->execute_simple( -SQL => $sql );
     my $desc = "The genome_db_ids in the species_set $species_set_name match the genome_db_ids in the genomic_align_blocks for $mlss_id";
     # If both arrays return the same number of genome_db_ids, pass, if not find the missing/additional genome_db_ids
-    cmp_ok(scalar(@ss_gdb_ids), '==', scalar(@$gab_gdb_ids), $desc) || diag explain array_diff(@ss_gdb_ids, @$gab_gdb_ids, "genome_db_ids in genomic_align_blocks", "genome_db_ids in species_set");
+    my $diff = array_diff(\@ss_gdb_ids, \@$gab_gdb_ids, 'genome_db_ids for genomic_align_blocks', 'genome_db_ids for species_set');
+    my @values = values %$diff;
+    ok(scalar(@values) == 0, $desc) || diag explain %$diff;
+
   }
     
 }

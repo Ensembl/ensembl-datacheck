@@ -40,13 +40,13 @@ sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
   
-  my $desc_1 = "Both species-set and GenomeDB has been released";
+  my $desc_1 = "Both %s and %s has been released";
   my $c_sql_1 = "t1.first_release IS NULL AND t2.first_release IS NOT NULL";
-  my $desc_2 = "Both the Genomedb and species_set are current";
+  my $desc_2 = "Both the %s and %s are current";
   my $c_sql_2 = "t1.last_release IS NOT NULL AND t2.first_release IS NOT NULL AND t2.last_release IS NULL";
-  my $desc_3 = "The species-set has not been released before the GenomeDB";
+  my $desc_3 = "The %s has not been released before the %s";
   my $c_sql_3 = "t1.first_release IS NOT NULL AND t2.first_release IS NOT NULL AND t2.first_release < t1.first_release";
-  my $desc_4 = "The GenomeDB has not been retired before the species-set";
+  my $desc_4 = "The %s has not been retired before the %s";
   my $c_sql_4 = "t1.last_release IS NOT NULL AND t2.last_release IS NOT NULL AND t2.last_release > t1.last_release"; 
     
   my %sql_conditions = (
@@ -66,7 +66,7 @@ sub tests {
           USING (species_set_id)
     WHERE $condition
     /;
-    my $detail_desc = $desc . " for rows in genome_db, species_set and species_set_header";
+    my $detail_desc = sprintf($desc, "genome_db", "species_set") . " for rows in genome_db, species_set and species_set_header";
     is_rows_zero($dbc, $sql_1, $detail_desc);
     
     my $sql_2 = qq/
@@ -78,7 +78,7 @@ sub tests {
           USING (species_set_id)
     WHERE $condition
     /;
-    $detail_desc = $desc . " for rows in genome_db, species_set and method_link_species_set";
+    $detail_desc = sprintf($desc, "genome_db", "method_link_species_set") . " for rows in genome_db, species_set and method_link_species_set";
     is_rows_zero($dbc, $sql_2, $detail_desc);
     
     my $sql_3 = qq/
@@ -86,9 +86,9 @@ sub tests {
       FROM species_set_header t1 
         JOIN method_link_species_set t2 
           USING (species_set_id)
-    WHERE $condition;
+    WHERE $condition
     /;
-    $detail_desc = $desc . " for rows in method_link_species_set and species_set_header";
+    $detail_desc = sprintf($desc, "species_set_header", "method_link_species_set") . " for rows in method_link_species_set and species_set_header";
     is_rows_zero($dbc, $sql_3, $detail_desc);
     
   }

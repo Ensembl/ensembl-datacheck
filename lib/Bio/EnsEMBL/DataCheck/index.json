@@ -270,6 +270,16 @@
       "name" : "CheckGenomicAlignGenomeDBs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignGenomeDBs"
    },
+   "CheckHomology" : {
+      "datacheck_type" : "critical",
+      "description" : "Check homology_id are all one-to-many for homology_members",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckHomology",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
@@ -307,6 +317,35 @@
       ],
       "name" : "CheckReleaseNulls",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseNulls"
+   },
+   "CheckSpeciesSetTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Check species_set_tags have no orphans and species_sets are unique",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckSpeciesSetTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable"
+   },
+   "CheckSpeciesTreeNodeAttr" : {
+      "datacheck_type" : "critical",
+      "description" : "Check some entries in species_tree_node_attr are > 0",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckSpeciesTreeNodeAttr",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr"
+   },
+   "CheckSynteny" : {
+      "datacheck_type" : "critical",
+      "description" : "Every synteny_region_id should be seen more than once",
+      "groups" : [
+         "compara",
+         "compara_syntenies"
+      ],
+      "name" : "CheckSynteny",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSynteny"
    },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
@@ -1105,6 +1144,16 @@
       ],
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
+   },
+   "MultipleGenomicAlignBlockIds" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every genomic_align_block_id has more than one genomic_align_id",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "MultipleGenomicAlignBlockIds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleGenomicAlignBlockIds"
    },
    "MultipleSeqRegions" : {
       "datacheck_type" : "critical",
