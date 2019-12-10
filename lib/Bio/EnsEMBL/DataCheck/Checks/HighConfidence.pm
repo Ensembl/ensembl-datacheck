@@ -28,7 +28,7 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'EGHighConfidence',
+  NAME           => 'HighConfidence',
   DESCRIPTION    => 'Checks that the HighConfidenceOrthologs pipeline has been run',
   GROUPS         => ['compara', 'compara_protein_trees'],
   DATACHECK_TYPE => 'critical',
@@ -39,15 +39,15 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
-  
+
   my $sql = q/
     SELECT COUNT(*) 
       FROM homology 
     WHERE is_high_confidence IS NULL
   /;
-  
+
   my $desc = "Homologies have been annotated with a confidence value";
-  
+
   is_rows_zero($dbc, $sql, $desc);
 }
 

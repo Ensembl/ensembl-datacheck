@@ -42,8 +42,8 @@ sub skip_tests {
   my $mlss = $mlss_adap->fetch_all_by_method_link_type('SYNTENY');
   my $db_name = $self->dba->dbc->dbname;
 
-  if (!defined @$mlss[0]) {
-    return(1, "There are no SYNTENY MLSS in $db_name");
+  if ( scalar(@$mlss) == 0 ) {
+    return( 1, "There are no SYNTENY MLSS in $db_name" );
   }
 }
 
@@ -52,7 +52,7 @@ sub tests {
   my $dbc = $self->dba->dbc;
 
   my @tables = qw (dnafrag dnafrag_region synteny_region);
-  
+
   foreach my $table ( @tables ) {
     my $sql_1 = qq/
       SELECT COUNT(*) 
@@ -61,9 +61,9 @@ sub tests {
     my $desc_1 = "$table is populated";
     is_rows_nonzero($dbc, $sql_1, $desc_1);
   }
-  
+
   my $desc_2 = "All synteny_region_ids have been seen more than once";
-  is_one_to_many($dbc, "dnafrag_region", "synteny_region_id", $desc_2);
+  is_one_to_many( $dbc, "dnafrag_region", "synteny_region_id", $desc_2 );
 }
 
 1;

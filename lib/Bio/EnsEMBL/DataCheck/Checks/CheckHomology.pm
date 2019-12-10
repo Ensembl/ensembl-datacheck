@@ -39,13 +39,10 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
-  
+
   my $desc_1 = "Each homology_id is seen with more than one homology_member";
   is_one_to_many($dbc, "homology_member", "homology_id", $desc_1);
-  
-  ### Hoping for a better idea than this query (below), or is it redundant? Can we just remove it?
-  ### What is it trying to achieve?
-  
+  ### Hoping for a better idea than this query (below)
   my $hideous_sql = q/
     SELECT hm1.gene_member_id gene_member_id1, hm2.gene_member_id gene_member_id2, COUNT(*) num, 
       GROUP_CONCAT(h1.description order by h1.description) descs 
@@ -58,10 +55,10 @@ sub tests {
       GROUP BY hm1.gene_member_id, hm2.gene_member_id 
         HAVING COUNT(*) > 1
   /;
-  
+
   my $desc_2 = "There is no redundancy in homology";
   is_rows_zero($dbc, $hideous_sql, $desc_2);
-  
+
 }
 
 1;

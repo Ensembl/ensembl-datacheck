@@ -39,7 +39,8 @@ diag('Methods');
 can_ok($module,
   qw( is_rows cmp_rows is_rows_zero is_rows_nonzero
       row_totals row_subtotals
-      fk denormalized denormalised has_data));
+      fk denormalized denormalised has_data
+      is_one_to_many));
 
 subtest 'Counting Database Rows', sub {
   my $sql_1 = 'SELECT COUNT(*) FROM gene';
@@ -231,6 +232,26 @@ subtest 'Foreign Keys', sub {
 	WHERE gene_id IN (SELECT MAX(gene_id) FROM transcript)
   /;
   $dba->dbc->sql_helper->execute_update($sql_fix);
+};
+
+subtest 'Testing one-to-many relationships', sub {
+  my $table = 'meta';
+  my $column = 'species_id';
+  my $column2 = 'meta_value';
+
+  subtest 'is_one_to_many', sub {
+    check_tests(
+      sub {
+        is_one_to_many($dba, $table, $column, 'pass: is one-to-many');
+        is_one_to_many($dba, $table, $column2, 'fail: is not one-to-many');
+      },
+      [
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
+      ],
+      'is_one_to_many method'
+    );
+  };
 };
 
 # Switch to variation db to test denormalization,

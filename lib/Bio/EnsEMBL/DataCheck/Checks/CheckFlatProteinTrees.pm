@@ -41,43 +41,29 @@ sub tests {
   my $dba = $self->dba;
   my $helper = $dba->dbc->sql_helper;
 
-  # Count and collect nodes with root_id != 0 and is not a seq_member
+  # Count and collect nodes that are not a seq_member
   my $internal_node_sql = qq/
     SELECT gtn.root_id, COUNT(*) AS internal_nodes 
       FROM gene_tree_node gtn 
     WHERE gtn.seq_member_id IS NULL 
       AND gtn.node_id <> gtn.root_id 
-      AND gtn.root_id <> 0 
     GROUP BY gtn.root_id
   /;
-  my $internal_node = $helper->execute_into_hash(  
+  my $internal_node = $helper->execute_into_hash(
    -SQL => $internal_node_sql
   );
 
-  # Count and collect seq_members where root_id != 0, parent_id==root_id and count>1
+  # Count and collect seq_members where parent_id is a root_id and count>1
   my $flat_member_sql = qq/
     SELECT gtn.root_id, COUNT(*) AS root_members 
       FROM gene_tree_node gtn 
     WHERE gtn.seq_member_id IS NOT NULL 
       AND gtn.parent_id = gtn.root_id 
-      AND gtn.root_id <> 2 
     GROUP BY gtn.root_id 
     HAVING root_members > 1
   /;
-  my $flat_members = $helper->execute(  
+  my $flat_members = $helper->execute_into_hash(
    -SQL => $flat_member_sql,
-   -USE_HASHREFS => 1
-  );
-
-  # Count and collect all node memmbers where root_id != 0
-  my $all_members_sql = qq/
-    SELECT root_id, COUNT(DISTINCT root_id) AS root_count 
-      FROM gene_tree_node 
-    WHERE root_id <> 0 
-    GROUP BY root_id
-  /;
-  my $all_members = $helper->execute_into_hash(  
-   -SQL => $all_members_sql
   );
 
   # Collect all non-rooted trees
@@ -88,34 +74,38 @@ sub tests {
       AND clusterset_id LIKE '%_it_%' 
       AND clusterset_id NOT LIKE 'pg_it_%'
   /;
-  my $nonrooted_trees = $helper->execute_into_hash( 
+  my $nonrooted_trees = $helper->execute_into_hash(
     -SQL => $nonrooted_trees_sql
   );
 
   my @flat_trees;
   my @flat_trees_w_structure;
 
-  foreach my $flat_member ( @$flat_members ) {
-    my $node_id = $flat_member->{root_id};
-    my $count = $flat_member->{root_members};
-    # Check if $node_id is present in $nonrooted_trees
-    if (exists $internal_node->{$node_id} ) {
-      if ( !exists $nonrooted_trees->{$node_id} ) {
-        push @flat_trees_w_structure, $node_id;
+  foreach my $root_id ( keys %$flat_members ) {
+    my $count = $flat_members->{$root_id};
+    my $max_allowed_root_members = exists $nonrooted_trees->{$root_id} ? 3 : 2;
+    if ($count > $max_allowed_root_members) {
+      # FAIL: too many members attached to the root node (regardless of the internal structure)
+      if (exists $internal_node->{$root_id} ) {
+        push @flat_trees_w_structure, $root_id;
       }
-    } # Check that root has no more than 2 members
-    elsif ( defined $count ) {
-      if ( ($count > 2) && ($count == $all_members->{$node_id} )) {
-        push @flat_trees, $node_id;
+      else {
+        push @flat_trees, $root_id;
+      }
+    }
+    elsif ($count == $max_allowed_root_members) {
+      if (exists $internal_node->{$root_id} ) {
+        # FAIL: too many nodes attached to the root
+        push @flat_trees_w_structure, $root_id;
       }
     }
   }
 
   my $desc_1 = "There is less than two seq_members with parent as root and a well formed internal tree structure";
   my $desc_2 = "There are flat trees with more than 2 nodes to a root";
-  ok( scalar(@flat_trees_w_structure) == 0, $desc_1 );
-  ok( scalar(@flat_trees) == 0, $desc_2 );
-  
+  is( scalar(@flat_trees), 0, $desc_2 );
+  is( scalar(@flat_trees_w_structure), 0, $desc_1 );
+
 }
 
 1;

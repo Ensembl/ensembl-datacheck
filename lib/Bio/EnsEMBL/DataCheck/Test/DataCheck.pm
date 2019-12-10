@@ -478,14 +478,14 @@ SQL where clause.
 
 sub is_one_to_many {
   my ($dbc, $table, $column, $test_name, $constraint) = @_;
-  
+
   if (!defined $constraint) {
     $constraint = "";
   }
   elsif ($constraint !~ /WHERE/) {
     $constraint = "WHERE $constraint";
   }
-  
+
   my $sql = qq/
     SELECT $column 
     FROM $table
@@ -493,7 +493,7 @@ sub is_one_to_many {
     GROUP BY $column 
     HAVING COUNT(*) = 1
   /;
-  
+
   is_rows_zero($dbc, $sql, $test_name);
 }
 

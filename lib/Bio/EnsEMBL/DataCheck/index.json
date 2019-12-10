@@ -787,16 +787,6 @@
       "name" : "DuplicateXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateXref"
    },
-   "EGHighConfidence" : {
-      "datacheck_type" : "critical",
-      "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
-      "groups" : [
-         "compara",
-         "compara_protein_trees"
-      ],
-      "name" : "EGHighConfidence",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EGHighConfidence"
-   },
    "EmptyVariationTables" : {
       "datacheck_type" : "advisory",
       "description" : "Variation tables are not empty",
@@ -1008,6 +998,16 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "HighConfidence" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "HighConfidence",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EGHighConfidence"
+   },
    "IndividualType" : {
       "datacheck_type" : "critical",
       "description" : "Individuals have the correct type for each species",
@@ -1053,6 +1053,16 @@
       ],
       "name" : "MTCodonTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MTCodonTable"
+   },
+   "MemberProductionCounts" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that the gene_member counts are appropriately populated",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "MemberProductionCounts",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
    },
    "MetaCoord" : {
       "datacheck_type" : "critical",

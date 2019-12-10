@@ -42,20 +42,15 @@ sub tests {
   my $dba = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my $mlss_adap = $dba->get_MethodLinkSpeciesSetAdaptor;
+  my $gdb_adap = $dba->get_GenomeDBAdaptor;
   my @mlss_types = qw ( PECAN EPO EPO_LOW_COVERAGE CACTUS_HAL LASTZ_NET LASTZ_PATCH);
-  
+  my $ancestral = $gdb_adap->fetch_all_by_name('ancestral_sequences');
   my @mlsses;
+
   foreach my $mlss_type ( @mlss_types ) {
     my $mlss = $mlss_adap->fetch_all_by_method_link_type($mlss_type);
     push @mlsses, @$mlss;
   }
-  
-  my $ancestral_sql = q/
-    SELECT genome_db_id 
-      FROM genome_db 
-    WHERE name = "ancestral_sequences"
-    /;
-  my $ancestral_id = $helper->execute_single_result( -SQL => $ancestral_sql );
 
   foreach my $mlss ( @mlsses ) {
     my $mlss_id = $mlss->dbID;
@@ -68,27 +63,28 @@ sub tests {
       my $gdb_id = $genomedb->dbID;
       push @ss_gdb_ids, $gdb_id;
     }
-    # Collect distinct genome_db_ids in genomic_align_block for each gab_mlss
+
     my $sql = qq/
     SELECT DISTINCT(genome_db_id) 
-      FROM genomic_align_block 
-        JOIN genomic_align 
-          USING(genomic_align_block_id) 
+      FROM genomic_align 
         JOIN dnafrag 
           USING (dnafrag_id) 
-    WHERE genomic_align_block.method_link_species_set_id=$mlss_id 
-      AND genome_db_id != $ancestral_id
+    WHERE method_link_species_set_id = $mlss_id 
     /;
+    
+    if (defined @$ancestral[0]) {
+      my $ancestral_id = @$ancestral[0]->dbID;
+      $sql .= " AND genome_db_id != $ancestral_id";
+    }
     
     my $gab_gdb_ids = $helper->execute_simple( -SQL => $sql );
     my $desc = "The genome_db_ids in the species_set $species_set_name match the genome_db_ids in the genomic_align_blocks for $mlss_id";
-    # If both arrays return the same number of genome_db_ids, pass, if not find the missing/additional genome_db_ids
-    my $diff = array_diff(\@ss_gdb_ids, \@$gab_gdb_ids, 'genome_db_ids for genomic_align_blocks', 'genome_db_ids for species_set');
-    my @values = values %$diff;
-    ok(scalar(@values) == 0, $desc) || diag explain %$diff;
-
+    # If both arrays return the same number of genome_db_ids, pass, if not report difference
+    my $diff = array_diff(\@ss_gdb_ids, \@$gab_gdb_ids, 'genome_db_ids for species_set', 'genome_db_ids for genomic_align_blocks' );
+    foreach my $title (sort keys %$diff) {
+      is( scalar( @{ $diff->{$title} } ), 0, "$desc\n$title" );
+    }
   }
-    
 }
 
 1;
