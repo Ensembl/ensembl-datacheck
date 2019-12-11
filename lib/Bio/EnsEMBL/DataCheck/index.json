@@ -168,6 +168,26 @@
       "name" : "CheckConservationScorePerBlock",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
    },
+   "CheckGenomicAlignTreeTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Check the consistency and validity of genomic_align_tree",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckGenomicAlignTreeTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignTreeTable"
+   },
+   "CheckJSONObjects" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that all JSON objects in gene_tree_object_store are valid",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckJSONObjects",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckJSONObjects"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
@@ -177,6 +197,15 @@
       ],
       "name" : "CheckLastZCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckLastZCoverage"
+   },
+   "CheckMethodLinkSpeciesSetTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for broken entries in method_link_species_Set",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckMethodLinkSpeciesSetTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMethodLinkSpeciesSetTable"
    },
    "CheckMultipleAlignCoverage" : {
       "datacheck_type" : "critical",
