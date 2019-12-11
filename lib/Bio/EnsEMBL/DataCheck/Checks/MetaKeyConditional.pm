@@ -146,6 +146,7 @@ sub repeat_analysis {
       GROUP BY
         logic_name
       ORDER BY logic_name
+      COLLATE latin1_bin
     /;
     my @logic_names = @{$helper->execute_simple(-SQL => $sql)};
 
