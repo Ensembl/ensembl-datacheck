@@ -23,6 +23,7 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -37,7 +38,43 @@ use constant {
 
 sub tests {
   my ($self) = @_;
+  my $dba = $self->dba;
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  my $mlss = $mlss_adap->fetch_all;
+  
+  foreach my $mlss ( @$mlss ) {
+    my $mlss_name = $mlss->name;
+    my $mlss_id = $mlss->dbID;
+    my $species_set = $mlss->species_set;
+    my $species_set_name = $species_set->name;
+    my $species_set_id = $species_set->dbID;
+    my $gdbs = $species_set->genome_dbs;
+    my $gdb_count = scalar( @$gdbs );
+    
+    if ( $mlss_name =~ /(^[0-9]+) / && $1 != $gdb_count ) {
+      fail("species_set $species_set_name and mlss $mlss_name both link to $gdb_count genomes");
+    }
+    if ( $mlss_name =~ /(^[0-9]+) / && $1 == $gdb_count ) {
+      pass("species_set $species_set_name and mlss $mlss_name both link to $gdb_count genomes");
+    }
+    if ( $mlss_name =~ /^([a-zA-Z]+) /  ) {
+      my $mlss_p1 = $1;
+      if ( $mlss_name =~ /^protein|nc|species/ ) {
+        fail("The current convention is in place for mlss $mlss_name and species_set $species_set_name");
+      }
+      else {
+        pass("The current convention is in place for mlss $mlss_name and species_set $species_set_name");
+      }
+      if ( $species_set_name !~ /collection-$mlss_p1/ &&  $species_set_name !~ /$mlss_p1/ ) {
+        fail("species_set $species_set_id for mlss $mlss_name starts with the species_set name $species_set_name"); 
+      }
+      else {
+        pass("species_set $species_set_id for mlss $mlss_name starts with the species_set name $species_set_name");
+      }
+    }
+  }
 
+  
 }
 
 1;

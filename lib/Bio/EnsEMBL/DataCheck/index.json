@@ -198,6 +198,27 @@
       "name" : "CheckLastZCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckLastZCoverage"
    },
+   "CheckMLSSIDConsistencyInGenomicAlign" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that method_link_species_set_id are the same across genomic_align and genomic_align_block",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckMLSSIDConsistencyInGenomicAlign",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMLSSIDConsistencyInGenomicAlign"
+   },
+   "CheckMSANames" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that every MSA method has a tag name in species_set_header",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckMSANames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMSANames"
+   },
    "CheckMethodLinkSpeciesSetTable" : {
       "datacheck_type" : "critical",
       "description" : "Check for broken entries in method_link_species_Set",
