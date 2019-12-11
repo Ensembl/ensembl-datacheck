@@ -61,7 +61,7 @@ sub tests {
     my $object_count_sql = 'SELECT COUNT(*) FROM %s';
     my @tables = qw(gene transcript exon translation);
     foreach my $table (@tables) {
-      my $old_count = $old_dba->dbc->sql_helper()->execute_single_result( -SQL => sprintf($object_count_sql, $table) );
+      my $old_count = sql_count($old_dba, sprintf($object_count_sql, $table) );
       my $new_count = $new_dba->dbc->sql_helper()->execute_single_result( -SQL => sprintf($object_count_sql, $table) );
       ++$table_num_count if ($old_count == $new_count);
     }
