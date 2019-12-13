@@ -211,7 +211,7 @@
    },
    "CheckMSANames" : {
       "datacheck_type" : "critical",
-      "description" : "Ensure that every MSA method has a tag name in species_set_header",
+      "description" : "Ensure that every MSA method has a name in species_set_header",
       "groups" : [
          "compara",
          "compara_multiple_alignments"
@@ -219,14 +219,14 @@
       "name" : "CheckMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMSANames"
    },
-   "CheckMethodLinkSpeciesSetTable" : {
+   "CheckMethodLinkSpeciesSetNames" : {
       "datacheck_type" : "critical",
-      "description" : "Check for broken entries in method_link_species_Set",
+      "description" : "Check for consistency of names in method_link_species_set (and species_set_header)",
       "groups" : [
          "compara"
       ],
-      "name" : "CheckMethodLinkSpeciesSetTable",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMethodLinkSpeciesSetTable"
+      "name" : "CheckMethodLinkSpeciesSetNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMethodLinkSpeciesSetNames"
    },
    "CheckMultipleAlignCoverage" : {
       "datacheck_type" : "critical",
@@ -237,6 +237,35 @@
       ],
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
+   },
+   "CheckOrthologyQCThresholds" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that some wga_coverage and goc_score thresholds have been populated",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckOrthologyQCThresholds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckOrthologyQCThresholds"
+   },
+   "CheckPairAlignerUniqueMethod" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that there is only one method for pairwise alignment per species_set",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckPairAlignerUniqueMethod",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckPairAlignerUniqueMethod"
+   },
+   "CheckSequenceTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for sequence length and availability",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckSequenceTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
    },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",

@@ -41,28 +41,29 @@ sub tests {
   my ($self) = @_;
   my $helper = $self->dba->dbc->sql_helper;
   my @data_labels = qw( exon_boundaries cafe cafe_lca consensus_cigar_line );
-  foreach my $data_label ( @data_labels ) {
-    my $counter = 0;
+  my $sql_1 = qq/
+    SELECT root_id, data_label, UNCOMPRESS(compressed_data) AS json_string 
+      FROM gene_tree_object_store
+    WHERE data_label = ?
+  /;
 
-    my $sql_1 = qq/
-      SELECT root_id, data_label, UNCOMPRESS(compressed_data) AS json_string 
-        FROM gene_tree_object_store
-      WHERE data_label = "$data_label"
-    /;
+  foreach my $data_label ( @data_labels ) {
+    my @bad_root_id;
     my $objects = $helper->execute(
       -SQL => $sql_1,
-      -USE_HASHREFS => 1
-    );
- 
-    foreach my $row ( @$objects ) {
-      my $json_check = eval{ decode_json($row->{json_string}) };
-      if ( $@ ) {
-        $counter++;
+      -PARAMS => [$data_label],
+      -USE_HASHREFS => 1,
+      -CALLBACK => sub {
+        my $row = shift @_;
+        my $json_check = eval{ decode_json($row->{json_string}) };
+        if ( $@ ) {
+          push @bad_root_id, $row->{root_id};
+        }
       }
-    }
+    );
 
     my $desc = "JSON objects are valid for all root_ids with data_label $data_label";
-    is( $counter, 0, $desc );
+    is( scalar(@bad_root_id), 0, $desc ) || diag explain @bad_root_id;
   }
 
 }

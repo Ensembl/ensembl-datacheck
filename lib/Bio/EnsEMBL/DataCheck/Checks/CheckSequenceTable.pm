@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckMLSSIDConsistencyInGenomicAlign;
+package Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable;
 
 use warnings;
 use strict;
@@ -28,29 +28,34 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CheckMLSSIDConsistencyInGenomicAlign',
-  DESCRIPTION    => 'Check that method_link_species_set_id are the same across genomic_align and genomic_align_block',
-  GROUPS         => ['compara', 'compara_multiple_alignments', 'compara_pairwise_alignments'],
+  NAME           => 'CheckSequenceTable',
+  DESCRIPTION    => 'Check for sequence length and availability',
+  GROUPS         => ['compara'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['genomic_align', 'genomic_align_block']
+  TABLES         => ['sequence']
 };
 
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
-  
-  my $desc = "All method_link_species_set_ids in genomic_align and genomic_align_block are accounted for";
-  my $sql = q/
-    SELECT COUNT(*) 
-      FROM genomic_align ga 
-        JOIN genomic_align_block gab 
-          USING (genomic_align_block_id) 
-    WHERE ga.method_link_species_set_id != gab.method_link_species_set_id
-  /;
 
-  is_rows_zero( $dbc, $sql, $desc);
+  my %conditions = (
+    "All sequences in sequence table are viable" => "sequence=''",
+    "The length in sequences is viable"          => "length<1",
+    "The length matches the length of sequence"  => "length!=length(sequence)"
+    );
+
+  foreach my $desc ( keys %conditions ) {
+    my $condition = $conditions{$desc};
+    my $sql = qq/
+      SELECT COUNT(*) 
+        FROM sequence 
+      WHERE $condition
+    /;
+    is_rows_zero( $dbc, $sql, $desc );
+  }
+  
 }
 
 1;
-
