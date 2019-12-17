@@ -726,7 +726,6 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships are not violated",
       "groups" : [
-         "compara",
          "core",
          "corelike",
          "funcgen",
@@ -735,6 +734,15 @@
       ],
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
+   },
+   "ForeignKeysCompara" : {
+      "datacheck_type" : "critical",
+      "description" : "Foreign key relationships are not violated",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "ForeignKeysCompara",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
    },
    "ForeignKeysMultiDB" : {
       "datacheck_type" : "critical",
