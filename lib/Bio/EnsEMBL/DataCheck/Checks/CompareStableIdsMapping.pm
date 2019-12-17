@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'CompareStableIdsMapping',
-  DESCRIPTION    => 'Check that stable id mapping has been done between two databases',
+  DESCRIPTION    => 'Stable IDs have been mapped between old and new databases',
   GROUPS         => ['compare_core'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
