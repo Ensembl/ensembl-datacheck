@@ -29,7 +29,7 @@ use Test::Exception;
 use Test::More;
 
 my $test_db_dir = $FindBin::Bin;
-my @species     = qw(collection drosophila_melanogaster);
+my @species     = qw(collection drosophila);
 my $db_type     = 'core';
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 

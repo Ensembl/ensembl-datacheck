@@ -33,7 +33,7 @@ use DbCheck_5;
 my $test_db_dir = $FindBin::Bin;
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
-my $species = 'drosophila_melanogaster';
+my $species = 'drosophila';
 my $db_type = 'core';
 my $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
 

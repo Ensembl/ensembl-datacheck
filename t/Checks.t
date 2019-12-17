@@ -26,7 +26,7 @@ use Test::More;
 my $test_db_dir = $FindBin::Bin;
 my %db_types    = (
                     collection => ['core'],
-                    drosophila_melanogaster => ['core'],
+                    drosophila => ['core'],
                     homo_sapiens => ['core', 'funcgen', 'variation'],
                   );
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';

@@ -1,5 +1,5 @@
 {
-  "drosophila_melanogaster" : {
+  "drosophila" : {
     "core" : {
       "regions" : [
         ["2L", 2000000, 4000000],

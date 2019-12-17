@@ -7,7 +7,7 @@
     'collection' => { 
       'core' => 'Bio::EnsEMBL::DBSQL::DBAdaptor',
     },
-    'drosophila_melanogaster' => { 
+    'drosophila' => {
       'core' => 'Bio::EnsEMBL::DBSQL::DBAdaptor',
     },
     'homo_sapiens' => { 
