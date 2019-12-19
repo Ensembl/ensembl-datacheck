@@ -50,7 +50,7 @@ sub tests {
 
     #If the stable ids are different, which should probably not happen we do not check the stable id
     #mapping as it is not needed
-    if ($stable_id_prefix ne $old_stable_id_prefix) {
+    if (defined($stable_id_prefix) and defined($old_stable_id_prefix) and $stable_id_prefix ne $old_stable_id_prefix) {
       skip 'Different stable id prefix'.$new_dba->dbc->dbname.' and '.$old_dba->dbc->dbname, 1;
     }
 
