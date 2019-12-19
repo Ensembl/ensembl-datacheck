@@ -83,7 +83,7 @@ sub tests {
     #datacheck will either erroneously fail or succeed.
     my $stable_id_event_sql = 'SELECT old_stable_id, new_stable_id FROM stable_id_event';
     my $stable_id_event_desc = 'Check that the stable_id_event table has as many or more rows than the previous database';
-    row_totals($new_dba, $new_dba, $stable_id_event_sql, undef, $expected_value, $stable_id_event_desc);
+    row_totals($new_dba, $old_dba, $stable_id_event_sql, undef, $expected_value, $stable_id_event_desc);
   }
 }
 
