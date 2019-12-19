@@ -267,6 +267,18 @@
       "name" : "CheckSequenceTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
    },
+   "CheckSpeciesSetSizeByMethod" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that the species-sets have the expected number of genomes",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments",
+         "compara_protein_trees",
+         "compara_syntenies"
+      ],
+      "name" : "CheckSpeciesSetSizeByMethod",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetSizeByMethod"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomal seq_regions have appropriate attribute",
