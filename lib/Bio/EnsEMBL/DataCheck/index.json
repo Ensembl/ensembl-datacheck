@@ -335,7 +335,7 @@
    },
    "CompareStableIdsMapping" : {
       "datacheck_type" : "critical",
-      "description" : "Check that stable id mapping has been done between two databases",
+      "description" : "Stable IDs have been mapped between old and new databases",
       "groups" : [
          "compare_core"
       ],
