@@ -227,7 +227,7 @@ sub pipeline_analyses {
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
       -analysis_capacity => 100,
       -max_retry_count   => 0,
-      -rc_name           => '4GB',
+      -rc_name           => '8GB',
       -flow_into         => {
                               '1' => ['?accu_name=results&accu_address=[]'],
                             },
