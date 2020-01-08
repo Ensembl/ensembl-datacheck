@@ -333,6 +333,15 @@
       "name" : "CompareSource",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSource"
    },
+   "CompareStableIdsMapping" : {
+      "datacheck_type" : "critical",
+      "description" : "Stable IDs have been mapped between old and new databases",
+      "groups" : [
+         "compare_core"
+      ],
+      "name" : "CompareStableIdsMapping",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareStableIdsMapping"
+   },
    "CompareStructuralVariationStudies" : {
       "datacheck_type" : "advisory",
       "description" : "Compare structural variation counts between two databases, categorised by study",
