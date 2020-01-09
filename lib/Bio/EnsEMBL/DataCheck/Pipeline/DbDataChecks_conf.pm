@@ -186,6 +186,7 @@ sub pipeline_analyses {
     {
       -logic_name        => 'DbFactory',
       -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
+      -analysis_capacity => 10,
       -max_retry_count   => 0,
       -flow_into         => {
                               '2->A' =>

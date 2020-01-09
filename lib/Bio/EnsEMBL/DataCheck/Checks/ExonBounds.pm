@@ -61,9 +61,9 @@ sub tests {
   my $desc_1 = "Transcript co-ordinates are the same as the exon extremities";
   my $diag_1 = "Exon bounds do not match transcript bounds";
   my $sql_1  = qq/
-    SELECT t.stable_id, t.seq_region_start, t.seq_region_end FROM
+    SELECT t.gene_id, t.stable_id, t.seq_region_start, t.seq_region_end FROM
     $exon_transcript_sql
-    GROUP BY t.stable_id
+    GROUP BY t.gene_id, t.stable_id
     HAVING
       MIN(e.seq_region_start) <> t.seq_region_start OR
       MAX(e.seq_region_end) <> t.seq_region_end
@@ -73,7 +73,7 @@ sub tests {
   my $desc_2 = "Exon and transcript have the same strand";
   my $diag_2 = "Transcript and exon have different strands";
   my $sql_2  = qq/
-    SELECT t.stable_id, e.stable_id FROM
+    SELECT t.transcript_id, t.stable_id, e.exon_id, e.stable_id FROM
     $exon_transcript_sql
     AND (
       e.seq_region_id <> t.seq_region_id OR
@@ -82,8 +82,8 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
 
-  # Writing a single SQL query to get for overlaps is a bit fierce, and
-  # takes ages to run, so retrieve all exons and go over them in rank order.
+  # Writing a single SQL query to get overlaps is a bit fierce, and takes
+  # ages to run, so retrieve all exons and go over them in rank order.
   my $desc_3 = 'Exons do not overlap';
 
   my $all_exons_sql = qq/

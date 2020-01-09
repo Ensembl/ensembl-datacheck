@@ -91,6 +91,7 @@ sub _config_file_default {
   (my $module_name = __PACKAGE__) =~ s!::!/!g;
   my $file = $INC{"$module_name.pm"};
 
+  $file =~ s!//!/!;
   $file =~ s!lib/Bio/EnsEMBL/DataCheck/[\w\.]+$!config.json!;
 
   return $file if -e $file;
