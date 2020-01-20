@@ -38,8 +38,6 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  # Make sure the registry is loaded
-  $self->registry;
 
   my $dba = $self->dba;
   my $helper = $dba->dbc->sql_helper;

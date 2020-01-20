@@ -24,7 +24,6 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/ array_diff /;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -76,18 +75,14 @@ sub tests {
       cmp_ok( $curr_row_count, '!=', $prev_row_count, $desc_3 );
         
     } else {
-      my $desc_4 = "Table: $table is new in $curr_db_name";
-      pass( $desc_4 );
-      my $desc_5 = "New table: $table is populated with data";
-      is_rows_nonzero($curr_dba->dbc, $sql, $desc_5);
+      my $desc_4 = "New table: $table is populated with data";
+      is_rows_nonzero($curr_dba->dbc, $sql, $desc_4);
     }
   }
   
   foreach my $table ( @$prev_tables ) {
-    my $desc_5 = "Table $table is missing in $curr_db_name and present in $prev_db_name";
-    unless ( exists($curr_tables{$table}) ) {
-      fail($desc_5);
-    }
+    my $desc_5 = "Table $table is present in $curr_db_name and present in $prev_db_name";
+    ok( exists($curr_tables{$table}), $desc_5 );
   }
 }
 
