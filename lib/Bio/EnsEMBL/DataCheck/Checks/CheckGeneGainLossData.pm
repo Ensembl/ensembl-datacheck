@@ -36,6 +36,14 @@ use constant {
   TABLES         => ['CAFE_gene_family', 'gene_tree_root']
 };
 
+sub skip_tests {
+  my ($self) = @_;
+  my $division = $self->dba->get_division();
+  if ( $division !~ /vertebrates/ ) {
+    return( 1, "Protein and ncRNA gain/loss trees are not analysed for $division" );
+  }
+}
+
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;

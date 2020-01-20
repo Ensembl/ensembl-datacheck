@@ -1063,7 +1063,7 @@
          "compara_protein_trees"
       ],
       "name" : "HighConfidence",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EGHighConfidence"
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
    },
    "IndividualType" : {
       "datacheck_type" : "critical",

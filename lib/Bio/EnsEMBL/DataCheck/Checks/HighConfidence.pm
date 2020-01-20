@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::EGHighConfidence;
+package Bio::EnsEMBL::DataCheck::Checks::HighConfidence;
 
 use warnings;
 use strict;

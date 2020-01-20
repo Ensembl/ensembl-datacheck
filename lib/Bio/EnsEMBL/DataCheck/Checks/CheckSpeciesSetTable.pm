@@ -39,9 +39,7 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
-  
-  fk($dbc, "species_set_tag", "species_set_id", "species_set_header", "species_set_id");
-  
+    
   my $sql = q/
     SELECT gdb_ids, count(*) num, GROUP_CONCAT(species_set_id ORDER BY species_set_id) AS species_set_ids 
     FROM (

@@ -43,17 +43,14 @@ sub tests {
   my $dbc = $dba->dbc;
   my $helper = $dbc->sql_helper;
   my $gdb_adap = $dba->get_GenomeDBAdaptor;
-  
-  fk($dbc, "gene_member_hom_stats", "gene_member_id", "gene_member", "gene_member_id");
-  my $constraint = "tree_type = 'tree' AND ref_root_id IS NULL";
-  fk($dbc, "gene_member_hom_stats", "collection", "gene_tree_root", "clusterset_id", $constraint);
-  
+
   my $sql_sums = qq/
     SELECT SUM(families) AS sum_families, SUM(gene_trees) AS sum_gene_trees, SUM(gene_gain_loss_trees) AS sum_gene_gain_loss_trees, SUM(orthologues) AS sum_orthologues, SUM(paralogues) AS sum_paralogues, SUM(homoeologues) AS sum_homoeologues 
       FROM gene_member_hom_stats 
     WHERE collection = ?
   /;
 
+  my $constraint = "tree_type = 'tree' AND ref_root_id IS NULL";
   my $sqlCollections = qq/
      SELECT DISTINCT clusterset_id 
        FROM gene_tree_root 
@@ -74,13 +71,13 @@ sub tests {
     WHERE genome_component IS NOT NULL
   /; # Assumes that the polyploid genomes are found in all the collections
   my $polyploid_count = $helper->execute_single_result( -SQL => $sqlPolyploids );
-  
+
   my $sqlGeneTrees = qq/
     SELECT COUNT(*) 
       FROM gene_tree_root 
     WHERE clusterset_id = ?
   /;
-  
+
   my $sqlCAFETrees = qq/
     SELECT COUNT(*) 
       FROM gene_tree_root 
@@ -88,7 +85,7 @@ sub tests {
           ON gene_tree_root.root_id = gene_tree_root_id 
     WHERE clusterset_id = ?
   /;
-  
+
   my @columns = qw(families gene_trees gene_gain_loss_trees orthologues paralogues homoeologues);
 
   foreach my $collection ( @$collections ) {
