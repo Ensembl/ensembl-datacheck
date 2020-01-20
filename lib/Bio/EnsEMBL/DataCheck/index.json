@@ -270,6 +270,16 @@
       "name" : "CheckGenomicAlignGenomeDBs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignGenomeDBs"
    },
+   "CheckGenomicAlignMTs" : {
+      "datacheck_type" : "advisory",
+      "description" : "The multiple alignments should include all the MT sequences",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckGenomicAlignMTs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignMTs"
+   },
    "CheckHomology" : {
       "datacheck_type" : "critical",
       "description" : "Check homology_id are all one-to-many for homology_members",
@@ -347,6 +357,26 @@
       "name" : "CheckSynteny",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSynteny"
    },
+   "CheckSyntenySanity" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check for missing syntenies in the compara database",
+      "groups" : [
+         "compara",
+         "compara_syntenies"
+      ],
+      "name" : "CheckSyntenySanity",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSyntenySanity"
+   },
+   "CheckTableSizes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Tables must be populated and not differ significantly in row numbers",
+      "groups" : [
+         "compara",
+         "compara_tables"
+      ],
+      "name" : "CheckTableSizes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckTableSizes"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomal seq_regions have appropriate attribute",
@@ -412,6 +442,16 @@
       ],
       "name" : "CompareGenotypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGenotypes"
+   },
+   "CompareMSANames" : {
+      "datacheck_type" : "advisory",
+      "description" : "The species_sets from the previous database are still present",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CompareMSANames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMSANames"
    },
    "ComparePhenotypeFeatures" : {
       "datacheck_type" : "advisory",
@@ -491,6 +531,15 @@
       ],
       "name" : "CompareSource",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSource"
+   },
+   "CompareStableIdsMapping" : {
+      "datacheck_type" : "critical",
+      "description" : "Stable IDs have been mapped between old and new databases",
+      "groups" : [
+         "compare_core"
+      ],
+      "name" : "CompareStableIdsMapping",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareStableIdsMapping"
    },
    "CompareStructuralVariationStudies" : {
       "datacheck_type" : "advisory",
@@ -885,7 +934,6 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships are not violated",
       "groups" : [
-         "compara",
          "core",
          "corelike",
          "funcgen",
@@ -894,6 +942,15 @@
       ],
       "name" : "ForeignKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeys"
+   },
+   "ForeignKeysCompara" : {
+      "datacheck_type" : "critical",
+      "description" : "Foreign key relationships are not violated",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "ForeignKeysCompara",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
    },
    "ForeignKeysMultiDB" : {
       "datacheck_type" : "critical",
@@ -1196,6 +1253,19 @@
       ],
       "name" : "MySQLStorageEngine",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MySQLStorageEngine"
+   },
+   "NoDataOnGenomeComponents" : {
+      "datacheck_type" : "critical",
+      "description" : "Data is only allowed on principle genomes and not components",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments",
+         "compara_pairwise_alignments",
+         "compara_protein_trees",
+         "compara_syntenies"
+      ],
+      "name" : "NoDataOnGenomeComponents",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NoDataOnGenomeComponents"
    },
    "PepstatsAttributes" : {
       "datacheck_type" : "critical",
