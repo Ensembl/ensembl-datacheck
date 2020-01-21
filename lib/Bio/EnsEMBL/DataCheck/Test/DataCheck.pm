@@ -41,6 +41,7 @@ our @EXPORT  = qw(
   row_totals row_subtotals
   fk denormalized denormalised
   has_data
+  is_one_to_many
 );
 
 use constant MAX_DIAG_ROWS => 10;
@@ -457,6 +458,43 @@ sub has_data {
   /;  
 
   is_rows_zero($dbc, $sql, $test_name, $diag_msg);  
+}
+
+=head2 Testing one-to-many relationships  
+
+=over 4
+
+=item B<is_one_to_many>
+
+is_one_to_many($dbc, $table, $column, $test_name, $constraint);
+
+Tests that each C<$column> member is present in the table more than once.
+If all the rows have a count>1, the test will pass. C<$constraint> is an optional
+SQL where clause.
+
+=back
+
+=cut
+
+sub is_one_to_many {
+  my ($dbc, $table, $column, $test_name, $constraint) = @_;
+
+  if (!defined $constraint) {
+    $constraint = "";
+  }
+  elsif ($constraint !~ /WHERE/) {
+    $constraint = "WHERE $constraint";
+  }
+
+  my $sql = qq/
+    SELECT $column 
+    FROM $table
+    $constraint
+    GROUP BY $column 
+    HAVING COUNT(*) = 1
+  /;
+
+  is_rows_zero($dbc, $sql, $test_name);
 }
 
 1;

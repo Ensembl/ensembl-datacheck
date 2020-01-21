@@ -10,6 +10,17 @@
       "name" : "AlignFeatureExternalDB",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignFeatureExternalDB"
    },
+   "AlignmentCoordinates" : {
+      "datacheck_type" : "critical",
+      "description" : "Alignment coordinates are within the length of their dnafrag",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments",
+         "compara_multiple_alignments"
+      ],
+      "name" : "AlignmentCoordinates",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentCoordinates"
+   },
    "AlignmentReadFileOrphans" : {
       "datacheck_type" : "critical",
       "description" : "Check that all read files are used in an alignment",
@@ -158,6 +169,37 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
+   "CheckCAFETable" : {
+      "datacheck_type" : "critical",
+      "description" : "Each row should show a one-to-many relationship",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckCAFETable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckCAFETable"
+   },
+   "CheckComparaStableIDs" : {
+      "datacheck_type" : "critical",
+      "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
+      "groups" : [
+         "compara",
+         "compara_families",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckComparaStableIDs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
+   },
+   "CheckConservationScore" : {
+      "datacheck_type" : "critical",
+      "description" : "The MLSS for GERP_CONSERVATION_SCORE should have conservation score entries",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckConservationScore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScore"
+   },
    "CheckConservationScorePerBlock" : {
       "datacheck_type" : "critical",
       "description" : "Multiple alignments with >3 species and >3 sequences must have a conservation score",
@@ -167,6 +209,66 @@
       ],
       "name" : "CheckConservationScorePerBlock",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
+   },
+   "CheckConstrainedElementTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Each row should show a one-to-many relationship",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckConstrainedElementTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConstrainedElementTable"
+   },
+   "CheckDuplicatedTaxaNames" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the ncbi_taxa_name contains only unique rows",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckDuplicatedTaxaNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
+   },
+   "CheckEmptyLeavesTrees" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that none of the gene tree leaves have children",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckEmptyLeavesTrees",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees"
+   },
+   "CheckFlatProteinTrees" : {
+      "datacheck_type" : "critical",
+      "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckFlatProteinTrees",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
+   },
+   "CheckGeneGainLossData" : {
+      "datacheck_type" : "critical",
+      "description" : "ncRNA and protein trees must have gene Gain/Loss trees",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckGeneGainLossData",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
+   },
+   "CheckGenomicAlignGenomeDBs" : {
+      "datacheck_type" : "critical",
+      "description" : "Check all genome_dbs for each method_link_species_set is present in genomic_aligns",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckGenomicAlignGenomeDBs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignGenomeDBs"
    },
    "CheckGenomicAlignMTs" : {
       "datacheck_type" : "advisory",
@@ -187,6 +289,16 @@
       ],
       "name" : "CheckGenomicAlignTreeTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignTreeTable"
+   },
+   "CheckHomology" : {
+      "datacheck_type" : "critical",
+      "description" : "Check homology_id are all one-to-many for homology_members",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckHomology",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
    },
    "CheckJSONObjects" : {
       "datacheck_type" : "critical",
@@ -268,6 +380,24 @@
       "name" : "CheckPairAlignerUniqueMethod",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckPairAlignerUniqueMethod"
    },
+   "CheckReleaseConsistency" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for consistency between retired genomes and species_sets",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckReleaseConsistency",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseConsistency"
+   },
+   "CheckReleaseNulls" : {
+      "datacheck_type" : "critical",
+      "description" : "For release DB the last_release must be NULL but cannot have a NULL first_release",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckReleaseNulls",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseNulls"
+   },
    "CheckSequenceTable" : {
       "datacheck_type" : "critical",
       "description" : "Check for sequence length and availability",
@@ -288,6 +418,35 @@
       ],
       "name" : "CheckSpeciesSetSizeByMethod",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetSizeByMethod"
+   },
+   "CheckSpeciesSetTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Check species_set_tags have no orphans and species_sets are unique",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckSpeciesSetTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable"
+   },
+   "CheckSpeciesTreeNodeAttr" : {
+      "datacheck_type" : "critical",
+      "description" : "Check some entries in species_tree_node_attr are > 0",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckSpeciesTreeNodeAttr",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr"
+   },
+   "CheckSynteny" : {
+      "datacheck_type" : "critical",
+      "description" : "Every synteny_region_id should be seen more than once",
+      "groups" : [
+         "compara",
+         "compara_syntenies"
+      ],
+      "name" : "CheckSynteny",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSynteny"
    },
    "CheckSyntenySanity" : {
       "datacheck_type" : "advisory",
@@ -987,6 +1146,16 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "HighConfidence" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "HighConfidence",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
+   },
    "IndividualType" : {
       "datacheck_type" : "critical",
       "description" : "Individuals have the correct type for each species",
@@ -1032,6 +1201,16 @@
       ],
       "name" : "MTCodonTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MTCodonTable"
+   },
+   "MemberProductionCounts" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that the gene_member counts are appropriately populated",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "MemberProductionCounts",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
    },
    "MetaCoord" : {
       "datacheck_type" : "critical",
@@ -1123,6 +1302,16 @@
       ],
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
+   },
+   "MultipleGenomicAlignBlockIds" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every genomic_align_block_id has more than one genomic_align_id",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "MultipleGenomicAlignBlockIds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleGenomicAlignBlockIds"
    },
    "MultipleSeqRegions" : {
       "datacheck_type" : "critical",

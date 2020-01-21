@@ -181,6 +181,12 @@ sub compara_fk {
   /;
   fk($self->dba, 'gene_tree_root',    'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $tree_constraint);
   fk($self->dba, 'species_tree_root', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $tree_constraint);
+
+  my $hom_stats_constraint = q/
+    tree_type = 'tree' AND 
+    ref_root_id IS NULL
+  /;
+  fk($self->dba, "gene_member_hom_stats", "collection", "gene_tree_root", "clusterset_id", $hom_stats_constraint);
 }
 
 1;
