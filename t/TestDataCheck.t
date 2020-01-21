@@ -238,14 +238,17 @@ subtest 'Testing one-to-many relationships', sub {
   my $table = 'meta';
   my $column = 'species_id';
   my $column2 = 'meta_value';
+  my $constraint = 'species_id > 0';
 
   subtest 'is_one_to_many', sub {
     check_tests(
       sub {
         is_one_to_many($dba, $table, $column, 'pass: is one-to-many');
+        is_one_to_many($dba, $table, $column, 'pass: is one-to-many with constraint', $constraint);
         is_one_to_many($dba, $table, $column2, 'fail: is not one-to-many');
       },
       [
+        { ok => 1, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
       ],
