@@ -178,6 +178,26 @@
       "name" : "CheckGenomicAlignMTs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignMTs"
    },
+   "CheckGenomicAlignTreeTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Check the consistency and validity of genomic_align_tree",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckGenomicAlignTreeTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignTreeTable"
+   },
+   "CheckJSONObjects" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that all JSON objects in gene_tree_object_store are valid",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckJSONObjects",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckJSONObjects"
+   },
    "CheckLastZCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
@@ -188,6 +208,36 @@
       "name" : "CheckLastZCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckLastZCoverage"
    },
+   "CheckMLSSIDConsistencyInGenomicAlign" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that method_link_species_set_id are the same across genomic_align and genomic_align_block",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckMLSSIDConsistencyInGenomicAlign",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMLSSIDConsistencyInGenomicAlign"
+   },
+   "CheckMSANames" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that every MSA method has a name in species_set_header",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments"
+      ],
+      "name" : "CheckMSANames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMSANames"
+   },
+   "CheckMethodLinkSpeciesSetNames" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for consistency of names in method_link_species_set (and species_set_header)",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckMethodLinkSpeciesSetNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMethodLinkSpeciesSetNames"
+   },
    "CheckMultipleAlignCoverage" : {
       "datacheck_type" : "critical",
       "description" : "Coverage for a multiple whole genome alignment MLSS matches the coverage recorded in the  mlss_tag table",
@@ -197,6 +247,47 @@
       ],
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
+   },
+   "CheckOrthologyQCThresholds" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that some wga_coverage and goc_score thresholds have been populated",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckOrthologyQCThresholds",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckOrthologyQCThresholds"
+   },
+   "CheckPairAlignerUniqueMethod" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that there is only one method for pairwise alignment per species_set",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckPairAlignerUniqueMethod",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckPairAlignerUniqueMethod"
+   },
+   "CheckSequenceTable" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for sequence length and availability",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "CheckSequenceTable",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
+   },
+   "CheckSpeciesSetSizeByMethod" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks that the species-sets have the expected number of genomes",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments",
+         "compara_protein_trees",
+         "compara_syntenies"
+      ],
+      "name" : "CheckSpeciesSetSizeByMethod",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetSizeByMethod"
    },
    "CheckSyntenySanity" : {
       "datacheck_type" : "advisory",
