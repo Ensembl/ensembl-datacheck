@@ -113,9 +113,9 @@
    },
    "AttribValues" : {
       "datacheck_type" : "advisory",
-      "description" : "TSL, APPRIS, GENCODE and RefSeq attributes exist",
+      "description" : "TSL, APPRIS and GENCODE attributes exist",
       "groups" : [
-         "geneset"
+         "geneset_support_level"
       ],
       "name" : "AttribValues",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
