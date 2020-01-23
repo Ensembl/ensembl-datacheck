@@ -111,14 +111,23 @@
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
    },
-   "AttribValues" : {
+   "AttribValuesCoverage" : {
       "datacheck_type" : "advisory",
-      "description" : "TSL, APPRIS and GENCODE attributes exist",
+      "description" : "TSL and APPRIS covers 95% of protein-coding gene on each chromosome",
       "groups" : [
          "geneset_support_level"
       ],
-      "name" : "AttribValues",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValues"
+      "name" : "AttribValuesCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValuesCoverage"
+   },
+   "AttribValuesExist" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that TSL, APPRIS and GENCODE attributes exist",
+      "groups" : [
+         "geneset_support_level"
+      ],
+      "name" : "AttribValuesExist",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValuesExist"
    },
    "BlankEnums" : {
       "datacheck_type" : "critical",

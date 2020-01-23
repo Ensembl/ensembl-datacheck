@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AttribValues;
+package Bio::EnsEMBL::DataCheck::Checks::AttribValuesCoverage;
 
 use warnings;
 use strict;
@@ -28,30 +28,20 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'AttribValues',
-  DESCRIPTION    => 'TSL, APPRIS and GENCODE attributes exist',
+  NAME           => 'AttribValuesCoverage',
+  DESCRIPTION    => 'TSL and APPRIS covers 95% of protein-coding gene on each chromosome',
   GROUPS         => ['geneset_support_level'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
-  TABLES         => ['assembly_exception', 'attrib_type', 'coord_system', 'gene', 'gene_attrib', 'seq_region', 'seq_region_attrib', 'transcript', 'transcript_attrib']
+  TABLES         => ['assembly_exception', 'attrib_type', 'gene', 'seq_region', 'seq_region_attrib', 'transcript', 'transcript_attrib']
 };
 
 sub tests {
   my ($self) = @_;
   my $helper = $self->dba->dbc->sql_helper;
 
-  my $desc_1 = 'APPRIS attributes exist';
-  my $sql_1  = q/
-    SELECT COUNT(*) FROM
-      transcript INNER JOIN
-      transcript_attrib USING (transcript_id) INNER JOIN
-      attrib_type USING (attrib_type_id)
-    WHERE code like 'appris%'
-  /;
-  is_rows_nonzero($self->dba, $sql_1, $desc_1);
-
-  my $desc_2 = '95% of the protein-coding genes on each chromosome have APPRIS attributes';
-  my $sql_2a = q/
+  my $desc_1 = '95% of the protein-coding genes on each chromosome have APPRIS attributes';
+  my $sql_1a = q/
     SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
       gene g INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
@@ -66,7 +56,7 @@ sub tests {
       at2.code like 'appris%'
     GROUP BY sr.name
   /;
-  my $sql_2b = q/
+  my $sql_1b = q/
     SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
       gene g INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
@@ -77,40 +67,12 @@ sub tests {
       at.code = 'karyotype_rank'
     GROUP BY sr.name
   /;
-  row_subtotals($self->dba, undef, $sql_2a, $sql_2b, 0.95, $desc_2);
+  row_subtotals($self->dba, undef, $sql_1a, $sql_1b, 0.95, $desc_1);
 
   if ($self->species =~ /(homo_sapiens|mus_musculus)/) {
-    my $desc_4 = 'All genes have at least one transcript with a gencode_basic attribute';
-    my $sql_4a = q/
-      SELECT COUNT(distinct gene_id) FROM transcript
-      WHERE biotype NOT IN ('LRG_gene')
-    /;
-    my $sql_4b = q/
-      SELECT COUNT(distinct gene_id) FROM
-        transcript INNER JOIN
-        transcript_attrib USING (transcript_id) INNER JOIN
-        attrib_type USING (attrib_type_id) 
-      WHERE
-        biotype NOT IN ('LRG_gene') AND
-        attrib_type.code = 'gencode_basic'
-    /;
 
-    my $gene_count    = $helper->execute_single_result( -SQL => $sql_4a );
-    my $gencode_count = $helper->execute_single_result( -SQL => $sql_4b );
-    is($gencode_count, $gene_count, $desc_4);
-
-    my $desc_5 = 'TSL attributes exist';
-    my $sql_5  = q/
-      SELECT COUNT(*) FROM
-        transcript INNER JOIN
-        transcript_attrib USING (transcript_id) INNER JOIN
-        attrib_type USING (attrib_type_id)
-      WHERE code like 'tsl%'
-    /;
-    is_rows_nonzero($self->dba, $sql_5, $desc_5);
-
-    my $desc_6 = '95% of the protein-coding genes on each chromosome have TSL attributes';
-    my $sql_6a = q/
+    my $desc_2 = '95% of the protein-coding genes on each chromosome have TSL attributes';
+    my $sql_2a = q/
       SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
         gene g INNER JOIN
         seq_region sr USING (seq_region_id) INNER JOIN
@@ -125,7 +87,7 @@ sub tests {
         at2.code like 'tsl%'
       GROUP BY sr.name
     /;
-    my $sql_6b = q/
+    my $sql_2b = q/
       SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
         gene g INNER JOIN
         seq_region sr USING (seq_region_id) INNER JOIN
@@ -136,7 +98,7 @@ sub tests {
         at.code = 'karyotype_rank'
       GROUP BY sr.name
     /;
-    row_subtotals($self->dba, undef, $sql_6a, $sql_6b, 0.95, $desc_6);
+    row_subtotals($self->dba, undef, $sql_2a, $sql_2b, 0.95, $desc_2);
   }
 }
 
