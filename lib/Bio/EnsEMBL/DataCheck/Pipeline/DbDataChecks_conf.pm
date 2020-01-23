@@ -200,13 +200,26 @@ sub pipeline_analyses {
     },
 
     {
+      -logic_name        => 'RunDataChecks_High_mem',  
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -rc_name           => '8GB',
+      -flow_into         => {
+                              '1' => ['StoreResults'],
+                            },
+
+    },
+
+    {
       -logic_name        => 'RunDataChecks',
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
       -analysis_capacity => 10,
       -max_retry_count   => 0,
-      -rc_name           => '4GB',
+      -rc_name           => '2GB',
       -flow_into         => {
                               '1' => ['StoreResults'],
+                              '-1' => ['RunDataChecks_High_mem']
                             },
     },
 
@@ -221,15 +234,28 @@ sub pipeline_analyses {
                               'A->1' => ['DataCheckFunnel'],
                             },
     },
+    
+    {
+      -logic_name        => 'DataCheckFan_High_mem',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
+      -analysis_capacity => 100,
+      -max_retry_count   => 0,
+      -rc_name           => '8GB',
+      -flow_into         => {
+                              '1' => ['?accu_name=results&accu_address=[]'],
+                            },
+    },
+
 
     {
       -logic_name        => 'DataCheckFan',
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
       -analysis_capacity => 100,
       -max_retry_count   => 0,
-      -rc_name           => '4GB',
+      -rc_name           => '2GB',
       -flow_into         => {
                               '1' => ['?accu_name=results&accu_address=[]'],
+                              '-1' => ['DataCheckFan_High_mem'] 
                             },
     },
 
