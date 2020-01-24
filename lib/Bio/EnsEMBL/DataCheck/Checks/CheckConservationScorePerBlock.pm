@@ -42,17 +42,17 @@ sub tests {
   my $helper  = $self->dba->dbc->sql_helper;
 
   my $gerp_mlss_id_present = qq/
-    SELECT method_link_species_set_id, value 
-    FROM method_link_species_set 
-      LEFT JOIN method_link USING(method_link_id) 
-      LEFT JOIN method_link_species_set_tag USING(method_link_species_set_id) 
+    SELECT mlss.method_link_species_set_id
+    FROM method_link_species_set mlss
+      JOIN method_link USING(method_link_id)
+      LEFT JOIN method_link_species_set_tag mlsst ON (mlss.method_link_species_set_id = mlsst.method_link_species_set_id AND tag = "msa_mlss_id" AND value != "")
     WHERE (type = "GERP_CONSERVATION_SCORE" 
       OR class LIKE "ConservationScore%") 
-      AND tag = "msa_mlss_id" AND value>0;
+      AND tag IS NULL;
   /;
   
-  my $desc_1 = "There are msa_mlss_id tags for the GERP mlss";
-  is_rows_nonzero($self->dba, $gerp_mlss_id_present, $desc_1);
+  my $desc_1 = "There are no GERP mlss without an msa_mlss_id tag";
+  is_rows_zero($self->dba, $gerp_mlss_id_present, $desc_1);
   
   my $gerp_mlss_ids = qq/
     SELECT method_link_species_set_id 
