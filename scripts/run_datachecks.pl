@@ -197,7 +197,7 @@ if ($dbname) {
 
   my $species;
   if ($dbtype eq 'compara') {
-    $species = 'Multi';
+    $species = 'multi';
   } else {
     my $sql = q/
       SELECT meta_value FROM meta
