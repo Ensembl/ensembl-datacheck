@@ -74,9 +74,9 @@ sub tests {
   }
   
   my $desc_2 = "The number of species_sets in $curr_db_name are the same as in $prev_db_name";
-  cmp_ok( ( scalar keys $curr_mlss_names ), '==', ( scalar keys $prev_mlss_names ), $desc_2 );
+  cmp_ok( ( scalar keys %$curr_mlss_names ), '==', ( scalar keys %$prev_mlss_names ), $desc_2 );
   
-  foreach my $species_set_name ( keys $prev_mlss_names ) {
+  foreach my $species_set_name ( keys %$prev_mlss_names ) {
     my $desc_4 = "$species_set_name is present in $curr_db_name";
     if ( exists ($curr_mlss_names->{$species_set_name}) ) {
       pass( $desc_4 );
