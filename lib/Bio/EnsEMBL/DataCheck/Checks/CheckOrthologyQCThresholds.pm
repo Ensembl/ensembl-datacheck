@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -39,18 +40,34 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
-  my @thresholds = qw( goc_quality_threshold wga_quality_threshold );
 
-  foreach my $threshold ( @thresholds ) {
-    my $desc = "There are some $threshold in method_link_species_set_attr";
-    my $sql = qq/
-      SELECT COUNT(*) 
-        FROM method_link_species_set_attr 
-      WHERE $threshold IS NOT NULL
-    /;
-    is_rows_nonzero( $dbc, $sql, $desc );
+  my $goc_sql = qq/
+    SELECT COUNT(*)
+      FROM method_link_species_set_attr
+    WHERE goc_quality_threshold IS NOT NULL
+  /;
+  my $has_goc_scores = sql_count($self->dba, 'SELECT 1 FROM homology WHERE goc_score IS NOT NULL LIMIT 1');
+  if ($has_goc_scores) {
+    my $desc = "There are some goc_quality_threshold in method_link_species_set_attr";
+    is_rows_nonzero( $dbc, $goc_sql, $desc );
+  } else {
+    my $desc = "There are no goc_quality_threshold in method_link_species_set_attr";
+    is_rows_zero( $dbc, $goc_sql, $desc );
   }
 
+  my $wga_sql = qq/
+    SELECT COUNT(*)
+      FROM method_link_species_set_attr
+    WHERE wga_quality_threshold IS NOT NULL
+  /;
+  my $has_wga_scores = sql_count($self->dba, 'SELECT 1 FROM homology WHERE wga_coverage IS NOT NULL LIMIT 1');
+  if ($has_wga_scores) {
+    my $desc = "There are some wga_quality_threshold in method_link_species_set_attr";
+    is_rows_nonzero( $dbc, $wga_sql, $desc );
+  } else {
+    my $desc = "There are no wga_quality_threshold in method_link_species_set_attr";
+    is_rows_zero( $dbc, $wga_sql, $desc );
+  }
 }
 
 1;
