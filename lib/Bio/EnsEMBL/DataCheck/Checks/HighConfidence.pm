@@ -55,6 +55,7 @@ sub tests {
     SELECT COUNT(*) 
       FROM homology 
     WHERE is_high_confidence IS NULL
+      AND description LIKE "ortholog%"
   /;
 
   my $desc = "Homologies have been annotated with a confidence value";
