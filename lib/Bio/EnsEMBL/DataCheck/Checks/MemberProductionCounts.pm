@@ -127,7 +127,7 @@ sub tests {
       my $desc_5 = "The sum of entries for gene_trees in gene_member_hom_stats > 0 for the $collection collection";
       cmp_ok( $sums->[0]->{sum_gene_trees}, ">", 0, $desc_5 );
       my $desc_6 = "There are entries in the gene_tree table";
-      cmp_ok( $counts[0], ">", 0, $desc_6 );
+      cmp_ok( $counts[1], ">", 0, $desc_6 );
     }
 
     foreach ( my $i = 1; $i < @columns; $i++ ) {
