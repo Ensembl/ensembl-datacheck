@@ -94,6 +94,9 @@ sub tests {
     
     is_rows_nonzero($self->dba, $sql, $desc);
   }
+  unless (@$entries_array) {
+    pass('None of the species included in multiple alignments have a mitochondrion');
+  }
 }
 
 1;
