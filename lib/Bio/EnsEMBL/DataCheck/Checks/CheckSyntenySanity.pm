@@ -36,6 +36,17 @@ use constant {
   TABLES         => ['dnafrag', 'dnafrag_region', 'genome_db', 'genomic_align', 'method_link', 'method_link_species_set', 'synteny_region']
 };
 
+sub skip_tests {
+  my ($self) = @_;
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  my $mlss = $mlss_adap->fetch_all_by_method_link_type('SYNTENY');
+  my $db_name = $self->dba->dbc->dbname;
+
+  if ( scalar(@$mlss) == 0 ) {
+    return( 1, "There are no SYNTENY MLSS in $db_name" );
+  }
+}
+
 sub tests {
   my ($self) = @_;
 
