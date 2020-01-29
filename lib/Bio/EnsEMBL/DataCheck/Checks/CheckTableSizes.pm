@@ -84,7 +84,7 @@ sub tests {
   }
   
   foreach my $table ( @$prev_tables ) {
-    my $desc_5 = "Table $table is present in $curr_db_name and present in $prev_db_name";
+    my $desc_5 = "Table $table is still present in $curr_db_name (was present in $prev_db_name)";
     ok( exists($curr_tables{$table}), $desc_5 );
   }
 }
