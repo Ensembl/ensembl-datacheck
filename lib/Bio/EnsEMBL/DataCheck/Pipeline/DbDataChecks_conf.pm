@@ -1,5 +1,5 @@
 =head1 LICENSE
-Copyright [2018-2019] EMBL-European Bioinformatics Institute
+Copyright [2018-2020] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -186,6 +186,7 @@ sub pipeline_analyses {
     {
       -logic_name        => 'DbFactory',
       -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
+      -analysis_capacity => 10,
       -max_retry_count   => 0,
       -flow_into         => {
                               '2->A' =>

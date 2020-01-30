@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2019] EMBL-European Bioinformatics Institute
+Copyright [2018-2020] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -54,7 +54,6 @@ sub tests {
     'sample.location_param'          => '[\w\.\-]+:\d+\-\d+',
     'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates)',
     'species.production_name'        => '_?[a-z0-9]+_[a-z0-9_]+',
-    'species.scientific_name'        => '\[?[A-Z][a-z0-9\-]+\]? [a-z0-9_]+ ?.*',
     'species.url'                    => '[A-Z_][a-z0-9]+_[A-Za-z0-9_]+',
     'web_accession_type'             => '(GenBank Assembly ID|EMBL\-Bank|WGS Master)',
     'web_accession_source'           => '(NCBI|ENA|DDBJ)',
