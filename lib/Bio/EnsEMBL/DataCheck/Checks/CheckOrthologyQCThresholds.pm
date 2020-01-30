@@ -47,13 +47,8 @@ sub tests {
     WHERE goc_quality_threshold IS NOT NULL
   /;
   my $has_goc_scores = sql_count($self->dba, 'SELECT 1 FROM homology WHERE goc_score IS NOT NULL LIMIT 1');
-  if ($has_goc_scores) {
-    my $desc = "There are some goc_quality_threshold in method_link_species_set_attr";
-    is_rows_nonzero( $dbc, $goc_sql, $desc );
-  } else {
-    my $desc = "There are no goc_quality_threshold in method_link_species_set_attr";
-    is_rows_zero( $dbc, $goc_sql, $desc );
-  }
+  my $desc_goc = 'The method_link_species_set_attr has ' . ($has_goc_scores ? 'some' : 'no') . ' goc_quality_thresholds';
+  cmp_rows($self->dba, $goc_sql, $has_goc_scores ? '>' : '==', 0, $desc_goc);
 
   my $wga_sql = qq/
     SELECT COUNT(*)
@@ -61,13 +56,8 @@ sub tests {
     WHERE wga_quality_threshold IS NOT NULL
   /;
   my $has_wga_scores = sql_count($self->dba, 'SELECT 1 FROM homology WHERE wga_coverage IS NOT NULL LIMIT 1');
-  if ($has_wga_scores) {
-    my $desc = "There are some wga_quality_threshold in method_link_species_set_attr";
-    is_rows_nonzero( $dbc, $wga_sql, $desc );
-  } else {
-    my $desc = "There are no wga_quality_threshold in method_link_species_set_attr";
-    is_rows_zero( $dbc, $wga_sql, $desc );
-  }
+  my $desc_wga = 'The method_link_species_set_attr has ' . ($has_wga_scores ? 'some' : 'no') . ' wga_quality_thresholds';
+  cmp_rows($self->dba, $wga_sql, $has_wga_scores ? '>' : '==', 0, $desc_wga);
 }
 
 1;
