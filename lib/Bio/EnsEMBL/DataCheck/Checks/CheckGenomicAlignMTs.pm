@@ -81,21 +81,22 @@ sub tests {
     -USE_HASHREFS => 1
   );
   
-  #Checking to make sure that there is at least one row in genomic for each mlss with dnafrag_id linked to MT
-  foreach my $row (@$entries_array) {
-    my $sql = qq/
-      SELECT count(*) 
-        FROM genomic_align 
-      WHERE method_link_species_set_id = $row->{method_link_species_set_id} 
-        AND dnafrag_id = $row->{dnafrag_id}
-    /;
-    
-    my $desc = "The MT of $row->{gdb_name} (dnafrag_id $row->{dnafrag_id}) is not present in the genomic_align table for alignment mlss_id $row->{method_link_species_set_id} ($row->{mlss_name})";
-    
-    is_rows_nonzero($self->dba, $sql, $desc);
-  }
-  unless (@$entries_array) {
-    pass('None of the species included in multiple alignments have a mitochondrion');
+  SKIP: {
+    skip 'None of the species included in multiple alignments have a mitochondrion' unless scalar(@$entries_array);
+
+    #Checking to make sure that there is at least one row in genomic for each mlss with dnafrag_id linked to MT
+    foreach my $row (@$entries_array) {
+      my $sql = qq/
+        SELECT count(*)
+          FROM genomic_align
+        WHERE method_link_species_set_id = $row->{method_link_species_set_id}
+          AND dnafrag_id = $row->{dnafrag_id}
+      /;
+
+      my $desc = "The MT of $row->{gdb_name} (dnafrag_id $row->{dnafrag_id}) is not present in the genomic_align table for alignment mlss_id $row->{method_link_species_set_id} ($row->{mlss_name})";
+
+      is_rows_nonzero($self->dba, $sql, $desc);
+    }
   }
 }
 
