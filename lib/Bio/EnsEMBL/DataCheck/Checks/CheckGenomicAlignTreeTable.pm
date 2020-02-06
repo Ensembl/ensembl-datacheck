@@ -98,7 +98,7 @@ sub tests {
     
     my $desc_3 = "Less than 1% of entries have a distance_to_parent > 1 for $mlss_id ($mlss_name)";
     
-    row_totals($dbc, undef, $sql_3, $sql_2, 0.99, $desc_3);
+    row_totals($dbc, undef, $sql_2, $sql_3, 0.99, $desc_3);
   }
 
 }
