@@ -39,6 +39,9 @@ use constant {
 sub tests {
   my ($self) = @_;
 
+  # Force load of registry, so that the DnaFragAdaptor can find core dbs.
+  $self->registry();
+
   my $dba = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my $mlss_adap = $dba->get_MethodLinkSpeciesSetAdaptor;
