@@ -55,6 +55,7 @@ sub tests {
       my $mlss_p1 = $1;
       my $desc_1 = "The current convention is in place for mlss $mlss_name ($mlss_id) and species_set $species_set_name ($species_set_id)";
       unlike( $mlss_name, qr/^(protein|nc|species)/, $desc_1 );
+      next if $species_set->first_release <= 80;
       my $desc_2 = "species_set $species_set_id for mlss $mlss_name ($mlss_id) starts with the species_set name $species_set_name";
 
       if ( $species_set_name =~ /collection/ ) {
@@ -64,6 +65,7 @@ sub tests {
         is( $species_set_name, $mlss_p1, $desc_2 );
       }
     }
+    next if $species_set->first_release <= 80;
     if ( $gdb_count >= 1 && $gdb_count <=2 ) {
       my @species_count = split /-/, $species_set_name;
       my $desc_3 = "For $mlss_name ($mlss_id) the species_set $species_set_name ($species_set_id) is appropriately named with the correct number of genomes";
