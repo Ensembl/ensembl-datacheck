@@ -16,20 +16,19 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckWGACoverageStats;
+package Bio::EnsEMBL::DataCheck::Checks::CheckGOCScoreStats;
 
 use warnings;
 use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::Utils::SqlHelper;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CheckWGACoverageStats',
-  DESCRIPTION    => 'The number of rows for WGA coverage have not dropped from previous release',
+  NAME           => 'CheckGOCScoreStats',
+  DESCRIPTION    => 'The number of rows for GOC have not dropped from previous release',
   GROUPS         => ['compara', 'compara_protein_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
@@ -46,7 +45,7 @@ sub tests {
   my $sql = qq/
     SELECT description, COUNT(*) 
       FROM homology 
-    WHERE wga_coverage IS NOT NULL 
+    WHERE goc_score IS NOT NULL 
       GROUP BY description
   /;
 
@@ -54,10 +53,9 @@ sub tests {
   my $curr_results = $curr_helper->execute_into_hash( -SQL => $sql );
 
   foreach my $type ( keys %$prev_results ) {
-    my $desc = "There are the same number of wga_coverage populated rows between releases for $type";
+    my $desc = "There are the same number of goc_score populated rows between releases for $type";
     cmp_ok( $curr_results->{$type}, ">=", $prev_results->{$type}, $desc );
   }
-
 }
 
 1;

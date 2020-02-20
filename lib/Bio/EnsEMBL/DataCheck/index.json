@@ -258,6 +258,16 @@
       "name" : "CheckFlatProteinTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
    },
+   "CheckGOCScoreStats" : {
+      "datacheck_type" : "critical",
+      "description" : "The number of rows for GOC have not dropped from previous release",
+      "groups" : [
+         "compara",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckGOCScoreStats",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGOCScoreStats"
+   },
    "CheckGeneGainLossData" : {
       "datacheck_type" : "critical",
       "description" : "ncRNA and protein trees must have gene Gain/Loss trees",
@@ -482,8 +492,6 @@
       "description" : "The number of rows for WGA coverage have not dropped from previous release",
       "groups" : [
          "compara",
-         "compara_multiple_alignments",
-         "compara_pairwise_alignments",
          "compara_protein_trees"
       ],
       "name" : "CheckWGACoverageStats",
