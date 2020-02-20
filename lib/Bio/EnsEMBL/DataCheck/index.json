@@ -477,6 +477,18 @@
       "name" : "CheckTableSizes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckTableSizes"
    },
+   "CheckWGACoverageStats" : {
+      "datacheck_type" : "critical",
+      "description" : "The number of rows for WGA coverage have not dropped from previous release",
+      "groups" : [
+         "compara",
+         "compara_multiple_alignments",
+         "compara_pairwise_alignments",
+         "compara_protein_trees"
+      ],
+      "name" : "CheckWGACoverageStats",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckWGACoverageStats"
+   },
    "ChromosomesAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomal seq_regions have appropriate attribute",
