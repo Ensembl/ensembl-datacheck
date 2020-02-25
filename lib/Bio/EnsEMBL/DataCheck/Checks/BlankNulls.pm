@@ -44,7 +44,8 @@ sub tests {
     WHERE
       TABLE_SCHEMA = database() AND
       DATA_TYPE = 'varchar' AND
-      IS_NULLABLE = 'YES'
+      IS_NULLABLE = 'YES' AND
+      TABLE_TYPE = 'BASE TABLE'
   /;
   my $nullables = $self->dba->dbc->sql_helper->execute(-SQL => $nullable_sql);
 
