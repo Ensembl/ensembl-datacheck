@@ -45,7 +45,7 @@ sub tests {
     SELECT
       meta_key, species_id FROM meta
     WHERE
-      meta_key IN ('patch', 'schema_type', 'schema_version') AND
+      meta_key IN ('division', 'patch', 'schema_type', 'schema_version') AND
       species_id IS NOT NULL
   /;
   is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
@@ -56,7 +56,7 @@ sub tests {
     SELECT
       meta_key, species_id FROM meta
     WHERE
-      meta_key NOT IN ('patch', 'schema_type', 'schema_version') AND
+      meta_key NOT IN ('division', 'patch', 'schema_type', 'schema_version') AND
       species_id IS NULL
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
