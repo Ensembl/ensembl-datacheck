@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION => 'Requisite core-like tables are identical to those in the core database',
   GROUPS      => ['corelike'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
-  TABLES      => ['assembly', 'coord_system', 'seq_region', 'seq_region_attrib']
+  TABLES      => ['assembly', 'coord_system', 'seq_region']
 };
 
 sub tests {
