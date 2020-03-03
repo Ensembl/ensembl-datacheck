@@ -52,6 +52,7 @@ sub tests {
   INNER JOIN coord_system USING (coord_system_id)
        WHERE analysis_description.displayable = 0
          AND coord_system.species_id = $species_id
+         AND coord_system.name <> 'lrg'
     GROUP BY analysis.logic_name
       HAVING COUNT(*) > 1
     /;
@@ -69,6 +70,7 @@ sub tests {
   INNER JOIN coord_system USING (coord_system_id)
        WHERE analysis_description.web_data is NULL
          AND coord_system.species_id = $species_id
+         AND coord_system.name <> 'lrg'
     GROUP BY analysis.logic_name
       HAVING COUNT(*) > 1
     /;
