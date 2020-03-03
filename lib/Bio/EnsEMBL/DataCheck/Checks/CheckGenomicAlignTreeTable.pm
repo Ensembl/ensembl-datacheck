@@ -60,6 +60,7 @@ sub tests {
   my @methods = qw( EPO EPO_LOW_COVERAGE );
   my $db_name = $self->dba->dbc->dbname;
   my $dbc = $self->dba->dbc;
+  my $helper = $dbc->sql_helper;
   my @mlsses;
 
   foreach my $method ( @methods ) {
@@ -97,8 +98,11 @@ sub tests {
     /;
     
     my $desc_3 = "Less than 1% of entries have a distance_to_parent > 1 for $mlss_id ($mlss_name)";
-    
-    row_totals($dbc, undef, $sql_3, $sql_2, 0.99, $desc_3);
+
+    my $expected_count = $helper->execute_single_result( -SQL => $sql_2 );
+    my $got_count = $helper->execute_single_result( -SQL => $sql_3 );
+    cmp_ok( $got_count, '<=', $expected_count * 0.01, $desc_3 )
+
   }
 
 }
