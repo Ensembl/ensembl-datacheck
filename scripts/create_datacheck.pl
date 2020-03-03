@@ -26,7 +26,7 @@ perl create_datacheck.pl [options]
 
 =item B<-n[ame]> <name>
 
-Mandatory. The name of the datacheck, in 'camel case', e.g. ForeignKeys.
+Mandatory. The name of the datacheck, in 'Pascal case', e.g. ForeignKeys.
 
 =item B<-d[escription]> <description>
 
@@ -34,49 +34,49 @@ Mandatory. Short description of datacheck.
 
 =item B<-c[lass]> ['BaseCheck'|'DbCheck']
 
-The Perl class for the datacheck. It is extremely unlikely that you will 
+The Perl class for the datacheck. It is extremely unlikely that you will
 need anything other than the default, 'DbCheck'.
 
 =item B<-datacheck_d[ir]> <datacheck_dir>
 
-The directory in which to save the datacheck module. Defaults to the 
-repository's default value (lib/Bio/EnsEMBL/DataCheck/Checks). 
+The directory in which to save the datacheck module. Defaults to the
+repository's default value (lib/Bio/EnsEMBL/DataCheck/Checks).
 Mandatory if -index_file is specified.
 
 =item B<-i[ndex_file]> <index_file>
 
 The path to the index_file that will be created/updated. Defaults to the
-repository's default value (lib/Bio/EnsEMBL/DataCheck/index.json). 
+repository's default value (lib/Bio/EnsEMBL/DataCheck/index.json).
 Mandatory if -datacheck_dir is specified.
 
 =item B<-g[roups]> <groups>
 
-The groups to which the datacheck belongs, in lower case with underscores, 
-e.g. core_handover. Multiple groups can be given as separate -groups, 
-or as a single comma-separated string.
+The groups to which the datacheck belongs, in 'Snake case', e.g. core_handover.
+Multiple groups can be given as separate -groups, or as a single
+comma-separated string.
 
 =item B<-datacheck_t[ype]> ['critical'|'advisory']
 
-The type of the datacheck. The default in the datacheck framework is 
+The type of the datacheck. The default in the datacheck framework is
 'critical', so you only really need to set this for advisory datachecks.
 
 =item B<-db[_types]> <db_types>
 
-Only relevant for 'DbCheck' class datachecks. The types of database for 
+Only relevant for 'DbCheck' class datachecks. The types of database for
 which the datacheck is appropriate, e.g. 'core', 'compara'. Multiple db_types
 can be given as separate -db_types, or as a single comma-separated string.
 
 =item B<-t[ables]> <tables>
 
-Only relevant for 'DbCheck' class datachecks. The database tables that 
+Only relevant for 'DbCheck' class datachecks. The database tables that
 contain data used by the datacheck, e.g. 'gene', 'object_xref'. Multiple tables
 can be given as separate -tables, or as a single comma-separated string.
 
 =item B<-p[er_db]> [0|1]
 
-Only relevant for 'DbCheck' class datachecks. The default in the datacheck 
-framework is to run once per species (per_db = 0). For collection 
-databases it may be appropriate for the datacheck to run once per database 
+Only relevant for 'DbCheck' class datachecks. The default in the datacheck
+framework is to run once per species (per_db = 0). For collection
+databases it may be appropriate for the datacheck to run once per database
 instead.
 
 =item B<-h[elp]>
@@ -98,7 +98,7 @@ use File::Spec::Functions qw(catdir);
 use Getopt::Long qw(:config no_ignore_case);
 use Path::Tiny;
 use Pod::Usage;
-    
+
 my (
     $help,
     $name, $description, $class, $datacheck_dir, $index_file,

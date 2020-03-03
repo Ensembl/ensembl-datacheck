@@ -553,6 +553,15 @@
       "name" : "CompareMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMSANames"
    },
+   "CompareOntologyTerm" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare Term counts between current and previous ontology database",
+      "groups" : [
+         "ontologies"
+      ],
+      "name" : "CompareOntologyTerm",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTerm"
+   },
    "ComparePhenotypeFeatures" : {
       "datacheck_type" : "advisory",
       "description" : "Compare phenotype feature counts between two databases, categorised by source",
