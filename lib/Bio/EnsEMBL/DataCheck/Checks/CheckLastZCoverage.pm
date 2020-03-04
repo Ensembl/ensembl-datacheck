@@ -43,7 +43,7 @@ sub skip_tests {
   my $db_name = $self->dba->dbc->dbname;
 
   if ( scalar(@$mlss) == 0 ) {
-    return( 1, "There are no SYNTENY MLSS in $db_name" );
+    return( 1, "There are no LASTZ MLSS in $db_name" );
   }
 }
 
