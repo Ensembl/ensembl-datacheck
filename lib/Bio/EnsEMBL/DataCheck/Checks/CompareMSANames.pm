@@ -41,7 +41,10 @@ sub tests {
   my $prev_dba;
   $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') if $self->registry_file;
   $prev_dba = $self->get_old_dba if $self->old_server_uri && !$prev_dba;
-  die "Neither -registry_file nor -old_server_uri given on the command-line. Cannot find the previous database" unless $prev_dba;
+  unless ($prev_dba) {
+      fail("Neither 'registry_file' nor 'old_server_uri' parameter given. Cannot find the previous database");
+      return;
+  }
   my $curr_db_name = $curr_dba->dbc->dbname;
   my $prev_db_name = $prev_dba->dbc->dbname;
   my $curr_mlss_adap = $curr_dba->get_MethodLinkSpeciesSetAdaptor;
