@@ -36,6 +36,17 @@ use constant {
   TABLES         => ['conservation_score', 'genomic_align_block', 'method_link', 'method_link_species_set', 'method_link_species_set_tag']
 };
 
+sub skip_tests {
+  my ($self) = @_;
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  my $mlss = $mlss_adap->fetch_all_by_method_link_type('GERP_CONSERVATION_SCORE');
+  my $db_name = $self->dba->dbc->dbname;
+
+  if ( scalar(@$mlss) == 0 ) {
+    return( 1, "There are no GERP_CONSERVATION_SCORE MLSS in $db_name" );
+  }
+}
+
 sub tests {
   my ($self) = @_;
   my $dba = $self->dba;

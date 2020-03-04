@@ -37,6 +37,23 @@ use constant {
   TABLES         => ['CAFE_gene_family', 'family', 'gene_member', 'gene_member_hom_stats', 'gene_tree_root', 'genome_db']
 };
 
+sub skip_tests {
+    my ($self) = @_;
+    my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+    my @methods = qw( PROTEIN_TREES NC_TREES );
+    my $db_name = $self->dba->dbc->dbname;
+
+    my @mlsses;
+    foreach my $method ( @methods ) {
+      my $mlss = $mlss_adap->fetch_all_by_method_link_type($method);
+      push @mlsses, @$mlss;
+    }
+
+    if ( scalar(@mlsses) == 0 ) {
+      return( 1, "There are no multiple alignments in $db_name" );
+    }
+}
+
 sub tests {
   my ($self) = @_;
   my $dba = $self->dba;

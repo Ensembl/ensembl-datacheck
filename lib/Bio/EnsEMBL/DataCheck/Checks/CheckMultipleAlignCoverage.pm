@@ -36,6 +36,23 @@ use constant {
   TABLES      => ['dnafrag', 'genome_db', 'genomic_align', 'method_link', 'method_link_species_set', 'species_tree_node', 'species_tree_node_tag']
 };
 
+sub skip_tests {
+    my ($self) = @_;
+    my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+    my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+    my $db_name = $self->dba->dbc->dbname;
+
+    my @mlsses;
+    foreach my $method ( @methods ) {
+      my $mlss = $mlss_adap->fetch_all_by_method_link_type($method);
+      push @mlsses, @$mlss;
+    }
+
+    if ( scalar(@mlsses) == 0 ) {
+      return( 1, "There are no multiple alignments in $db_name" );
+    }
+
+}
 
 sub tests {
   my ($self) = @_;
