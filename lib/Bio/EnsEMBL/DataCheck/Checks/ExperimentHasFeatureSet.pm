@@ -36,16 +36,37 @@ use constant {
   TABLES      => ['experiment','feature_type','epigenome','peak_calling'],
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = q/
+    SELECT COUNT(name) FROM regulatory_build 
+    WHERE is_current=1
+  /;
+
+  if (! sql_count($self->dba, $sql) ) {
+    return (1, 'The database has no regulatory build');
+  }
+}
+
 sub tests {
   my ($self) = @_;
   my $desc = "Every distinct experiment, epigenome and feature_type combination is linked to a feature_set";
   my $sql = q/
-    SELECT DISTINCT ex.experiment_id, ex.epigenome_id, ex.feature_type_id, ep.display_label, ft.name FROM 
+    SELECT DISTINCT
+      ex.experiment_id,
+      ex.epigenome_id,
+      ex.feature_type_id,
+      ep.short_name,
+      ft.name
+    FROM 
       experiment ex JOIN 
       feature_type ft USING(feature_type_id) JOIN
       epigenome ep USING(epigenome_id) LEFT JOIN 
       peak_calling pc ON ex.epigenome_id=pc.epigenome_id AND ex.feature_type_id=pc.feature_type_id
-    WHERE ft.name!='WCE' AND peak_calling_id is NULL
+    WHERE
+      ft.name!='WCE' AND
+      peak_calling_id is NULL
   /;
   is_rows_zero($self->dba, $sql, $desc);
 }
