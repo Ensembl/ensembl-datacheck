@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -33,6 +34,19 @@ use constant {
   GROUPS      => ['funcgen', 'regulatory_build', 'funcgen_registration'],
   DB_TYPES    => ['funcgen']
 };
+
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = q/
+    SELECT COUNT(name) FROM regulatory_build 
+    WHERE is_current=1
+  /;
+
+  if (! sql_count($self->dba, $sql) ) {
+    return (1, 'The database has no regulatory build');
+  }
+}
 
 sub tests {
   my $self = shift;
@@ -47,8 +61,6 @@ sub tests {
         $read_file->name
       );
   }
-  return;
 }
 
 1;
-
