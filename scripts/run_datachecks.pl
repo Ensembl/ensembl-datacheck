@@ -182,6 +182,10 @@ if ($dbname) {
   if (! defined $dbtype) {
     if ($dbname =~ /_compara_/) {
       $dbtype = 'compara';
+    } elsif ($dbname =~ /ensembl_ontology/) {
+      $dbtype = 'ontology';
+    } elsif ($dbname =~ /ensembl_production/) {
+      $dbtype = 'production';
     } else {
       ($dbtype) = $dbname =~ /_([a-z]+)[\d_]+$/;
     }
@@ -189,14 +193,16 @@ if ($dbname) {
   die "Could not derive database type from dbname" unless defined $dbtype;
 
   my $adaptor = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'   if $dbtype eq 'compara';
-  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'   if $dbtype eq 'funcgen';
-  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor' if $dbtype eq 'variation';
+  $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'    if $dbtype eq 'compara';
+  $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'    if $dbtype eq 'funcgen';
+  $adaptor = 'Bio::EnsEMBL::Ontology::DBSQL::DBAdaptor'   if $dbtype eq 'ontology';
+  $adaptor = 'Bio::EnsEMBL::Production::DBSQL::DBAdaptor' if $dbtype eq 'production';
+  $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor'  if $dbtype eq 'variation';
 
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
 
   my $species;
-  if ($dbtype eq 'compara') {
+  if ($dbtype =~ /^(compara|ontology|production)$/) {
     $species = 'multi';
   } else {
     my $sql = q/
