@@ -66,7 +66,7 @@ sub tests {
     my $gab_mlss_list = $mlss->get_all_sister_mlss_by_class('GenomicAlignBlock.pairwise_alignment');
     my $gdbs = $mlss->species_set->genome_dbs;
     
-    #Collect dnafrag_ids longer than 1Mb with exceptions
+    #Collect dnafrag_ids of karyotype-level regions
     foreach my $gdb ( @$gdbs ) {
       my $gdb_id = $gdb->dbID;
       my $karyo_dnafrags = $dnafrag_adap->fetch_all_karyotype_DnaFrags_by_GenomeDB($gdb);
