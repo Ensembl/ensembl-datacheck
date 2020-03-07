@@ -49,11 +49,14 @@ sub tests {
 
   foreach my $data_label ( @data_labels ) {
     my @bad_root_id;
-    my $objects = $helper->execute(
+    my $it = $helper->execute(
       -SQL => $sql_1,
       -PARAMS => [$data_label],
       -USE_HASHREFS => 1,
-      -CALLBACK => sub {
+      -ITERATOR => 1,
+      -PREPARE_PARAMS => [{'mysql_use_result' => 1}],
+    );
+    $it->each( sub {
         my $row = shift @_;
         my $json_check = eval{ decode_json($row->{json_string}) };
         if ( $@ ) {
