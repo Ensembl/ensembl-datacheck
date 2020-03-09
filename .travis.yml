@@ -29,6 +29,7 @@ before_install:
     - git clone --branch $ENSEMBL_BRANCH --depth 1 https://github.com/Ensembl/ensembl-test.git
     - git clone --branch $ENSEMBL_BRANCH --depth 1 https://github.com/Ensembl/ensembl-variation.git
     - git clone --branch $ENSEMBL_BRANCH --depth 1 https://github.com/Ensembl/ensembl-compara.git
+    - git clone --branch $ENSEMBL_BRANCH --depth 1 https://github.com/Ensembl/ensembl-biomart.git
     - wget https://github.com/bioperl/bioperl-live/archive/release-1-6-924.zip
     - unzip release-1-6-924.zip
 
