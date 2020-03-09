@@ -196,6 +196,18 @@ sub compara_fk {
     ref_root_id IS NULL
   /;
   fk($self->dba, "gene_member_hom_stats", "collection", "gene_tree_root", "clusterset_id", $hom_stats_constraint);
+
+  my $mlss_tag_genome_constraint = q/
+    tag LIKE '%reference_species'
+  /;
+  fk($self->dba, "method_link_species_set_tag", "value", "genome_db", "name", $mlss_tag_genome_constraint);
+
+  my $mlss_tag_msa_constraint = q/
+    tag = 'msa_mlss_id'
+  /;
+  fk($self->dba, "method_link_species_set_tag", "value", "method_link_species_set", "method_link_species_set_id", $mlss_tag_msa_constraint);
+
+  
 }
 
 1;
