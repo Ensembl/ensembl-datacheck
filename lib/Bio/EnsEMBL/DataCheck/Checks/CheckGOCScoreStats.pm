@@ -37,7 +37,7 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') || $self->get_old_dba;
+  my $prev_dba = $self->get_old_dba;
 
   my $curr_helper = $self->dba->dbc->sql_helper;
   my $prev_helper = $prev_dba->dbc->sql_helper;
