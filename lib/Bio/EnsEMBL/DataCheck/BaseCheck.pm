@@ -178,7 +178,7 @@ sub run {
   # subtests, there will always be a single test result in the TAP output.
   # It will be at the same level of indentation as the 'Subtest' header.
   my ($indent) = $output =~ /(\s*)# Subtest: $name/m;
-  my $passed = $output =~ /^${indent}ok 1/m;
+  my $passed = $output =~ /^${indent}ok \d/m;
   $self->_passed($passed || 0);
 
   # Return value indicates failure, like a program exit code, i.e. 0 is fine.
