@@ -56,6 +56,7 @@
       "datacheck_type" : "critical",
       "description" : "Gene analyses have descriptions",
       "groups" : [
+         "analysis_description",
          "core",
          "corelike",
          "geneset"
@@ -748,6 +749,7 @@
       "datacheck_type" : "critical",
       "description" : "Analysis descriptions and display settings are consistent with production database",
       "groups" : [
+         "analysis_description",
          "controlled_tables",
          "core",
          "corelike"
@@ -899,6 +901,7 @@
       "datacheck_type" : "advisory",
       "description" : "Genes are displayable and have web_data attached to their analysis",
       "groups" : [
+         "analysis_description",
          "core",
          "corelike",
          "geneset"
@@ -910,6 +913,7 @@
       "datacheck_type" : "critical",
       "description" : "Sample gene is displayable and has web_data attached to its analysis",
       "groups" : [
+         "analysis_description",
          "core",
          "geneset"
       ],
@@ -1076,6 +1080,7 @@
       "datacheck_type" : "critical",
       "description" : "Probe features and feature sets have descriptions and are displayable",
       "groups" : [
+         "analysis_description",
          "funcgen"
       ],
       "name" : "FuncgenAnalysisDescription",

@@ -23,17 +23,28 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ControlledAnalysis',
   DESCRIPTION => 'Analysis descriptions and display settings are consistent with production database',
-  GROUPS      => ['controlled_tables', 'core', 'corelike'],
+  GROUPS      => ['analysis_description', 'controlled_tables', 'core', 'corelike'],
   DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
   TABLES      => ['analysis', 'analysis_description'],
   PER_DB      => 1
 };
+
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = 'SELECT COUNT(*) FROM analysis';
+
+  if (! sql_count($self->dba, $sql) ) {
+    return (1, 'No analyses.');
+  }
+}
 
 sub tests {
   my ($self) = @_;
