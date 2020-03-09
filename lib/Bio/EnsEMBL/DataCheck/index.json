@@ -360,6 +360,16 @@
       "name" : "CheckMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMSANames"
    },
+   "CheckMartDatasetName" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the given core database mart dataset name is not exceeding MySQL limit of 64 chars and that they are unique accross all the divisions (except Bacteria)",
+      "groups" : [
+         "core",
+         "biomart"
+      ],
+      "name" : "CheckMartDatasetName",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMartDatasetName"
+   },
    "CheckMethodLinkSpeciesSetNames" : {
       "datacheck_type" : "critical",
       "description" : "Check for consistency of names in method_link_species_set (and species_set_header)",
