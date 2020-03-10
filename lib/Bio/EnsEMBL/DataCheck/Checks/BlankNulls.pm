@@ -40,11 +40,13 @@ sub tests {
 
   my $nullable_sql = q/
     SELECT TABLE_NAME, COLUMN_NAME FROM
-      INFORMATION_SCHEMA.COLUMNS
+      INFORMATION_SCHEMA.COLUMNS INNER JOIN
+      INFORMATION_SCHEMA.TABLES USING (TABLE_SCHEMA, TABLE_NAME)
     WHERE
       TABLE_SCHEMA = database() AND
       DATA_TYPE = 'varchar' AND
-      IS_NULLABLE = 'YES'
+      IS_NULLABLE = 'YES' AND
+      TABLE_TYPE = 'BASE TABLE'
   /;
   my $nullables = $self->dba->dbc->sql_helper->execute(-SQL => $nullable_sql);
 

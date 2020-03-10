@@ -418,7 +418,15 @@ sub get_old_dba {
       $params{'-MULTISPECIES_DB'} = 1;
     }
 
+    if (lc $group eq 'compara') {
+	$old_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->new(%params);
+    } elsif (lc $group eq 'variation') {
+	$old_dba = Bio::EnsEMBL::Variation::DBSQL::DBAdaptor->new(%params);
+    } elsif (lc $group eq 'funcgen') {
+	$old_dba = Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor->new(%params);
+    } else {
 	$old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
+    }
 
     push @{$self->dba_list}, $old_dba;
   }

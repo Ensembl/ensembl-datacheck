@@ -105,7 +105,7 @@ sub compara_fk {
   if ($self->dba->dbc->dbname !~ /_master/) {
     fk($self->dba, 'method_link', 'method_link_id', 'method_link_species_set');
     fk($self->dba, 'species_set', 'species_set_id', 'method_link_species_set');
-    fk($self->dba, 'genome_db',   'genome_db_id',   'species_set');
+    fk($self->dba, 'genome_db',   'genome_db_id',   'species_set',             undef, 'name != "ancestral_sequences"' );
   }
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
