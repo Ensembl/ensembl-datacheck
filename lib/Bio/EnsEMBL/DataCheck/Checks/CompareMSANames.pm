@@ -38,7 +38,13 @@ sub tests {
   my ($self) = @_;
 
   my $curr_dba = $self->dba;
-  my $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') || $self->get_old_dba;
+  my $prev_dba;
+  $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') if $self->registry_file;
+  $prev_dba = $self->get_old_dba if $self->old_server_uri && !$prev_dba;
+  unless ($prev_dba) {
+      fail("Neither 'registry_file' nor 'old_server_uri' parameter given. Cannot find the previous database");
+      return;
+  }
   my $curr_db_name = $curr_dba->dbc->dbname;
   my $prev_db_name = $prev_dba->dbc->dbname;
   my $curr_mlss_adap = $curr_dba->get_MethodLinkSpeciesSetAdaptor;
@@ -71,9 +77,9 @@ sub tests {
   }
   
   my $desc_2 = "The number of species_sets in $curr_db_name are the same as in $prev_db_name";
-  cmp_ok( ( scalar keys $curr_mlss_names ), '==', ( scalar keys $prev_mlss_names ), $desc_2 );
+  cmp_ok( ( scalar keys %$curr_mlss_names ), '==', ( scalar keys %$prev_mlss_names ), $desc_2 );
   
-  foreach my $species_set_name ( keys $prev_mlss_names ) {
+  foreach my $species_set_name ( keys %$prev_mlss_names ) {
     my $desc_4 = "$species_set_name is present in $curr_db_name";
     if ( exists ($curr_mlss_names->{$species_set_name}) ) {
       pass( $desc_4 );

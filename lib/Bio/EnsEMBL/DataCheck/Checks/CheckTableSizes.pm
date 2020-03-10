@@ -40,7 +40,13 @@ sub tests {
   
   my $curr_dba = $self->dba;
   my $curr_helper = $curr_dba->dbc->sql_helper;
-  my $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') || $self->get_old_dba;
+  my $prev_dba;
+  $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') if $self->registry_file;
+  $prev_dba = $self->get_old_dba if $self->old_server_uri && !$prev_dba;
+  unless ($prev_dba) {
+      fail("Neither 'registry_file' nor 'old_server_uri' parameter given. Cannot find the previous database");
+      return;
+  }
   my $prev_helper = $prev_dba->dbc->sql_helper;
   
   my $table_sql = "SHOW TABLES";
@@ -81,7 +87,7 @@ sub tests {
   }
   
   foreach my $table ( @$prev_tables ) {
-    my $desc_5 = "Table $table is present in $curr_db_name and present in $prev_db_name";
+    my $desc_5 = "Table $table is still present in $curr_db_name (was present in $prev_db_name)";
     ok( exists($curr_tables{$table}), $desc_5 );
   }
 }
