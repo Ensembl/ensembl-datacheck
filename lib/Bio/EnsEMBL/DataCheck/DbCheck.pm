@@ -167,6 +167,7 @@ sub _registry_default {
   $self->dba->dbc->disconnect_if_idle();
 
   if (defined $self->registry_file) {
+    $registry->disconnect_all;
     $registry->clear;
     $registry->load_all($self->registry_file);
   } elsif (defined $self->server_uri) {
@@ -178,6 +179,7 @@ sub _registry_default {
         die "species and group parameters are required if the URI includes a database name";
       }
     }
+    $registry->disconnect_all;
     $registry->clear;
     $registry->load_registry_from_url($self->server_uri);
   } else {

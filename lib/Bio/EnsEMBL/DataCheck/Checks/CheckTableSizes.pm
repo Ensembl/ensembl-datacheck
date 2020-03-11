@@ -40,9 +40,7 @@ sub tests {
   
   my $curr_dba = $self->dba;
   my $curr_helper = $curr_dba->dbc->sql_helper;
-  my $prev_dba;
-  $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') if $self->registry_file;
-  $prev_dba = $self->get_old_dba if $self->old_server_uri && !$prev_dba;
+  my $prev_dba = $self->get_old_dba;
   unless ($prev_dba) {
       fail("Neither 'registry_file' nor 'old_server_uri' parameter given. Cannot find the previous database");
       return;
