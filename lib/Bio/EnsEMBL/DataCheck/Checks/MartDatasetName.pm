@@ -64,7 +64,7 @@ sub tests {
   # If dataset is longer than 18 char, we won't be able to generate gene mart tables
   # like dataset_gene_ensembl__protein_feature_superfamily__dm as this will exceed
   # the MySQL table name limit of 64 char.
-  cmp_ok(length($mart_dataset),"<",18) || diag($self->species." mart name: $mart_dataset is too long, contact the Production team");
+  cmp_ok(length($mart_dataset),"<=",18) || diag($self->species." mart name: $mart_dataset is too long, contact the Production team");
   my $metadata_dba = $self->get_dba('multi', 'metadata');
   my $gdba = $metadata_dba->get_GenomeInfoAdaptor();
   my $rdba = $metadata_dba->get_DataReleaseInfoAdaptor();
