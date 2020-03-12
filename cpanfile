@@ -6,3 +6,4 @@ requires 'Path::Tiny';
 requires 'Test::Exception', '0.43';
 requires 'Test::JSON', '0.11';
 requires 'Test::More', '1.302086';
+requires 'File::Slurp';
