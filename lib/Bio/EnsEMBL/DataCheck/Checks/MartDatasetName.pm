@@ -70,7 +70,6 @@ sub tests {
   my $gdba = $metadata_dba->get_GenomeInfoAdaptor();
   my $rdba = $metadata_dba->get_DataReleaseInfoAdaptor();
   # Get the current release version
-  $DB::single = 1;
   ($rdba,$gdba) = fetch_and_set_release($schema_version,$rdba,$gdba);
   my $species_division = $mca->get_division;
   my $divisions;
