@@ -46,9 +46,10 @@ sub skip_tests {
   my $mca = $self->dba->get_adaptor('MetaContainer');
   my $division = $mca->get_division;
   my $production_name = $mca->get_production_name;
+  my $schema_version = $mca->get_schema_version;
   if ($division eq "EnsemblVertebrates"){
     # Load species to include in the Vertebrates marts
-    my $included_species = genome_to_include($division);
+    my $included_species = genome_to_include($division,$schema_version);
     if (!grep( /$production_name/, @$included_species) ){
       return (1, 'We dont build mart for this species');
     }
@@ -68,9 +69,9 @@ sub tests {
   my $metadata_dba = $self->get_dba('multi', 'metadata');
   my $gdba = $metadata_dba->get_GenomeInfoAdaptor();
   my $rdba = $metadata_dba->get_DataReleaseInfoAdaptor();
-  my ($release,$release_info);
   # Get the current release version
-  ($rdba,$gdba,$release,$release_info) = fetch_and_set_release($schema_version,$rdba,$gdba);
+  $DB::single = 1;
+  ($rdba,$gdba) = fetch_and_set_release($schema_version,$rdba,$gdba);
   my $species_division = $mca->get_division;
   my $divisions;
   # For Vertebrates we only want to check the other divisions since these are on a different server
@@ -114,13 +115,11 @@ sub generate_dataset_name_from_db_name {
 }
 
 sub genome_to_include {
-	my ($div) = @_;
+	my ($div,$schema_version) = @_;
 	#Get both division short and full name from a division short or full name
 	my ($division,$division_name)=process_division_names($div);
-	my @included_species;
-	my $filename = repo_location('ensembl-biomart').'/scripts/include_'.$division.'.ini';
-	@included_species = read_file( $filename,chomp => 1);
-	return \@included_species;
+  my $included_species = parse_ini_file("https://raw.githubusercontent.com/Ensembl/ensembl-biomart/release/".$schema_version."/scripts/include_".$division.".ini");
+	return $included_species;
 }
 
 =head2 process_division_names
@@ -185,6 +184,33 @@ sub fetch_and_set_release {
     $gdba->data_release($release_info);
   }
   return ($rdba,$gdba,$release,$release_info);
+}
+
+=head2 parse_ini_file
+  Description: Subroutine parsing an ini file. I am reusing code from https://github.com/Ensembl/ensembl-metadata/blob/master/modules/Bio/EnsEMBL/MetaData/AnnotationAnalyzer.pm
+  Arg        : ini file GitHub URL
+  Returntype : Hash ref (keys are method parameter, values are associated parameter value)
+  Exceptions : none
+  Caller     : general
+  Status     : Stable
+=cut
+
+sub parse_ini_file {
+  my ($ini_file)= @_ ;
+  my $ua = LWP::UserAgent->new();
+  my $req = HTTP::Request->new( GET => $ini_file );
+  # Pass request to the user agent and get a response back
+  my $res = $ua->request($req);
+  my $ini;
+  # Check the outcome of the response
+  if ( $res->is_success ) {
+    $ini = $res->content;
+  }
+  else {
+    die( "Could not retrieve $ini_file: " . $res->status_line );
+  }
+  my @array = split(/\n/,"$ini");
+  return \@array;
 }
 1;
 
