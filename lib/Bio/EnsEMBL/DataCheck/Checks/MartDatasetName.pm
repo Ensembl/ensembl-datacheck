@@ -24,7 +24,6 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/repo_location/;
 use LWP::UserAgent;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
