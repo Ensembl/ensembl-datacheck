@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DuplicateXref',
   DESCRIPTION    => 'Xrefs have been added twice with different descriptions or versions',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
   TABLES         => ['xref'],
   PER_DB         => 1,

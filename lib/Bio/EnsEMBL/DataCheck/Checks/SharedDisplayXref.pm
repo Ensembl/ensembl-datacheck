@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'SharedDisplayXref',
   DESCRIPTION    => 'Protein coding gene/transcript display xrefs are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
   TABLES         => ['gene', 'transcript', 'seq_region', 'coord_system','xref'],
   PER_DB         => 1,

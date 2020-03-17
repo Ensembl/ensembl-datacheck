@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'TranscriptDisplayXrefSuffix',
   DESCRIPTION    => 'Transcripts do not have a display xref with a -20* suffix. These are created by the non-vert Xref pipeline unless a flag is enabled: http://www.ebi.ac.uk/seqdb/confluence/display/EnsGen/Xref+mapping#Xrefmapping-CustomisingXrefMapping(DisplayXrefs)',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
   TABLES         => ['transcript', 'xref', 'object_xref','seq_region','coord_system'],
 };

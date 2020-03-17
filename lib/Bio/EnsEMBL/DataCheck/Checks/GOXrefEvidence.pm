@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'GOXrefEvidence',
   DESCRIPTION => 'All GO xrefs have an evidence',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
   TABLES         => ['object_xref','xref', 'external_db', 'ontology_xref']
 };
