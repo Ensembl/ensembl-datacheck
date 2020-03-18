@@ -30,22 +30,24 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DescriptionNewlines',
   DESCRIPTION    => 'Check for newlines and tabs in gene descriptions',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'core'],
   DATACHECK_TYPE => 'critical',
   TABLES         => ['gene']
 };
 
 sub tests {
-  my ($self) = @_;
 
+  my ($self) = @_;
+  my $species_id = $self->dba->species_id;
   my $desc_1 = 'gene description does not contain  newlines and/or tabs';
-  my $sql_1  = qq/
-  	SELECT COUNT(*) 
-        FROM gene 
-        WHERE (LOCATE('\n', description) > 0 OR LOCATE('\t', description) > 0)
+  my $sql_2 = qq/
+    SELECT count(*) FROM  gene g 
+    INNER JOIN seq_region sr USING (seq_region_id) 
+    INNER JOIN  coord_system cs USING (coord_system_id)   
+    where cs.species_id = $species_id  AND (LOCATE('\n', g.description) > 0 OR LOCATE('\t', g.description) > 0)
   /;
 
-  is_rows_zero($self->dba, $sql_1, $desc_1);
+  is_rows_zero($self->dba, $sql_2, $desc_1);
 }
 
 1;

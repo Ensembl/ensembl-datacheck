@@ -901,7 +901,8 @@
       "datacheck_type" : "critical",
       "description" : "Check for newlines and tabs in gene descriptions",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "DescriptionNewlines",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
