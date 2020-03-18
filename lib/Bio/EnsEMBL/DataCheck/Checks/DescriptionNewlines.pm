@@ -36,18 +36,19 @@ use constant {
 };
 
 sub tests {
-
   my ($self) = @_;
+
   my $species_id = $self->dba->species_id;
-  my $desc_1 = 'gene description does not contain  newlines and/or tabs';
-  my $sql_2 = qq/
-    SELECT count(*) FROM  gene g 
+  my $desc_1 = 'Gene description does not contain newlines or tabs';
+  my $sql_1 = qq/
+    SELECT COUNT(*) FROM gene g 
     INNER JOIN seq_region sr USING (seq_region_id) 
     INNER JOIN  coord_system cs USING (coord_system_id)   
-    where cs.species_id = $species_id  AND (LOCATE('\n', g.description) > 0 OR LOCATE('\t', g.description) > 0)
+    WHERE cs.species_id = $species_id
+    AND (LOCATE('\n', g.description) > 0 OR LOCATE('\t', g.description) > 0)
   /;
 
-  is_rows_zero($self->dba, $sql_2, $desc_1);
+  is_rows_zero($self->dba, $sql_1, $desc_1);
 }
 
 1;
