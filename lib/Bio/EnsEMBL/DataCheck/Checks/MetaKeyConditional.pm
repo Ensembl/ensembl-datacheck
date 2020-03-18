@@ -23,6 +23,7 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -45,6 +46,7 @@ sub tests {
     $self->havana_species();
     $self->projected_transcripts();
     $self->repeat_analysis();
+    $self->strain_type();
   } elsif ($self->dba->group eq 'variation') {
     $self->has_polyphen();
     $self->has_sift();
@@ -75,13 +77,48 @@ sub gencode_species {
   SKIP: {
     skip 'Not a GENCODE species', 1 unless exists $gencode_species{$self->species};
 
+    my $mca = $self->dba->get_adaptor('MetaContainer');
+
     my @meta_keys = ('gencode.version');
     foreach my $meta_key (@meta_keys) {
       my $desc = "'$meta_key' meta_key exists";
-      my $mca = $self->dba->get_adaptor('MetaContainer');
       my $values = $mca->list_value_by_key($meta_key);
       ok(scalar @$values, $desc);
     }
+
+    my $old_dba = $self->get_old_dba();
+    my $old_mca = $old_dba->get_adaptor('MetaContainer');
+
+    my $cur_geneset_update = $mca->single_value_by_key('genebuild.last_geneset_update');
+    my $old_geneset_update = $old_mca->single_value_by_key('genebuild.last_geneset_update');
+    my $cur_gencode_version = $mca->single_value_by_key('gencode.version');
+    my $old_gencode_version = $old_mca->single_value_by_key('gencode.version');
+    my $cur_datafreeze_date = $mca->single_value_by_key('genebuild.havana_datafreeze_date');
+    my $old_datafreeze_date = $old_mca->single_value_by_key('genebuild.havana_datafreeze_date');
+
+    if ($cur_geneset_update eq $old_geneset_update) {
+      my $desc_1 = 'Same geneset as previous release, same GENCODE version';
+      is($cur_gencode_version, $old_gencode_version, $desc_1);
+      my $desc_2 = 'Same geneset as previous release, same HAVANA datafreeze date';
+      is($cur_datafreeze_date, $old_datafreeze_date, $desc_2);
+    } else {
+      my $desc_1 = 'Updated geneset from previous release, updated GENCODE version';
+      isnt($cur_gencode_version, $old_gencode_version, $desc_1);
+      my $desc_2 = 'Updated geneset from previous release, updated HAVANA datafreeze date';
+      isnt($cur_datafreeze_date, $old_datafreeze_date, $desc_2);
+    }
+
+    my $desc = 'Web data matches GENCODE version meta key';
+    my $diag = 'Mismatched GENCODE version';
+    my $sql = qq/
+      SELECT logic_name, web_data FROM
+        analysis INNER JOIN
+        analysis_description USING (analysis_id)
+      WHERE
+        web_data LIKE '%GENCODE%' AND
+        web_data NOT LIKE '%$cur_gencode_version%'
+    /;
+    is_rows_zero($self->dba, $sql, $desc, $diag);
   }
 }
 
@@ -156,6 +193,21 @@ sub repeat_analysis {
     my $mca = $self->dba->get_adaptor('MetaContainer');
     my @values = sort @{ $mca->list_value_by_key('repeat.analysis') };
     is_deeply(\@values, \@logic_names, $desc);
+  }
+}
+
+sub strain_type {
+  my ($self) = @_;
+
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $strain_group = $mca->list_value_by_key('species.strain_group');
+
+  SKIP: {
+    skip 'No strain group', 1 unless scalar @$strain_group;
+
+    my $desc = "'strain.type' meta_key exists";
+    my $strain_type = $mca->list_value_by_key('strain.type');
+    ok(scalar @$strain_type, $desc);
   }
 }
 

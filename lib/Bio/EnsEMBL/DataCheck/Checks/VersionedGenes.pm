@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::UnversionedGenes;
+package Bio::EnsEMBL::DataCheck::Checks::VersionedGenes;
 
 use warnings;
 use strict;
@@ -28,56 +28,71 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'UnversionedGenes',
-  DESCRIPTION => 'Genes are unversioned in non-vertebrate databases',
+  NAME        => 'VersionedGenes',
+  DESCRIPTION => 'Genes are versioned in vertebrate databases, and unversioned in non-vertebrate databases',
   GROUPS      => ['core', 'geneset'],
   DB_TYPES    => ['core'],
   TABLES      => ['coord_system', 'exon', 'exon_transcript', 'gene', 'seq_region', 'transcript', 'translation']
 };
 
-sub skip_tests {
-  my ($self) = @_;
-
-  my $mca = $self->dba->get_adaptor('MetaContainer');
-  my $division = $mca->get_division;
-
-  if ($division eq 'EnsemblVertebrates') {
-    return (1, 'Vertebrate genes can be versioned');
-  }
-}
-
 sub tests {
   my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
-  $self->version_check('gene',       $species_id);
-  $self->version_check('transcript', $species_id);
-  $self->version_check('exon',       $species_id);
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $division = $mca->get_division;
 
-  $self->translation_version_check($species_id);
+  my $version_expected = 0;
+  if ($division eq 'EnsemblVertebrates') {
+    $version_expected = 1;
+  }
+
+  $self->version_check('gene',       $version_expected, $species_id);
+  $self->version_check('transcript', $version_expected, $species_id);
+  $self->version_check('exon',       $version_expected, $species_id);
+
+  $self->translation_version_check($version_expected, $species_id);
 }
 
 sub version_check {
-  my ($self, $table, $species_id) = @_;
+  my ($self, $table, $version_expected, $species_id) = @_;
 
-  my $desc = ucfirst($table).'s are unversioned';
-  my $diag = "Versioned $table";
+  my ($desc, $diag, $condition);
+  if ($version_expected) {
+    $desc = ucfirst($table).'s are versioned';
+    $diag = "Unversioned $table";
+    $condition = "AND $table.version IS NULL"
+  } else {
+    $desc = ucfirst($table).'s are unversioned';
+    $diag = "Versioned $table";
+    $condition = "AND $table.version IS NOT NULL"
+  }
+
   my $sql  = qq/
 	SELECT $table.stable_id, $table.version FROM
 	  $table INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
 	WHERE cs.species_id = $species_id
-      AND $table.version IS NOT NULL
+      $condition
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 
 sub translation_version_check {
-  my ($self, $species_id) = @_;
+  my ($self, $version_expected, $species_id) = @_;
 
-  my $desc = 'Translations are unversioned';
-  my $diag = "Versioned translation";
+  my ($desc, $diag, $condition);
+  if ($version_expected) {
+    $desc = 'Translations are versioned';
+    $diag = "Unversioned translation";
+    $condition = "AND tn.version IS NULL"
+  } else {
+    $desc = 'Translations are unversioned';
+    $diag = "Versioned translation";
+    $condition = "AND tn.version IS NOT NULL"
+  }
+
   my $sql  = qq/
 	SELECT tn.stable_id, tn.version FROM
 	  translation tn INNER JOIN
@@ -85,7 +100,7 @@ sub translation_version_check {
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
 	WHERE cs.species_id = $species_id
-      AND tn.version IS NOT NULL
+      $condition
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
 
