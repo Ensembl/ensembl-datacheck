@@ -897,6 +897,16 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
+   "DescriptionNewlines" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for newlines and tabs in gene descriptions",
+      "groups" : [
+         "xref",
+         "core"
+      ],
+      "name" : "DescriptionNewlines",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
+   },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
       "description" : "Genes are displayable and have web_data attached to their analysis",
@@ -944,7 +954,8 @@
       "datacheck_type" : "critical",
       "description" : "Xrefs have been added twice with different descriptions or versions",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "DuplicateXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateXref"
@@ -1090,7 +1101,8 @@
       "datacheck_type" : "critical",
       "description" : "All GO xrefs have an evidence",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "GOXrefEvidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GOXrefEvidence"
@@ -1671,7 +1683,8 @@
       "datacheck_type" : "critical",
       "description" : "Protein coding gene/transcript display xrefs are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "SharedDisplayXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SharedDisplayXref"
@@ -1747,7 +1760,8 @@
       "datacheck_type" : "critical",
       "description" : "Genes/Transcript display_xref does not have display_label set as stable_id",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "StableIdDisplayXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIdDisplayXref"
@@ -1786,7 +1800,8 @@
       "datacheck_type" : "critical",
       "description" : "Transcripts do not have a display xref with a -20* suffix. These are created by the non-vert Xref pipeline unless a flag is enabled: http://www.ebi.ac.uk/seqdb/confluence/display/EnsGen/Xref+mapping#Xrefmapping-CustomisingXrefMapping(DisplayXrefs)",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "TranscriptDisplayXrefSuffix",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptDisplayXrefSuffix"
@@ -1804,7 +1819,8 @@
       "datacheck_type" : "critical",
       "description" : "Gene display xrefs are only attached to UniProtKB Gene Names (Uniprot_gn)",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "UniProtDisplayXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UniProtDisplayXref"
@@ -1824,7 +1840,8 @@
       "datacheck_type" : "critical",
       "description" : "Uniprot xrefs do not have Unreviewed as their primary DB accession",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "UnreviewedXrefs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnreviewedXrefs"
@@ -1946,7 +1963,8 @@
       "datacheck_type" : "critical",
       "description" : "Xrefs do not have HTML markup, non-printing characters, or blank values",
       "groups" : [
-         "xref"
+         "xref",
+         "core"
       ],
       "name" : "XrefFormat",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefFormat"

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'XrefFormat',
   DESCRIPTION    => 'Xrefs do not have HTML markup, non-printing characters, or blank values',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
   TABLES         => ['xref'],
   PER_DB         => 1,
