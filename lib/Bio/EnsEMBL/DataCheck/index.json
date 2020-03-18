@@ -1849,16 +1849,6 @@
       "name" : "UnreviewedXrefs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnreviewedXrefs"
    },
-   "UnversionedGenes" : {
-      "datacheck_type" : "critical",
-      "description" : "Genes are unversioned in non-vertebrate databases",
-      "groups" : [
-         "core",
-         "geneset"
-      ],
-      "name" : "UnversionedGenes",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnversionedGenes"
-   },
    "ValidTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Transcripts have translations, if appropriate",
@@ -1961,6 +1951,16 @@
       ],
       "name" : "VariationSubset",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSubset"
+   },
+   "VersionedGenes" : {
+      "datacheck_type" : "critical",
+      "description" : "Genes are versioned in vertebrate databases, and unversioned in non-vertebrate databases",
+      "groups" : [
+         "core",
+         "geneset"
+      ],
+      "name" : "VersionedGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenes"
    },
    "XrefFormat" : {
       "datacheck_type" : "critical",
