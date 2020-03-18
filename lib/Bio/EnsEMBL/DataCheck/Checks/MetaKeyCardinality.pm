@@ -65,8 +65,10 @@ sub tests {
     species.production_name
     species.scientific_name
     species.species_name
+    species.strain_group
     species.taxonomy_id
     species.url
+    strain.type
   /;
 
   my $mca = $self->dba->get_adaptor("MetaContainer");

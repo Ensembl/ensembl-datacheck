@@ -45,6 +45,7 @@ sub tests {
     $self->havana_species();
     $self->projected_transcripts();
     $self->repeat_analysis();
+    $self->strain_type();
   } elsif ($self->dba->group eq 'variation') {
     $self->has_polyphen();
     $self->has_sift();
@@ -156,6 +157,21 @@ sub repeat_analysis {
     my $mca = $self->dba->get_adaptor('MetaContainer');
     my @values = sort @{ $mca->list_value_by_key('repeat.analysis') };
     is_deeply(\@values, \@logic_names, $desc);
+  }
+}
+
+sub strain_type {
+  my ($self) = @_;
+
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $strain_group = $mca->list_value_by_key('species.strain_group');
+
+  SKIP: {
+    skip 'No strain group', 1 unless scalar @$strain_group;
+
+    my $desc = "'strain.type' meta_key exists";
+    my $strain_type = $mca->list_value_by_key('strain.type');
+    ok(scalar @$strain_type, $desc);
   }
 }
 
