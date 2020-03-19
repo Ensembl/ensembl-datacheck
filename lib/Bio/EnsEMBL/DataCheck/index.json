@@ -1257,6 +1257,16 @@
       "name" : "MTCodonTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MTCodonTable"
    },
+   "MartDatasetName" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the given core database mart dataset name is not exceeding MySQL limit of 64 chars and that they are unique accross all the divisions (except Bacteria)",
+      "groups" : [
+         "core",
+         "biomart"
+      ],
+      "name" : "MartDatasetName",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MartDatasetName"
+   },
    "MemberProductionCounts" : {
       "datacheck_type" : "critical",
       "description" : "Checks that the gene_member counts are appropriately populated",
