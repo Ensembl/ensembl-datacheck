@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'StableIdDisplayXref',
   DESCRIPTION    => 'Genes/Transcript display_xref does not have display_label set as stable_id',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
   TABLES         => ['gene','transcript','xref']
 };

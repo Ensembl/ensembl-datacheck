@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::GOXrefEvidence;
+package Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines;
 
 use warnings;
 use strict;
@@ -25,31 +25,31 @@ use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
-
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'GOXrefEvidence',
-  DESCRIPTION => 'All GO xrefs have an evidence',
+  NAME           => 'DescriptionNewlines',
+  DESCRIPTION    => 'Check for newlines and tabs in gene descriptions',
   GROUPS         => ['xref', 'core'],
-  DB_TYPES       => ['core'],
-  TABLES         => ['object_xref','xref', 'external_db', 'ontology_xref']
+  DATACHECK_TYPE => 'critical',
+  TABLES         => ['gene']
 };
 
 sub tests {
   my ($self) = @_;
-  my $desc = "All GO xrefs have an evidence";
-  my $sql  = qq/
-      SELECT COUNT(*) FROM
-        object_xref ox JOIN
-        xref x using (xref_id) JOIN
-			  external_db e using (external_db_id) LEFT JOIN
-			  ontology_xref oox using (object_xref_id)
-      WHERE
-        e.db_name='GO' AND 
-        oox.object_xref_id is null
-    /;
-    is_rows_zero($self->dba, $sql, $desc);
+
+  my $species_id = $self->dba->species_id;
+  my $desc_1 = 'Gene description does not contain newlines or tabs';
+  my $sql_1 = qq/
+    SELECT COUNT(*) FROM gene g 
+    INNER JOIN seq_region sr USING (seq_region_id) 
+    INNER JOIN  coord_system cs USING (coord_system_id)   
+    WHERE cs.species_id = $species_id
+    AND (LOCATE('\n', g.description) > 0 OR LOCATE('\t', g.description) > 0)
+  /;
+
+  is_rows_zero($self->dba, $sql_1, $desc_1);
 }
 
 1;
+
