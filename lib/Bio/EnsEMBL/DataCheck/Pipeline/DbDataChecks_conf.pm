@@ -45,6 +45,7 @@ sub default_options {
     antispecies  => [],
     antitaxons   => [],
     meta_filters => {},
+    dbname       => [],
     db_type      => 'core',
 
     datacheck_dir      => undef,
@@ -150,6 +151,7 @@ sub pipeline_analyses {
                               antispecies  => $self->o('antispecies'),
                               antitaxons   => $self->o('antitaxons'),
                               meta_filters => $self->o('meta_filters'),
+                              dbname       => $self->o('dbname'),
                               db_type      => $self->o('db_type'),
 
                               datacheck_dir      => $self->o('datacheck_dir'),

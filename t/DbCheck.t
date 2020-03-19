@@ -354,7 +354,7 @@ subtest 'Registry instantiation', sub {
 
   throws_ok(
     sub { $check->registry },
-    qr/Registry requires a 'registry_file' or 'server_uri' attribute/,
+    qr/registry needs to be specified with 'registry_file' or 'server_uri'/,
     'DbCheck->registry fails if a file or uri is not set');
 
   $check = TestChecks::DbCheck_1->new(
