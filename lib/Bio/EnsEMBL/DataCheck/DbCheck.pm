@@ -183,7 +183,8 @@ sub _registry_default {
     $registry->clear;
     $registry->load_registry_from_url($self->server_uri);
   } else {
-    die "Registry requires a 'registry_file' or 'server_uri' attribute";
+    die "The '.$self->name.' datacheck needs data from another database, ".
+        "for which a registry needs to be specified with 'registry_file' or 'server_uri'";
   }
 
   if ($self->dba->is_multispecies) {
@@ -284,6 +285,7 @@ sub load_registry {
 
 sub species {
   my $self = shift;
+
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   my $species;
@@ -477,8 +479,10 @@ sub run_datacheck {
         -species_id      => $species_ids{$species},
       );
       $self->dba($dba);
+      my $db_type = $dba->group;
+      my $db_name = $dba->dbc->dbname;
 
-      subtest $species => sub {
+      subtest "$species, $db_type, $db_name" => sub {
         SKIP: {
           my ($skip, $skip_reason) = $self->skip_tests(@_);
 
@@ -498,8 +502,10 @@ sub run_datacheck {
     if ($self->per_db && $self->dba->is_multispecies) {
       $label = 'all species in collection';
     }
+    my $db_type = $self->dba->group;
+    my $db_name = $self->dba->dbc->dbname;
 
-    subtest $label => sub {
+    subtest "$label, $db_type, $db_name" => sub {
       SKIP: {
         my ($skip, $skip_reason) = $self->skip_tests(@_);
 
