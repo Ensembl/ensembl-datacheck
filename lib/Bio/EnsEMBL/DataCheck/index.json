@@ -1249,6 +1249,15 @@
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
    },
+   "GeneTreeHighlighting" : {
+      "datacheck_type" : "critical",
+      "description" : "GO and InterPro xrefs are loaded for highlighting annotated genes",
+      "groups" : [
+         "compara_annot_highlight"
+      ],
+      "name" : "GeneTreeHighlighting",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTreeHighlighting"
+   },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
       "description" : "Genome statistics are present and correct",
