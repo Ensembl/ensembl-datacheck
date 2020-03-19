@@ -69,7 +69,7 @@ sub write_output {
   # In order to prevent people from inadvertently overwriting existing
   # output, append a subdirectory. 
   if (defined $self->param('output_dir')) {
-    my $subdir = $ENV{'USER'}.'_'.time;
+    my $subdir = $ENV{'USER'}.'_'.time.'_'.$$;
     my $dir = path($self->param('output_dir'), $subdir)->stringify;
     $self->param('output_dir', $dir);
   }
@@ -86,6 +86,7 @@ sub write_output {
     division     => $self->param('division'),
     run_all      => $self->param('run_all'),
     meta_filters => $self->param('meta_filters'),
+    dbname       => $self->param('dbname'),
     db_type      => $self->param('db_type'),
 
     datacheck_dir      => $self->param('datacheck_dir'),

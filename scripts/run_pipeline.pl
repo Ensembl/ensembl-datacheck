@@ -110,6 +110,12 @@ The name of the taxon to exclude from datachecks
 Multiple antitaxons can be given as separate -antitaxons parameters, 
 or as a single comma-separated string.
 
+=item B<-dbname> <dbname>
+
+The name of the database on which to run datachecks.
+Multiple dbnames can be given as separate -dbname parameters, 
+or as a single comma-separated string.
+
 =item B<-names> <name>
 
 The name of the datacheck to execute.
@@ -213,7 +219,7 @@ my (
     $help,
     $host, $port, $user, $pass, $dbname, $drop_db,
     $registry_file, $old_server_uri, $data_file_path, $config_file, $dbtype,
-    @species, @taxons, @divisions, $run_all, @antispecies, @antitaxons,
+    @species, @taxons, @divisions, $run_all, @antispecies, @antitaxons, @dbnames,
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_dir,
     $parallelize_datachecks,
@@ -241,6 +247,7 @@ GetOptions(
   "run_all",          \$run_all,
   "antispecies:s",    \@antispecies,
   "antitaxons:s",     \@antitaxons,
+  "dbnames:s",        \@dbnames,
 
   "names|n:s",         \@names,
   "patterns:s",        \@patterns,
@@ -306,6 +313,7 @@ if (! defined $datacheck_dir && defined $index_file) {
 @divisions = map { split(/[,\s]+/, $_) } @divisions if scalar @divisions;
 @antispecies = map { split(/[,\s]+/, $_) } @antispecies if scalar @antispecies;
 @antitaxons = map { split(/[,\s]+/, $_) } @antitaxons if scalar @antitaxons;
+@dbnames = map { split(/[,\s]+/, $_) } @dbnames if scalar @dbnames;
 
 # If datacheck parameters have been specified as comma-separated strings,
 # convert them into arrays.
@@ -359,6 +367,7 @@ $input_id{division} = \@divisions if scalar @divisions;
 $input_id{run_all} = $run_all if defined $run_all;
 $input_id{antispecies} = \@antispecies if scalar @antispecies;
 $input_id{antitaxons} = \@antitaxons if scalar @antitaxons;
+$input_id{dbname} = \@dbnames if scalar @dbnames;
 $input_id{datacheck_names} = \@names if scalar @names;
 $input_id{datacheck_patterns} = \@patterns if scalar @patterns;
 $input_id{datacheck_groups} = \@groups if scalar @groups;
