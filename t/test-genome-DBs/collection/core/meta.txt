@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	100
+2	\N	schema_version	101
 3	\N	patch	patch_88_89_a.sql|schema_version
 4	1	schema.load_started	2017-05-08 19:14:41
 5	1	schema.load_started	2017-05-08 19:14:45
@@ -184,3 +184,5 @@
 556	\N	patch	patch_98_99_a.sql|schema_version
 557	\N	patch	patch_99_100_a.sql|schema_version
 558	\N	patch	patch_99_100_b.sql|alter_externaldb_type_notnull
+559	\N	patch	patch_99_100_c.sql|alter_mapping_session_assembly_length
+560	\N	patch	patch_100_101_a.sql|schema_version
