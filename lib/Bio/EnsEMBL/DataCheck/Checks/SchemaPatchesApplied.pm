@@ -43,7 +43,7 @@ sub tests {
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   my $db_patches = $mca->list_value_by_key('patch');
-  my @db_patches = sort @$db_patches;
+  my @db_patches = sort { ($a =~ /patch_(\d+)/)[0] <=> ($b =~ /patch_(\d+)/)[0] } @$db_patches;
   foreach (@db_patches) {
     $_ =~ s/\|.*$//;
   }
@@ -84,7 +84,7 @@ sub file_patches {
 
   if (-e $sql_dir) {
     my @files = path($sql_dir)->children(qr/^patch_\d+_\d+_\w+\.sql$/);
-    foreach my $file ( sort {$a->basename cmp $b->basename} @files ) {
+    foreach my $file ( sort { ($a->basename =~ /patch_(\d+)/)[0] <=> ($b->basename =~ /patch_(\d+)/)[0] } @files ) {
       push @file_patches, $file->basename;
     }
   } else {
