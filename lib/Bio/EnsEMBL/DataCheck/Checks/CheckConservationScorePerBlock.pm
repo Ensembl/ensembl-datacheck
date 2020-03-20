@@ -46,8 +46,7 @@ sub tests {
     FROM method_link_species_set mlss
       JOIN method_link USING(method_link_id)
       LEFT JOIN method_link_species_set_tag mlsst ON (mlss.method_link_species_set_id = mlsst.method_link_species_set_id AND tag = "msa_mlss_id" AND value != "")
-    WHERE (type = "GERP_CONSERVATION_SCORE" 
-      OR class LIKE "ConservationScore%") 
+    WHERE type = "GERP_CONSERVATION_SCORE"
       AND tag IS NULL;
   /;
   
@@ -59,8 +58,7 @@ sub tests {
     FROM method_link_species_set 
       LEFT JOIN method_link USING(method_link_id) 
       LEFT JOIN method_link_species_set_tag USING(method_link_species_set_id) 
-    WHERE (type = "GERP_CONSERVATION_SCORE" 
-      OR class LIKE "ConservationScore%") 
+    WHERE type = "GERP_CONSERVATION_SCORE"
       AND tag = "msa_mlss_id";
   /;
 
