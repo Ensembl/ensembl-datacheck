@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
     my ($self) = @_;
     my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-    my @methods = qw (PECAN CACTUS_HAL LASTZ_NET LASTZ_PATCH EPO_LOW_COVERAGE);
+    my @methods = qw (PECAN CACTUS_HAL LASTZ_NET LASTZ_PATCH EPO_EXTENDED);
     my $db_name = $self->dba->dbc->dbname;
 
     my @mlsses;
@@ -58,7 +58,7 @@ sub tests {
   my $dba = $self->dba;
   my $dbc = $dba->dbc;
   my $mlss_adap = $dba->get_MethodLinkSpeciesSetAdaptor;
-  my @mlss_types = qw (PECAN CACTUS_HAL LASTZ_NET LASTZ_PATCH EPO_LOW_COVERAGE);
+  my @mlss_types = qw (PECAN CACTUS_HAL LASTZ_NET LASTZ_PATCH EPO_EXTENDED);
   my @mlsses;
   
   # The tests are excluded from the EPO methods because these have ancestral sequences in

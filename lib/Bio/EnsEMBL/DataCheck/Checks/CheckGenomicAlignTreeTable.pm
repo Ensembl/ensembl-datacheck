@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
     my ($self) = @_;
     my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-    my @methods = qw( EPO EPO_LOW_COVERAGE );
+    my @methods = qw( EPO EPO_EXTENDED );
     my $db_name = $self->dba->dbc->dbname;
     
     my @mlsses;
@@ -57,7 +57,7 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-  my @methods = qw( EPO EPO_LOW_COVERAGE );
+  my @methods = qw( EPO EPO_EXTENDED );
   my $db_name = $self->dba->dbc->dbname;
   my $dbc = $self->dba->dbc;
   my $helper = $dbc->sql_helper;
