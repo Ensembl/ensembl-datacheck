@@ -60,7 +60,6 @@ sub tests {
   my $dbname = $self->dba->dbc->dbname;
   my $mart_dataset = generate_dataset_name_from_db_name($dbname);
   my $mca = $self->dba->get_adaptor('MetaContainer');
-  my $schema_version = $mca->get_schema_version;
   # If dataset is longer than 18 char, we won't be able to generate gene mart tables
   # like dataset_gene_ensembl__protein_feature_superfamily__dm as this will exceed
   # the MySQL table name limit of 64 char.
@@ -69,7 +68,7 @@ sub tests {
   my $gdba = $metadata_dba->get_GenomeInfoAdaptor();
   my $rdba = $metadata_dba->get_DataReleaseInfoAdaptor();
   # Get the current release version
-  ($rdba,$gdba) = fetch_and_set_release($schema_version,$rdba,$gdba);
+  ($rdba,$gdba) = fetch_and_set_release($rdba,$gdba);
   my $species_division = $mca->get_division;
   my $divisions;
   # For Vertebrates we only want to check the other divisions since these are on a different server
@@ -157,30 +156,17 @@ sub process_division_names {
   Status     : Stable
 =cut
 sub fetch_and_set_release {
-  my ($release_version,$rdba,$gdba) = @_;
+  my ($rdba,$gdba) = @_;
   my ($release_info,$release);
-  if (defined $release_version){
-    $release_info = $rdba->fetch_by_ensembl_genomes_release($release_version);
-    if (!$release_info){
-      $release_info = $rdba->fetch_by_ensembl_release($release_version);
-      $release = $release_info->{ensembl_version};
-    }
-    else{
-      $release = $release_info->{ensembl_genomes_version};
-    }
-    $gdba->data_release($release_info);
+  $release_info = $rdba->fetch_current_ensembl_release();
+  if (!$release_info){
+    $release_info = $rdba->fetch_current_ensembl_genomes_release();
+    $release = $release_info->{ensembl_genomes_version};
   }
   else{
-    $release_info = $rdba->fetch_current_ensembl_release();
-    if (!$release_info){
-      $release_info = $rdba->fetch_current_ensembl_genomes_release();
-      $release = $release_info->{ensembl_genomes_version};
-    }
-    else{
-      $release = $release_info->{ensembl_version};
-    }
-    $gdba->data_release($release_info);
+    $release = $release_info->{ensembl_version};
   }
+  $gdba->data_release($release_info);
   return ($rdba,$gdba,$release,$release_info);
 }
 
