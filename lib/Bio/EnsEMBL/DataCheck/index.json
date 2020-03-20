@@ -917,6 +917,16 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
+   "DescriptionDisplayXrefs" : {
+      "datacheck_type" : "critical",
+      "description" : "\n                     Tests for {ECO: } blocks from Uniprot in descriptions.\n                     Test for Bad characters in display_label\n                     Tests for improper import of MIM data.         \n                    ",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "DescriptionDisplayXrefs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionDisplayXrefs"
+   },
    "DescriptionNewlines" : {
       "datacheck_type" : "critical",
       "description" : "Check for newlines and tabs in gene descriptions",
@@ -926,6 +936,16 @@
       ],
       "name" : "DescriptionNewlines",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
+   },
+   "DisplayLabels" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that certain tables have display_labels set",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "DisplayLabels",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayLabels"
    },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
