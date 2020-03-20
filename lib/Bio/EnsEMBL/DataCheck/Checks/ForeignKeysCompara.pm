@@ -114,7 +114,7 @@ sub compara_fk {
       SELECT method_link_id FROM method_link
       WHERE
         method_link_id < 100 AND
-        class NOT LIKE "ConstrainedElement.%" AND
+        class LIKE "GenomicAlign%" AND
         type NOT LIKE "CACTUS_HAL%"
     )
   /;
