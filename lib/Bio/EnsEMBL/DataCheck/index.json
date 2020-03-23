@@ -947,6 +947,16 @@
       "name" : "DisplayLabels",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayLabels"
    },
+   "DisplayXref" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that display_xrefs are set OK",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "DisplayXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXref"
+   },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
       "description" : "Genes are displayable and have web_data attached to their analysis",
