@@ -45,7 +45,7 @@ sub tests {
     "HGNC_curated_transcript" =>"Gene"
   );
 
-  foreach ((my ($source, $wrong) = each %check_type)) {
+  while ((my ($source, $wrong) = each %check_type)) {
 
     my $desc_1 = "All $source  xrefs assigned to correct object type";
     my $sql_1  = qq/
