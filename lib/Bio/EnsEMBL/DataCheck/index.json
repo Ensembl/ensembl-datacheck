@@ -1231,6 +1231,16 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "HGNCTypes" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that HGNC_curated_genes xrefs are on genes, _transcript are on transcript etc",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCTypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCTypes"
+   },
    "HighConfidence" : {
       "datacheck_type" : "critical",
       "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
