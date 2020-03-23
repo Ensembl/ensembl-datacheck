@@ -1179,6 +1179,16 @@
       "name" : "GeneCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneCounts"
    },
+   "GeneDescriptions" : {
+      "datacheck_type" : "critical",
+      "description" : "Check gene descriptions; correct capitalisation of UniprotKB/SwissProt",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "GeneDescriptions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneDescriptions"
+   },
    "GeneGC" : {
       "datacheck_type" : "critical",
       "description" : "All genes have a GC statistic",
@@ -1230,6 +1240,16 @@
       ],
       "name" : "HighConfidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
+   },
+   "IdentityXrefCigarLines" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that cigar lines in the identity_xref table are in the same format, as they are in the alignment tables, i.e. start with a number rather than a letter",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "IdentityXrefCigarLines",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::IdentityXrefCigarLines"
    },
    "IndividualType" : {
       "datacheck_type" : "critical",
@@ -2046,5 +2066,15 @@
       ],
       "name" : "XrefTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefTypes"
+   },
+   "XrefVersions" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for blank versions in the xref table.",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "XrefVersions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefVersions"
    }
 }
