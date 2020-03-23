@@ -1231,6 +1231,16 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "HGNCNumeric" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that no HGNC xrefs have dbprimary_acc=display_label",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCNumeric",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCNumeric"
+   },
    "HGNCTypes" : {
       "datacheck_type" : "critical",
       "description" : "Check that HGNC_curated_genes xrefs are on genes, _transcript are on transcript etc",
