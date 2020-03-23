@@ -33,7 +33,6 @@ use constant {
   GROUPS         => ['core', 'xref'],
   DATACHECK_TYPE => 'critical',
   TABLES         => ['xref'],
-  PER_DB         => 1
 };
 
 sub tests {
