@@ -60,12 +60,12 @@ sub tests {
       my $fraction = $rows_numeric / $all_rows;
       if ($fraction > $threshold) {
 
-        pass( $rows_numeric .  " (" . $fraction * 100 . "%) HGNC xrefs with dbprimary_acc=display_label;" .
+        fail( $rows_numeric .  " (" . $fraction * 100 . "%) HGNC xrefs with dbprimary_acc=display_label;" .
                       " this will cause genes to have numeric display names, or break hyperlinks");
 
       } else {
 
-        fail( "All HGNC xrefs (or more than ". $threshold * 100 . "%) have different dbprimary_acc and display_label");
+        pass( $desc_1);
 
       }
   
