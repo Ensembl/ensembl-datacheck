@@ -352,6 +352,9 @@ sub get_old_dba {
   my $uri = parse_uri($self->old_server_uri);
   my %params = $uri->generate_dbsql_params();
 
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+  my $division = $mca->get_division;
+
   my $db_version;
   if (exists $params{'-DBNAME'}) {
     if ($params{'-DBNAME'} =~ /^(\d+)$/) {
@@ -359,14 +362,13 @@ sub get_old_dba {
       delete $params{'-DBNAME'};
     }
   } else {
-    my $mca = $self->dba->get_adaptor("MetaContainer");
     $db_version = ($mca->schema_version) - 1;
   }
 
   my $dbh;
   if (exists $params{'-DBNAME'}) {
-	my $message = 'Specified database does not exist';
-	$dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+    my $message = 'Specified database does not exist';
+    $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
   } else {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
     die "No metadata database found in the registry" unless defined $meta_dba;
@@ -377,17 +379,22 @@ sub get_old_dba {
         genome_database gd INNER JOIN
         genome g USING (genome_id) INNER JOIN
         organism o USING (organism_id) INNER JOIN
-        data_release dr USING (data_release_id)
-      WHERE gd.type = ? and o.name = ? and dr.ensembl_version = ?
+        data_release dr USING (data_release_id) INNER JOIN
+        division d USING (division_id)
+      WHERE
+        gd.type = ? AND
+        o.name = ? AND
+        dr.ensembl_version = ? AND
+        d.name = ?
     /;
-    my $params = [$group, $species, $db_version];
+    my $params = [$group, $species, $db_version, $division];
 
     my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
 
     if (scalar(@dbnames) == 1) {
       $params{'-DBNAME'} = $dbnames[0];
       my $message = 'Database in metadata database does not exist';
-	  $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+      $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
     } elsif (scalar(@dbnames) > 1) {
       die "Multiple release $db_version $group databases for $species";
     }
@@ -409,27 +416,27 @@ sub get_old_dba {
     my $sql = qq/
       SELECT species_id FROM meta
       WHERE
-		meta_key = 'species.production_name' AND
-		meta_value = '$species'
+        meta_key = 'species.production_name' AND
+        meta_value = '$species'
     /;
     my $vals = $dbh->selectcol_arrayref($sql);
     my $species_id = $vals->[0];
     $params{'-SPECIES_ID'} = $species_id;
 
-	# We assume that if the new db is multispecies,
-	# the old one will be too.
+    # We assume that if the new db is multispecies,
+    # the old one will be too.
     if ($self->dba->is_multispecies) {
       $params{'-MULTISPECIES_DB'} = 1;
     }
 
     if (lc $group eq 'compara') {
-	$old_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->new(%params);
     } elsif (lc $group eq 'variation') {
-	$old_dba = Bio::EnsEMBL::Variation::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::Variation::DBSQL::DBAdaptor->new(%params);
     } elsif (lc $group eq 'funcgen') {
-	$old_dba = Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor->new(%params);
     } else {
-	$old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
     }
 
     push @{$self->dba_list}, $old_dba;
