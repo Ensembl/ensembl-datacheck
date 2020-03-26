@@ -57,7 +57,7 @@ sub tests {
       unlike( $mlss_name, qr/^(protein|nc|species)/, $desc_1 );
       # Since there are many species_sets below first_release 81 in plants that have no name at all, set a
       # threshold to avoid checking them (and failing)
-      next if $species_set->first_release <= 80;
+      next if ($species_set->first_release // 0) <= 80;
       my $desc_2 = "species_set $species_set_id for mlss $mlss_name ($mlss_id) starts with the species_set name $species_set_name";
 
       if ( $species_set_name =~ /collection/ ) {
@@ -67,7 +67,7 @@ sub tests {
         is( $species_set_name, $mlss_p1, $desc_2 );
       }
     }
-    next if $species_set->first_release <= 80;
+    next if ($species_set->first_release // 0) <= 80;
     if ( $gdb_count >= 1 && $gdb_count <=2 ) {
       my @species_count = split /-/, $species_set_name;
       my $desc_3 = "For $mlss_name ($mlss_id) the species_set $species_set_name ($species_set_id) is appropriately named with the correct number of genomes";
