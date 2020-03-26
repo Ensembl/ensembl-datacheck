@@ -43,9 +43,19 @@ sub tests {
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   my $db_patches = $mca->list_value_by_key('patch');
-  my @db_patches = sort { ($a =~ /patch_(\d+)/)[0] <=> ($b =~ /patch_(\d+)/)[0] } @$db_patches;
-  foreach (@db_patches) {
-    $_ =~ s/\|.*$//;
+
+  my %db_patches;
+  foreach my $db_patch (@$db_patches) {
+    $db_patch =~ s/\|.*$//;
+    $db_patch =~ /patch_(\d+)_\d+_(\w+)/;
+    $db_patches{$1}{$2} = $db_patch;
+  }
+
+  my @db_patches;
+  foreach my $number (sort {$a <=> $b} keys %db_patches) {
+    foreach my $letter (sort keys %{$db_patches{$number}}) {
+      push @db_patches, $db_patches{$number}{$letter};
+    }
   }
 
   my $file_patches = $self->file_patches();
@@ -74,7 +84,6 @@ sub tests {
 
 sub file_patches {
   my ($self) = @_;
-  my @file_patches;
 
   # Don't need checking here, the DB_TYPES ensure we won't get
   # a $dba from a group that we can't handle, and the repo_location
@@ -82,13 +91,22 @@ sub file_patches {
   my $repo_location  = repo_location($self->dba->group);
   my $sql_dir = "$repo_location/sql";
 
+  my %file_patches;
   if (-e $sql_dir) {
     my @files = path($sql_dir)->children(qr/^patch_\d+_\d+_\w+\.sql$/);
-    foreach my $file ( sort { ($a->basename =~ /patch_(\d+)/)[0] <=> ($b->basename =~ /patch_(\d+)/)[0] } @files ) {
-      push @file_patches, $file->basename;
+    foreach my $file ( @files ) {
+      $file->basename =~ /patch_(\d+)_\d+_(\w+)/;
+      $file_patches{$1}{$2} = $file->basename;
     }
   } else {
     die "SQL directory does not exist: $sql_dir";
+  }
+
+  my @file_patches;
+  foreach my $number (sort {$a <=> $b} keys %file_patches) {
+    foreach my $letter (sort keys %{$file_patches{$number}}) {
+      push @file_patches, $file_patches{$number}{$letter};
+    }
   }
 
   return \@file_patches;
