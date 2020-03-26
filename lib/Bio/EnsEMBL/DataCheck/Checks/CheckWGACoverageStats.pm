@@ -55,7 +55,7 @@ sub tests {
 
   foreach my $type ( keys %$prev_results ) {
     my $desc = "There are the same number of wga_coverage populated rows between releases for $type";
-    cmp_ok( $curr_results->{$type}, ">=", $prev_results->{$type}, $desc );
+    cmp_ok( $curr_results->{$type} // 0, ">=", $prev_results->{$type}, $desc );
   }
 
 }
