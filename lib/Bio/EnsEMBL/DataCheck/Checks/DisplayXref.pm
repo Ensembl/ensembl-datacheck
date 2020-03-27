@@ -31,7 +31,7 @@ use constant {
   NAME           => 'DisplayXref',
   DESCRIPTION    => 'Check that display_xrefs are set OK',
   GROUPS         => ['core', 'xref'],
-  DATACHECK_TYPE => 'critical',
+  DATACHECK_TYPE => 'advisory',
   TABLES         => ['xref'],
 };
 
@@ -49,40 +49,12 @@ sub tests {
      INNER JOIN  coord_system cs USING (coord_system_id)   
      WHERE cs.species_id = $species_id
      AND  t.display_xref_id IS NOT NULL 
-     AND  t.display_xref_id > 0;
     /;
 
     is_rows_nonzero($self->dba, $sql_1, $desc_1);
 
-    my $desc_2 = "No ${type}s  with  display_xref_id set to 0";
+    my $desc_2 = "EntrezGene gene names are not numeric";
     my $sql_2  = qq/
-     SELECT COUNT(*) FROM $type t
-     INNER JOIN seq_region sr USING (seq_region_id) 
-     INNER JOIN  coord_system cs USING (coord_system_id)   
-     WHERE cs.species_id = $species_id     
-     AND t.display_xref_id = 0
-    /;
-
-    is_rows_zero($self->dba, $sql_2, $desc_2);
-
-    my $desc_3 = "No ${type}s have display_xref_ids pointing to non-existent xrefs";
-    my $sql_3  = qq/
-      SELECT count(*) FROM $type t 
-      INNER JOIN seq_region sr USING (seq_region_id) 
-      INNER JOIN  coord_system cs USING (coord_system_id) 
-      LEFT JOIN xref ON t.display_xref_id=xref.xref_id
-      WHERE cs.species_id = $species_id
-      AND t.display_xref_id IS NOT NULL 
-      AND xref.xref_id IS NULL;
-    /;
-
-    is_rows_zero($self->dba, $sql_3, $desc_3);
-
-  }
-
-
-    my $desc_4 = "genes have display_xrefs that are from EntrezGene and are numeric";
-    my $sql_4  = qq/
        SELECT COUNT(*) FROM gene g 
        INNER JOIN seq_region sr USING (seq_region_id) 
        INNER JOIN  coord_system cs USING (coord_system_id) 
@@ -93,7 +65,8 @@ sub tests {
        AND x.display_label REGEXP '^[0-9]+\$';
     /;
 
-    is_rows_zero($self->dba, $sql_4, $desc_4);
+    is_rows_zero($self->dba, $sql_2, $desc_2);
+  }
 
 }
 

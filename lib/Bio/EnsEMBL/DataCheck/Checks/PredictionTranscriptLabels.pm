@@ -30,9 +30,9 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DisplayLabels',
   DESCRIPTION    => 'Check that certain tables have display_labels set',
-  GROUPS         => ['core', 'xref'],
+  GROUPS         => ['annotation', 'core'],
   DATACHECK_TYPE => 'critical',
-  TABLES         => ['prediction_transcript', 'simple_feature']
+  TABLES         => ['prediction_transcript']
 };
 
 sub tests {
@@ -50,17 +50,6 @@ sub tests {
 
   is_rows_zero($self->dba, $sql_1, $desc_1);
 
-  my $desc_2 = 'No NULL values Found in  display_label for simple_feature table';
-  my $sql_2  = qq/
-      SELECT count(*) FROM simple_feature sf
-      INNER JOIN seq_region sr USING (seq_region_id) 
-      INNER JOIN  coord_system cs USING (coord_system_id)   
-      WHERE cs.species_id = $species_id
-      AND sf.display_label IS NULL
-     
-  /;
-
-  is_rows_zero($self->dba, $sql_2, $desc_2);
 }
 
 1;

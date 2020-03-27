@@ -29,10 +29,13 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'XrefFormat',
-  DESCRIPTION    => 'Xrefs do not have HTML markup, non-printing characters, or blank values',
+  DESCRIPTION    => 'Xrefs do not have HTML markup, non-printing characters, or blank values.
+Tests for {ECO: } blocks from Uniprot in descriptions.
+Test for Bad characters in display_label.
+',
   GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
-  TABLES         => ['xref'],
+  TABLES         => ['xref', 'external_db'],
   PER_DB         => 1,
 };
 
@@ -65,6 +68,24 @@ sub tests {
   /;
 
   is_rows_zero($self->dba, $sql_3, $desc_3, $diag_3);
+
+  my $desc_4 = 'No {ECO: } blocks from Uniprot in descriptions';
+  my $sql_4  = qq/
+      SELECT count(*) FROM xref  
+      WHERE description like '%{ECO:%}%'
+  /;
+
+  is_rows_zero($self->dba, $sql_4, $desc_4);
+
+  my $desc_5 = 'No NULL OR Bad Chracters Found In display_label';
+  my $sql_5  = qq/
+      SELECT count(*) FROM xref 
+      OR display_label REGEXP '^[\n\r\t]+'
+  /;
+
+  is_rows_zero($self->dba, $sql_5, $desc_5);
+
+
 }
 
 1;
