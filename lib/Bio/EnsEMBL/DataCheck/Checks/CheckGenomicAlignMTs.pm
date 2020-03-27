@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
     my ($self) = @_;
     my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-    my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+    my @methods = qw( EPO EPO_EXTENDED PECAN );
     my $db_name = $self->dba->dbc->dbname;
 
     my @mlsses;

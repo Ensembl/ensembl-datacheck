@@ -40,7 +40,7 @@ use constant {
 sub skip_tests {
     my ($self) = @_;
     my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-    my @methods = qw (PECAN EPO EPO_LOW_COVERAGE LASTZ_NET LASTZ_PATCH);
+    my @methods = qw (PECAN EPO EPO_EXTENDED LASTZ_NET LASTZ_PATCH);
     my $db_name = $self->dba->dbc->dbname;
 
     my @mlsses;
@@ -60,7 +60,7 @@ sub tests {
   my $helper = $dba->dbc->sql_helper;
   my $mlss_adap = $dba->get_MethodLinkSpeciesSetAdaptor;
   my $gdb_adap = $dba->get_GenomeDBAdaptor;
-  my @mlss_types = qw ( PECAN EPO EPO_LOW_COVERAGE LASTZ_NET LASTZ_PATCH);
+  my @mlss_types = qw ( PECAN EPO EPO_EXTENDED LASTZ_NET LASTZ_PATCH);
   my $ancestral = $gdb_adap->fetch_all_by_name('ancestral_sequences');
   my @mlsses;
 

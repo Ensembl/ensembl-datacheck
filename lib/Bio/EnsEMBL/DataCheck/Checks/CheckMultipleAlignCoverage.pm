@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
     my ($self) = @_;
     my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-    my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+    my @methods = qw( EPO EPO_EXTENDED PECAN );
     my $db_name = $self->dba->dbc->dbname;
 
     my @mlsses;
@@ -63,7 +63,7 @@ sub tests {
     SELECT method_link_species_set_id 
       FROM method_link_species_set 
         JOIN method_link USING(method_link_id) 
-      WHERE method_link.type IN ('EPO', 'EPO_LOW_COVERAGE', 'PECAN')
+      WHERE method_link.type IN ('EPO', 'EPO_EXTENDED', 'PECAN')
     /;
   
   my $msa_mlss_array = $helper->execute_simple(-SQL => $msa_mlss_sql);
