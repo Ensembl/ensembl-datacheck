@@ -1,1 +1,1 @@
-1 EnsemblMetazoa  EM
+1	EnsemblMetazoa	EM
