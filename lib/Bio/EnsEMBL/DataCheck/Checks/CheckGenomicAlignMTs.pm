@@ -71,9 +71,7 @@ sub tests {
         JOIN genome_db USING(genome_db_id)
         JOIN dnafrag USING(genome_db_id)
       WHERE cellular_component = 'MT' 
-        AND (class LIKE 'GenomicAlignTree%' 
-          OR class LIKE 'GenomicAlign%multiple%') 
-        AND (type NOT LIKE 'CACTUS_HAL%')
+        AND type IN ("EPO", "EPO_EXTENDED", "PECAN")
     /;
   
   my $entries_array = $helper->execute(  

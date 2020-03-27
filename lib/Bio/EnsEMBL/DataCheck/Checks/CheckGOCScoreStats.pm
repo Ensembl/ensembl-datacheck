@@ -37,7 +37,7 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $prev_dba = $self->registry->get_DBAdaptor('compara_prev', 'compara') || $self->get_old_dba;
+  my $prev_dba = $self->get_old_dba;
 
   my $curr_helper = $self->dba->dbc->sql_helper;
   my $prev_helper = $prev_dba->dbc->sql_helper;
@@ -54,7 +54,7 @@ sub tests {
 
   foreach my $type ( keys %$prev_results ) {
     my $desc = "There are the same number of goc_score populated rows between releases for $type";
-    cmp_ok( $curr_results->{$type}, ">=", $prev_results->{$type}, $desc );
+    cmp_ok( $curr_results->{$type} // 0, ">=", $prev_results->{$type}, $desc );
   }
 }
 
