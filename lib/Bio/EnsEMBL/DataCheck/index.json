@@ -1261,16 +1261,6 @@
       "name" : "HighConfidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
    },
-   "IdentityXrefCigarLines" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that cigar lines in the identity_xref table are in the same format, as they are in the alignment tables, i.e. start with a number rather than a letter",
-      "groups" : [
-         "core",
-         "xref"
-      ],
-      "name" : "IdentityXrefCigarLines",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::IdentityXrefCigarLines"
-   },
    "IndividualType" : {
       "datacheck_type" : "critical",
       "description" : "Individuals have the correct type for each species",
@@ -2086,15 +2076,5 @@
       ],
       "name" : "XrefTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefTypes"
-   },
-   "XrefVersions" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for blank versions in the xref table.",
-      "groups" : [
-         "core",
-         "xref"
-      ],
-      "name" : "XrefVersions",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefVersions"
    }
 }
