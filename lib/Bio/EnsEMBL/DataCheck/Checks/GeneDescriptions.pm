@@ -44,7 +44,7 @@ sub tests {
     INNER JOIN seq_region sr USING (seq_region_id) 
     INNER JOIN  coord_system cs USING (coord_system_id)   
     WHERE cs.species_id = $species_id
-    AND description like '%Uniprot%' 
+    AND description LIKE BINARY '%Uniprot%' 
   /;
 
   is_rows_zero($self->dba, $sql_1, $desc_1);
