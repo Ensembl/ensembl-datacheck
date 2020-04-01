@@ -91,11 +91,6 @@ subtest 'Fetch DNA DBA from registry', sub {
     dba        => $dba,
     server_uri => $server_uri,
   );
-
-  throws_ok(
-    sub { $check->get_dna_dba },
-    qr/Could not retrieve DNA database/,
-    'DbCheck->get_dna_dba fails if core database is not in registry');
 };
 
 done_testing();
