@@ -113,7 +113,7 @@ foreach my $tap_file (@tap_files) {
 	  } elsif ($result->as_string =~ /^\s{8}((?:ok|.* # SKIP).*)/ && $passed) {
         $test = $1;
         $tests{$test} = [];
-	  } elsif ($result->as_string =~ /^\s{8}#\s(\s+.*)/) {
+	  } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
 	    push @{$tests{$test}}, $1;
 	  }
     } elsif ($result->is_test) {
