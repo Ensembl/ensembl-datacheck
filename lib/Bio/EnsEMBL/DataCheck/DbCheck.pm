@@ -183,7 +183,7 @@ sub _registry_default {
     $registry->clear;
     $registry->load_registry_from_url($self->server_uri);
   } else {
-    die "The '.$self->name.' datacheck needs data from another database, ".
+    die "The '".$self->name."' datacheck needs data from another database, ".
         "for which a registry needs to be specified with 'registry_file' or 'server_uri'";
   }
 
@@ -326,8 +326,6 @@ sub get_dna_dba {
   if (defined $dna_dba) {
     $self->registry->add_DNAAdaptor($self->species, $self->dba->group, $self->species, 'core');
     push @{$self->dba_list}, $dna_dba;
-  } else {
-    die "Could not retrieve DNA database for ".$self->dba->dbc->dbname;
   }
 
   return $dna_dba;
@@ -495,7 +493,11 @@ sub run_datacheck {
 
           plan skip_all => $skip_reason if $skip;
 
-          $self->tests(@_);
+          eval { $self->tests(@_) };
+          if ($@) {
+            fail("Datacheck ran without errors");
+            diag($@);
+          }
         }
       };
     }
@@ -518,7 +520,11 @@ sub run_datacheck {
 
         plan skip_all => $skip_reason if $skip;
 
-        $self->tests(@_);
+        eval { $self->tests(@_) };
+        if ($@) {
+          fail("Datacheck ran without errors");
+          diag($@);
+        }
       }
     }
   }
