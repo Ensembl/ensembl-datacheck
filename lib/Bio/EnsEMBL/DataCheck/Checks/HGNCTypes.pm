@@ -32,28 +32,35 @@ use constant {
   GROUPS         => ['core', 'xref'],
   DATACHECK_TYPE => 'critical',
   TABLES         => ['xref'],
-  PER_DB         => 1
 };
 
 sub tests {
   my ($self) = @_;
+  my $species_id = $self->dba->species_id;
   #note these are looking for the *wrong* assignments
   my %check_type =(
-    "HGNC_curated_gene"=> "Transcript",
-    "HGNC_automatic_gene" => "Transcript",
-    "HGNC_curated_transcript" => "Gene",
-    "HGNC_curated_transcript" =>"Gene"
+   "HGNC" => "Transcript",
+   "HGNC_trans_name" => "Gene"
   );
-
-  while ((my ($source, $wrong) = each %check_type)) {
-
+  foreach my $source (keys %check_type) {
+    my $table = 'gene';
+    my $wrong = $check_type{$source};
     my $desc_1 = "All $source  xrefs assigned to correct object type";
-    my $sql_1  = qq/
-      SELECT COUNT(*) FROM xref x, external_db e, object_xref ox 
-      WHERE e.external_db_id=x.external_db_id 
-      AND x.xref_id=ox.xref_id AND e.db_name='$source'
+    if ($check_type{$source} eq 'Transcript'){
+        $table = 'transcript';
+    }
+    my $sql_1 = qq/
+      SELECT COUNT(*) FROM object_xref ox  
+      INNER JOIN xref USING(xref_id) 
+      INNER JOIN external_db e USING(external_db_id)
+      INNER JOIN ${table} gt ON ox.ensembl_id = gt.${table}_id 
+      INNER JOIN seq_region sr USING (seq_region_id) 
+      INNER JOIN coord_system cs USING (coord_system_id) 
+      WHERE cs.species_id = $species_id
+      AND e.db_name='$source'
       AND ox.ensembl_object_type='$wrong'
-    /;
+   /;
+   print($sql_1); 
 
     is_rows_zero($self->dba, $sql_1, $desc_1);
   }
