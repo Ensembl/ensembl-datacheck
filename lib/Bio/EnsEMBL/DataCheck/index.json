@@ -1231,6 +1231,16 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "HGNCMultipleGenes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Check for HGNCs that have been assigned as display labels more than one gene.",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCMultipleGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCMultipleGenes"
+   },
    "HGNCNumeric" : {
       "datacheck_type" : "critical",
       "description" : "Check that no HGNC xrefs have dbprimary_acc=display_label",
