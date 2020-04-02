@@ -60,6 +60,7 @@ sub tests {
       AND e.db_name='$source'
       AND ox.ensembl_object_type='$wrong'
    /;
+
     is_rows_zero($self->dba, $sql_1, $desc_1);
   }
 
