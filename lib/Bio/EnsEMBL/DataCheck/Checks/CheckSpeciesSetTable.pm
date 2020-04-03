@@ -33,7 +33,7 @@ use constant {
   GROUPS         => ['compara'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['species_set', 'species_set_tag']
+  TABLES         => ['species_set']
 };
 
 sub tests {
