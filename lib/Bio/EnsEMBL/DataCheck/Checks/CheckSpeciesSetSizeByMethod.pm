@@ -54,6 +54,7 @@ sub tests {
     "SYNTENY"               => 2
   );
 
+  my $found = 0;
   foreach my $method ( keys %methods ) {
     next if ( $method eq "ENSEMBL_PARALOGUES" && $self->dba->dbc->dbname =~ /master/ );
     my $mlsss = $mlss_adap->fetch_all_by_method_link_type($method);
@@ -78,7 +79,11 @@ sub tests {
       if ( $mlss_name =~ /(^[0-9]+) / ) {
         is($1, $gdb_count, "species_set $species_set_name and mlss $mlss_name both link to $gdb_count genomes");
       }
+      $found = 1;
     }
+  }
+  unless ($found) {
+    plan skip_all => "No MLSSs to test in this database";
   }
 }
 
