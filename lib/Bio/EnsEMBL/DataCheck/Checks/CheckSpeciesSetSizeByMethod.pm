@@ -68,10 +68,12 @@ sub tests {
       my $gdbs = $species_set->genome_dbs;
       my $gdb_count = scalar( @$gdbs );
 
-      my $desc = "For MLSS $mlss_name there are $allowable_count genome_dbs for species_set $species_set_name ($species_set_id), as expected";
       if ( ($method eq 'LASTZ_NET') && ($gdb_count == 1) && ($species_set_name !~ /-/) ) {
         $allowable_count = 1;
       }
+
+      my $desc = "For MLSS $mlss_name there are $allowable_count genome_dbs for species_set $species_set_name ($species_set_id), as expected";
+
       is( $gdb_count, $allowable_count, $desc );
       if ( $mlss_name =~ /(^[0-9]+) / ) {
         is($1, $gdb_count, "species_set $species_set_name and mlss $mlss_name both link to $gdb_count genomes");
