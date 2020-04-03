@@ -55,6 +55,10 @@ sub tests {
       my ($col1, $table2, $col2) = $line =~
         /\s*FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
       if (defined $col1 && defined $table2 && defined $col2) {
+        # Because the master database may have old genomes linked to deprecated taxon_ids
+        if ($self->dba->dbc->dbname =~ /master/) {
+          next if "$table1 $col1 $table2 $col2" eq 'genome_db taxon_id ncbi_taxa_node taxon_id';
+        }
         fk($self->dba, $table1, $col1, $table2, $col2);
       } else {
         push @failed_to_parse, $line;
