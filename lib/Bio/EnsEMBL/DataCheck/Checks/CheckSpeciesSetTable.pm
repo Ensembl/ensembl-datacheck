@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckSpeciesSetTable',
   DESCRIPTION    => 'Check species_set_tags have no orphans and species_sets are unique',
-  GROUPS         => ['compara'],
+  GROUPS         => ['compara', 'compara_master'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['species_set']

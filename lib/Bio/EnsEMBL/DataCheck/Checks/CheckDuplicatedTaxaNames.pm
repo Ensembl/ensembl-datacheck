@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckDuplicatedTaxaNames',
   DESCRIPTION    => 'Check that the ncbi_taxa_name contains only unique rows',
-  GROUPS         => ['compara'],
+  GROUPS         => ['compara', 'compara_master'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['ncbi_taxa_name']

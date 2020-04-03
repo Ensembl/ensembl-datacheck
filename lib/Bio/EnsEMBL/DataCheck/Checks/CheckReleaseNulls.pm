@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckReleaseNulls',
   DESCRIPTION    => 'For release DB the last_release must be NULL but cannot have a NULL first_release',
-  GROUPS         => ['compara'],
+  GROUPS         => ['compara', 'compara_master'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genome_db', 'method_link_species_set', 'species_set_header']

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckMethodLinkSpeciesSetNames',
   DESCRIPTION    => 'Check for consistency of names in method_link_species_set (and species_set_header)',
-  GROUPS         => ['compara'],
+  GROUPS         => ['compara', 'compara_master'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genome_db', 'method_link_species_set', 'species_set', 'species_set_header']

@@ -146,6 +146,7 @@
       "description" : "Enum columns do not have empty string values",
       "groups" : [
          "compara",
+         "compara_master",
          "core",
          "corelike",
          "funcgen",
@@ -160,6 +161,7 @@
       "description" : "Nullable columns do not have empty string values",
       "groups" : [
          "compara",
+         "compara_master",
          "core",
          "corelike",
          "funcgen",
@@ -234,7 +236,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that the ncbi_taxa_name contains only unique rows",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "CheckDuplicatedTaxaNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
@@ -356,6 +359,7 @@
       "description" : "Ensure that every MSA method has a name in species_set_header",
       "groups" : [
          "compara",
+         "compara_master",
          "compara_multiple_alignments"
       ],
       "name" : "CheckMSANames",
@@ -365,7 +369,8 @@
       "datacheck_type" : "critical",
       "description" : "Check for consistency of names in method_link_species_set (and species_set_header)",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "CheckMethodLinkSpeciesSetNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMethodLinkSpeciesSetNames"
@@ -395,6 +400,7 @@
       "description" : "Ensure that there is only one method for pairwise alignment per species_set",
       "groups" : [
          "compara",
+         "compara_master",
          "compara_pairwise_alignments"
       ],
       "name" : "CheckPairAlignerUniqueMethod",
@@ -404,7 +410,8 @@
       "datacheck_type" : "critical",
       "description" : "Check for consistency between retired genomes and species_sets",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "CheckReleaseConsistency",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseConsistency"
@@ -413,7 +420,8 @@
       "datacheck_type" : "critical",
       "description" : "For release DB the last_release must be NULL but cannot have a NULL first_release",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "CheckReleaseNulls",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseNulls"
@@ -432,6 +440,7 @@
       "description" : "Checks that the species-sets have the expected number of genomes",
       "groups" : [
          "compara",
+         "compara_master",
          "compara_pairwise_alignments",
          "compara_protein_trees",
          "compara_syntenies"
@@ -443,7 +452,8 @@
       "datacheck_type" : "critical",
       "description" : "Check species_set_tags have no orphans and species_sets are unique",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "CheckSpeciesSetTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable"
@@ -865,6 +875,7 @@
       "description" : "All tables have the same collation (latin1_swedish_ci)",
       "groups" : [
          "compara",
+         "compara_master",
          "core",
          "corelike",
          "funcgen",
@@ -1101,7 +1112,8 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships are not violated",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "ForeignKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
@@ -1400,6 +1412,7 @@
       "description" : "Meta keys are correctly assigned at species or database level",
       "groups" : [
          "compara",
+         "compara_master",
          "core",
          "corelike",
          "funcgen",
@@ -1681,6 +1694,7 @@
       "description" : "Schema patches are up-to-date",
       "groups" : [
          "compara",
+         "compara_master",
          "core",
          "corelike",
          "funcgen",
@@ -1695,6 +1709,7 @@
       "description" : "The schema type meta key matches the DB name",
       "groups" : [
          "compara",
+         "compara_master",
          "core",
          "corelike",
          "funcgen",
