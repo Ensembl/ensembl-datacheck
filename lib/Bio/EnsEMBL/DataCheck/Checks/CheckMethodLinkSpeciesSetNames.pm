@@ -43,6 +43,8 @@ sub tests {
   my $mlss = $mlss_adap->fetch_all;
 
   foreach my $mlss ( @$mlss ) {
+    # The convention only applies to MLSSs that have been released and are current
+    next if (!$mlss->first_release || $mlss->last_release);
     my $mlss_name = $mlss->name;
     my $mlss_id = $mlss->dbID;
     my $species_set = $mlss->species_set;
@@ -53,11 +55,7 @@ sub tests {
 
     if ( $mlss_name =~ /^([a-zA-Z\-\.]+) / ) {
       my $mlss_p1 = $1;
-      # Since there are many species_sets below first_release 81 in plants that have no name at all, set a
-      # threshold to avoid checking them (and failing)
-      next if ($species_set->first_release // 0) <= 80;
       my $desc_2 = "species_set $species_set_id for mlss $mlss_name ($mlss_id) starts with the species_set name $species_set_name";
-
       if ( $species_set_name =~ /collection/ ) {
         is( $species_set_name, "collection-$mlss_p1", $desc_2 );
       }
@@ -65,7 +63,6 @@ sub tests {
         is( $species_set_name, $mlss_p1, $desc_2 );
       }
     }
-    next if ($species_set->first_release // 0) <= 80;
     if ( $gdb_count >= 1 && $gdb_count <=2 ) {
       my @species_count = split /-/, $species_set_name;
       my $desc_3 = "For $mlss_name ($mlss_id) the species_set $species_set_name ($species_set_id) is appropriately named with the correct number of genomes";
