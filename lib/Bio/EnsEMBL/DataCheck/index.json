@@ -1399,6 +1399,7 @@
       "datacheck_type" : "critical",
       "description" : "Meta keys are correctly assigned at species or database level",
       "groups" : [
+         "compara",
          "core",
          "corelike",
          "funcgen",
