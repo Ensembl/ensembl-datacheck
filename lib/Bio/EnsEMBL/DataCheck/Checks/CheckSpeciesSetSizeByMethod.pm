@@ -68,7 +68,7 @@ sub tests {
       my $gdbs = $species_set->genome_dbs;
       my $gdb_count = scalar( @$gdbs );
 
-      if ( ($method eq 'LASTZ_NET') && ($gdb_count == 1) && ($species_set_name !~ /-/) ) {
+      if ( ($method eq 'LASTZ_NET' || $method eq 'SYNTENY') && ($gdb_count == 1) && ($species_set_name !~ /-/) ) {
         $allowable_count = 1;
       }
 
