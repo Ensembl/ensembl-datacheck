@@ -66,7 +66,8 @@ sub tests {
       my $mlss_name = $mlss->name;
       my $ss_name = $mlss->species_set->name;
       my $ss_id = $mlss->species_set->dbID;
-      $species_sets{"$ss_id ($ss_name)"}++;
+      my $ss_key = $ss_name ? "$ss_id ($ss_name)" : $ss_id;
+      $species_sets{$ss_key}++;
     }
   }
   foreach my $species_set ( sort keys %species_sets ) {
