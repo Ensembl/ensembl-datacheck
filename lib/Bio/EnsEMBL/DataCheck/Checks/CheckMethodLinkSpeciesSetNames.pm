@@ -51,7 +51,7 @@ sub tests {
     my $gdbs = $species_set->genome_dbs;
     my $gdb_count = scalar( @$gdbs );
 
-    if ( $mlss_name =~ /^([a-zA-Z]+) / ) {
+    if ( $mlss_name =~ /^([a-zA-Z\-\.]+) / ) {
       my $mlss_p1 = $1;
       # Since there are many species_sets below first_release 81 in plants that have no name at all, set a
       # threshold to avoid checking them (and failing)
