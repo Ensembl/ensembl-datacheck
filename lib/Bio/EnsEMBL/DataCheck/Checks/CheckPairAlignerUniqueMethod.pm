@@ -62,6 +62,10 @@ sub tests {
   foreach my $method ( @methods ) {
     my $mlsses = $mlss_adap->fetch_all_by_method_link_type($method);
     foreach my $mlss ( @$mlsses ){
+      if (!$mlss->first_release || $mlss->last_release) {
+        # the rule only applies to current MLSSs
+        next;
+      }
       my $ss_name = $mlss->species_set->name;
       my $ss_id = $mlss->species_set->dbID;
       my $ss_key = $ss_name ? "$ss_id ($ss_name)" : $ss_id;
