@@ -79,22 +79,13 @@ sub tests {
     /;
     
     my $lastz_summary_sql = qq/
-      SELECT SUM(IF(tag_coverage <= genomic_align_coverage, 1, 0)) AS coverage_ok
+      SELECT *
       FROM ( $genomic_coverage_sql ) y
+      WHERE tag_coverage > genomic_align_coverage
     /;
     
-    my $species_set_size_sql = qq/
-      SELECT ss.size 
-      FROM species_set_header ss JOIN method_link_species_set m USING(species_set_id) 
-      WHERE m.method_link_species_set_id = $mlss_id
-    /;
-    
-    my $lastz_summary_result = $helper->execute_single_result(-SQL => $lastz_summary_sql);
-    my $species_set_size_result = $helper->execute_single_result(-SQL => $species_set_size_sql);
-  
-    my $desc_1 = "genomic_align coverage = method_link_species_set_tag coverage for mlss_id: $mlss_id";
-    is($lastz_summary_result, $species_set_size_result, $desc_1);
-    
+    my $desc_1 = "genomic_align coverage >= method_link_species_set_tag coverage for mlss_id: $mlss_id";
+    is_rows_zero($self->dba, $lastz_summary_sql, $desc_1);
   }
 }
 
