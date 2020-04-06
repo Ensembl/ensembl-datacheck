@@ -69,6 +69,7 @@ sub identical_meta_keys {
     WHERE
       meta_key RLIKE 'assembly|liftover|lrg' AND
       meta_key NOT LIKE 'assembly.web_accession%' AND
+      meta_key NOT LIKE 'assembly.provider%' AND
       species_id = $species_id
   /;
   my $identical_meta_keys = $helper->execute_into_hash(-SQL => $sql);
@@ -90,6 +91,7 @@ sub consistent_meta_keys {
       meta
     WHERE
       meta_key LIKE 'species.%' AND
+      meta_key <> 'species.biomart_dataset' AND
       species_id = $species_id
     ORDER BY
       meta_key_value_pair
