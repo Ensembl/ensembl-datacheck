@@ -99,36 +99,37 @@ foreach my $tap_file (@tap_files) {
   # to-do: extract test number, use that as key with test message and diag messages as lists.
   while (my $result = $parser->next) {
     if ($result->is_comment) {
-      next unless $result->as_string =~ /^# Subtest:/;
-      # Top-level comment will be the name of the datacheck,
-      # the next line will be the species.
-      ($datacheck) = $result->as_string =~ /^# Subtest: (.+)/;
-      $result = $parser->next;
-      ($species) = $result->as_string =~ /\s+# Subtest: (.+)/;
-      %tests = ();
+      # Unindented 'Subtest' comment is the name of the datacheck,
+      # indented 'Subtest's are the species/database.
+      if ($result->as_string =~ /^# Subtest: (.+)/) {
+        $datacheck = $1;
+      }
     } elsif ($result->is_unknown) {
-      if ($result->as_string =~ /^\s{8}((?:not ok|# No tests run).*)/) {
-	    $test = $1;
-        $tests{$test} = [];
-	  } elsif ($result->as_string =~ /^\s{8}((?:ok|.* # SKIP).*)/ && $passed) {
+      if ($result->as_string =~ /^\s+# Subtest: (.+)/) {
+        $species = $1;
+        %tests = ();
+      } elsif ($result->as_string =~ /^\s{8}((?:not ok|# No tests run).*)/) {
         $test = $1;
         $tests{$test} = [];
-	  } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
-	    push @{$tests{$test}}, $1;
-	  }
+      } elsif ($result->as_string =~ /^\s{8}((?:ok|.* # SKIP).*)/ && $passed) {
+        $test = $1;
+        $tests{$test} = [];
+      } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
+        push @{$tests{$test}}, $1;
+      }
     } elsif ($result->is_test) {
       my $ok = $result->as_string =~ /^not ok/ ? 0 : 1;
       if (!$ok || $passed) {
         my %datacheck_tests = %tests;
         if ($by_species) {
-		  $results{$species}{$datacheck}{'ok'} = $ok;
+          $results{$species}{$datacheck}{'ok'} = $ok;
           $results{$species}{$datacheck}{'tests'} = \%datacheck_tests;
         } else {
-		  $results{$datacheck}{$species}{'ok'} = $ok;
+          $results{$datacheck}{$species}{'ok'} = $ok;
           $results{$datacheck}{$species}{'tests'} = \%datacheck_tests;
         }
-	  }  
-	}
+      }  
+    }
   }
 }
 
