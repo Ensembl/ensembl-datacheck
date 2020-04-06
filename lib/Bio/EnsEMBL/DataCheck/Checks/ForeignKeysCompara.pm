@@ -42,6 +42,8 @@ sub tests {
 
   my $table_sql_file = $self->table_sql_file();
 
+  my @failed_to_parse;
+
   my $table1;
   foreach my $line ( path($table_sql_file)->lines ) {
     if ($line =~ /CREATE TABLE `?(\w+)`?/) {
@@ -53,13 +55,16 @@ sub tests {
       my ($col1, $table2, $col2) = $line =~
         /\s*FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
       if (defined $col1 && defined $table2 && defined $col2) {
-        print "$table1, $col1, $table2, $col2\n";
         fk($self->dba, $table1, $col1, $table2, $col2);
       } else {
-        die "Failed to parse foreign key relationship from $line";
+        push @failed_to_parse, $line;
       }
     }
   }
+
+  my $desc_parsed = "Parsed all foreign key relationships from file";
+  is(scalar(@failed_to_parse), 0, $desc_parsed) ||
+    diag explain @failed_to_parse;
 
   $self->compara_fk();
 }
