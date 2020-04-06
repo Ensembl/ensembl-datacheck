@@ -79,6 +79,9 @@ sub gencode_species {
 
     my $mca = $self->dba->get_adaptor('MetaContainer');
 
+    my $assembly = $mca->single_value_by_key('assembly.default');
+    skip 'Not applicable to GRCh37', 1 if $assembly eq 'GRCh37';
+
     my @meta_keys = ('gencode.version');
     foreach my $meta_key (@meta_keys) {
       my $desc = "'$meta_key' meta_key exists";
