@@ -57,44 +57,53 @@ sub tests {
     my $desc_2 = "Taxonomy ID ($taxon_id) for $sci_name is valid";
     my $desc_3 = "Species name correct for taxonomy ID ($taxon_id)";
 
-    my $taxonomy_dba = $self->registry->get_DBAdaptor('multi', 'taxonomy');
-    my $tna  = $taxonomy_dba->get_TaxonomyNodeAdaptor();
+    my $taxonomy_dba = $self->get_dba('multi', 'taxonomy');
 
-    my $node = $tna->fetch_by_taxon_id($taxon_id);
-    ok(defined $node, $desc_2);
+    my $desc_exists = "Taxonomy database found";
+    if ( ok(defined $taxonomy_dba, $desc_exists) ) {
+      my $tna = $taxonomy_dba->get_TaxonomyNodeAdaptor();
+      my $node = $tna->fetch_by_taxon_id($taxon_id);
+      ok(defined $node, $desc_2);
 
-    if (defined $node) {
-      # For species in the NCBI taxonomy that have strain details,
-      # we typically split that out into a separate meta_key.
-      # So we remove that here, if necessary. 
-      my $tax_name = $node->name;
-      if ($sci_name ne $tax_name) {
-        $tax_name =~ s/ $strain// if defined $strain;
-      }
+      if (defined $node) {
+        # For species in the NCBI taxonomy that have strain details,
+        # we typically split that out into a separate meta_key.
+        # So we remove that here, if necessary. 
+        my $tax_name = $node->name;
+        if ($sci_name ne $tax_name) {
+          $tax_name =~ s/ $strain// if defined $strain;
+          $tax_name =~ s/ str\. .*//;
+        }
 
-      my $alias = 0;
+        my $alias = 0;
 
-      if ($sci_name ne $tax_name) {
-        my @synonyms = ();
-        my $synonyms = $node->names->{'synonym'};
-        my $genbank_synonyms = $node->names->{'genbank synonym'};
-        push @synonyms, @{$synonyms} if defined $synonyms;
-        push @synonyms, @{$genbank_synonyms} if defined $genbank_synonyms;
+        if ($sci_name ne $tax_name) {
+          my @synonyms = ();
+          my $synonyms = $node->names->{'synonym'};
+          my $includes = $node->names->{'includes'};
+          my $genbank_synonyms = $node->names->{'genbank synonym'};
+          my $equivalent_names = $node->names->{'equivalent name'};
+          push @synonyms, @{$synonyms} if defined $synonyms;
+          push @synonyms, @{$includes} if defined $includes;
+          push @synonyms, @{$genbank_synonyms} if defined $genbank_synonyms;
+          push @synonyms, @{$equivalent_names} if defined $equivalent_names;
 
-        foreach my $synonym (@synonyms) {
-          if ($sci_name ne $synonym) {
-            $synonym =~ s/ $strain// if defined $strain;
-          }
+          foreach my $synonym (@synonyms) {
+            if ($sci_name ne $synonym) {
+              $synonym =~ s/ $strain// if defined $strain;
+              $synonym =~ s/ str\. .*//;
+            }
 
-          if ($sci_name eq $synonym) {
-            $tax_name = $synonym;
-            $alias = 1;
-            last;
+            if ($sci_name eq $synonym) {
+              $tax_name = $synonym;
+              $alias = 1;
+              last;
+            }
           }
         }
+        is($sci_name, $tax_name, $desc_3);
+        diag('Species name matches alias, not scientific name') if $alias;
       }
-      is($sci_name, $tax_name, $desc_3);
-      diag('Species name matches alias, not scientific name') if $alias;
     }
   }
 }
