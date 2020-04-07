@@ -351,7 +351,6 @@ sub get_old_dba {
   my %params = $uri->generate_dbsql_params();
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
-  my $division = $mca->get_division;
 
   my $db_version;
   if (exists $params{'-DBNAME'}) {
@@ -371,22 +370,39 @@ sub get_old_dba {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
     die "No metadata database found in the registry" unless defined $meta_dba;
 
-    my $helper = $meta_dba->dbc->sql_helper;
-    my $sql = q/
-      SELECT gd.dbname FROM 
-        genome_database gd INNER JOIN
-        genome g USING (genome_id) INNER JOIN
-        organism o USING (organism_id) INNER JOIN
-        data_release dr USING (data_release_id) INNER JOIN
-        division d USING (division_id)
-      WHERE
-        gd.type = ? AND
-        o.name = ? AND
-        dr.ensembl_version = ? AND
-        d.name = ?
-    /;
-    my $params = [$group, $species, $db_version, $division];
+    my ($sql, $params);
+    if ($mca->can('get_division')) {
+      my $division = $mca->get_division;
+      $sql = q/
+        SELECT gd.dbname FROM
+          genome_database gd INNER JOIN
+          genome g USING (genome_id) INNER JOIN
+          organism o USING (organism_id) INNER JOIN
+          data_release dr USING (data_release_id) INNER JOIN
+          division d USING (division_id)
+        WHERE
+          gd.type = ? AND
+          o.name = ? AND
+          dr.ensembl_version = ? AND
+          d.name = ?
+      /;
+      $params = [$group, $species, $db_version, $division];
+    } else {
+      $sql = q/
+        SELECT gd.dbname FROM
+          genome_database gd INNER JOIN
+          genome g USING (genome_id) INNER JOIN
+          organism o USING (organism_id) INNER JOIN
+          data_release dr USING (data_release_id)
+        WHERE
+          gd.type = ? AND
+          o.name = ? AND
+          dr.ensembl_version = ?
+      /;
+      $params = [$group, $species, $db_version];
+    }
 
+    my $helper = $meta_dba->dbc->sql_helper;
     my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
 
     if (scalar(@dbnames) == 1) {
