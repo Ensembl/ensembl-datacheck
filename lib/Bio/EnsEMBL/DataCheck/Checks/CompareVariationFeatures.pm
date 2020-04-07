@@ -47,20 +47,28 @@ sub tests {
     my $curr_dna_dba = $self->get_dna_dba();
     my $old_core_dba = $self->get_old_dba(undef, 'core');
 
-    # Check the assembly version. Skip if not the same
-    skip 'Different assemblies', 1 
-      unless $self->same_assembly($curr_dna_dba, $old_core_dba);
-    
-    my $desc = "Consistent variation feature counts by seq region name between ".
-               $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
+    my $desc_curr_core = 'Current core database found';
+    my $curr_core_pass = ok(defined $curr_dna_dba, $desc_curr_core);
 
-    my $sql  = q/
-      SELECT sr.name, COUNT(*)
-      FROM variation_feature vf JOIN seq_region sr
-        ON (vf.seq_region_id = sr.seq_region_id)
-      GROUP BY sr.name
-    /;
-    row_subtotals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
+    my $desc_old_core = 'Old core database found';
+    my $old_core_pass = ok(defined $old_core_dba, $desc_old_core);
+
+    if ($curr_core_pass && $old_core_pass) {
+      # Check the assembly version. Skip if not the same
+      skip 'Different assemblies', 1
+        unless $self->same_assembly($curr_dna_dba, $old_core_dba);
+
+      my $desc = "Consistent variation feature counts by seq region name between ".
+                 $self->dba->dbc->dbname.' and '.$old_dba->dbc->dbname;
+
+      my $sql  = q/
+        SELECT sr.name, COUNT(*)
+        FROM variation_feature vf JOIN seq_region sr
+          ON (vf.seq_region_id = sr.seq_region_id)
+        GROUP BY sr.name
+      /;
+      row_subtotals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
+    }
   }
 }
 
