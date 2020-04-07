@@ -38,19 +38,25 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $identical_corelike = $self->identical_meta_keys($self->dba);
-  my $identical_core = $self->identical_meta_keys($self->get_dna_dba);
+  my $desc_dna_dba = 'Core database found';
+  my $dna_dba = $self->get_dna_dba();
+  my $pass = ok(defined $dna_dba, $desc_dna_dba);
 
-  my $desc_1 = 'Identical assembly.* meta keys in core and core-like databases';
-  is_deeply($identical_corelike, $identical_core, $desc_1) ||
-    diag explain hash_diff($identical_corelike, $identical_core, 'core-like db', 'core db');
+  if ($pass) {
+    my $identical_corelike = $self->identical_meta_keys($self->dba);
+    my $identical_core = $self->identical_meta_keys($dna_dba);
 
-  my $consistent_corelike = $self->consistent_meta_keys($self->dba);
-  my $consistent_core = $self->consistent_meta_keys($self->get_dna_dba);
+    my $desc_1 = 'Identical assembly.* meta keys in core and core-like databases';
+    is_deeply($identical_corelike, $identical_core, $desc_1) ||
+      diag explain hash_diff($identical_corelike, $identical_core, 'core-like db', 'core db');
 
-  my $desc_2 = 'Consistent species.* meta keys in core and core-like databases';
-  is_deeply($consistent_corelike, $consistent_core, $desc_2) ||
-    diag explain array_diff($consistent_corelike, $consistent_core, 'core-like db', 'core db');
+    my $consistent_corelike = $self->consistent_meta_keys($self->dba);
+    my $consistent_core = $self->consistent_meta_keys($dna_dba);
+
+    my $desc_2 = 'Consistent species.* meta keys in core and core-like databases';
+    is_deeply($consistent_corelike, $consistent_core, $desc_2) ||
+      diag explain array_diff($consistent_corelike, $consistent_core, 'core-like db', 'core db');
+  }
 }
 
 sub identical_meta_keys {
