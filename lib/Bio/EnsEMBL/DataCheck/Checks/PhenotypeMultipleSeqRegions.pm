@@ -38,12 +38,17 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
 
+  my $desc_dna_dba = 'Core database found';
   my $dna_dba = $self->get_dna_dba();
-  my $mca = $dna_dba->get_adaptor("MetaContainer");
-  my $division = $mca->get_division;
+  my $pass = ok(defined $dna_dba, $desc_dna_dba);
 
-  if ($division ne 'EnsemblVertebrates') {
-    return (1, "$division can have phenotypes on single seq region");
+  if ($pass) {
+    my $mca = $dna_dba->get_adaptor("MetaContainer");
+    my $division = $mca->get_division;
+
+    if ($division ne 'EnsemblVertebrates') {
+      return (1, "$division can have phenotypes on single seq region");
+    }
   }
 }
 
