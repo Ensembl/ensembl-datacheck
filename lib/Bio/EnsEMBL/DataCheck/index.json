@@ -1243,7 +1243,7 @@
    },
    "HGNCTypes" : {
       "datacheck_type" : "critical",
-      "description" : "Check that HGNC_curated_genes xrefs are on genes, _transcript are on transcript etc",
+      "description" : "HGNC xrefs are attached to the appropriate object",
       "groups" : [
          "core",
          "xref"

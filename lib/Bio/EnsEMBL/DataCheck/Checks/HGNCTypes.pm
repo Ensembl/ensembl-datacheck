@@ -28,43 +28,43 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'HGNCTypes',
-  DESCRIPTION    => 'Check that HGNC_curated_genes xrefs are on genes, _transcript are on transcript etc',
+  DESCRIPTION    => 'HGNC xrefs are attached to the appropriate object',
   GROUPS         => ['core', 'xref'],
   DATACHECK_TYPE => 'critical',
-  TABLES         => ['xref'],
+  TABLES         => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'transcript', 'xref'],
 };
 
 sub tests {
   my ($self) = @_;
+
   my $species_id = $self->dba->species_id;
-  #note these are looking for the *wrong* assignments
-  my %check_type =(
-   "HGNC" => "Transcript",
-   "HGNC_trans_name" => "Gene"
+
+  my %check_type = (
+   "HGNC" => "Gene",
+   "HGNC_trans_name" => "Transcript"
   );
+
   foreach my $source (keys %check_type) {
-    my $table = 'gene';
-    my $wrong = $check_type{$source};
-    my $desc_1 = "All $source  xrefs assigned to correct object type";
-    if ($check_type{$source} eq 'Transcript'){
-        $table = 'transcript';
-    }
-    my $sql_1 = qq/
-      SELECT COUNT(*) FROM object_xref ox  
-      INNER JOIN xref USING(xref_id) 
-      INNER JOIN external_db e USING(external_db_id)
-      INNER JOIN ${table} gt ON ox.ensembl_id = gt.${table}_id 
-      INNER JOIN seq_region sr USING (seq_region_id) 
-      INNER JOIN coord_system cs USING (coord_system_id) 
-      WHERE cs.species_id = $species_id
-      AND e.db_name='$source'
-      AND ox.ensembl_object_type='$wrong'
-   /;
+    my $object_type = $check_type{$source};
+    my $table = lc($object_type);
+
+    my $desc_1 = "All $source xrefs assigned to ${object_type}s";
+    my $sql_1  = qq/
+      SELECT COUNT(*) FROM
+        object_xref ox INNER JOIN
+        xref USING (xref_id) INNER JOIN
+        external_db e USING (external_db_id) INNER JOIN
+        $table gt ON ox.ensembl_id = gt.${table}_id INNER JOIN
+        seq_region sr USING (seq_region_id) INNER JOIN
+        coord_system cs USING (coord_system_id) 
+      WHERE
+        cs.species_id = $species_id AND
+        e.db_name = '$source' AND
+        ox.ensembl_object_type <> '$object_type'
+    /;
 
     is_rows_zero($self->dba, $sql_1, $desc_1);
   }
-
 }
 
 1;
-
