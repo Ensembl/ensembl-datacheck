@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::DisplayLabels;
+package Bio::EnsEMBL::DataCheck::Checks::PredictionTranscriptLabels;
 
 use warnings;
 use strict;
@@ -28,18 +28,18 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'DisplayLabels',
-  DESCRIPTION    => 'Check that certain tables have display_labels set',
+  NAME           => 'PredictionTranscriptLabels',
+  DESCRIPTION    => 'Predicted transcripts have display labels',
   GROUPS         => ['annotation', 'core'],
   DATACHECK_TYPE => 'critical',
-  TABLES         => ['prediction_transcript']
+  TABLES         => ['coord_system', 'prediction_transcript', 'seq_region']
 };
 
 sub tests {
   my ($self) = @_;
   my $species_id = $self->dba->species_id;
 
-  my $desc_1 = 'No NULL values Found in  display_label for prediction_transcript table';
+  my $desc_1 = 'No NULL display_labels in prediction_transcript table';
   my $sql_1  = qq/
       SELECT count(*) FROM prediction_transcript pt
       INNER JOIN seq_region sr USING (seq_region_id) 
@@ -49,8 +49,6 @@ sub tests {
   /;
 
   is_rows_zero($self->dba, $sql_1, $desc_1);
-
 }
 
 1;
-

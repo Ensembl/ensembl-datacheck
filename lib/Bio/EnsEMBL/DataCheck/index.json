@@ -927,16 +927,6 @@
       "name" : "DescriptionNewlines",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
    },
-   "DisplayLabels" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that certain tables have display_labels set",
-      "groups" : [
-         "annotation",
-         "core"
-      ],
-      "name" : "DisplayLabels",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayLabels"
-   },
    "DisplayXref" : {
       "datacheck_type" : "advisory",
       "description" : "Check that display_xrefs are set OK",
@@ -1507,6 +1497,16 @@
       ],
       "name" : "Population",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Population"
+   },
+   "PredictionTranscriptLabels" : {
+      "datacheck_type" : "critical",
+      "description" : "Predicted transcripts have display labels",
+      "groups" : [
+         "annotation",
+         "core"
+      ],
+      "name" : "PredictionTranscriptLabels",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PredictionTranscriptLabels"
    },
    "ProbeUnique" : {
       "datacheck_type" : "critical",
