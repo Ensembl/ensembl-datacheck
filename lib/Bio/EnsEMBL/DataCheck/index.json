@@ -927,6 +927,26 @@
       "name" : "DescriptionNewlines",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
    },
+   "DisplayXrefExists" : {
+      "datacheck_type" : "advisory",
+      "description" : "At least one gene name exists",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "DisplayXrefExists",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExists"
+   },
+   "DisplayXrefFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene names are correctly formatted",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "DisplayXrefFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefFormat"
+   },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
       "description" : "Genes are displayable and have web_data attached to their analysis",
@@ -1488,6 +1508,16 @@
       "name" : "Population",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Population"
    },
+   "PredictionTranscriptLabels" : {
+      "datacheck_type" : "critical",
+      "description" : "Predicted transcripts have display labels",
+      "groups" : [
+         "annotation",
+         "core"
+      ],
+      "name" : "PredictionTranscriptLabels",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PredictionTranscriptLabels"
+   },
    "ProbeUnique" : {
       "datacheck_type" : "critical",
       "description" : "Probe IDs and mappings are unique",
@@ -1991,7 +2021,7 @@
    },
    "XrefFormat" : {
       "datacheck_type" : "critical",
-      "description" : "Xrefs do not have HTML markup, non-printing characters, or blank values",
+      "description" : "Xref accessions, labels, and descriptions are validly formatted",
       "groups" : [
          "xref",
          "core"
