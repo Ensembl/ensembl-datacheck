@@ -917,16 +917,6 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
-   "DescriptionNewlines" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for newlines and tabs in gene descriptions",
-      "groups" : [
-         "xref",
-         "core"
-      ],
-      "name" : "DescriptionNewlines",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
-   },
    "DisplayXrefExists" : {
       "datacheck_type" : "advisory",
       "description" : "At least one gene name exists",
@@ -1179,6 +1169,16 @@
       "name" : "GeneCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneCounts"
    },
+   "GeneDescriptions" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene descriptions are correctly formatted",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "GeneDescriptions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneDescriptions"
+   },
    "GeneGC" : {
       "datacheck_type" : "critical",
       "description" : "All genes have a GC statistic",
@@ -1220,6 +1220,36 @@
       ],
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
+   },
+   "HGNCMultipleGenes" : {
+      "datacheck_type" : "advisory",
+      "description" : "HGNC-derived gene names are not given to multiple genes",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCMultipleGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCMultipleGenes"
+   },
+   "HGNCNumeric" : {
+      "datacheck_type" : "critical",
+      "description" : "HGNC xrefs do not have the accession as the display_label",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCNumeric",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCNumeric"
+   },
+   "HGNCTypes" : {
+      "datacheck_type" : "critical",
+      "description" : "HGNC xrefs are attached to the appropriate object",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCTypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCTypes"
    },
    "HighConfidence" : {
       "datacheck_type" : "critical",

@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION    => 'Xref accessions, labels, and descriptions are validly formatted',
   GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
-  TABLES         => ['xref'],
+  TABLES         => ['identity_xref', 'xref'],
   PER_DB         => 1,
 };
 
@@ -59,8 +59,8 @@ sub tests {
   my $desc_3 = 'No xrefs display_labels have newlines, tabs or carriage returns';
   my $diag_3 = 'Non-printing character';
   my $sql_3  = qq/
-      SELECT dbprimary_acc, display_label FROM xref 
-      WHERE display_label REGEXP '[\n\r\t]+'
+    SELECT dbprimary_acc, display_label FROM xref 
+    WHERE display_label REGEXP '[\n\r\t]+'
   /;
   is_rows_zero($self->dba, $sql_3, $desc_3, $diag_3);
 
@@ -75,10 +75,18 @@ sub tests {
   my $desc_5 = 'No "ECO:" blocks from Uniprot in descriptions';
   my $diag_5 = '"ECO:" blocks';
   my $sql_5  = qq/
-      SELECT dbprimary_acc, display_label FROM xref  
-      WHERE description like '%{ECO:%}%'
+    SELECT dbprimary_acc, display_label FROM xref  
+    WHERE description like '%{ECO:%}%'
   /;
   is_rows_zero($self->dba, $sql_5, $desc_5, $diag_5);
+
+  my $desc_6 = 'All cigar lines in identity_xref start with M, D, or I';
+  my $diag_6 = 'Invalid character';
+  my $sql_6  = qq/
+    SELECT object_xref_id, LEFT(cigar_line, 1) AS cigar_first FROM identity_xref 
+    WHERE cigar_line REGEXP '^[MDI]'
+  /;
+  is_rows_zero($self->dba, $sql_6, $desc_6, $diag_6);
 }
 
 1;
