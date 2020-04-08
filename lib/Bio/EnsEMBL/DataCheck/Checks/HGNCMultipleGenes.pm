@@ -30,54 +30,31 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'HGNCMultipleGenes',
-  DESCRIPTION    => 'Check for HGNCs that have been assigned as display labels more than one gene.',
+  DESCRIPTION    => 'HGNC-derived gene names are not given to multiple genes',
   GROUPS         => ['core', 'xref'],
   DATACHECK_TYPE => 'advisory',
-  TABLES         => ['xref']
+  TABLES         => ['external_db', 'gene', 'xref']
 };
 
 sub tests {
-
   my ($self) = @_;
-  my $species_id = $self->dba->species_id;
-  my $sql_1 = qq/
-     SELECT DISTINCT(x.display_label), COUNT(*) AS count FROM xref x, external_db e , gene g
-     INNER JOIN seq_region sr USING (seq_region_id) 
-     INNER JOIN coord_system cs USING (coord_system_id)
-     WHERE e.external_db_id=x.external_db_id 
-     AND cs.species_id = $species_id
-     AND e.db_name LIKE 'HGNC%' 
-     AND x.xref_id=g.display_xref_id 
-     AND x.display_label not like '%1 to many)'
-     AND g.seq_region_id NOT in (select seq_region_id FROM seq_region_attrib sa, attrib_type at WHERE at.attrib_type_id = sa.attrib_type_id AND code = 'non_ref')
-     GROUP BY x.display_label
-     HAVING COUNT > 1
-     
-  /;
 
-  my $rows = sql_count($self->dba, $sql_1);
-
-  if ($rows == 0){
-
-    is_rows_zero($self->dba,
-                  $sql_1,
-                  "All HGNC symbols have been assigned to only one gene");
-
-  } elsif ($rows> 0 && $rows < 500 ) {
-
-     is_rows_nonzero($self->dba, 
-                     $sql_1, 
-                     "Most HGNC symbols only assigned to one gene $rows have been assigned to more than one gene");
-    
-  }else {
-
-     is_rows_zero($self->dba, 
-                  $sql_1, 
-                  "More than $rows HGNC symbols have been assigned to more than one gene");
+  my $dbea = $self->dba->get_adaptor('DBEntry');
+  my $hgnc_xrefs = $dbea->fetch_all_by_source("HGNC%");
+  
+  my $ga = $self->dba->get_adaptor('Gene');
+  
+  my $count = 0;
+  foreach my $xref (@$hgnc_xrefs) {
+    next if $xref->display_id =~ /1 to many/;
+    my $genes = $ga->fetch_all_by_display_label($xref->display_id);
+    if (scalar @{$genes} > 1) {
+      $count++;
+    }
   }
 
-  
+  my $desc = "All HGNC symbols have been assigned to only one gene";
+  is($count, 0, $desc);
 }
 
 1;
-

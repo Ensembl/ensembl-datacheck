@@ -1223,7 +1223,7 @@
    },
    "HGNCMultipleGenes" : {
       "datacheck_type" : "advisory",
-      "description" : "Check for HGNCs that have been assigned as display labels more than one gene.",
+      "description" : "HGNC-derived gene names are not given to multiple genes",
       "groups" : [
          "core",
          "xref"
