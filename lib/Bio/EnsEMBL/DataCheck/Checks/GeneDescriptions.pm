@@ -29,27 +29,39 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'GeneDescriptions',
-  DESCRIPTION    => 'Check gene descriptions; correct capitalisation of UniprotKB/SwissProt',
+  DESCRIPTION    => 'Gene descriptions are correctly formatted',
   GROUPS         => ['core', 'xref'],
   DATACHECK_TYPE => 'critical',
-  TABLES         => ['gene']
+  TABLES         => ['coord_system', 'gene', 'seq_region']
 };
 
 sub tests {
   my ($self) = @_;
+
   my $species_id = $self->dba->species_id;
-  my $desc_1 = 'descriptions have correct spelling/capitalisation of Uniprot attribution as "UniProt"';
-  my $sql_1 = qq/
-    SELECT COUNT(*) FROM gene g 
+
+  my $desc_1 = 'Gene descriptions do not contain newlines or tabs';
+  my $diag_1 = 'Non-printing character';
+  my $sql_1  = qq/
+    SELECT g.gene_id, g.stable_id FROM gene g 
     INNER JOIN seq_region sr USING (seq_region_id) 
     INNER JOIN  coord_system cs USING (coord_system_id)   
     WHERE cs.species_id = $species_id
-    AND description LIKE BINARY '%Uniprot%' 
+    AND g.description REGEXP '[\n\r\t]+'
+  /;
+  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
+
+  my $desc_2 = 'Gene descriptions have correct capitalisation of "UniProt"';
+  my $diag_2 = 'Incorrect "UniProt" format';
+  my $sql_2  = qq/
+    SELECT g.gene_id, g.stable_id, g.description FROM gene g 
+    INNER JOIN seq_region sr USING (seq_region_id) 
+    INNER JOIN  coord_system cs USING (coord_system_id) 
+    WHERE cs.species_id = $species_id 
+    AND g.description LIKE BINARY '%Uniprot%'
   /;
 
-  is_rows_zero($self->dba, $sql_1, $desc_1);
-
+  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
 }
 
 1;
-

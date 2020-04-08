@@ -917,16 +917,6 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
-   "DescriptionNewlines" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for newlines and tabs in gene descriptions",
-      "groups" : [
-         "xref",
-         "core"
-      ],
-      "name" : "DescriptionNewlines",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
-   },
    "DisplayXrefExists" : {
       "datacheck_type" : "advisory",
       "description" : "At least one gene name exists",
@@ -1181,7 +1171,7 @@
    },
    "GeneDescriptions" : {
       "datacheck_type" : "critical",
-      "description" : "Check gene descriptions; correct capitalisation of UniprotKB/SwissProt",
+      "description" : "Gene descriptions are correctly formatted",
       "groups" : [
          "core",
          "xref"
