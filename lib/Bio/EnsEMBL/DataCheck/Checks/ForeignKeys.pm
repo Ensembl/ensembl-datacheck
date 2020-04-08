@@ -43,6 +43,8 @@ sub tests {
 
   my $fk_sql_file = $self->fk_sql_file();
 
+  my @failed_to_parse;
+
   foreach my $line ( path($fk_sql_file)->lines ) {
     next if $line =~ /^\-\-/;
     next unless $line =~ /FOREIGN KEY/;
@@ -54,11 +56,15 @@ sub tests {
       # In theory, need exceptions for gene_archive.peptide_archive_id and object_xref.analysis_id
       # which can be zero. But really, they should be null. And if they're not supposed
       # to be null, then they shouldn't be zero either.
-       fk($self->dba, $table1, $col1, $table2, $col2);
+      fk($self->dba, $table1, $col1, $table2, $col2);
     } else {
-      die "Failed to parse foreign key relationship from $line";
+      push @failed_to_parse, $line;
     }
   }
+
+  my $desc_parsed = "Parsed all foreign key relationships from file";
+  is(scalar(@failed_to_parse), 0, $desc_parsed) ||
+    diag explain @failed_to_parse;
 
   if ($self->dba->group =~ /(cdna|core|otherfeatures|rnaseq)/) {
     $self->core_fk();

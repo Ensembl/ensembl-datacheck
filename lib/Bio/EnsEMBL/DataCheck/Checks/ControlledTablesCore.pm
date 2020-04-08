@@ -89,15 +89,19 @@ sub tests {
       # we allow entries in the prod db that are not in the core db. We could
       # use a Test::Deep method instead, but that module does not provide
       # adequate diagnostic messages.
+      my @not_in_prod;
       foreach my $id (sort {$a <=> $b} keys %data) {
         if (exists $prod_data{$id}) {
           my $desc = "Data in $table ($id_column: $id) is consistent";
           is_deeply($data{$id}, $prod_data{$id}, $desc);
         } else {
-          my $desc = "Data in $table ($id_column: $id) exists in master table";
+          push @not_in_prod, "$table ($id_column: $id)";
           fail($desc);
         }
       }
+      my $desc_exists = "All data exists in master table";
+      is(scalar(@not_in_prod), 0, $desc_exists) ||
+        diag explain @not_in_prod;
     }
   }
 }

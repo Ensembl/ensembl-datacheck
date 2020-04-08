@@ -61,9 +61,9 @@ sub tests {
   my $desc_1 = "Transcript co-ordinates are the same as the exon extremities";
   my $diag_1 = "Exon bounds do not match transcript bounds";
   my $sql_1  = qq/
-    SELECT t.gene_id, t.stable_id, t.seq_region_start, t.seq_region_end FROM
+    SELECT t.transcript_id, t.stable_id, t.seq_region_start, t.seq_region_end FROM
     $exon_transcript_sql
-    GROUP BY t.gene_id, t.stable_id
+    GROUP BY t.transcript_id, t.stable_id
     HAVING
       MIN(e.seq_region_start) <> t.seq_region_start OR
       MAX(e.seq_region_end) <> t.seq_region_end

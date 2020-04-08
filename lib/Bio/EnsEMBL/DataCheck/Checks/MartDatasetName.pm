@@ -34,7 +34,8 @@ use constant {
   GROUPS         => ['core','biomart'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
-  TABLES         => ['meta']
+  TABLES         => ['meta'],
+  PER_DB         => 1
 };
 
 sub skip_tests {

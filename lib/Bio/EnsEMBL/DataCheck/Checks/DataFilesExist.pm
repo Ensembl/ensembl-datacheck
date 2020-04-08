@@ -99,37 +99,42 @@ sub segmentation_file_has_bigbed {
 sub data_files_exist {
   my ($self) = @_;
 
-  if ( ! (defined $self->data_file_path && -e $self->data_file_path) ) {
-    die "Data file directory must be set as 'data_file_path' attribute";
-  }
+  my $desc_path = "'data_file_path' defined";
+  my $desc_exists = "'data_file_path' exists";
+  my $dna_db_exists = "Found associated core database";
 
-  my $path = $self->species_assembly_path($self->data_file_path);
+  if ( ok($self->data_file_path, $desc_path) ) {
+    if ( ok(-e $self->data_file_path, $desc_exists) ) {
+      my $path = $self->species_assembly_path($self->data_file_path);
+      if ( ok($path, $dna_db_exists) ) {
+        my $data_file_sql = q/
+          SELECT table_name, path FROM data_file
+          WHERE file_type IN ('BIGWIG', 'BIGBED')
+        /;
+        my $helper = $self->dba->dbc->sql_helper;
+        my $data_files = $helper->execute(-SQL => $data_file_sql);
 
-  my $data_file_sql = q/
-    SELECT table_name, path FROM data_file
-    WHERE file_type IN ('BIGWIG', 'BIGBED')
-  /;
-  my $helper = $self->dba->dbc->sql_helper;
-  my $data_files = $helper->execute(-SQL => $data_file_sql);
+        my %table_names;
+        my %missing_files;
+        foreach (@$data_files) {
+          my $table_name = $_->[0];
+          $table_names{$table_name}++;
 
-  my %table_names;
-  my %missing_files;
-  foreach (@$data_files) {
-    my $table_name = $_->[0];
-    $table_names{$table_name}++;
+          # Don't need to check for undef $file value, db schema doesn't allow it.
+          my $file = $_->[1];
+          my $data_file = catdir($path, $file);
+          if (! -e $data_file) {
+            push @{$missing_files{$table_name}}, $data_file;
+          }
+        }
 
-    # Don't need to check for undef $file value, db schema doesn't allow it.
-    my $file = $_->[1];
-    my $data_file = catdir($path, $file);
-    if (! -e $data_file) {
-      push @{$missing_files{$table_name}}, $data_file;
+        foreach my $table_name (keys %table_names) {
+          my $desc = "All $table_name data files exist";
+          ok(!exists($missing_files{$table_name}), $desc); #||
+            #diag explain $missing_files{$table_name};
+        }
+      }
     }
-  }
-
-  foreach my $table_name (keys %table_names) {
-    my $desc = "All $table_name data files exist";
-    ok(!exists($missing_files{$table_name}), $desc); #||
-      #diag explain $missing_files{$table_name};
   }
 }
 
@@ -138,10 +143,12 @@ sub species_assembly_path {
 
   my $species = $self->species;
   my $core_dba = $self->get_dna_dba;
-  my $meta = $core_dba->get_MetaContainer;
-  my $assembly_default = $meta->single_value_by_key('assembly.default');
+  if (defined $core_dba) {
+    my $meta = $core_dba->get_MetaContainer;
+    my $assembly_default = $meta->single_value_by_key('assembly.default');
 
-  return catdir($data_file_path, $species, $assembly_default);
+    return catdir($data_file_path, $species, $assembly_default);
+  }
 }
 
 1;
