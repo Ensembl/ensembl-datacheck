@@ -927,16 +927,6 @@
       "name" : "DescriptionNewlines",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
    },
-   "DisplayXref" : {
-      "datacheck_type" : "advisory",
-      "description" : "Check that display_xrefs are set OK",
-      "groups" : [
-         "core",
-         "xref"
-      ],
-      "name" : "DisplayXref",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXref"
-   },
    "DisplayXrefExists" : {
       "datacheck_type" : "advisory",
       "description" : "At least one gene name exists",
@@ -2031,7 +2021,7 @@
    },
    "XrefFormat" : {
       "datacheck_type" : "critical",
-      "description" : "Xrefs do not have HTML markup, non-printing characters, or blank values.\nTests for {ECO: } blocks from Uniprot in descriptions.\nTest for Bad characters in display_label.\n",
+      "description" : "Xref accessions, labels, and descriptions are validly formatted",
       "groups" : [
          "xref",
          "core"
