@@ -1233,7 +1233,7 @@
    },
    "HGNCNumeric" : {
       "datacheck_type" : "critical",
-      "description" : "Check that no HGNC xrefs have dbprimary_acc=display_label",
+      "description" : "HGNC xrefs do not have the accession as the display_label",
       "groups" : [
          "core",
          "xref"

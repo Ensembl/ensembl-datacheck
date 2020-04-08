@@ -29,31 +29,32 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'HGNCNumeric',
-  DESCRIPTION    => 'Check that no HGNC xrefs have dbprimary_acc=display_label',
+  DESCRIPTION    => 'HGNC xrefs do not have the accession as the display_label',
   GROUPS         => ['core', 'xref'],
-  DATACHECK_TYPE => 'critical',
-  TABLES         => ['xref'],
-  PER_DB         => 1
+  TABLES         => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'xref'],
 };
 
 sub tests {
-
   my ($self) = @_;
-  my $threshold = 0.01;
-  my $desc_1 = "All HGNC xrefs have different dbprimary_acc and display_label";
-  my $sql_1 = qq/
-       SELECT COUNT(*) FROM external_db e, xref x, object_xref ox, gene g 
-       WHERE e.external_db_id=x.external_db_id 
-       AND x.xref_id=ox.xref_id 
-       AND ox.ensembl_object_type='Gene' 
-       AND ox.ensembl_id=g.gene_id 
-       AND e.db_name LIKE 'HGNC%'
-       AND x.dbprimary_acc=x.display_label
+
+  my $species_id = $self->dba->species_id;
+
+  my $desc_1 = "HGNC xrefs do not have the accession as the display_label";
+  my $sql_1  = qq/
+    SELECT COUNT(*) FROM
+      object_xref ox INNER JOIN
+      xref x USING (xref_id) INNER JOIN
+      external_db e USING (external_db_id) INNER JOIN
+      gene g ON ox.ensembl_id = g.gene_id INNER JOIN
+      seq_region sr USING (seq_region_id) INNER JOIN
+      coord_system cs USING (coord_system_id) 
+    WHERE
+      cs.species_id = $species_id AND
+      e.db_name LIKE 'HGNC%' AND
+      ox.ensembl_object_type = 'Gene' AND
+      x.dbprimary_acc = x.display_label
   /;
-
   is_rows_zero($self->dba, $sql_1, $desc_1);
-
 }
 
 1;
-
