@@ -42,6 +42,11 @@ sub skip_tests {
   my $dna_dba = $self->get_dna_dba();
   my $pass = ok(defined $dna_dba, $desc_dna_dba);
 
+  # Note that if $pass is false, we will still execute the 'tests'
+  # method; which is either not required, or will need to done again,
+  # because the datacheck will fail. But it's complicated to do
+  # otherwise, and it doesn't really matter for this datacheck,
+  # because the query runs quickly.
   if ($pass) {
     my $mca = $dna_dba->get_adaptor("MetaContainer");
     my $division = $mca->get_division;
