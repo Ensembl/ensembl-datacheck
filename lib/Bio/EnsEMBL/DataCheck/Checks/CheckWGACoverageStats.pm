@@ -31,7 +31,7 @@ use constant {
   NAME           => 'CheckWGACoverageStats',
   DESCRIPTION    => 'The number of rows for WGA coverage have not dropped from previous release',
   GROUPS         => ['compara', 'compara_gene_trees'],
-  DATACHECK_TYPE => 'critical',
+  DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
   TABLES         => ['homology']
 };

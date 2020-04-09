@@ -269,7 +269,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
    },
    "CheckGOCScoreStats" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "The number of rows for GOC have not dropped from previous release",
       "groups" : [
          "compara",
@@ -511,7 +511,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckTableSizes"
    },
    "CheckWGACoverageStats" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "The number of rows for WGA coverage have not dropped from previous release",
       "groups" : [
          "compara",
