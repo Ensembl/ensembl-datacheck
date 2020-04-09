@@ -95,7 +95,7 @@ sub tests {
 
     my $desc_2 = "genomic_align coverage matches species_tree_node_tag for mlss_id: $mlss_id";
 
-    my $summary_result = $helper->execute_single_result(-SQL => $msa_summary_sql);
+    my $summary_result = $helper->execute_single_result(-SQL => $msa_summary_sql, -NO_ERROR => 1);
     
     is($summary_result, 1, $desc_2);
     
