@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
   my $division = $self->dba->get_division();
-  if ( $division !~ /vertebrates/ ) {
+  if ( $division !~ /vertebrates/ && $division !~ /plants/ ) {
     return( 1, "Protein and ncRNA gain/loss trees are not analysed for $division" );
   }
 }
