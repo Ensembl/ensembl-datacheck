@@ -56,39 +56,44 @@ sub skip_tests {
 # +------------------+----------------+--------------+----------------+--------------+
 sub tests {
   my ($self) = @_;
-  
+
+  my $desc_dna_dba = 'Core database found';
   my $dna_dba = $self->get_dna_dba();
-  my $gca = $dna_dba->get_adaptor("GenomeContainer");
-  my $version = $gca->get_version();
-  die('No assembly version') if (!$version);
-  
-  my $desc = 'Variants are not mapped to the Y PAR';
-  my $constraint;
-  
-  if ($version eq 'GRCh38') {
-    $constraint = qq/
-    (vf.seq_region_start >= 10001 AND vf.seq_region_end <= 2781479)
-    OR
-    (vf.seq_region_start >= 56887903 AND vf.seq_region_end <= 57217415)
+  my $pass = ok(defined $dna_dba, $desc_dna_dba);
+
+  if ($pass) {
+    my $gca = $dna_dba->get_adaptor("GenomeContainer");
+    my $version = $gca->get_version();
+    die('No assembly version') if (!$version);
+
+    my $desc = 'Variants are not mapped to the Y PAR';
+    my $constraint;
+
+    if ($version eq 'GRCh38') {
+      $constraint = qq/
+      (vf.seq_region_start >= 10001 AND vf.seq_region_end <= 2781479)
+      OR
+      (vf.seq_region_start >= 56887903 AND vf.seq_region_end <= 57217415)
+      /;
+    } elsif ($version eq 'GRCh37') {
+      $constraint = qq/
+      (vf.seq_region_start >= 10001 AND vf.seq_region_end <= 2649520)
+      OR
+      (vf.seq_region_start >=59034050 AND vf.seq_region_end AND vf.seq_region_end <= 59363566)
+      /;
+    } else {
+      die("No PAR regions for assembly $version");
+    }
+
+    my $sql = qq/
+      SELECT COUNT(variation_feature_id)
+      FROM variation_feature vf, seq_region sr
+      WHERE vf.seq_region_id = sr.seq_region_id
+      AND sr.name = "Y"
+      AND ($constraint)
     /;
-  } elsif ($version eq 'GRCh37') {
-    $constraint = qq/
-    (vf.seq_region_start >= 10001 AND vf.seq_region_end <= 2649520)
-    OR
-    (vf.seq_region_start >=59034050 AND vf.seq_region_end AND vf.seq_region_end <= 59363566)
-    /;
-  } else {
-    die("No PAR regions for assembly $version");
+    is_rows_zero($self->dba, $sql, $desc);
   }
-  
-  my $sql = qq/
-    SELECT COUNT(variation_feature_id) 
-    FROM variation_feature vf, seq_region sr 
-    WHERE vf.seq_region_id = sr.seq_region_id
-    AND sr.name = "Y"
-    AND ($constraint)
-  /;
-  is_rows_zero($self->dba, $sql, $desc);
 }
 
 1;
