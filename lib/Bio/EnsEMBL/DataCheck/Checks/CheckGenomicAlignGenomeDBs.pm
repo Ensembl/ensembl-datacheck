@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckGenomicAlignGenomeDBs',
   DESCRIPTION    => 'Check all genome_dbs for each method_link_species_set is present in genomic_aligns',
-  GROUPS         => ['compara', 'compara_multiple_alignments', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['dnafrag', 'genome_db', 'genomic_align', 'genomic_align_block', 'method_link_species_set', 'species_set']

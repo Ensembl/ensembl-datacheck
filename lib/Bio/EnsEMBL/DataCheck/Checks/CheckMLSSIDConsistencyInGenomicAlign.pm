@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckMLSSIDConsistencyInGenomicAlign',
   DESCRIPTION    => 'Check that method_link_species_set_id are the same across genomic_align and genomic_align_block',
-  GROUPS         => ['compara', 'compara_multiple_alignments', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genomic_align', 'genomic_align_block']

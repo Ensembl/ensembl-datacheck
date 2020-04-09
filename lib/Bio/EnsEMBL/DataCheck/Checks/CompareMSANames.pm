@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareMSANames',
   DESCRIPTION    => 'The species_sets from the previous database are still present',
-  GROUPS         => ['compara', 'compara_multiple_alignments'],
+  GROUPS         => ['compara'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set', 'species_set_header']

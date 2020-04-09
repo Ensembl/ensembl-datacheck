@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CheckMultipleAlignCoverage',
   DESCRIPTION => 'Coverage for a multiple whole genome alignment MLSS matches the coverage recorded in the  mlss_tag table',
-  GROUPS      => ['compara', 'compara_multiple_alignments'],
+  GROUPS      => ['compara', 'compara_genome_alignments'],
   DB_TYPES    => ['compara'],
   TABLES      => ['dnafrag', 'genome_db', 'genomic_align', 'method_link', 'method_link_species_set', 'species_tree_node', 'species_tree_node_tag']
 };

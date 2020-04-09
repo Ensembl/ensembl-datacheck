@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckGOCScoreStats',
   DESCRIPTION    => 'The number of rows for GOC have not dropped from previous release',
-  GROUPS         => ['compara', 'compara_protein_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['homology']

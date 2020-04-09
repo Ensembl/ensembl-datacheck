@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyLevel',
   DESCRIPTION => 'Meta keys are correctly assigned at species or database level',
-  GROUPS      => ['compara', 'compara_master', 'core', 'corelike', 'funcgen', 'meta', 'variation'],
+  GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'core', 'corelike', 'funcgen', 'meta', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   TABLES      => ['meta'],
   PER_DB      => 1,

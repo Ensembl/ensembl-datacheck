@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckWGACoverageStats',
   DESCRIPTION    => 'The number of rows for WGA coverage have not dropped from previous release',
-  GROUPS         => ['compara', 'compara_protein_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['homology']

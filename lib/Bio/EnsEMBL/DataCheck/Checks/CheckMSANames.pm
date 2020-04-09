@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckMSANames',
   DESCRIPTION    => 'Ensure that every MSA method has a name in species_set_header',
-  GROUPS         => ['compara', 'compara_master', 'compara_multiple_alignments'],
+  GROUPS         => ['compara', 'compara_master', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set', 'species_set_header']

@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckPairAlignerUniqueMethod',
   DESCRIPTION    => 'Ensure that there is only one method for pairwise alignment per species_set',
-  GROUPS         => ['compara', 'compara_master', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_master', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set']

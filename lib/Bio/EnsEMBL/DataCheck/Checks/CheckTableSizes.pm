@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckTableSizes',
   DESCRIPTION    => 'Tables must be populated and not differ significantly in row numbers',
-  GROUPS         => ['compara', 'compara_tables'],
+  GROUPS         => ['compara'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
 };

@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckSpeciesSetSizeByMethod',
   DESCRIPTION    => 'Checks that the species-sets have the expected number of genomes',
-  GROUPS         => ['compara', 'compara_master', 'compara_pairwise_alignments', 'compara_protein_trees', 'compara_syntenies'],
+  GROUPS         => ['compara', 'compara_master', 'compara_genome_alignments', 'compara_gene_trees', 'compara_syntenies'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set', 'species_set']

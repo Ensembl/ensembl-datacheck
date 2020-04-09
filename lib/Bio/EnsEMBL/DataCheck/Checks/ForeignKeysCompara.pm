@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeysCompara',
   DESCRIPTION => 'Foreign key relationships are not violated',
-  GROUPS      => ['compara', 'compara_master'],
+  GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies'],
   DB_TYPES    => ['compara'],
   PER_DB      => 1
 };

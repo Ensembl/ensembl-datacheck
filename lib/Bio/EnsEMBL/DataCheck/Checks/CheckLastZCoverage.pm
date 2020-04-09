@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CheckLastZCoverage',
   DESCRIPTION => 'Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table',
-  GROUPS      => ['compara', 'compara_pairwise_alignments'],
+  GROUPS      => ['compara', 'compara_genome_alignments'],
   DB_TYPES    => ['compara'],
   TABLES      => ['dnafrag', 'genome_db', 'genomic_align', 'method_link', 'method_link_species_set', 'method_link_species_set_tag', 'species_set_header']
 };

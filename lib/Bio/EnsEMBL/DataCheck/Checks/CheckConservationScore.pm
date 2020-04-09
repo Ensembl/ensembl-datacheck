@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckConservationScore',
   DESCRIPTION    => 'The MLSS for GERP_CONSERVATION_SCORE should have conservation score entries',
-  GROUPS         => ['compara', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['conservation_score', 'genomic_align_block', 'method_link', 'method_link_species_set', 'method_link_species_set_tag']
