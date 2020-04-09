@@ -51,14 +51,15 @@ sub tests {
   my $sql = qq/
     SELECT member_type, COUNT(*) 
       FROM gene_tree_root gtr 
-        JOIN CAFE_gene_family cgf 
+        LEFT JOIN CAFE_gene_family cgf
           ON(gtr.root_id=cgf.gene_tree_root_id) 
     WHERE gtr.tree_type = 'tree' 
       GROUP BY gtr.member_type
+      HAVING COUNT(cgf.gene_tree_root_id) = 0
   /;
   
-  my $desc = "There is data for ncRNA and protein gain/loss trees in the gene_tree_root and CAFE_gene_family tables";
-  cmp_rows($dbc, $sql, "==", 2, $desc);
+  my $desc = "All member types have gain/loss trees";
+  is_rows_zero($self->dba, $sql, $desc);
 }
 
 1;
