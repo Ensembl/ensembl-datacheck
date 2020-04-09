@@ -179,7 +179,7 @@ sub tests {
         FROM gene_member_hom_stats 
           JOIN gene_member 
             USING (gene_member_id) 
-          LEFT JOIN gene_tree_node 
+          JOIN gene_tree_node
             ON canonical_member_id = seq_member_id
           JOIN gene_tree_root USING (root_id)
       WHERE gene_trees = 0 
