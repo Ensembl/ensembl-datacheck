@@ -370,7 +370,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMSANames"
    },
    "CheckMethodLinkSpeciesSetNames" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Check for consistency of names in method_link_species_set (and species_set_header)",
       "groups" : [
          "compara",

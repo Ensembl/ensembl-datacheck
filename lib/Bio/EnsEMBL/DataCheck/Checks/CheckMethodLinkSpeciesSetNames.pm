@@ -31,7 +31,7 @@ use constant {
   NAME           => 'CheckMethodLinkSpeciesSetNames',
   DESCRIPTION    => 'Check for consistency of names in method_link_species_set (and species_set_header)',
   GROUPS         => ['compara', 'compara_gene_trees', 'compara_master', 'compara_syntenies'],
-  DATACHECK_TYPE => 'critical',
+  DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
   TABLES         => ['genome_db', 'method_link_species_set', 'species_set', 'species_set_header']
 };
