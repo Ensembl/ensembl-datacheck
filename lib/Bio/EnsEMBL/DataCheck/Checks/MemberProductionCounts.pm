@@ -159,7 +159,7 @@ sub tests {
     /;
     is_rows_zero( $dbc, $sqlBrokenGainLossCounts, $desc_10 );
 
-    my $desc_11 = "Columns in gene_member_hom_stats have been correctly populated for the $collection collection";
+    my $desc_11 = "All gene_trees>1 have an actual gene-tree for the $collection collection";
     my $sqlPopulateGMHS = qq/
       SELECT COUNT(*) 
         FROM gene_member_hom_stats 
@@ -173,7 +173,7 @@ sub tests {
     /;
     is_rows_zero( $dbc, $sqlPopulateGMHS, $desc_11 );
 
-    my $desc_12 = "Columns in gene_member_hom_stats have been correctly populated with gene_tree_root for the $collection collection";
+    my $desc_12 = "All gene_trees=0 have no gene-tree for the $collection collection";
     my $sqlPopulatewithGTR = qq/
       SELECT COUNT(*) 
         FROM gene_member_hom_stats 
