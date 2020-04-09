@@ -23,6 +23,8 @@ use strict;
 
 use Moose;
 use Test::More;
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -31,29 +33,28 @@ use constant {
   DESCRIPTION    => 'MT seq region has codon table attribute',
   GROUPS         => ['core'],
   DATACHECK_TYPE => 'critical',
-  DB_TYPES       => ['core', 'otherfeatures'],
+  DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };
 
 sub skip_tests {
   my ($self) = @_;
 
-  my $sa = $self->dba->get_adaptor('Slice');
+  my $species_id = $self->dba->species_id;
 
-  # There's no good way to detect a mitochondrial sequence,
-  # have to rely on a set of likely names.
-  my @mts = ('MT', 'Mito', 'mitochondrion_genome');
-
-  my $has_mt = 0;
-  foreach my $mt ( @mts ) {
-    my $slice = $sa->fetch_by_region('toplevel', $mt);
-    if (defined $slice) {
-      $has_mt = 1;
-      last;
-    }
-  }
+  my $sql = qq/
+    SELECT COUNT(*) FROM
+      seq_region INNER JOIN
+      coord_system USING (coord_system_id) INNER JOIN
+      seq_region_attrib USING (seq_region_id) INNER JOIN
+      attrib_type USING (attrib_type_id)
+    WHERE
+      species_id = $species_id AND
+      code = 'sequence_location' AND
+      value = 'mitochondrial_chromosome'
+  /;
   
-  if (!$has_mt) {
+  if (! sql_count($self->dba, $sql) ) {
     return (1, 'No mitochondrional seq_region.');
   }
 }
@@ -61,25 +62,24 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
 
+  my $species_id = $self->dba->species_id;
+
   my $desc = 'MT region has codon table attribute';
-  my @mts  = ('MT', 'Mito', 'mitochondrion_genome');
-
-  my $sa = $self->dba->get_adaptor('Slice');
-
-  my $has_attribute = 0;
-  foreach my $mt ( @mts ) {
-    my $slice = $sa->fetch_by_region('toplevel', $mt);
-    if (defined $slice) {
-      my $attribs = $slice->get_all_Attributes('codon_table');
-
-      if (scalar @$attribs) {
-        $has_attribute = 1;
-        last;
-      }
-    }
-  }
-
-  ok($has_attribute, $desc);
+  my $sql  = qq/
+    SELECT COUNT(*) FROM
+      seq_region INNER JOIN
+      coord_system USING (coord_system_id) INNER JOIN
+      seq_region_attrib sra1 USING (seq_region_id) INNER JOIN
+      seq_region_attrib sra2 USING (seq_region_id) INNER JOIN
+      attrib_type at1 ON sra1.attrib_type_id = at1.attrib_type_id INNER JOIN
+      attrib_type at2 ON sra2.attrib_type_id = at2.attrib_type_id
+    WHERE
+      species_id = $species_id AND
+      at1.code   = 'sequence_location' AND
+      sra1.value = 'mitochondrial_chromosome' AND
+      at2.code   = 'codon_table'
+  /;
+  is_rows($self->dba, $sql, 1, $desc);
 }
 
 1;
