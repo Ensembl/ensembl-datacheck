@@ -61,6 +61,8 @@ sub tests {
   my $helper = $dbc->sql_helper;
   my $gdb_adap = $dba->get_GenomeDBAdaptor;
 
+  my $division = $dba->get_division();
+
   my $sql_sums = qq/
     SELECT SUM(families) AS sum_families, SUM(gene_trees) AS sum_gene_trees, SUM(gene_gain_loss_trees) AS sum_gene_gain_loss_trees, SUM(orthologues) AS sum_orthologues, SUM(paralogues) AS sum_paralogues, SUM(homoeologues) AS sum_homoeologues 
       FROM gene_member_hom_stats 
@@ -114,7 +116,7 @@ sub tests {
     
     my @counts = ($family_count, $genetree_count, $cafetrees_count, $genetree_count, $genetree_count, $polyploid_count);
 
-    if ( $dba->get_division() =~ /vertebrates/ && $collection =~ /default/ ) {
+    if ( $division =~ /vertebrates/ && $collection =~ /default/ ) {
       my $desc_5 = "The sum of entries for families in gene_member_hom_stats > 0 for the $collection collection";
       cmp_ok( $sums->[0]->{sum_families}, ">", 0, $desc_5 );
       my $desc_6 = "There are entries in the family table";
@@ -123,7 +125,7 @@ sub tests {
       my $desc_8 = "There were no unexpected entries in gene_member_hom_stats with families > 0 for the $collection collection";
       is( $sums->[0]->{sum_families} > 0, $counts[0] > 0, $desc_7 );
     }
-    if ( $dba->get_division() =~ /vertebrates/ || $collection =~ /default/ ) {
+    if ( $division =~ /vertebrates/ || $collection =~ /default/ ) {
       my $desc_5 = "The sum of entries for gene_trees in gene_member_hom_stats > 0 for the $collection collection";
       cmp_ok( $sums->[0]->{sum_gene_trees}, ">", 0, $desc_5 );
       my $desc_6 = "There are entries in the gene_tree table";
