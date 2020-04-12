@@ -28,6 +28,7 @@ use warnings;
 use feature 'say';
 
 use JSON;
+use Time::Piece;
 
 use base ('Bio::EnsEMBL::Hive::RunnableDB::NotifyByEmail');
 
@@ -41,6 +42,11 @@ sub run {
   my $tag          = $self->param('tag');
   my $email        = $self->param('email');
   my $timestamp    = $self->param('timestamp');
+
+  my $end_timestamp = localtime->cdate;
+  my $start = Time::Piece->strptime($timestamp,'%a %b %d %H:%M:%S %Y');
+  my $end = Time::Piece->strptime($end_timestamp,'%a %b %d %H:%M:%S %Y');
+  my $runtime_sec = $end - $start;
 
   my $sql = q/
     SELECT dbname, passed, failed, skipped FROM datacheck_results
@@ -71,7 +77,8 @@ sub run {
     history_file => $history_file,
     output_dir   => $output_dir,
     tag          => $tag,
-    timestamp    => $timestamp,
+    timestamp    => $end_timestamp,
+    runtime_sec  => "$runtime_sec",
   );
 
   $self->param('output', \%output);
