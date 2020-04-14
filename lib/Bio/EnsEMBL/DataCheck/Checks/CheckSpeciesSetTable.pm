@@ -39,7 +39,7 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
-  my $helper = $self->dba->dbc->sql_helper;
+  my $helper = $dbc->sql_helper;
     
   my $sql = q/
     SELECT species_set_id, genome_db_id
@@ -75,4 +75,3 @@ sub tests {
 }
 
 1;
-
