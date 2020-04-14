@@ -78,7 +78,7 @@ sub tests {
     /;
 
     my $tag_coverage_sql = qq/
-    SELECT n.genome_db_id, t.value AS tag_coverage, g.genomic_align_coverage 
+    SELECT n.genome_db_id, n.node_name, t.value AS tag_coverage, g.genomic_align_coverage
       FROM species_tree_node n 
         JOIN species_tree_root r USING(root_id)
         JOIN species_tree_node_tag t USING(node_id) 
@@ -86,18 +86,12 @@ sub tests {
       WHERE n.genome_db_id IS NOT NULL 
         AND t.tag = 'genome_coverage' 
         AND r.method_link_species_set_id = $mlss_id
-    /;
-
-    my $msa_summary_sql = qq/
-      SELECT FORMAT(AVG(IF(genomic_align_coverage >= tag_coverage, 1, 0)), '#') 
-        FROM ( $tag_coverage_sql ) c
+        AND g.genomic_align_coverage < t.value
     /;
 
     my $desc_2 = "genomic_align coverage matches species_tree_node_tag for mlss_id: $mlss_id";
 
-    my $summary_result = $helper->execute_single_result(-SQL => $msa_summary_sql, -NO_ERROR => 1);
-    
-    is($summary_result, 1, $desc_2);
+    is_rows_zero($self->dba, $tag_coverage_sql, $desc_2);
     
   }
 }
