@@ -67,7 +67,7 @@ sub checkDuplicatedValues {
       SELECT $column
       FROM $table
       GROUP BY $column 
-      HAVING COUNT(*) > 1
+      HAVING COUNT(*) > 1 AND $column IS NOT NULL
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
 }
