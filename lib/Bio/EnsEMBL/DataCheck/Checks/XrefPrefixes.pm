@@ -99,11 +99,15 @@ sub tests {
 sub xref_prefixes_check {
   my ($self,$source_name,$pattern,$desc) = @_;    
   my $sql  = qq/
-      SELECT dbprimary_acc FROM xref x, external_db e
+      SELECT dbprimary_acc FROM xref x JOIN
+        external_db e USING(external_db_id) JOIN
+        object_xref ox USING (xref_id) JOIN
+        analysis a USING (analysis_id)
       WHERE
         x.external_db_id = e.external_db_id AND
         e.db_name = '$source_name' AND
-        x.dbprimary_acc NOT REGEXP '$pattern'
+        x.dbprimary_acc NOT REGEXP '$pattern' AND
+        a.logic_name != 'xref_projection'
     /;
   is_rows_zero($self->dba, $sql, $desc);
 }
