@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -34,6 +35,16 @@ use constant {
   DB_TYPES    => ['variation'],
   TABLES      => ['individual'],
 };
+
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = 'SELECT COUNT(*) FROM individual';
+
+  if (! sql_count($self->dba, $sql) ) {
+    return (1, 'No individual records.');
+  }
+}
 
 sub tests {
   my ($self) = @_;
