@@ -60,18 +60,20 @@ sub tests {
         WHERE individual_type_id != 1
     /;
     is_rows_zero($self->dba, $sql_1, $desc, $diag);
+    return;
   }
 
   if($species =~ /canis_lupus_familiaris|danio_rerio|
                   gallus_gallus|rattus_norvegicus|
                   bos_taurus|ornithorhynchus_anatinus|
                   pongo_abelii/) {
-  my $sql_2 = q/
+    my $sql_2 = q/
       SELECT COUNT(*)
       FROM individual
       WHERE individual_type_id != 2
-  /; 
-  is_rows_zero($self->dba, $sql_2, $desc, $diag);
+    /;
+    is_rows_zero($self->dba, $sql_2, $desc, $diag);
+    return;
   } 
 
   if($species =~ /anopheles_gambiae/) {
@@ -82,6 +84,7 @@ sub tests {
         AND individual_type_id != 3
     /;
     is_rows_zero($self->dba, $sql_3, $desc, $diag);
+    return;
   }
 
   if($species =~ /homo_sapiens|pan_troglodytes|tetraodon_nigroviridis/) {
@@ -91,6 +94,7 @@ sub tests {
         WHERE individual_type_id != 3
     /;
     is_rows_zero($self->dba, $sql_4, $desc, $diag);
+    return;
   }
 
   # There are individual records but no species specific individual type checks
