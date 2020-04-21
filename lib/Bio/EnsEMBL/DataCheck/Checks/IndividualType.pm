@@ -82,7 +82,12 @@ sub tests {
     is_rows_zero($self->dba, $sql_4, $desc, $diag);
   }
 
+  # There are individual records but no species specific individual type checks
+  # SKIP the check so that it is not reported as a failure
+  SKIP: {
+     skip "No individual_type_id check" , 1;
+  }
+
 }
 
 1;
-
