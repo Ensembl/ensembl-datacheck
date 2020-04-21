@@ -169,6 +169,15 @@
       "name" : "BlankNulls",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankNulls"
    },
+   "BlankSets" : {
+      "datacheck_type" : "critical",
+      "description" : "Set columns do not have empty string values (unless default)",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "BlankSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankSets"
+   },
    "CanonicalTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Canonical transcripts and translation are correctly configured",
