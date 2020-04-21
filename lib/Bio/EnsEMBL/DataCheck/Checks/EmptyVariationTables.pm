@@ -146,7 +146,7 @@ sub get_tables_to_check {
   # Remove citation tables for species without citation database
   my @species_with_citations = qw/
      bos_taurus
-     canis_familiaris
+     canis_lupus_familiaris
      capra_hircus
      danio_rerio
      equus_caballus
