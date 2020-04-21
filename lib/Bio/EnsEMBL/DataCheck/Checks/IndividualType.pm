@@ -62,7 +62,7 @@ sub tests {
     is_rows_zero($self->dba, $sql_1, $desc, $diag);
   }
 
-  if($species =~ /canis_familiaris|danio_rerio|
+  if($species =~ /canis_lupus_familiaris|danio_rerio|
                   gallus_gallus|rattus_norvegicus|
                   bos_taurus|ornithorhynchus_anatinus|
                   pongo_abelii/) {
