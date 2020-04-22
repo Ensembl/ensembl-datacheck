@@ -56,6 +56,10 @@ sub tests {
     my $desc = "There are the same number of goc_score populated rows between releases for $type";
     cmp_ok( $curr_results->{$type} // 0, ">=", $prev_results->{$type}, $desc );
   }
+
+  unless (%$prev_results) {
+    plan skip_all => "No MLSSs to test in this database";
+  }
 }
 
 1;
