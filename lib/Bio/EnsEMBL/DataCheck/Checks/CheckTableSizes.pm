@@ -62,7 +62,7 @@ sub tests {
   my @constant_tables = qw(method_link species_tree_root species_set_tag);
   my $division = $curr_dba->get_division();
   if ($division eq 'pan') {
-    # The number of species is pan is frozen
+    # The number of species in pan is frozen
     push @constant_tables, qw(genome_db method_link_species_set species_set species_set_header);
   }
   my %constant_tables = map {$_ => 1} @constant_tables;
@@ -94,7 +94,7 @@ sub tests {
         # Non empty tables should remain not empty
         isnt( $curr_row_count, 0, $desc_7);
 
-        # Don't bother doing these tests since we not they will fail and
+        # Don't bother doing these tests since we know they will fail and
         # the reason has already been reported
         if ($curr_row_count) {
           # Both tables have some data, we expect the new size to be
@@ -122,4 +122,3 @@ sub tests {
 }
 
 1;
-
