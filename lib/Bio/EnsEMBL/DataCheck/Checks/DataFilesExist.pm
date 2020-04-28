@@ -25,6 +25,7 @@ use File::Spec::Functions qw/catdir/;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -41,7 +42,18 @@ sub tests {
 
   $self->alignment_has_bigwig();
   $self->segmentation_file_has_bigbed();
-  $self->data_files_exist();
+
+  # We do the test here, because for the previous two tests,
+  # an empty data_file table could represent an error.
+  # But for the next test, an empty data_file table is not an
+  # issue, and if that's the case, we can skip in order to prevent
+  # an unnecessary connection to the associated core db.
+  my $sql = 'SELECT COUNT(*) FROM data_file';
+  if ( sql_count($self->dba, $sql) ) {
+    $self->data_files_exist();
+  } else {
+    skip 'No data_files to test', 1;
+  }
 }
 
 sub alignment_has_bigwig {
