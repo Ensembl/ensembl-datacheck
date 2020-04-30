@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION => 'StructuralVariationFeature table data is present and correct',
   GROUPS      => ['variation'],
   DB_TYPES    => ['variation'],
-  TABLES      => ['structural_variation_feature']
+  TABLES      => ['structural_variation_feature','structural_variation']
 };
 
 sub tests {
@@ -51,6 +51,24 @@ sub tests {
     HAVING COUNT(structural_variation_id) > 1
   /;
   is_rows_zero($self->dba, $sql, $desc);
+
+  # Structural variants imported from COSMIC must have somatic status
+  # Checks structural_variation_feature and structural_variation
+  my $svf_somatic = 'Structural variation features from COSMIC are somatic';
+  my $sql_svf  = qq/
+    SELECT COUNT(*) FROM structural_variation_feature svf
+    LEFT JOIN study st ON svf.study_id = st.study_id
+    WHERE svf.somatic = 0 AND st.description LIKE '%cosmic%';
+  /;
+  is_rows_zero($self->dba, $sql_svf, $svf_somatic);
+
+  my $sv_somatic = 'Structural variations from COSMIC are somatic';
+  my $sql_sv  = qq/
+    SELECT COUNT(*) FROM structural_variation sv
+    LEFT JOIN study st ON sv.study_id = st.study_id
+    WHERE sv.somatic = 0 AND st.description LIKE '%cosmic%';
+  /;
+  is_rows_zero($self->dba, $sql_sv, $sv_somatic);
 }
 
 1;
