@@ -1805,6 +1805,15 @@
       "name" : "StructuralVariationFeature",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationFeature"
    },
+   "StructuralVariationSomatic" : {
+      "datacheck_type" : "critical",
+      "description" : "Structural variants imported from COSMIC are somatic",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "StructuralVariationSomatic",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationSomatic"
+   },
    "TagCoverageStats" : {
       "datacheck_type" : "critical",
       "description" : "The coverage must not exceed the genome lengths",
