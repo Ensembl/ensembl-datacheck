@@ -43,7 +43,7 @@ sub tests {
   my $division = $mca->get_division;
 
   my $version_expected = 0;
-  if ($division eq 'EnsemblVertebrates') {
+  if ($division ~= 'Ensembl(Vertebrates|Viruses)') {
     $version_expected = 1;
   }
 
