@@ -38,23 +38,29 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  # Structural variants imported from COSMIC must have somatic status
-  # Checks structural_variation_feature and structural_variation
-  my $svf_somatic = 'Structural variation features from COSMIC are somatic';
-  my $sql_svf  = qq/
-    SELECT COUNT(*) FROM structural_variation_feature svf
-    LEFT JOIN study st ON svf.study_id = st.study_id
-    WHERE svf.somatic = 0 AND st.description LIKE '%cosmic%';
-  /;
-  is_rows_zero($self->dba, $sql_svf, $svf_somatic);
+  SKIP: {
+    my $species = $self->species;
 
-  my $sv_somatic = 'Structural variations from COSMIC are somatic';
-  my $sql_sv  = qq/
-    SELECT COUNT(*) FROM structural_variation sv
-    LEFT JOIN study st ON sv.study_id = st.study_id
-    WHERE sv.somatic = 0 AND st.description LIKE '%cosmic%';
-  /;
-  is_rows_zero($self->dba, $sql_sv, $sv_somatic);
+    skip 'Structural variants from COSMIC not expected', 1 unless $species =~ /homo_sapiens/;
+
+    # Structural variants imported from COSMIC must have somatic status
+    # Checks structural_variation_feature and structural_variation
+    my $svf_somatic = 'Structural variation features from COSMIC are somatic';
+    my $sql_svf  = qq/
+      SELECT COUNT(*) FROM structural_variation_feature svf
+      JOIN study st ON svf.study_id = st.study_id
+      WHERE svf.somatic != 1 AND st.description LIKE '%cosmic%';
+    /;
+    is_rows_zero($self->dba, $sql_svf, $svf_somatic);
+
+    my $sv_somatic = 'Structural variations from COSMIC are somatic';
+    my $sql_sv  = qq/
+      SELECT COUNT(*) FROM structural_variation sv
+      JOIN study st ON sv.study_id = st.study_id
+      WHERE sv.somatic != 1 AND st.description LIKE '%cosmic%';
+    /;
+    is_rows_zero($self->dba, $sql_sv, $sv_somatic);
+  }
 }
 
 1;
