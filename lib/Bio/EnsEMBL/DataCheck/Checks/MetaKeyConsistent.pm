@@ -32,7 +32,8 @@ use constant {
   DESCRIPTION => 'Assembly and species meta keys are identical between core and core-like databases',
   GROUPS      => ['corelike', 'meta'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
-  TABLES      => ['meta']
+  TABLES      => ['meta'],
+  FORCE       => 1
 };
 
 sub tests {

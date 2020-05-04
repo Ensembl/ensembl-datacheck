@@ -31,7 +31,8 @@ use constant {
   NAME        => 'ForeignKeysMultiDB',
   DESCRIPTION => 'Foreign key relationships between tables from different databases are not violated',
   GROUPS      => ['funcgen', 'schema', 'variation'],
-  DB_TYPES    => ['funcgen', 'variation']
+  DB_TYPES    => ['funcgen', 'variation'],
+  FORCE       => 1
 };
 
 sub tests {
