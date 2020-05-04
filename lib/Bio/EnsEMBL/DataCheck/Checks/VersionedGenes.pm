@@ -40,10 +40,10 @@ sub tests {
   my $species_id = $self->dba->species_id;
 
   my $mca = $self->dba->get_adaptor('MetaContainer');
-  my $division = $mca->get_division;
+  my $method = $mca->get_single_value_by_key('genebuild.method');
 
   my $version_expected = 0;
-  if ($division eq 'EnsemblVertebrates') {
+  if ($method =~ /build/) {
     $version_expected = 1;
   }
 
