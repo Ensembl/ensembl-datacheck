@@ -37,7 +37,7 @@ use Test::Builder::Module;
 our $VERSION = 1.00;
 our @ISA     = qw(Test::Builder::Module);
 our @EXPORT  = qw(
-  tags_exist coding_coverage
+  has_tags cmp_tag
 );
 
 my $CLASS = __PACKAGE__;
@@ -99,8 +99,8 @@ sub has_tags {
 
 cmp_tag($dba, $method_link_type, $tag_name, $operator, $expected, $test_name);
 
-For each MLSS of type C<$method_link_type>, test whether the coding
-coverage tag has a non-zero value.
+For each MLSS of type C<$method_link_type>, test whether the value
+for a given tag is expected.
 
 C<$test_name> is a short description of the test that will be printed
 out; if not provided, a default will be used.
@@ -110,7 +110,7 @@ out; if not provided, a default will be used.
 sub cmp_tag {
   my ( $dba, $method_link_type, $tag_name, $operator, $expected, $name ) =  @_;
 
-  $name = "$method_link_type $tag_name $operator $expected" unless defined $name;
+  $name = "All $method_link_type $tag_name $operator $expected" unless defined $name;
 
   my $tb = $CLASS->builder;
 
@@ -123,9 +123,9 @@ sub cmp_tag {
 
   my $mlss_list = $mlssa->fetch_all_by_method_link_type($method_link_type);
   foreach my $mlss (@$mlss_list) {
-	my $tag_value = $mlss->get_value_for_tag($tag_name);
-	if (defined $tag_value) {
-	  if (! $tb->cmp_ok( $tag_value, $operator, $expected )) {
+    my $tag_value = $mlss->get_value_for_tag($tag_name);
+    if (defined $tag_value) {
+      if (! $tb->cmp_ok( $tag_value, $operator, $expected, $mlss->name . ": $tag_name")) {
         push @diag_msg, "$method_link_type (MLSS ID: ".$mlss->dbID.") $tag_name value $tag_value is not $operator $expected";
       }
     } else {

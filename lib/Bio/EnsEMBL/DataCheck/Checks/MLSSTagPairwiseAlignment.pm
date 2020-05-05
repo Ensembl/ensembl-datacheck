@@ -31,10 +31,27 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MLSSTagPairwiseAlignment',
   DESCRIPTION => 'Pairwise alignments have appropriate tags',
-  GROUPS      => ['compara', 'compara_pairwise_alignments'],
+  GROUPS      => ['compara', 'compara_genome_alignments'],
   DB_TYPES    => ['compara'],
   TABLES      => ['method_link', 'method_link_species_set', 'method_link_species_set_tag']
 };
+
+sub skip_tests {
+  my ($self) = @_;
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  my @methods = qw( LASTZ_NET BLASTZ_NET TRANSLATED_BLAT_NET );
+  my $db_name = $self->dba->dbc->dbname;
+  
+  my @mlsses;
+  foreach my $method ( @methods ) {
+    my $mlss = $mlss_adap->fetch_all_by_method_link_type($method);
+    push @mlsses, @$mlss;
+  }
+  
+  if ( scalar(@mlsses) == 0 ) {
+    return( 1, "There are no multiple alignments in $db_name" );
+  }
+}
 
 sub tests {
   my ($self) = @_;

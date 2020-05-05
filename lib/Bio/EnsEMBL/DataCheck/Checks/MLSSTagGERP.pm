@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::MLSSTagMultipleAlignment;
+package Bio::EnsEMBL::DataCheck::Checks::MLSSTagGERP;
 
 use warnings;
 use strict;
@@ -29,8 +29,8 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'MLSSTagMultipleAlignment',
-  DESCRIPTION => 'Multiple alignments have appropriate tags',
+  NAME        => 'MLSSTagGERP',
+  DESCRIPTION => 'GERP analyses have appropriate tags',
   GROUPS      => ['compara', 'compara_genome_alignments'],
   DB_TYPES    => ['compara'],
   TABLES      => ['method_link', 'method_link_species_set', 'method_link_species_set_tag']
@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-  my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+  my @methods = qw( EPO EPO_LOW_COVERAGE );
   my $db_name = $self->dba->dbc->dbname;
   
   my @mlsses;
@@ -56,39 +56,32 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
 
-  my $tags = [
-    'num_blocks',
-    'max_align',
-  ];
+  has_tags($self->dba, 'GERP_CONSTRAINED_ELEMENT', ['max_align', 'msa_mlss_id']);
+  has_tags($self->dba, 'GERP_CONSERVATION_SCORE',  ['msa_mlss_id']);
 
-  has_tags($self->dba, 'EPO', $tags);
-  has_tags($self->dba, 'PECAN', $tags);
-
-  push @$tags, 'base_mlss_id';
-  has_tags($self->dba, 'EPO_LOW_COVERAGE', $tags);
-
-  my $desc = "Low coverage alignments tagged with base MSA MLSS ID";
-  my $sql = qq/
+  my $desc = "GERP analysis tagged with appropriate MSA MLSS ID";
+  my $sql  = qq/
     SELECT
       mlss1.method_link_species_set_id,
-      mlss2.method_link_species_set_id
+      mlss2.method_link_species_set_id,
+      ml1.type,
+      ml2.type,
+      mlsst.value
     FROM
       method_link_species_set mlss1 INNER JOIN
+      method_link_species_set mlss2 ON (mlss1.species_set_id = mlss2.species_set_id) INNER JOIN
       method_link ml1 ON mlss1.method_link_id = ml1.method_link_id INNER JOIN
-      method_link_species_set_tag mlsst ON
-        mlss1.method_link_species_set_id = mlsst.method_link_species_set_id
-        LEFT OUTER JOIN
-        (
-          SELECT method_link_species_set_id FROM
-            method_link_species_set INNER JOIN
-            method_link USING (method_link_id)
-          WHERE
-            type = "EPO"
-        ) mlss2 ON mlsst.value = mlss2.method_link_species_set_id
+      method_link ml2 ON mlss2.method_link_id = ml2.method_link_id INNER JOIN
+      method_link_species_set_tag mlsst ON mlss1.method_link_species_set_id = mlsst.method_link_species_set_id
     WHERE
-      ml1.type = "EPO_LOW_COVERAGE" AND
-      mlsst.tag = "base_mlss_id" AND
-      mlss2.method_link_species_set_id IS NULL
+      (ml1.class = "ConservationScore.conservation_score" OR
+       ml1.class = "ConstrainedElement.constrained_element") AND
+      (ml2.class = "GenomicAlignBlock.multiple_alignment" OR
+       ml2.class LIKE "GenomicAlignTree.%") AND
+      ml1.type NOT LIKE "pGERP%" AND
+      ml2.type NOT LIKE "pEPO%" AND
+      mlsst.tag = "msa_mlss_id" AND
+      mlss2.method_link_species_set_id <> mlsst.value
   /;
   is_rows_zero($self->dba, $sql, $desc);
 }

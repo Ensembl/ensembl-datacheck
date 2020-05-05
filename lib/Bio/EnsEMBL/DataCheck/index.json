@@ -1346,22 +1346,42 @@
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
    },
+   "MLSSTagGERP" : {
+      "datacheck_type" : "critical",
+      "description" : "GERP analyses have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagGERP",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagGERP"
+   },
    "MLSSTagHomology" : {
       "datacheck_type" : "critical",
       "description" : "Homologies have appropriate tags",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "MLSSTagHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagHomology"
+   },
+   "MLSSTagMaxAlign" : {
+      "datacheck_type" : "critical",
+      "description" : "Max align tags have correct values",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagMaxAlign",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagMaxAlign"
    },
    "MLSSTagMultipleAlignment" : {
       "datacheck_type" : "critical",
       "description" : "Multiple alignments have appropriate tags",
       "groups" : [
          "compara",
-         "compara_multiple_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "MLSSTagMultipleAlignment",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagMultipleAlignment"
@@ -1371,7 +1391,7 @@
       "description" : "Pairwise alignments have appropriate tags",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "MLSSTagPairwiseAlignment",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagPairwiseAlignment"
@@ -1390,7 +1410,8 @@
       "datacheck_type" : "critical",
       "description" : "Threshold values for ds exist, if appropriate",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_gene_trees"
       ],
       "name" : "MLSSTagThresholdDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagThresholdDs"

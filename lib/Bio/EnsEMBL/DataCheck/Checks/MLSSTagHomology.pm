@@ -31,10 +31,27 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MLSSTagHomology',
   DESCRIPTION => 'Homologies have appropriate tags',
-  GROUPS      => ['compara', 'compara_protein_trees'],
+  GROUPS      => ['compara', 'compara_gene_trees'],
   DB_TYPES    => ['compara'],
   TABLES      => ['method_link', 'method_link_species_set', 'method_link_species_set_tag']
 };
+
+sub skip_tests {
+  my ($self) = @_;
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  my @methods = qw( PROTEIN_TREES NC_TREES );
+  my $db_name = $self->dba->dbc->dbname;
+  
+  my @mlsses;
+  foreach my $method ( @methods ) {
+    my $mlss = $mlss_adap->fetch_all_by_method_link_type($method);
+    push @mlsses, @$mlss;
+  }
+  
+  if ( scalar(@mlsses) == 0 ) {
+    return( 1, "There are no gene trees in $db_name" );
+  }
+}
 
 sub tests {
   my ($self) = @_;

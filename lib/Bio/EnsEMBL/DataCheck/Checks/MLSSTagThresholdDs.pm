@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MLSSTagThresholdDs',
   DESCRIPTION => 'Threshold values for ds exist, if appropriate',
-  GROUPS      => ['compara'],
+  GROUPS      => ['compara', 'compara_gene_trees'],
   DB_TYPES    => ['compara'],
   TABLES      => ['method_link', 'method_link_species_set', 'method_link_species_set_attr']
 };
