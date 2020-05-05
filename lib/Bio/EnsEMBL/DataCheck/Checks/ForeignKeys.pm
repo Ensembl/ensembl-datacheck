@@ -66,7 +66,10 @@ sub tests {
   is(scalar(@failed_to_parse), 0, $desc_parsed) ||
     diag explain @failed_to_parse;
 
-  if ($self->dba->group =~ /(cdna|core|otherfeatures|rnaseq)/) {
+  if ($self->dba->group eq 'core') {
+    $self->core_fk();
+    $self->dna_fk();
+  } elsif ($self->dba->group =~ /(cdna|otherfeatures|rnaseq)/) {
     $self->core_fk();
   } elsif ($self->dba->group eq 'funcgen') {
     $self->funcgen_fk();
@@ -116,6 +119,14 @@ sub core_fk {
   fk($self->dba, 'supporting_feature',            'feature_id', 'protein_align_feature', 'protein_align_feature_id', 'feature_type = "protein_align_feature"');
   fk($self->dba, 'transcript_supporting_feature', 'feature_id', 'dna_align_feature',     'dna_align_feature_id',     'feature_type = "dna_align_feature"');
   fk($self->dba, 'transcript_supporting_feature', 'feature_id', 'protein_align_feature', 'protein_align_feature_id', 'feature_type = "protein_align_feature"');
+}
+
+sub dna_fk {
+  my ($self) = @_;
+
+  # Cases in which we need to restrict to a subset of rows, using a constraint
+  fk($self->dba, 'seq_region', 'seq_region_id', 'dna', 'seq_region_id',
+    'coord_system_id IN (SELECT coord_system_id FROM coord_system WHERE attrib LIKE "%sequence_level%")');
 }
 
 sub funcgen_fk {
