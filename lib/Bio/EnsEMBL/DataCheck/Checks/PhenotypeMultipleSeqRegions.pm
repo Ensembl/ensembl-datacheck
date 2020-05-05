@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -37,6 +38,15 @@ use constant {
 
 sub skip_tests {
   my ($self) = @_;
+
+  my $sql = 'SELECT COUNT(*) FROM phenotype_feature';
+  my $count = sql_count($self->dba, $sql);
+  if (! $count) {
+    return (1, 'No phenotype_feature records');
+  }
+  if ($count == 1) {
+    return (1, 'Only 1 phenotype_feature record');
+  }
 
   my $desc_dna_dba = 'Core database found';
   my $dna_dba = $self->get_dna_dba();
