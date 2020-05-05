@@ -38,7 +38,7 @@ sub fetch_input {
 
   my $dbname = $datacheck_params->{dba_params}->{-DBNAME};
 
-  my $subject = "FAILED: Datacheck $datacheck_name for $dbname";
+  my $subject = "FAILED: Datacheck $datacheck_name for $dbname in pipeline $pipeline_name";
   $self->param('subject', $subject);
   my $text =
     "Datacheck $datacheck_name failed for $dbname in $pipeline_name pipeline.".
