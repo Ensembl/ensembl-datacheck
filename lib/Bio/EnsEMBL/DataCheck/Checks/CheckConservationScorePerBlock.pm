@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CheckConservationScorePerBlock',
   DESCRIPTION => 'Multiple alignments with >3 species and >3 sequences must have a conservation score',
-  GROUPS      => ['compara', 'compara_multiple_alignments'],
+  GROUPS      => ['compara', 'compara_genome_alignments'],
   DB_TYPES    => ['compara'],
   TABLES      => ['conservation_score', 'dnafrag', 'genome_db', 'genomic_align', 'genomic_align_block', 'method_link', 'method_link_species_set', 'method_link_species_set_tag']
 };

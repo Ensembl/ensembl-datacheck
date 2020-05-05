@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckConstrainedElementTable',
   DESCRIPTION    => 'Each row should show a one-to-many relationship',
-  GROUPS         => ['compara', 'compara_multiple_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['constrained_elements']

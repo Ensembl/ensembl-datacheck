@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'MultipleGenomicAlignBlockIds',
   DESCRIPTION    => 'Check that every genomic_align_block_id has more than one genomic_align_id',
-  GROUPS         => ['compara', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genomic_align', 'method_link', 'method_link_species_set']

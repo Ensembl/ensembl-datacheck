@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'MemberProductionCounts',
   DESCRIPTION    => 'Checks that the gene_member counts are appropriately populated',
-  GROUPS         => ['compara', 'compara_protein_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['CAFE_gene_family', 'family', 'gene_member', 'gene_member_hom_stats', 'gene_tree_root', 'genome_db']
@@ -60,6 +60,8 @@ sub tests {
   my $dbc = $dba->dbc;
   my $helper = $dbc->sql_helper;
   my $gdb_adap = $dba->get_GenomeDBAdaptor;
+
+  my $division = $dba->get_division();
 
   my $sql_sums = qq/
     SELECT SUM(families) AS sum_families, SUM(gene_trees) AS sum_gene_trees, SUM(gene_gain_loss_trees) AS sum_gene_gain_loss_trees, SUM(orthologues) AS sum_orthologues, SUM(paralogues) AS sum_paralogues, SUM(homoeologues) AS sum_homoeologues 
@@ -114,7 +116,7 @@ sub tests {
     
     my @counts = ($family_count, $genetree_count, $cafetrees_count, $genetree_count, $genetree_count, $polyploid_count);
 
-    if ( $dba->get_division() =~ /vertebrates/ && $collection =~ /default/ ) {
+    if ( $division =~ /vertebrates/ && $collection =~ /default/ ) {
       my $desc_5 = "The sum of entries for families in gene_member_hom_stats > 0 for the $collection collection";
       cmp_ok( $sums->[0]->{sum_families}, ">", 0, $desc_5 );
       my $desc_6 = "There are entries in the family table";
@@ -123,7 +125,7 @@ sub tests {
       my $desc_8 = "There were no unexpected entries in gene_member_hom_stats with families > 0 for the $collection collection";
       is( $sums->[0]->{sum_families} > 0, $counts[0] > 0, $desc_7 );
     }
-    if ( $dba->get_division() =~ /vertebrates/ || $collection =~ /default/ ) {
+    if ( $division =~ /vertebrates/ || $collection =~ /default/ ) {
       my $desc_5 = "The sum of entries for gene_trees in gene_member_hom_stats > 0 for the $collection collection";
       cmp_ok( $sums->[0]->{sum_gene_trees}, ">", 0, $desc_5 );
       my $desc_6 = "There are entries in the gene_tree table";
@@ -157,7 +159,7 @@ sub tests {
     /;
     is_rows_zero( $dbc, $sqlBrokenGainLossCounts, $desc_10 );
 
-    my $desc_11 = "Columns in gene_member_hom_stats have been correctly populated for the $collection collection";
+    my $desc_11 = "All gene_trees>1 have an actual gene-tree for the $collection collection";
     my $sqlPopulateGMHS = qq/
       SELECT COUNT(*) 
         FROM gene_member_hom_stats 
@@ -171,13 +173,13 @@ sub tests {
     /;
     is_rows_zero( $dbc, $sqlPopulateGMHS, $desc_11 );
 
-    my $desc_12 = "Columns in gene_member_hom_stats have been correctly populated with gene_tree_root for the $collection collection";
+    my $desc_12 = "All gene_trees=0 have no gene-tree for the $collection collection";
     my $sqlPopulatewithGTR = qq/
       SELECT COUNT(*) 
         FROM gene_member_hom_stats 
           JOIN gene_member 
             USING (gene_member_id) 
-          LEFT JOIN gene_tree_node 
+          JOIN gene_tree_node
             ON canonical_member_id = seq_member_id
           JOIN gene_tree_root USING (root_id)
       WHERE gene_trees = 0 

@@ -31,7 +31,7 @@ use constant {
   NAME           => 'AlignmentCoordinates',
   DESCRIPTION    => 'Alignment coordinates are within the length of their dnafrag',
   DATACHECK_TYPE => 'critical',
-  GROUPS         => ['compara', 'compara_pairwise_alignments', 'compara_multiple_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DB_TYPES       => ['compara'],
   TABLES         => ['dnafrag', 'genomic_align']
 };

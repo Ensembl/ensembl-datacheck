@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckGenomicAlignTreeTable',
   DESCRIPTION    => 'Check the consistency and validity of genomic_align_tree',
-  GROUPS         => ['compara', 'compara_multiple_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genomic_align_tree', 'method_link_species_set']

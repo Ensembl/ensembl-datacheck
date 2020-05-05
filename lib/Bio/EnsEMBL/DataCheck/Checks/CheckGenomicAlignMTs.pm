@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CheckGenomicAlignMTs',
   DESCRIPTION => 'The multiple alignments should include all the MT sequences',
-  GROUPS      => ['compara', 'compara_multiple_alignments'],
+  GROUPS      => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES    => ['compara'],
   TABLES      => ['dnafrag', 'genome_db', 'genomic_align', 'method_link', 'method_link_species_set', 'species_set']
