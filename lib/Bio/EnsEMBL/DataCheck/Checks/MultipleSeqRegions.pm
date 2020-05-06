@@ -43,7 +43,7 @@ sub skip_tests {
   my $pass = ok(defined $dna_dba, $desc_dna_dba);
 
   # Note that if $pass is false, we will still execute the 'tests'
-  # method; which is either not required, or will need to done again,
+  # method; which is either not required, or will need to be done again,
   # because the datacheck will fail. But it's complicated to do
   # otherwise, and it doesn't really matter for this datacheck,
   # because the query runs quickly.
