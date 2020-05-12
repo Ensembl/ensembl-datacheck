@@ -1473,7 +1473,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleGenomicAlignBlockIds"
    },
    "MultipleSeqRegions" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Tables have multiple seq regions",
       "groups" : [
          "variation"
