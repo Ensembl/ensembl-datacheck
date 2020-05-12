@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'TranscriptBounds',
   DESCRIPTION => 'Gene and transcript bounds are consistent',
-  GROUPS      => ['core', 'corelike', 'geneset'],
+  GROUPS      => ['core', 'brc4_core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['attrib_type', 'coord_system', 'gene', 'seq_region', 'transcript', 'transcript_attrib']
 };

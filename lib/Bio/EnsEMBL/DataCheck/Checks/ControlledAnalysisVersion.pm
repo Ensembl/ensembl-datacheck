@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'ControlledAnalysisVersion',
   DESCRIPTION    => 'Analysis db_verion is consistent with production database',
-  GROUPS         => ['controlled_tables', 'core', 'corelike'],
+  GROUPS         => ['controlled_tables', 'core', 'brc4_core', 'corelike'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
   TABLES         => ['analysis', 'analysis_description'],

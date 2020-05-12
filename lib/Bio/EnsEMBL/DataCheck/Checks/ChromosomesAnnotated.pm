@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'ChromosomesAnnotated',
   DESCRIPTION    => 'Chromosomal seq_regions have appropriate attribute',
-  GROUPS         => ['assembly', 'core'],
+  GROUPS         => ['assembly', 'core', 'brc4_core'],
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };

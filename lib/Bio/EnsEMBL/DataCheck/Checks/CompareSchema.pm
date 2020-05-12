@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CompareSchema',
   DESCRIPTION => 'Compare database schema to definition in SQL file',
-  GROUPS      => ['core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['core', 'brc4_core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'production', 'rnaseq', 'variation'],
   PER_DB      => 1
 };

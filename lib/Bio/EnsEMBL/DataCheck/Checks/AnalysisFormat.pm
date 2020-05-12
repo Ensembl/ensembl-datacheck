@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AnalysisFormat',
   DESCRIPTION => 'Analysis logic name and date are formatted correctly',
-  GROUPS      => ['core', 'corelike'],
+  GROUPS      => ['core', 'brc4_core', 'corelike'],
   DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
   TABLES      => ['analysis'],
   PER_DB      => 1

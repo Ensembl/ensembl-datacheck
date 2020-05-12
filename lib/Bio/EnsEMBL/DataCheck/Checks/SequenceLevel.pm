@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SequenceLevel',
   DESCRIPTION => 'DNA is attached, and only attached, to sequence-level seq_regions',
-  GROUPS      => ['assembly', 'core'],
+  GROUPS      => ['assembly', 'core', 'brc4_core'],
   DB_TYPES    => ['core'],
   TABLES      => ['coord_system', 'dna', 'seq_region'],
 };

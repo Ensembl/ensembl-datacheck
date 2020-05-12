@@ -33,7 +33,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeys',
   DESCRIPTION => 'Foreign key relationships are not violated',
-  GROUPS      => ['core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['core', 'brc4_core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1,
 };
