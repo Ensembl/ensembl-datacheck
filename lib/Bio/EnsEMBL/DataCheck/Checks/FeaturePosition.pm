@@ -32,7 +32,8 @@ use constant {
   DESCRIPTION => 'Feature co-ordinates are within the bounds of their seq_region',
   GROUPS      => ['funcgen', 'ersa'],
   DB_TYPES    => ['funcgen'],
-  TABLES      => ['external_feature', 'mirna_target_feature', 'motif_feature', 'peak', 'regulatory_feature']
+  TABLES      => ['external_feature', 'mirna_target_feature', 'motif_feature', 'peak', 'regulatory_feature'],
+  FORCE       => 1
 };
 
 sub tests {
