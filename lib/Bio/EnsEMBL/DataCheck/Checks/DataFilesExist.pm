@@ -37,23 +37,26 @@ use constant {
   FORCE       => 1
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = q/
+    SELECT COUNT(name) FROM regulatory_build 
+    WHERE is_current=1
+  /;
+
+  if (! sql_count($self->dba, $sql) ) {
+    return (1, 'The database has no regulatory build');
+  }
+}
+
 sub tests {
   my ($self) = @_;
 
   $self->alignment_has_bigwig();
   $self->segmentation_file_has_bigbed();
-
-  # We do the test here, because for the previous two tests,
-  # an empty data_file table could represent an error.
-  # But for the next test, an empty data_file table is not an
-  # issue, and if that's the case, we can skip in order to prevent
-  # an unnecessary connection to the associated core db.
-  my $sql = 'SELECT COUNT(*) FROM data_file';
-  if ( sql_count($self->dba, $sql) ) {
-    $self->data_files_exist();
-  } else {
-    skip 'No data_files to test', 1;
-  }
+  $self->motif_feature_has_bigbed();
+  $self->data_files_exist();
 }
 
 sub alignment_has_bigwig {
@@ -106,6 +109,20 @@ sub segmentation_file_has_bigbed {
       df.table_id IS NULL
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
+}
+
+sub motif_feature_has_bigbed {
+  my ($self) = @_;
+
+  my $desc = 'Motif feature file is defined';
+  my $diag = 'Missing BIGBED file';
+  my $sql  = q/
+    SELECT table_id FROM data_file
+    WHERE
+      table_name = 'motif_feature' AND
+      file_type = 'BIGBED'
+  /;
+  is_rows($self->dba, $sql, 1, $desc, $diag);
 }
 
 sub data_files_exist {
