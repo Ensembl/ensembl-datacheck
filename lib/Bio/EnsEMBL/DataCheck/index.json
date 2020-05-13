@@ -1720,6 +1720,15 @@
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
    },
+   "SeqRegionNamesBRC4" : {
+      "datacheck_type" : "advisory",
+      "description" : "Seq_region names have correct accessions and synonyms",
+      "groups" : [
+         "brc4_core"
+      ],
+      "name" : "SeqRegionNamesBRC4",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesBRC4"
+   },
    "SeqRegionNamesINSDC" : {
       "datacheck_type" : "advisory",
       "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
