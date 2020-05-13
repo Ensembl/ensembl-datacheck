@@ -38,17 +38,16 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  SKIP: {
-    my $old_dba = $self->get_old_dba();
 
-    skip 'No old version of database', 1 unless defined $old_dba;
+  # Inherited code from DbCheck will always fail if the previous
+  # release's database cannot be found - so don't need to test
+  # for that here.
+  my $old_dba = $self->get_old_dba();
 
-    my $desc = "Term count has not decreased in ".
-               $self->dba->dbc->dbname.' compared to '.$old_dba->dbc->dbname;
-    my $sql  = 'SELECT COUNT(*) FROM term';
-    row_totals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
-  }
+  my $desc = 'Term count has not decreased in '.
+             $self->dba->dbc->dbname.' compared to '.$old_dba->dbc->dbname;
+  my $sql  = 'SELECT COUNT(*) FROM term';
+  row_totals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
 }
 
 1;
-
