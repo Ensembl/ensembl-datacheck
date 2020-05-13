@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -38,36 +39,23 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
 
-  my $desc_dna_dba = 'Core database found';
-  my $dna_dba = $self->get_dna_dba();
-  my $pass = ok(defined $dna_dba, $desc_dna_dba);
+  my $sql = 'SELECT COUNT(*) FROM seq_region';
 
-  # Note that if $pass is false, we will still execute the 'tests'
-  # method; which is either not required, or will need to be done again,
-  # because the datacheck will fail. But it's complicated to do
-  # otherwise, and it doesn't really matter for this datacheck,
-  # because the query runs quickly.
-  if ($pass) {
-    my $mca = $dna_dba->get_adaptor("MetaContainer");
-    my $division = $mca->get_division;
-
-    if ($division eq 'EnsemblViruses') {
-      return (1, "$division can have tables with a single seq region");
-    }
+  if ( sql_count($self->dba, $sql) == 1 ) {
+    return (1, 'The database has a single seq_region');
   }
 }
 
 sub tests {
   my ($self) = @_;
-  
   # Check that tables have multiple distinct seq_region_id
   foreach my $table (@{$self->tables}) {
-       my $desc = "Table $table does not have 1 distinct seq region id";
-       my $sql  = qq/
-         SELECT COUNT(DISTINCT seq_region_id)
-         FROM $table
-       /;
-       cmp_rows($self->dba, $sql, '!=', 1, $desc);
+    my $desc = "Table $table does not have 1 distinct seq region id";
+    my $sql  = qq/
+      SELECT COUNT(DISTINCT seq_region_id)
+      FROM $table
+    /;
+    cmp_rows($self->dba, $sql, '!=', 1, $desc);
   }
 }
 
