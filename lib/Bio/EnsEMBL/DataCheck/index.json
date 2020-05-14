@@ -1549,7 +1549,6 @@
       "description" : "At least one protein-coding gene exists",
       "groups" : [
          "core",
-         "brc4_core",
          "geneset"
       ],
       "name" : "ProteinCodingGenes",
