@@ -41,7 +41,7 @@ sub tests {
 
   $self->version_check('gene',        $species_id);
   $self->version_check('transcript',  $species_id);
-  #$self->version_check('exon',  $species_id);
+  $self->version_check('exon',        $species_id);
 
   $self->translation_version_check($species_id);
 }
