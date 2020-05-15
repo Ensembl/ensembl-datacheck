@@ -46,10 +46,10 @@ sub tests {
       JOIN method_link_species_set 
         USING (species_set_id) 
     WHERE genome_component IS NOT NULL 
-      AND method_link_id != 401;
+      AND method_link_id NOT IN (401, 600);
   /;
-  #The only MLSS that is allowed to have component GenomeDBs is protein-trees (401)
-  my $desc_1 = "The only MLSS that is allowed to have component GenomeDBs is protein-trees (401)";
+  #The only MLSSs that are allowed to have component GenomeDBs are protein-trees (401) and species-tree (600)
+  my $desc_1 = "The only MLSSs that are allowed to have component GenomeDBs are protein-trees (401) and species-tree (600)";
   is_rows_zero($self->dba, $sql_1, $desc_1);
   #The following tables have no exceptions when it comes to component_genome_dbs
   my @tables = qw(genomic_align dnafrag_region constrained_element gene_member seq_member);
