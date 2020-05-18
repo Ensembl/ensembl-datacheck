@@ -366,6 +366,15 @@ sub get_old_dba {
   if (exists $params{'-DBNAME'}) {
     my $message = 'Specified database does not exist';
     $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+  } elsif ($group =~ /compara|ontology/) {
+    my $dbname = $self->dba->dbc->dbname;
+    my $current = $mca->schema_version;
+    $dbname =~ s/$current/$db_version/; # Ensembl version
+    my ($eg_current, $eg_version) = ($current-53, $db_version-53);
+    $dbname =~ s/$eg_current/$eg_version/; # EG version
+    $params{'-DBNAME'} = $dbname;
+    my $message = 'Previous version of database does not exist';
+    $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
   } else {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
     die "No metadata database found in the registry" unless defined $meta_dba;
