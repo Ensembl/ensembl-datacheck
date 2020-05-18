@@ -33,21 +33,28 @@ use constant {
   DESCRIPTION => 'All GO xrefs have an evidence',
   GROUPS         => ['xref', 'core'],
   DB_TYPES       => ['core'],
-  TABLES         => ['object_xref','xref', 'external_db', 'ontology_xref']
+  TABLES         => ['coord_system', 'external_db', 'object_xref', 'ontology_xref', 'seq_region', 'transcript', 'xref']
 };
 
 sub tests {
   my ($self) = @_;
+  my $species_id = $self->dba->species_id;
+
   my $desc = "All GO xrefs have an evidence";
   my $sql  = qq/
-      SELECT COUNT(*) FROM
-        object_xref ox JOIN
-        xref x using (xref_id) JOIN
-			  external_db e using (external_db_id) LEFT JOIN
-			  ontology_xref oox using (object_xref_id)
-      WHERE
-        e.db_name='GO' AND 
-        oox.object_xref_id is null
+    SELECT COUNT(*) FROM
+      transcript t INNER JOIN
+      object_xref ox ON t.transcript_id = ox.ensembl_id INNER JOIN
+      xref x using (xref_id) INNER JOIN
+      external_db e using (external_db_id) LEFT OUTER JOIN
+      ontology_xref oox using (object_xref_id) INNER JOIN
+      seq_region USING (seq_region_id) INNER JOIN
+      coord_system USING (coord_system_id)
+    WHERE
+      ox.ensembl_object_type = 'Transcript' AND
+      e.db_name = 'GO' AND
+      oox.object_xref_id IS NULL AND
+      species_id = $species_id
     /;
     is_rows_zero($self->dba, $sql, $desc);
 }
