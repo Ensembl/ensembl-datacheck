@@ -51,20 +51,31 @@ sub tests {
 
   skip 'No primary_assembly to check', 1 if @coords == 0;
 
-  my $desc = "Only one primary_assembly coord_system";
-  my $diag = 'Several primary assembly coords_systems';
-  is(scalar(@coords), 1, $desc);
+  my $desc_1 = "Only one primary_assembly coord_system";
+  my $diag_1 = 'Several primary assembly coords_systems';
+  is(scalar(@coords), 1, $desc_1);
+
+  my $coord = $coords[0];
+
+  my $desc_2 = "Primary assenbly is default";
+  my $diag_2 = 'Primary assembly is not default';
+  is($coord->is_default, 1, $desc_2);
+
+  my $desc_3 = "Primary assenbly is sequence level";
+  my $diag_3 = 'Primary assembly is not sequence level';
+  is($coord->is_sequence_level, 1, $desc_3);
 
   # Check that this coord_system seq_regions all have a tag
-  my $coord_id = $coords[0]->dbID;
+  my $coord_id = $coord->dbID;
   $self->check_seq_attrib_name_coord($species_id, $coord_id, 'coord_system_tag');
+  $self->check_seq_attrib_name_coord($species_id, $coord_id, 'toplevel');
 }
 
 sub check_seq_attrib_name {
   my ($self, $species_id, $attrib_code) = @_;
 
-  my $desc = "All toplevel seq_regions have a '$attrib_code' attribute";
-  my $diag = 'No attrib_name attribute for seq_region';
+  my $desc = "All seq_regions have a '$attrib_code' attribute";
+  my $diag = "No attrib_name '$attrib_code' for seq_region";
   my $sql  = qq/
     SELECT sr.name
     FROM seq_region sr
@@ -95,8 +106,8 @@ sub check_seq_attrib_name {
 sub check_seq_attrib_name_coord {
   my ($self, $species_id, $coord_id, $attrib_code) = @_;
 
-  my $desc = "All toplevel seq_regions have a '$attrib_code' attribute";
-  my $diag = 'No attrib_name attribute for seq_region';
+  my $desc = "All seq_regions have a '$attrib_code' attribute";
+  my $diag = "No attrib_name '$attrib_code' for seq_region";
   my $sql  = qq/
     SELECT sr.name
     FROM seq_region sr
