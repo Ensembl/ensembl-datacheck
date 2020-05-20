@@ -1708,14 +1708,14 @@
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
    },
-   "SeqRegionCoordSystemBRC4" : {
+   "SeqRegionBRC4" : {
       "datacheck_type" : "critical",
-      "description" : "Seq_region for primary_assembly have a coord_system_tag",
+      "description" : "Seq_region for BRC4 have correct attributes",
       "groups" : [
          "brc4_core"
       ],
-      "name" : "SeqRegionCoordSystemBRC4",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionCoordSystemBRC4"
+      "name" : "SeqRegionBRC4",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionBRC4"
    },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
@@ -1728,22 +1728,12 @@
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
    },
-   "SeqRegionNamesBRC4" : {
-      "datacheck_type" : "advisory",
-      "description" : "Seq_region names have correct accessions and synonyms",
-      "groups" : [
-         "brc4_core"
-      ],
-      "name" : "SeqRegionNamesBRC4",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesBRC4"
-   },
    "SeqRegionNamesINSDC" : {
       "datacheck_type" : "advisory",
       "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
       "groups" : [
          "assembly",
-         "core",
-         "brc4_core"
+         "core"
       ],
       "name" : "SeqRegionNamesINSDC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"

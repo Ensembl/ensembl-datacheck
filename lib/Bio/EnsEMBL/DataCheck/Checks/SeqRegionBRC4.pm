@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesBRC4;
+package Bio::EnsEMBL::DataCheck::Checks::SeqRegionBRC4;
 
 use warnings;
 use strict;
@@ -28,23 +28,12 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'SeqRegionNamesBRC4',
-  DESCRIPTION    => 'Seq_region names have correct accessions and synonyms',
+  NAME           => 'SeqRegionBRC4',
+  DESCRIPTION    => 'Seq_region for BRC4 have correct attributes',
   GROUPS         => ['brc4_core'],
-  DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'external_db', 'seq_region', 'seq_region_attrib', 'seq_region_synonym']
 };
-
-sub skip_tests {
-  my ($self) = @_;
-  
-  my $gca = $self->dba->get_adaptor("GenomeContainer");
-
-  if (!defined $gca->get_accession) {
-    return (1, 'Not an INSDC assembly.');
-  }
-}
 
 sub tests {
   my ($self) = @_;
@@ -55,6 +44,20 @@ sub tests {
 
   # Check for INSDC accession (not systematic in case out assembly is not in sync with INSDC)
   #$self->check_seq_synonym($species_id, 'INSDC');
+
+  # Check if there is one coord_system named primary_assembly
+  my $csa = $self->dba->get_adaptor("coordsystem");
+  my @coords = grep { $_->name eq 'primary_assembly' } @{ $csa->fetch_all() };
+
+  skip 'No primary_assembly to check', 1 if @coords == 0;
+
+  my $desc = "Only one primary_assembly coord_system";
+  my $diag = 'Several primary assembly coords_systems';
+  is(scalar(@coords), 1, $desc);
+
+  # Check that this coord_system seq_regions all have a tag
+  my $coord_id = $coords[0]->dbID;
+  $self->check_seq_attrib_name_coord($species_id, $coord_id, 'coord_system_tag');
 }
 
 sub check_seq_attrib_name {
@@ -84,6 +87,39 @@ sub check_seq_attrib_name {
       ) sra ON sr.seq_region_id = sra.seq_region_id
     WHERE
       sra.value IS NULL AND
+      cs.species_id = $species_id
+  /;
+  is_rows_zero($self->dba, $sql, $desc, $diag);
+}
+
+sub check_seq_attrib_name_coord {
+  my ($self, $species_id, $coord_id, $attrib_code) = @_;
+
+  my $desc = "All toplevel seq_regions have a '$attrib_code' attribute";
+  my $diag = 'No attrib_name attribute for seq_region';
+  my $sql  = qq/
+    SELECT sr.name
+    FROM seq_region sr
+      INNER JOIN coord_system cs USING (coord_system_id)
+      INNER JOIN
+      (
+        SELECT seq_region_id, value FROM
+          seq_region_attrib INNER JOIN
+          attrib_type USING (attrib_type_id)
+        WHERE
+          code = 'toplevel'
+      ) toplevel ON sr.seq_region_id = toplevel.seq_region_id
+      LEFT OUTER JOIN
+      (
+        SELECT seq_region_id, value FROM
+          seq_region_attrib INNER JOIN
+          attrib_type USING (attrib_type_id)
+        WHERE
+          code = '$attrib_code'
+      ) sra ON sr.seq_region_id = sra.seq_region_id
+    WHERE
+      sra.value IS NULL AND
+      cs.coord_system_id = '$coord_id' AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
