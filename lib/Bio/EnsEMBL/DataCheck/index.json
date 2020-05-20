@@ -1708,6 +1708,15 @@
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
    },
+   "SeqRegionCoordSystemBRC4" : {
+      "datacheck_type" : "critical",
+      "description" : "Seq_region for primary_assembly have a coord_system_tag",
+      "groups" : [
+         "brc4_core"
+      ],
+      "name" : "SeqRegionCoordSystemBRC4",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionCoordSystemBRC4"
+   },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
       "description" : "Seq_region names are unique (top-level) or consistent (non-top-level)",
