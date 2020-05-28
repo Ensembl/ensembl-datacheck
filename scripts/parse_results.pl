@@ -115,7 +115,12 @@ foreach my $tap_file (@tap_files) {
         $test = $1;
         $tests{$test} = [];
       } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
-        push @{$tests{$test}}, $1;
+        if (defined $test) {
+          push @{$tests{$test}}, $1;
+        } else {
+          warn "Premature diagnostication: diagnostics incomplete ".
+               "for $species because they cannot be linked to a test";
+        }
       } elsif ($result->as_string =~ /^\s{4}((?:ok|not ok))/) {
         my $ok = $1 eq 'ok' ? 1 : 0;
         if (!$ok || $passed) {
@@ -128,6 +133,7 @@ foreach my $tap_file (@tap_files) {
             $results{$datacheck}{$species}{'tests'} = \%datacheck_tests;
           }
         }
+        $test = undef;
       }  
     }
   }
