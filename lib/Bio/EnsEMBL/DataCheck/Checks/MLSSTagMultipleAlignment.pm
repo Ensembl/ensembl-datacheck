@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-  my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+  my @methods = qw( EPO EPO_EXTENDED PECAN );
   my $db_name = $self->dba->dbc->dbname;
   
   my @mlsses;
@@ -65,9 +65,9 @@ sub tests {
   has_tags($self->dba, 'PECAN', $tags);
 
   push @$tags, 'base_mlss_id';
-  has_tags($self->dba, 'EPO_LOW_COVERAGE', $tags);
+  has_tags($self->dba, 'EPO_EXTENDED', $tags);
 
-  my $desc = "Low coverage alignments tagged with base MSA MLSS ID";
+  my $desc = "Extended multiple sequence alignments tagged with base MSA MLSS ID";
   my $sql = qq/
     SELECT
       mlss1.method_link_species_set_id,
@@ -86,7 +86,7 @@ sub tests {
             type = "EPO"
         ) mlss2 ON mlsst.value = mlss2.method_link_species_set_id
     WHERE
-      ml1.type = "EPO_LOW_COVERAGE" AND
+      ml1.type = "EPO_EXTENDED" AND
       mlsst.tag = "base_mlss_id" AND
       mlss2.method_link_species_set_id IS NULL
   /;
