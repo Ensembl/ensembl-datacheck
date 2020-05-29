@@ -67,6 +67,7 @@
       "datacheck_type" : "critical",
       "description" : "Analysis logic name and date are formatted correctly",
       "groups" : [
+         "ancestral",
          "core",
          "corelike"
       ],
@@ -96,6 +97,7 @@
       "datacheck_type" : "critical",
       "description" : "Assembly exceptions are correctly configured",
       "groups" : [
+         "ancestral",
          "assembly",
          "core"
       ],
@@ -116,6 +118,7 @@
       "datacheck_type" : "critical",
       "description" : "Assembly and seq_region tables are consistent",
       "groups" : [
+         "ancestral",
          "assembly",
          "core"
       ],
@@ -144,6 +147,7 @@
       "datacheck_type" : "critical",
       "description" : "Enum columns do not have empty string values",
       "groups" : [
+         "ancestral",
          "compara",
          "compara_gene_trees",
          "compara_master",
@@ -161,6 +165,7 @@
       "datacheck_type" : "critical",
       "description" : "Nullable columns do not have empty string values",
       "groups" : [
+         "ancestral",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
@@ -823,6 +828,7 @@
       "datacheck_type" : "critical",
       "description" : "Meta keys are consistent with production database",
       "groups" : [
+         "ancestral",
          "controlled_tables",
          "core",
          "corelike",
@@ -904,6 +910,7 @@
       "datacheck_type" : "critical",
       "description" : "All tables have the same collation (latin1_swedish_ci)",
       "groups" : [
+         "ancestral",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
@@ -1132,6 +1139,7 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships are not violated",
       "groups" : [
+         "ancestral",
          "core",
          "corelike",
          "funcgen",
@@ -1493,6 +1501,7 @@
       "datacheck_type" : "critical",
       "description" : "A subset of meta keys must only have a single value",
       "groups" : [
+         "ancestral",
          "core",
          "meta"
       ],
@@ -1524,6 +1533,7 @@
       "datacheck_type" : "critical",
       "description" : "Meta values are correctly formatted and linked",
       "groups" : [
+         "ancestral",
          "core",
          "meta",
          "variation"
@@ -1535,6 +1545,7 @@
       "datacheck_type" : "critical",
       "description" : "Meta keys are correctly assigned at species or database level",
       "groups" : [
+         "ancestral",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
@@ -1855,6 +1866,7 @@
       "datacheck_type" : "critical",
       "description" : "The schema version meta key matches the DB name",
       "groups" : [
+         "ancestral",
          "compara",
          "core",
          "corelike",
@@ -1869,6 +1881,7 @@
       "datacheck_type" : "critical",
       "description" : "Seq_region names are unique (top-level) or consistent (non-top-level)",
       "groups" : [
+         "ancestral",
          "assembly",
          "core"
       ],
