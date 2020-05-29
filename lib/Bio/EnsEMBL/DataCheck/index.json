@@ -882,6 +882,15 @@
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
    },
+   "DNAFragCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Top-level sequences in the core database match dnafrags in compara database",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "DNAFragCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
+   },
    "DataFilesExist" : {
       "datacheck_type" : "critical",
       "description" : "Data files are defined where necessary, and exist on the filesystem",
@@ -1249,6 +1258,24 @@
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
    },
+   "GeneTreeHighlighting" : {
+      "datacheck_type" : "critical",
+      "description" : "GO and InterPro xrefs are loaded for highlighting annotated genes",
+      "groups" : [
+         "compara_annot_highlight"
+      ],
+      "name" : "GeneTreeHighlighting",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTreeHighlighting"
+   },
+   "GenomeDBCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "GenomeDBCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
+   },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
       "description" : "Genome statistics are present and correct",
@@ -1336,6 +1363,76 @@
       ],
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
+   },
+   "MLSSTagGERP" : {
+      "datacheck_type" : "critical",
+      "description" : "GERP analyses have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagGERP",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagGERP"
+   },
+   "MLSSTagHomology" : {
+      "datacheck_type" : "critical",
+      "description" : "Homologies have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "MLSSTagHomology",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagHomology"
+   },
+   "MLSSTagMaxAlign" : {
+      "datacheck_type" : "critical",
+      "description" : "Max align tags have correct values",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagMaxAlign",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagMaxAlign"
+   },
+   "MLSSTagMultipleAlignment" : {
+      "datacheck_type" : "critical",
+      "description" : "Multiple alignments have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagMultipleAlignment",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagMultipleAlignment"
+   },
+   "MLSSTagPairwiseAlignment" : {
+      "datacheck_type" : "critical",
+      "description" : "Pairwise alignments have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagPairwiseAlignment",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagPairwiseAlignment"
+   },
+   "MLSSTagSynteny" : {
+      "datacheck_type" : "critical",
+      "description" : "Syntenies have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_syntenies"
+      ],
+      "name" : "MLSSTagSynteny",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagSynteny"
+   },
+   "MLSSTagThresholdDs" : {
+      "datacheck_type" : "critical",
+      "description" : "Threshold values for ds exist, if appropriate",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "MLSSTagThresholdDs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagThresholdDs"
    },
    "MTCodonTable" : {
       "datacheck_type" : "critical",
