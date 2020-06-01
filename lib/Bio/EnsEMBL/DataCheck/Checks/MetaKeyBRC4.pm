@@ -46,7 +46,7 @@ sub tests {
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
-  foreach my $meta_key (@optional) {
+  foreach my $meta_key (@expected) {
     my $values = $mca->list_value_by_key($meta_key);
 
     my $desc = "Value exists for meta_key $meta_key";
