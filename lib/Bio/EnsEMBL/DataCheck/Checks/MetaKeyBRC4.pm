@@ -37,7 +37,7 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my @optional = qw/
+  my @expected = qw/
   assembly.accession
   species.taxonomy_id
   BRC4.component
