@@ -74,7 +74,7 @@ sub tests {
 sub check_seq_attrib_name {
   my ($self, $species_id, $attrib_code) = @_;
 
-  my $desc = "All seq_regions have a '$attrib_code' attribute";
+  my $desc = "All toplevel seq_regions have a '$attrib_code' attribute";
   my $diag = "No attrib_name '$attrib_code' for seq_region";
   my $sql  = qq/
     SELECT sr.name
@@ -102,12 +102,9 @@ sub check_seq_attrib_name_coord {
     SELECT sr.name
     FROM seq_region sr
       INNER JOIN coord_system cs USING (coord_system_id)
-      INNER JOIN seq_region_attrib sra_top USING (seq_region_id)
-      INNER JOIN attrib_type at_top ON sra_top.attrib_type_id = at_top.attrib_type_id
       LEFT JOIN seq_region_attrib sra USING (seq_region_id)
       LEFT JOIN attrib_type at ON sra.attrib_type_id = at.attrib_type_id
     WHERE
-      at_top.code = 'toplevel' AND
       at.code = '$attrib_code' AND
       sra.value IS NULL AND
       cs.coord_system_id = '$coord_id' AND
