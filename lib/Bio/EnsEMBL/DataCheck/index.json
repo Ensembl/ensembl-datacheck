@@ -828,7 +828,6 @@
       "datacheck_type" : "critical",
       "description" : "Meta keys are consistent with production database",
       "groups" : [
-         "ancestral",
          "controlled_tables",
          "core",
          "corelike",
