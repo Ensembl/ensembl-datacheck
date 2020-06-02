@@ -42,7 +42,7 @@ sub tests {
   my $schema_version = $mca->schema_version;
 
   my $db_version;
-  if ($self->dba->group eq 'compara') {
+  if ($self->dba->group eq 'compara' || $self->dba->dbc->dbname =~ /ancestral/) {
     ($db_version) = $self->dba->dbc->dbname =~ /(\d+)$/;
   } else {
     ($db_version) = $self->dba->dbc->dbname =~ /(\d+)_\d+$/;
