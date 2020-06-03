@@ -186,6 +186,8 @@ if ($dbname) {
       $dbtype = 'ontology';
     } elsif ($dbname =~ /ensembl_production/) {
       $dbtype = 'production';
+    } elsif ($dbname =~ /ancestral/) {
+      $dbtype = 'core';
     } else {
       ($dbtype) = $dbname =~ /_([a-z]+)[\d_]+$/;
     }
@@ -202,6 +204,8 @@ if ($dbname) {
   my $species;
   if ($dbtype =~ /^(compara|ontology|production)$/) {
     $species = 'multi';
+  } elsif ($dbname =~ /ancestral/) {
+    $species = 'Ancestral sequences';
   } else {
     my $sql = q/
       SELECT meta_value FROM meta

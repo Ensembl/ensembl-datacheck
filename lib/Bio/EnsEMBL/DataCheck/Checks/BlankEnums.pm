@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'BlankEnums',
   DESCRIPTION => 'Enum columns do not have empty string values',
-  GROUPS      => ['compara', 'compara_gene_trees', 'compara_master', 'compara_syntenies', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['ancestral', 'compara', 'compara_gene_trees', 'compara_master', 'compara_syntenies', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1
 };
