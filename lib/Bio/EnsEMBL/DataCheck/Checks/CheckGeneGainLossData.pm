@@ -36,14 +36,6 @@ use constant {
   TABLES         => ['CAFE_gene_family', 'gene_tree_root']
 };
 
-sub skip_tests {
-  my ($self) = @_;
-  my $division = $self->dba->get_division();
-  if ( $division !~ /vertebrates/ && $division !~ /plants/ ) {
-    return( 1, "Protein and ncRNA gain/loss trees are not analysed for $division" );
-  }
-}
-
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
@@ -57,8 +49,10 @@ sub tests {
     push @mlsses, @$mlss;
   }
 
+  my $mlsses_with_cafe = 0;
   foreach my $mlss ( @mlsses ) {
     next unless $mlss->get_value_for_tag('has_cafe');
+    $mlsses_with_cafe++;
     my $mlss_id = $mlss->dbID;
     my $sql = qq/
     SELECT member_type, COUNT(*) 
@@ -74,6 +68,10 @@ sub tests {
     my $mlss_name = $mlss->name;
     my $desc = "All member types have gain/loss trees for $mlss_name";
     is_rows_zero($self->dba, $sql, $desc);
+  }
+
+  unless ($mlsses_with_cafe) {
+    plan skip_all => "No MLSSs with gain/loss data in this database";
   }
 }
 
