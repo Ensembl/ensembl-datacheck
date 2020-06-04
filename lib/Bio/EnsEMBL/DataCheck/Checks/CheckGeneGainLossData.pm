@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckGeneGainLossData',
   DESCRIPTION    => 'ncRNA and protein trees must have gene Gain/Loss trees',
-  GROUPS         => ['compara', 'compara_gene_trees'],
+  GROUPS         => ['compara', 'compara_protein_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['CAFE_gene_family', 'gene_tree_root']
