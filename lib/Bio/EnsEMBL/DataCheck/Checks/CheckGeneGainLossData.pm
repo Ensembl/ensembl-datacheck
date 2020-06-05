@@ -36,30 +36,43 @@ use constant {
   TABLES         => ['CAFE_gene_family', 'gene_tree_root']
 };
 
-sub skip_tests {
-  my ($self) = @_;
-  my $division = $self->dba->get_division();
-  if ( $division !~ /vertebrates/ ) {
-    return( 1, "Protein and ncRNA gain/loss trees are not analysed for $division" );
-  }
-}
-
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
-  
-  my $sql = qq/
+
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  my @methods = qw (PROTEIN_TREES NC_TREES);
+
+  my @mlsses;
+  foreach my $method ( @methods ) {
+    my $mlss = $mlss_adap->fetch_all_by_method_link_type($method);
+    push @mlsses, @$mlss;
+  }
+
+  my $mlsses_with_cafe = 0;
+  foreach my $mlss ( @mlsses ) {
+    next unless $mlss->get_value_for_tag('has_cafe');
+    $mlsses_with_cafe++;
+    my $mlss_id = $mlss->dbID;
+    my $sql = qq/
     SELECT member_type, COUNT(*) 
       FROM gene_tree_root gtr 
-        JOIN CAFE_gene_family cgf 
+        LEFT JOIN CAFE_gene_family cgf
           ON(gtr.root_id=cgf.gene_tree_root_id) 
-    WHERE gtr.tree_type = 'tree' 
+    WHERE gtr.tree_type = 'tree'
+      AND gtr.method_link_species_set_id = $mlss_id
       GROUP BY gtr.member_type
-  /;
-  
-  my $desc = "There is data for ncRNA and protein gain/loss trees in the gene_tree_root and CAFE_gene_family tables";
-  cmp_rows($dbc, $sql, "==", 2, $desc);
+      HAVING COUNT(cgf.gene_tree_root_id) = 0
+    /;
+
+    my $mlss_name = $mlss->name;
+    my $desc = "All member types have gain/loss trees for $mlss_name";
+    is_rows_zero($self->dba, $sql, $desc);
+  }
+
+  unless ($mlsses_with_cafe) {
+    plan skip_all => "No MLSSs with gain/loss data in this database";
+  }
 }
 
 1;
-
