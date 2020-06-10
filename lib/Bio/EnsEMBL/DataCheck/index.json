@@ -1410,6 +1410,16 @@
       "name" : "MySQLStorageEngine",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MySQLStorageEngine"
    },
+   "NCBIGeneLabels" : {
+      "datacheck_type" : "critical",
+      "description" : "NCBI genes have display xrefs",
+      "groups" : [
+         "corelike",
+         "xref"
+      ],
+      "name" : "NCBIGeneLabels",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NCBIGeneLabels"
+   },
    "NoDataOnGenomeComponents" : {
       "datacheck_type" : "critical",
       "description" : "Data is only allowed on principle genomes and not components",
