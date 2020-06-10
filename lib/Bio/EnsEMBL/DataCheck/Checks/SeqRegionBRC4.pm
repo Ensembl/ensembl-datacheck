@@ -80,13 +80,15 @@ sub check_seq_attrib_name {
     SELECT sr.name
     FROM seq_region sr
       INNER JOIN coord_system cs USING (coord_system_id)
-      INNER JOIN seq_region_attrib sra_top USING (seq_region_id)
-      INNER JOIN attrib_type at_top ON sra_top.attrib_type_id = at_top.attrib_type_id
-      LEFT JOIN seq_region_attrib sra USING (seq_region_id)
-      LEFT JOIN attrib_type at ON sra.attrib_type_id = at.attrib_type_id
+      LEFT OUTER JOIN
+      (
+        SELECT seq_region_id, value FROM
+          seq_region_attrib INNER JOIN
+          attrib_type USING (attrib_type_id)
+        WHERE
+          code = '$attrib_code'
+      ) sra ON sr.seq_region_id = sra.seq_region_id
     WHERE
-      at_top.code = 'toplevel' AND
-      at.code = '$attrib_code' AND
       sra.value IS NULL AND
       cs.species_id = $species_id
   /;
@@ -102,10 +104,15 @@ sub check_seq_attrib_name_coord {
     SELECT sr.name
     FROM seq_region sr
       INNER JOIN coord_system cs USING (coord_system_id)
-      LEFT JOIN seq_region_attrib sra USING (seq_region_id)
-      LEFT JOIN attrib_type at ON sra.attrib_type_id = at.attrib_type_id
+      LEFT OUTER JOIN
+      (
+        SELECT seq_region_id, value FROM
+          seq_region_attrib INNER JOIN
+          attrib_type USING (attrib_type_id)
+        WHERE
+          code = '$attrib_code'
+      ) sra ON sr.seq_region_id = sra.seq_region_id
     WHERE
-      at.code = '$attrib_code' AND
       sra.value IS NULL AND
       cs.coord_system_id = '$coord_id' AND
       cs.species_id = $species_id
