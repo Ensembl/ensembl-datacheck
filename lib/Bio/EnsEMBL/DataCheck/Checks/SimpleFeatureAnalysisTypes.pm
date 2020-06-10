@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'SimpleFeatureAnalysisTypes',
   DESCRIPTION    => 'Simple features are not from analysis type gene, mrna and cds',
-  GROUPS         => ['core'],
+  GROUPS         => ['core', 'brc4_core'],
   DB_TYPES       => ['core'],
   TABLES         => ['gene', 'analysis', 'analysis_description']
 };

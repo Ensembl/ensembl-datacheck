@@ -16,33 +16,42 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::UnlocatedTranscripts;
+package Bio::EnsEMBL::DataCheck::Checks::MetaKeyBRC4;
 
 use warnings;
 use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'UnlocatedTranscripts',
-  DESCRIPTION => 'Transcripts are linked to sequences',
-  GROUPS      => ['core', 'brc4_core', 'corelike', 'geneset'],
-  DB_TYPES    => ['core', 'otherfeatures'],
-  TABLES      => ['transcript'],
-  PER_DB      => 1
+  NAME           => 'MetaKeyBRC4',
+  DESCRIPTION    => 'Expected meta keys for BRC4 cores',
+  GROUPS         => ['brc4_core'],
+  DB_TYPES       => ['core'],
+  TABLES         => ['meta']
 };
 
 sub tests {
   my ($self) = @_;
 
-  my $desc = 'Transcripts attached to seq_regions';
-  my $diag = 'Stable ID';
-  my $sql  = 'SELECT stable_id FROM transcript WHERE seq_region_id = 0';
-  is_rows_zero($self->dba, $sql, $desc, $diag);
+  my @expected = qw/
+  assembly.accession
+  species.taxonomy_id
+  BRC4.component
+  BRC4.organism_abbrev
+  /;
+
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+
+  foreach my $meta_key (@expected) {
+    my $values = $mca->list_value_by_key($meta_key);
+
+    my $desc = "Value exists for meta_key $meta_key";
+    ok(scalar @$values, $desc);
+  }
 }
 
 1;

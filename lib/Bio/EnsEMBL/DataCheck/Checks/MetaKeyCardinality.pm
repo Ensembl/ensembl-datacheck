@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyCardinality',
   DESCRIPTION => 'A subset of meta keys must only have a single value',
-  GROUPS      => ['core', 'meta'],
+  GROUPS      => ['core', 'brc4_core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta']
 };

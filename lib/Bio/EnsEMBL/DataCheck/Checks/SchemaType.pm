@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SchemaType',
   DESCRIPTION => 'The schema type meta key matches the DB name',
-  GROUPS      => ['compara', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['compara', 'core', 'brc4_core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   TABLES      => ['meta'],
   PER_DB      => 1
