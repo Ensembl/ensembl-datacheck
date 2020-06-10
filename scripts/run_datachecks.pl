@@ -205,7 +205,7 @@ if ($dbname) {
   if ($dbtype =~ /^(compara|ontology|production)$/) {
     $species = 'multi';
   } elsif ($dbname =~ /ancestral/) {
-    $species = 'Ancestral sequences';
+    $species = 'ancestral_sequences';
   } else {
     my $sql = q/
       SELECT meta_value FROM meta
