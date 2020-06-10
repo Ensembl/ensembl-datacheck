@@ -47,12 +47,14 @@ sub tests {
       gene INNER JOIN
       object_xref ON gene_id = ensembl_id INNER JOIN
       xref USING (xref_id) INNER JOIN
-      external_db USING (external_db_id)
+      external_db USING (external_db_id) INNER JOIN
+      analysis ON gene.analysis_id = analysis.analysis_id
     WHERE
       ensembl_object_type = 'Gene' AND
       db_name = 'EntrezGene' AND
       stable_id NOT IN (dbprimary_acc, display_label) AND
-      display_xref_id IS NULL
+      display_xref_id IS NULL AND
+      logic_name = 'refseq_import'
     /;
   is_rows_zero($self->dba, $sql_1, $desc_1);
 
@@ -62,12 +64,14 @@ sub tests {
       transcript INNER JOIN
       object_xref ON gene_id = ensembl_id INNER JOIN
       xref USING (xref_id) INNER JOIN
-      external_db USING (external_db_id)
+      external_db USING (external_db_id) INNER JOIN
+      analysis ON transcript.analysis_id = analysis.analysis_id
     WHERE
       ensembl_object_type = 'Transcript' AND
       db_name = 'EntrezGene' AND
       stable_id NOT IN (dbprimary_acc, display_label) AND
-      display_xref_id IS NULL
+      display_xref_id IS NULL AND
+      logic_name = 'refseq_import'
     /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
 }
