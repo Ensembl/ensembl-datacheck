@@ -198,6 +198,7 @@ sub pipeline_analyses {
                                   ['RunDataChecks']
                                 ),
                               'A->1' => ['DataCheckSummary'],
+                                  
                             },
       -rc_name           => 'default',
     },
@@ -300,9 +301,17 @@ sub pipeline_analyses {
       -max_retry_count   => 0,
       -rc_name           => 'default',
       -flow_into         => {
-                              '1' => ['?table_name=result'],
+                              '1' => ['?table_name=result', 'DataCheckTapToJson'],
                             },
     },
+    {
+      -logic_name        => 'DataCheckTapToJson',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -rc_name           => 'default',
+    },
+    
 
   ];
 }
