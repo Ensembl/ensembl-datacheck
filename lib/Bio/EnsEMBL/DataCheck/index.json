@@ -72,8 +72,8 @@
       "description" : "Analysis logic name and date are formatted correctly",
       "groups" : [
          "ancestral",
-         "core",
          "brc4_core",
+         "core",
          "corelike"
       ],
       "name" : "AnalysisFormat",
@@ -104,8 +104,8 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "core",
-         "brc4_core"
+         "brc4_core",
+         "core"
       ],
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
@@ -127,8 +127,8 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "core",
-         "brc4_core"
+         "brc4_core",
+         "core"
       ],
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
@@ -156,12 +156,12 @@
       "description" : "Enum columns do not have empty string values",
       "groups" : [
          "ancestral",
+         "brc4_core",
          "compara",
          "compara_gene_trees",
          "compara_master",
          "compara_syntenies",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -175,13 +175,13 @@
       "description" : "Nullable columns do not have empty string values",
       "groups" : [
          "ancestral",
+         "brc4_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -926,13 +926,13 @@
       "description" : "All tables have the same collation (latin1_swedish_ci)",
       "groups" : [
          "ancestral",
+         "brc4_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1161,8 +1161,8 @@
       "description" : "Foreign key relationships are not violated",
       "groups" : [
          "ancestral",
-         "core",
          "brc4_core",
+         "core",
          "corelike",
          "funcgen",
          "schema",
@@ -1541,8 +1541,8 @@
       "description" : "A subset of meta keys must only have a single value",
       "groups" : [
          "ancestral",
-         "core",
          "brc4_core",
+         "core",
          "meta"
       ],
       "name" : "MetaKeyCardinality",
@@ -1575,8 +1575,8 @@
       "description" : "Meta values are correctly formatted and linked",
       "groups" : [
          "ancestral",
-         "core",
          "brc4_core",
+         "core",
          "meta",
          "variation"
       ],
@@ -1588,13 +1588,13 @@
       "description" : "Meta keys are correctly assigned at species or database level",
       "groups" : [
          "ancestral",
+         "brc4_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "meta",
@@ -1887,13 +1887,13 @@
       "datacheck_type" : "critical",
       "description" : "Schema patches are up-to-date",
       "groups" : [
+         "brc4_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1906,13 +1906,13 @@
       "datacheck_type" : "critical",
       "description" : "The schema type meta key matches the DB name",
       "groups" : [
+         "brc4_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1926,9 +1926,9 @@
       "description" : "The schema version meta key matches the DB name",
       "groups" : [
          "ancestral",
+         "brc4_core",
          "compara",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1952,8 +1952,8 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "core",
-         "brc4_core"
+         "brc4_core",
+         "core"
       ],
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
