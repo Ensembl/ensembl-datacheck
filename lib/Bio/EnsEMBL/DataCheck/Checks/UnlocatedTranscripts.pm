@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'UnlocatedTranscripts',
   DESCRIPTION => 'Transcripts are linked to sequences',
-  GROUPS      => ['core', 'corelike', 'geneset'],
+  GROUPS      => ['core', 'brc4_core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['transcript'],
   PER_DB      => 1

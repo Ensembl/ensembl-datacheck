@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyAssembly',
   DESCRIPTION => 'Assembly data and meta keys are consistent',
-  GROUPS      => ['assembly', 'core', 'meta'],
+  GROUPS      => ['assembly', 'core', 'brc4_core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['assembly', 'attrib_type', 'coord_system', 'meta', 'seq_region', 'seq_region_attrib']
 };

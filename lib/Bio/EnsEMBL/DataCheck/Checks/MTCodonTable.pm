@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'MTCodonTable',
   DESCRIPTION    => 'MT seq region has codon table attribute',
-  GROUPS         => ['core'],
+  GROUPS         => ['core', 'brc4_core'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']

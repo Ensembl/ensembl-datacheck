@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'DatabaseCollation',
   DESCRIPTION => 'All tables have the same collation (latin1_swedish_ci)',
-  GROUPS      => ['ancestral', 'compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['ancestral', 'brc4_core', 'compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1
 };

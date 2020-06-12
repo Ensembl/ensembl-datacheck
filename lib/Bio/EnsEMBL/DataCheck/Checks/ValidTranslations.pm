@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ValidTranslations',
   DESCRIPTION => 'Translations have appropriate properties',
-  GROUPS      => ['core', 'corelike', 'geneset'],
+  GROUPS      => ['core', 'brc4_core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['coord_system', 'exon', 'exon_transcript', 'seq_region', 'transcript', 'translation']
 };

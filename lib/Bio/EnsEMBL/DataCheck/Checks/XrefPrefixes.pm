@@ -81,7 +81,6 @@ sub tests {
   'ZFIND_ID' => '^ZDB',
   'cint_aniseed_v1' => '^ci',
   'dictyBase' => '^DDB',
-  'external_wheat_gene_names' => '^GSP-',
   'flybase_gene_id' => '^FB',
   'flybase_transcript_id' => '^FB',
   'flybase_translation_id' => '^FB',

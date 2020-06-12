@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'AssemblyExceptionsMapping',
   DESCRIPTION    => 'Assembly exceptions have alignment mappings',
-  GROUPS         => ['assembly', 'core'],
+  GROUPS         => ['assembly', 'core', 'brc4_core'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['analysis', 'assembly_exception', 'dna_align_feature',

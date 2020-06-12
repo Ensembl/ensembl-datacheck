@@ -5,6 +5,7 @@
       "groups" : [
          "annotation",
          "core",
+         "brc4_core",
          "corelike"
       ],
       "name" : "AlignFeatureExternalDB",
@@ -36,6 +37,7 @@
       "description" : "Alt allele group members map back to the same chromosome",
       "groups" : [
          "core",
+         "brc4_core",
          "geneset"
       ],
       "name" : "AltAllele",
@@ -46,6 +48,7 @@
       "description" : "No alt_allele_group has more than one gene from the primary assembly",
       "groups" : [
          "core",
+         "brc4_core",
          "geneset"
       ],
       "name" : "AltAlleleGroup",
@@ -57,6 +60,7 @@
       "groups" : [
          "analysis_description",
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -69,6 +73,7 @@
       "groups" : [
          "ancestral",
          "core",
+         "brc4_core",
          "corelike"
       ],
       "name" : "AnalysisFormat",
@@ -99,7 +104,8 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
@@ -109,7 +115,8 @@
       "description" : "Assembly exceptions have alignment mappings",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "AssemblyExceptionsMapping",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptionsMapping"
@@ -120,7 +127,8 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
@@ -153,6 +161,7 @@
          "compara_master",
          "compara_syntenies",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -172,6 +181,7 @@
          "compara_master",
          "compara_syntenies",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -194,6 +204,7 @@
       "description" : "Canonical transcripts and translation are correctly configured",
       "groups" : [
          "core",
+         "brc4_core",
          "geneset"
       ],
       "name" : "CanonicalTranscripts",
@@ -539,7 +550,8 @@
       "description" : "Chromosomal seq_regions have appropriate attribute",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "ChromosomesAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
@@ -681,6 +693,7 @@
       "description" : "Compare database schema to definition in SQL file",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -808,6 +821,7 @@
          "analysis_description",
          "controlled_tables",
          "core",
+         "brc4_core",
          "corelike"
       ],
       "name" : "ControlledAnalysis",
@@ -819,6 +833,7 @@
       "groups" : [
          "controlled_tables",
          "core",
+         "brc4_core",
          "corelike"
       ],
       "name" : "ControlledAnalysisVersion",
@@ -844,6 +859,7 @@
       "groups" : [
          "controlled_tables",
          "core",
+         "brc4_core",
          "corelike"
       ],
       "name" : "ControlledTablesCore",
@@ -916,6 +932,7 @@
          "compara_master",
          "compara_syntenies",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -993,6 +1010,7 @@
       "groups" : [
          "analysis_description",
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -1005,6 +1023,7 @@
       "groups" : [
          "analysis_description",
          "core",
+         "brc4_core",
          "geneset"
       ],
       "name" : "DisplayableSampleGene",
@@ -1031,7 +1050,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateTranscriptNames"
    },
    "DuplicateXref" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Xrefs have been added twice with different descriptions or versions",
       "groups" : [
          "xref",
@@ -1064,6 +1083,7 @@
       "description" : "Exon regions are non-overlapping, and are consistent with their transcripts",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -1075,6 +1095,7 @@
       "description" : "Exon/transcript links are not duplicated, and rank=1 exons exist for every transcript",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -1097,6 +1118,7 @@
       "groups" : [
          "annotation",
          "core",
+         "brc4_core",
          "corelike"
       ],
       "name" : "FeatureBounds",
@@ -1140,6 +1162,7 @@
       "groups" : [
          "ancestral",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1197,6 +1220,7 @@
       "description" : "Genes and transcripts have valid biotypes",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -1208,6 +1232,7 @@
       "description" : "Genes are within the bounds of their seq_region",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -1249,6 +1274,7 @@
       "description" : "Genes, transcripts, exons and translations have non-NULL, unique stable IDs",
       "groups" : [
          "core",
+         "brc4_core",
          "geneset"
       ],
       "name" : "GeneStableID",
@@ -1259,6 +1285,7 @@
       "description" : "Genes have valid strand values",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -1366,6 +1393,7 @@
       "description" : "LRG features and seq_regions are correctly configured",
       "groups" : [
          "core",
+         "brc4_core",
          "xref"
       ],
       "name" : "LRG",
@@ -1445,7 +1473,8 @@
       "datacheck_type" : "critical",
       "description" : "MT seq region has codon table attribute",
       "groups" : [
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "MTCodonTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MTCodonTable"
@@ -1476,6 +1505,7 @@
       "groups" : [
          "annotation",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "geneset",
@@ -1491,10 +1521,20 @@
       "groups" : [
          "assembly",
          "core",
+         "brc4_core",
          "meta"
       ],
       "name" : "MetaKeyAssembly",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyAssembly"
+   },
+   "MetaKeyBRC4" : {
+      "datacheck_type" : "critical",
+      "description" : "Expected meta keys for BRC4 cores",
+      "groups" : [
+         "brc4_core"
+      ],
+      "name" : "MetaKeyBRC4",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyBRC4"
    },
    "MetaKeyCardinality" : {
       "datacheck_type" : "critical",
@@ -1502,6 +1542,7 @@
       "groups" : [
          "ancestral",
          "core",
+         "brc4_core",
          "meta"
       ],
       "name" : "MetaKeyCardinality",
@@ -1512,6 +1553,7 @@
       "description" : "Conditional meta keys exist if the data requires them",
       "groups" : [
          "core",
+         "brc4_core",
          "meta",
          "variation"
       ],
@@ -1534,6 +1576,7 @@
       "groups" : [
          "ancestral",
          "core",
+         "brc4_core",
          "meta",
          "variation"
       ],
@@ -1551,6 +1594,7 @@
          "compara_master",
          "compara_syntenies",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "meta",
@@ -1603,6 +1647,7 @@
       "groups" : [
          "compara",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1610,6 +1655,16 @@
       ],
       "name" : "MySQLStorageEngine",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MySQLStorageEngine"
+   },
+   "NCBIGeneLabels" : {
+      "datacheck_type" : "critical",
+      "description" : "NCBI genes have display xrefs",
+      "groups" : [
+         "corelike",
+         "xref"
+      ],
+      "name" : "NCBIGeneLabels",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NCBIGeneLabels"
    },
    "NoDataOnGenomeComponents" : {
       "datacheck_type" : "critical",
@@ -1674,7 +1729,8 @@
       "description" : "Component genomes are annotated for polyploid genomes",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "PolyploidAttribs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
@@ -1741,6 +1797,7 @@
       "description" : "All protein-coding genes have a valid translation",
       "groups" : [
          "core",
+         "brc4_core",
          "geneset"
       ],
       "name" : "ProteinTranslation",
@@ -1800,7 +1857,8 @@
       "description" : "Repeat feature coordinates are present and correct",
       "groups" : [
          "annotation",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "RepeatFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
@@ -1835,6 +1893,7 @@
          "compara_master",
          "compara_syntenies",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1853,6 +1912,7 @@
          "compara_master",
          "compara_syntenies",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1868,6 +1928,7 @@
          "ancestral",
          "compara",
          "core",
+         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1876,13 +1937,23 @@
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
    },
+   "SeqRegionBRC4" : {
+      "datacheck_type" : "critical",
+      "description" : "Seq_region for BRC4 have correct attributes",
+      "groups" : [
+         "brc4_core"
+      ],
+      "name" : "SeqRegionBRC4",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionBRC4"
+   },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
       "description" : "Seq_region names are unique (top-level) or consistent (non-top-level)",
       "groups" : [
          "ancestral",
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
@@ -1902,7 +1973,8 @@
       "description" : "Chromosomes have rank 1",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "SeqRegionRank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionRank"
@@ -1913,6 +1985,7 @@
       "groups" : [
          "assembly",
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -1924,7 +1997,8 @@
       "description" : "DNA is attached, and only attached, to sequence-level seq_regions",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
@@ -1944,7 +2018,8 @@
       "datacheck_type" : "critical",
       "description" : "Simple features are not from analysis type gene, mrna and cds",
       "groups" : [
-         "core"
+         "core",
+         "brc4_core"
       ],
       "name" : "SimpleFeatureAnalysisTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SimpleFeatureAnalysisTypes"
@@ -1972,6 +2047,7 @@
       "description" : "Species production_name and alias are unique across all databases in the registry",
       "groups" : [
          "core",
+         "brc4_core",
          "meta"
       ],
       "name" : "SpeciesNameUnique",
@@ -1982,6 +2058,7 @@
       "description" : "Taxonomic meta keys are consistent with taxonomy database",
       "groups" : [
          "core",
+         "brc4_core",
          "meta"
       ],
       "name" : "SpeciesTaxonomy",
@@ -2015,6 +2092,15 @@
       "name" : "StructuralVariationFeature",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationFeature"
    },
+   "StructuralVariationSomatic" : {
+      "datacheck_type" : "critical",
+      "description" : "Structural variants imported from COSMIC are somatic",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "StructuralVariationSomatic",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationSomatic"
+   },
    "TagCoverageStats" : {
       "datacheck_type" : "critical",
       "description" : "The coverage must not exceed the genome lengths",
@@ -2031,6 +2117,7 @@
       "description" : "Gene and transcript bounds are consistent",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -2071,6 +2158,7 @@
       "description" : "Transcripts are linked to sequences",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -2092,6 +2180,7 @@
       "description" : "Transcripts have translations, if appropriate",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -2103,6 +2192,7 @@
       "description" : "Translations have appropriate properties",
       "groups" : [
          "core",
+         "brc4_core",
          "corelike",
          "geneset"
       ],
@@ -2199,6 +2289,15 @@
       ],
       "name" : "VersionedGenes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenes"
+   },
+   "VersionedGenesBRC4" : {
+      "datacheck_type" : "critical",
+      "description" : "Genes are unversioned in BRC4 databases",
+      "groups" : [
+         "brc4_core"
+      ],
+      "name" : "VersionedGenesBRC4",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenesBRC4"
    },
    "XrefFormat" : {
       "datacheck_type" : "critical",

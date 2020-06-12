@@ -40,10 +40,13 @@ sub tests {
   my $species_id = $self->dba->species_id;
 
   my $mca = $self->dba->get_adaptor('MetaContainer');
-  my $division = $mca->get_division;
+  my $method = $mca->get_single_value_by_key('genebuild.method');
 
+  # If the geneset has been produced in-house, the 'method' meta_key
+  # will have one of the following values:
+  # full_genebuild, projection_build, mixed_strategy_build, maker_genebuild
   my $version_expected = 0;
-  if ($division =~ /Ensembl(Vertebrates|Viruses)/) {
+  if ($method =~ /build/) {
     $version_expected = 1;
   }
 

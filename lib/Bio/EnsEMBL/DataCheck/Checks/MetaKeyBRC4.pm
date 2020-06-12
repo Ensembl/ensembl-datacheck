@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SchemaVersion;
+package Bio::EnsEMBL::DataCheck::Checks::MetaKeyBRC4;
 
 use warnings;
 use strict;
@@ -27,29 +27,31 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'SchemaVersion',
-  DESCRIPTION => 'The schema version meta key matches the DB name',
-  GROUPS      => ['ancestral', 'brc4_core', 'compara', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
-  DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
-  TABLES      => ['meta'],
-  PER_DB      => 1
+  NAME           => 'MetaKeyBRC4',
+  DESCRIPTION    => 'Expected meta keys for BRC4 cores',
+  GROUPS         => ['brc4_core'],
+  DB_TYPES       => ['core'],
+  TABLES         => ['meta']
 };
 
 sub tests {
   my ($self) = @_;
 
+  my @expected = qw/
+  assembly.accession
+  species.taxonomy_id
+  BRC4.component
+  BRC4.organism_abbrev
+  /;
+
   my $mca = $self->dba->get_adaptor("MetaContainer");
-  my $schema_version = $mca->schema_version;
 
-  my $db_version;
-  if ($self->dba->group eq 'compara' || $self->dba->dbc->dbname =~ /ancestral/) {
-    ($db_version) = $self->dba->dbc->dbname =~ /(\d+)$/;
-  } else {
-    ($db_version) = $self->dba->dbc->dbname =~ /(\d+)_\d+$/;
+  foreach my $meta_key (@expected) {
+    my $values = $mca->list_value_by_key($meta_key);
+
+    my $desc = "Value exists for meta_key $meta_key";
+    ok(scalar @$values, $desc);
   }
-
-  my $desc = "Meta key schema_version matches version in database name";
-  is($schema_version, $db_version, $desc);
 }
 
 1;

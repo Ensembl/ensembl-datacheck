@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyFormat',
   DESCRIPTION => 'Meta values are correctly formatted and linked',
-  GROUPS      => ['ancestral', 'core', 'meta', 'variation'],
+  GROUPS      => ['ancestral', 'brc4_core', 'core', 'meta', 'variation'],
   DB_TYPES    => ['core', 'variation'],
   TABLES      => ['meta']
 };
