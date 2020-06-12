@@ -32,7 +32,8 @@ use constant {
   DESCRIPTION => 'Feature co-ordinates are within the bounds of their seq_region',
   GROUPS      => ['funcgen', 'ersa'],
   DB_TYPES    => ['funcgen'],
-  TABLES      => ['external_feature', 'mirna_target_feature', 'motif_feature', 'peak', 'regulatory_feature']
+  TABLES      => ['external_feature', 'mirna_target_feature', 'motif_feature', 'peak', 'regulatory_feature'],
+  FORCE       => 1
 };
 
 sub tests {
@@ -40,33 +41,38 @@ sub tests {
 
   my $seq_regions = $self->seq_region_lengths();
 
-  foreach my $table (@{$self->tables}) {
-    $self->start_bound_check($table);
-    $self->end_bound_check($table, $seq_regions);
+  my $desc = 'seq_region lengths fetched from core database';
+  if ( ok($seq_regions, $desc) ) {
+    foreach my $table (@{$self->tables}) {
+      $self->start_bound_check($table);
+      $self->end_bound_check($table, $seq_regions);
+    }
   }
 }
 
 sub seq_region_lengths {
   my ($self) = @_;
 
-  my $species_id = $self->dba->species_id;
-
   my $dna_dba = $self->get_dna_dba();
 
-  my $sql = qq/
-    SELECT seq_region_id, length FROM
-	  seq_region INNER JOIN
-	  seq_region_attrib USING (seq_region_id) INNER JOIN
-	  attrib_type USING (attrib_type_id) INNER JOIN
-	  coord_system USING (coord_system_id)
-    WHERE
-      attrib_type.code = "toplevel" AND
-      coord_system.species_id = $species_id;
-  /;
+  if (defined $dna_dba) {
+    my $species_id = $self->dba->species_id;
 
-  my $seq_regions = $dna_dba->dbc->sql_helper->execute_into_hash( -SQL => $sql );
+    my $sql = qq/
+      SELECT seq_region_id, length FROM
+      seq_region INNER JOIN
+      seq_region_attrib USING (seq_region_id) INNER JOIN
+      attrib_type USING (attrib_type_id) INNER JOIN
+      coord_system USING (coord_system_id)
+      WHERE
+        attrib_type.code = "toplevel" AND
+        coord_system.species_id = $species_id;
+    /;
 
-  return $seq_regions;
+    my $seq_regions = $dna_dba->dbc->sql_helper->execute_into_hash( -SQL => $sql );
+
+    return $seq_regions;
+  }
 }
 
 sub start_bound_check {

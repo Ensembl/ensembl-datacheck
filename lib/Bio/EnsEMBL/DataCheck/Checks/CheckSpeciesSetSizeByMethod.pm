@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckSpeciesSetSizeByMethod',
   DESCRIPTION    => 'Checks that the species-sets have the expected number of genomes',
-  GROUPS         => ['compara', 'compara_pairwise_alignments', 'compara_protein_trees', 'compara_syntenies'],
+  GROUPS         => ['compara', 'compara_master', 'compara_genome_alignments', 'compara_gene_trees', 'compara_syntenies'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set', 'species_set']
@@ -54,6 +54,7 @@ sub tests {
     "SYNTENY"               => 2
   );
 
+  my $found = 0;
   foreach my $method ( keys %methods ) {
     next if ( $method eq "ENSEMBL_PARALOGUES" && $self->dba->dbc->dbname =~ /master/ );
     my $mlsss = $mlss_adap->fetch_all_by_method_link_type($method);
@@ -68,15 +69,21 @@ sub tests {
       my $gdbs = $species_set->genome_dbs;
       my $gdb_count = scalar( @$gdbs );
 
-      my $desc = "For MLSS $mlss_name there are $allowable_count genome_dbs for species_set $species_set_name ($species_set_id), as expected";
-      if ( ($method eq 'LASTZ_NET') && ($gdb_count == 1) && ($species_set_name !~ /-/) ) {
+      if ( ($method eq 'LASTZ_NET' || $method eq 'SYNTENY') && ($gdb_count == 1) && ($species_set_name !~ /-/) ) {
         $allowable_count = 1;
       }
+
+      my $desc = "For MLSS $mlss_name there are $allowable_count genome_dbs for species_set $species_set_name ($species_set_id), as expected";
+
       is( $gdb_count, $allowable_count, $desc );
       if ( $mlss_name =~ /(^[0-9]+) / ) {
         is($1, $gdb_count, "species_set $species_set_name and mlss $mlss_name both link to $gdb_count genomes");
       }
+      $found = 1;
     }
+  }
+  unless ($found) {
+    plan skip_all => "No MLSSs to test in this database";
   }
 }
 

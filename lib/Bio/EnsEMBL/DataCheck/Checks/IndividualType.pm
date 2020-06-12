@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -34,6 +35,16 @@ use constant {
   DB_TYPES    => ['variation'],
   TABLES      => ['individual'],
 };
+
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = 'SELECT COUNT(*) FROM individual';
+
+  if (! sql_count($self->dba, $sql) ) {
+    return (1, 'No individual records.');
+  }
+}
 
 sub tests {
   my ($self) = @_;
@@ -49,18 +60,20 @@ sub tests {
         WHERE individual_type_id != 1
     /;
     is_rows_zero($self->dba, $sql_1, $desc, $diag);
+    return;
   }
 
-  if($species =~ /canis_familiaris|danio_rerio|
+  if($species =~ /canis_lupus_familiaris|danio_rerio|
                   gallus_gallus|rattus_norvegicus|
                   bos_taurus|ornithorhynchus_anatinus|
                   pongo_abelii/) {
-  my $sql_2 = q/
+    my $sql_2 = q/
       SELECT COUNT(*)
       FROM individual
       WHERE individual_type_id != 2
-  /; 
-  is_rows_zero($self->dba, $sql_2, $desc, $diag);
+    /;
+    is_rows_zero($self->dba, $sql_2, $desc, $diag);
+    return;
   } 
 
   if($species =~ /anopheles_gambiae/) {
@@ -71,6 +84,7 @@ sub tests {
         AND individual_type_id != 3
     /;
     is_rows_zero($self->dba, $sql_3, $desc, $diag);
+    return;
   }
 
   if($species =~ /homo_sapiens|pan_troglodytes|tetraodon_nigroviridis/) {
@@ -80,9 +94,15 @@ sub tests {
         WHERE individual_type_id != 3
     /;
     is_rows_zero($self->dba, $sql_4, $desc, $diag);
+    return;
+  }
+
+  # There are individual records but no species specific individual type checks
+  # SKIP the check so that it is not reported as a failure
+  SKIP: {
+     skip "No individual_type_id check" , 1;
   }
 
 }
 
 1;
-

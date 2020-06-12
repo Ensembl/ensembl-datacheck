@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CheckGenomicAlignMTs',
   DESCRIPTION => 'The multiple alignments should include all the MT sequences',
-  GROUPS      => ['compara', 'compara_multiple_alignments'],
+  GROUPS      => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES    => ['compara'],
   TABLES      => ['dnafrag', 'genome_db', 'genomic_align', 'method_link', 'method_link_species_set', 'species_set']
@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
     my ($self) = @_;
     my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-    my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+    my @methods = qw( EPO EPO_EXTENDED PECAN );
     my $db_name = $self->dba->dbc->dbname;
 
     my @mlsses;
@@ -71,9 +71,7 @@ sub tests {
         JOIN genome_db USING(genome_db_id)
         JOIN dnafrag USING(genome_db_id)
       WHERE cellular_component = 'MT' 
-        AND (class LIKE 'GenomicAlignTree%' 
-          OR class LIKE 'GenomicAlign%multiple%') 
-        AND (type NOT LIKE 'CACTUS_HAL%')
+        AND type IN ("EPO", "EPO_EXTENDED", "PECAN")
     /;
   
   my $entries_array = $helper->execute(  

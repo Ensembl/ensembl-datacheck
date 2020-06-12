@@ -30,30 +30,48 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckSpeciesSetTable',
   DESCRIPTION    => 'Check species_set_tags have no orphans and species_sets are unique',
-  GROUPS         => ['compara'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['species_set', 'species_set_tag']
+  TABLES         => ['species_set']
 };
 
 sub tests {
   my ($self) = @_;
   my $dbc = $self->dba->dbc;
+  my $helper = $dbc->sql_helper;
     
   my $sql = q/
-    SELECT gdb_ids, count(*) num, GROUP_CONCAT(species_set_id ORDER BY species_set_id) AS species_set_ids 
-    FROM (
-      SELECT species_set_id, GROUP_CONCAT(genome_db_id ORDER BY genome_db_id) AS gdb_ids 
-        FROM species_set GROUP BY species_set_id
-   	) t1 
-    GROUP BY gdb_ids 
-    HAVING COUNT(*)>1
+    SELECT species_set_id, genome_db_id
+    FROM species_set
+    ORDER BY genome_db_id
   /;
+
+  my %ss_content;
+  my $it = $helper->execute(
+    -SQL => $sql,
+    -USE_HASHREFS => 1,
+    -ITERATOR => 1,
+    -PREPARE_PARAMS => [{'mysql_use_result' => 1}],
+  );
+  $it->each( sub {
+      my $row = shift @_;
+      $ss_content{ $row->{species_set_id} } .= $row->{genome_db_id} . "-";
+    }
+  );
   
-  my $desc = "All of the species_set entries are unique";
-  is_rows_zero($dbc, $sql, $desc);
+  my %hasher;
+  foreach my $ss_id (keys %ss_content) {
+    push @{ $hasher{$ss_content{$ss_id}} }, $ss_id;
+  }
+
+  foreach my $content (keys %hasher) {
+    my $ex_ss_id = $hasher{$content}->[0];
+    my $n_ss = scalar(@{$hasher{$content}});
+    my $desc = "Content found in only one species-set: " . join(",", @{$hasher{$content}});
+    is($n_ss, 1, $desc);
+  }
   
 }
 
 1;
-

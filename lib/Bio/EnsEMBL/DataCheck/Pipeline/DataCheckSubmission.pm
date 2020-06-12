@@ -69,7 +69,10 @@ sub write_output {
   # In order to prevent people from inadvertently overwriting existing
   # output, append a subdirectory. 
   if (defined $self->param('output_dir')) {
-    my $subdir = $ENV{'USER'}.'_'.time.'_'.$$;
+    my @chars = ("A".."Z", "a".."z", 0..9);
+    my $rand_string;
+    $rand_string .= $chars[rand @chars] for 1..12;
+    my $subdir = $ENV{'USER'}.'_'.$rand_string;
     my $dir = path($self->param('output_dir'), $subdir)->stringify;
     $self->param('output_dir', $dir);
   }

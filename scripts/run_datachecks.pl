@@ -186,6 +186,8 @@ if ($dbname) {
       $dbtype = 'ontology';
     } elsif ($dbname =~ /ensembl_production/) {
       $dbtype = 'production';
+    } elsif ($dbname =~ /ancestral/) {
+      $dbtype = 'core';
     } else {
       ($dbtype) = $dbname =~ /_([a-z]+)[\d_]+$/;
     }
@@ -195,8 +197,6 @@ if ($dbname) {
   my $adaptor = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
   $adaptor = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor'    if $dbtype eq 'compara';
   $adaptor = 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor'    if $dbtype eq 'funcgen';
-  $adaptor = 'Bio::EnsEMBL::Ontology::DBSQL::DBAdaptor'   if $dbtype eq 'ontology';
-  $adaptor = 'Bio::EnsEMBL::Production::DBSQL::DBAdaptor' if $dbtype eq 'production';
   $adaptor = 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor'  if $dbtype eq 'variation';
 
   my $multispecies_db = $dbname =~ /^\w+_collection_core_\w+$/;
@@ -204,6 +204,8 @@ if ($dbname) {
   my $species;
   if ($dbtype =~ /^(compara|ontology|production)$/) {
     $species = 'multi';
+  } elsif ($dbname =~ /ancestral/) {
+    $species = 'ancestral_sequences';
   } else {
     my $sql = q/
       SELECT meta_value FROM meta

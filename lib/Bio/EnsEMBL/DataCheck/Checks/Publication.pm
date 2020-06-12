@@ -53,10 +53,9 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql_ids, $desc_ids, $diag_ids);
 
-  my $desc = 'Publication duplicated pmid, pmcid, doi';
+  my $desc = 'Publication duplicated pmid, pmcid';
   $self->checkDuplicatedValues('publication', 'pmid', $desc, 'Publication is duplicated on pmid');
   $self->checkDuplicatedValues('publication', 'pmcid', $desc, 'Publication is duplicated on pmcid');
-  $self->checkDuplicatedValues('publication', 'doi', $desc, 'Publication is duplicated on doi');
 
 }
 
@@ -67,7 +66,7 @@ sub checkDuplicatedValues {
       SELECT $column
       FROM $table
       GROUP BY $column 
-      HAVING COUNT(*) > 1
+      HAVING COUNT(*) > 1 AND $column IS NOT NULL
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
 }

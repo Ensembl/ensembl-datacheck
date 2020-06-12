@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeysCompara',
   DESCRIPTION => 'Foreign key relationships are not violated',
-  GROUPS      => ['compara'],
+  GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies'],
   DB_TYPES    => ['compara'],
   PER_DB      => 1
 };
@@ -41,6 +41,8 @@ sub tests {
   my ($self) = @_;
 
   my $table_sql_file = $self->table_sql_file();
+
+  my @failed_to_parse;
 
   my $table1;
   foreach my $line ( path($table_sql_file)->lines ) {
@@ -53,13 +55,20 @@ sub tests {
       my ($col1, $table2, $col2) = $line =~
         /\s*FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
       if (defined $col1 && defined $table2 && defined $col2) {
-        print "$table1, $col1, $table2, $col2\n";
+        # Because the master database may have old genomes linked to deprecated taxon_ids
+        if ($self->dba->dbc->dbname =~ /master/) {
+          next if "$table1 $col1 $table2 $col2" eq 'genome_db taxon_id ncbi_taxa_node taxon_id';
+        }
         fk($self->dba, $table1, $col1, $table2, $col2);
       } else {
-        die "Failed to parse foreign key relationship from $line";
+        push @failed_to_parse, $line;
       }
     }
   }
+
+  my $desc_parsed = "Parsed all foreign key relationships from file";
+  is(scalar(@failed_to_parse), 0, $desc_parsed) ||
+    diag explain @failed_to_parse;
 
   $self->compara_fk();
 }
@@ -114,7 +123,7 @@ sub compara_fk {
       SELECT method_link_id FROM method_link
       WHERE
         method_link_id < 100 AND
-        class NOT LIKE "ConstrainedElement.%" AND
+        class LIKE "GenomicAlign%" AND
         type NOT LIKE "CACTUS_HAL%"
     )
   /;
@@ -187,6 +196,18 @@ sub compara_fk {
     ref_root_id IS NULL
   /;
   fk($self->dba, "gene_member_hom_stats", "collection", "gene_tree_root", "clusterset_id", $hom_stats_constraint);
+
+  my $mlss_tag_genome_constraint = q/
+    tag LIKE '%reference_species'
+  /;
+  fk($self->dba, "method_link_species_set_tag", "value", "genome_db", "name", $mlss_tag_genome_constraint);
+
+  my $mlss_tag_msa_constraint = q/
+    tag = 'msa_mlss_id'
+  /;
+  fk($self->dba, "method_link_species_set_tag", "value", "method_link_species_set", "method_link_species_set_id", $mlss_tag_msa_constraint);
+
+  
 }
 
 1;

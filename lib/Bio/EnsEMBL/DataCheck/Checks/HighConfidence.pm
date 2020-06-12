@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'HighConfidence',
   DESCRIPTION    => 'Checks that the HighConfidenceOrthologs pipeline has been run',
-  GROUPS         => ['compara', 'compara_protein_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['homology']
@@ -38,6 +38,12 @@ use constant {
 
 sub skip_tests {
   my ($self) = @_;
+
+  my $division = $self->dba->get_division();
+  if ( $division =~ /fungi/ ) {
+    return( 1, "HighConfidence data are not generated for $division" );
+  }
+
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
   my $mlss = $mlss_adap->fetch_all_by_method_link_type('ENSEMBL_ORTHOLOGUES');
   my $db_name = $self->dba->dbc->dbname;

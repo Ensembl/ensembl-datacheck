@@ -131,7 +131,11 @@ sub skip_datacheck {
 sub run_datacheck {
   # Method can be overridden by a subclass, if required.
   my $self = shift;
-  $self->tests(@_);
+  eval { $self->tests(@_) };
+  if ($@) {
+    fail("Datacheck ran without errors");
+    diag($@);
+  }
 }
 
 sub skip_tests {

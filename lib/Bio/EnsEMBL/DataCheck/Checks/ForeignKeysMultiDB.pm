@@ -31,7 +31,8 @@ use constant {
   NAME        => 'ForeignKeysMultiDB',
   DESCRIPTION => 'Foreign key relationships between tables from different databases are not violated',
   GROUPS      => ['funcgen', 'schema', 'variation'],
-  DB_TYPES    => ['funcgen', 'variation']
+  DB_TYPES    => ['funcgen', 'variation'],
+  FORCE       => 1
 };
 
 sub tests {
@@ -103,14 +104,18 @@ sub variation_funcgen_fk {
     my $sql = 'SELECT COUNT(name) FROM regulatory_build WHERE is_current = 1';
     skip 'The database has no regulatory build', 1 unless sql_count($funcgen_dba, $sql);
 
-    {
-      my $desc = "All stable IDs in motif_feature_variation exist in funcgen database";
-      my ($mf_ids) = $self->col_array($funcgen_dba, 'motif_feature', 'stable_id');
-      my ($mfv_ids, $label) = $self->col_array($self->dba, 'motif_feature_variation', 'feature_stable_id');
-      my $diff = array_diff($mfv_ids, $mf_ids, $label);
-      my @diffs = @{$$diff{"In $label only"}};
-      is(scalar(@diffs), 0, $desc);
-    }
+    # The following is not tractable - there are 100s of millions of
+    # rows in one table, and 10s of millions in the other. I don't
+    # have a good alternative, so I'll leave this commented out for
+    # now, so that it's clear we're not checking this table.
+    #{
+    #  my $desc = "All stable IDs in motif_feature_variation exist in funcgen database";
+    #  my ($mf_ids) = $self->col_array($funcgen_dba, 'motif_feature', 'stable_id');
+    #  my ($mfv_ids, $label) = $self->col_array($self->dba, 'motif_feature_variation', 'feature_stable_id');
+    #  my $diff = array_diff($mfv_ids, $mf_ids, $label);
+    #  my @diffs = @{$$diff{"In $label only"}};
+    #  is(scalar(@diffs), 0, $desc);
+    #}
 
     {
       my $desc = "All stable IDs in regulatory_feature_variation exist in funcgen database";

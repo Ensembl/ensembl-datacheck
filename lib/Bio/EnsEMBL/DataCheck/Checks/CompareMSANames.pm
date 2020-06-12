@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareMSANames',
   DESCRIPTION    => 'The species_sets from the previous database are still present',
-  GROUPS         => ['compara', 'compara_multiple_alignments'],
+  GROUPS         => ['compara'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set', 'species_set_header']
@@ -39,15 +39,11 @@ sub tests {
 
   my $curr_dba = $self->dba;
   my $prev_dba = $self->get_old_dba;
-  unless ($prev_dba) {
-      fail("Neither 'registry_file' nor 'old_server_uri' parameter given. Cannot find the previous database");
-      return;
-  }
   my $curr_db_name = $curr_dba->dbc->dbname;
   my $prev_db_name = $prev_dba->dbc->dbname;
   my $curr_mlss_adap = $curr_dba->get_MethodLinkSpeciesSetAdaptor;
   my $prev_mlss_adap = $prev_dba->get_MethodLinkSpeciesSetAdaptor;
-  my @mlss_types = qw ( PECAN EPO EPO_LOW_COVERAGE CACTUS_HAL );
+  my @mlss_types = qw ( PECAN EPO EPO_EXTENDED CACTUS_HAL );
   my @curr_mlsses;
   my @prev_mlsses;
   
@@ -78,14 +74,10 @@ sub tests {
   cmp_ok( ( scalar keys %$curr_mlss_names ), '==', ( scalar keys %$prev_mlss_names ), $desc_2 );
   
   foreach my $species_set_name ( keys %$prev_mlss_names ) {
-    my $desc_4 = "$species_set_name is present in $curr_db_name";
-    if ( exists ($curr_mlss_names->{$species_set_name}) ) {
-      pass( $desc_4 );
-      my $desc_3 = "The number of multiple alignments for species_set <$species_set_name> in $curr_db_name is the same or more than in $prev_db_name";
-      cmp_ok( @{ $curr_mlss_names->{$species_set_name} }, '<=', @{ $prev_mlss_names->{$species_set_name} }, $desc_3 );
-    }
-    else {
-      fail( $desc_4 );
+    my $desc_3 = "$species_set_name is present in $curr_db_name";
+    if ( ok(exists $curr_mlss_names->{$species_set_name}, $desc_3) ) {
+      my $desc_4 = "The number of multiple alignments for species_set <$species_set_name> in $curr_db_name is the same or more than in $prev_db_name";
+      cmp_ok( @{ $curr_mlss_names->{$species_set_name} }, '<=', @{ $prev_mlss_names->{$species_set_name} }, $desc_4 );
     }
   }
 }

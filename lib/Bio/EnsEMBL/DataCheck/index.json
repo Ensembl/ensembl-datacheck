@@ -16,8 +16,7 @@
       "description" : "Alignment coordinates are within the length of their dnafrag",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments",
-         "compara_multiple_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "AlignmentCoordinates",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentCoordinates"
@@ -72,8 +71,9 @@
       "datacheck_type" : "critical",
       "description" : "Analysis logic name and date are formatted correctly",
       "groups" : [
-         "core",
+         "ancestral",
          "brc4_core",
+         "core",
          "corelike"
       ],
       "name" : "AnalysisFormat",
@@ -102,9 +102,10 @@
       "datacheck_type" : "critical",
       "description" : "Assembly exceptions are correctly configured",
       "groups" : [
+         "ancestral",
          "assembly",
-         "core",
-         "brc4_core"
+         "brc4_core",
+         "core"
       ],
       "name" : "AssemblyExceptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptions"
@@ -124,9 +125,10 @@
       "datacheck_type" : "critical",
       "description" : "Assembly and seq_region tables are consistent",
       "groups" : [
+         "ancestral",
          "assembly",
-         "core",
-         "brc4_core"
+         "brc4_core",
+         "core"
       ],
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
@@ -153,9 +155,13 @@
       "datacheck_type" : "critical",
       "description" : "Enum columns do not have empty string values",
       "groups" : [
-         "compara",
-         "core",
+         "ancestral",
          "brc4_core",
+         "compara",
+         "compara_gene_trees",
+         "compara_master",
+         "compara_syntenies",
+         "core",
          "corelike",
          "funcgen",
          "schema",
@@ -168,9 +174,14 @@
       "datacheck_type" : "critical",
       "description" : "Nullable columns do not have empty string values",
       "groups" : [
-         "compara",
-         "core",
+         "ancestral",
          "brc4_core",
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies",
+         "core",
          "corelike",
          "funcgen",
          "schema",
@@ -178,6 +189,15 @@
       ],
       "name" : "BlankNulls",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankNulls"
+   },
+   "BlankSets" : {
+      "datacheck_type" : "critical",
+      "description" : "Set columns do not have empty string values (unless default)",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "BlankSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankSets"
    },
    "CanonicalTranscripts" : {
       "datacheck_type" : "critical",
@@ -195,7 +215,7 @@
       "description" : "Each row should show a one-to-many relationship",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckCAFETable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckCAFETable"
@@ -205,8 +225,7 @@
       "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
       "groups" : [
          "compara",
-         "compara_families",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckComparaStableIDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
@@ -216,7 +235,7 @@
       "description" : "The MLSS for GERP_CONSERVATION_SCORE should have conservation score entries",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckConservationScore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScore"
@@ -226,7 +245,7 @@
       "description" : "Multiple alignments with >3 species and >3 sequences must have a conservation score",
       "groups" : [
          "compara",
-         "compara_multiple_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckConservationScorePerBlock",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConservationScorePerBlock"
@@ -236,7 +255,7 @@
       "description" : "Each row should show a one-to-many relationship",
       "groups" : [
          "compara",
-         "compara_multiple_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckConstrainedElementTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckConstrainedElementTable"
@@ -245,7 +264,11 @@
       "datacheck_type" : "critical",
       "description" : "Check that the ncbi_taxa_name contains only unique rows",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies"
       ],
       "name" : "CheckDuplicatedTaxaNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
@@ -255,7 +278,7 @@
       "description" : "Check that none of the gene tree leaves have children",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckEmptyLeavesTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees"
@@ -265,17 +288,17 @@
       "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckFlatProteinTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
    },
    "CheckGOCScoreStats" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "The number of rows for GOC have not dropped from previous release",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckGOCScoreStats",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGOCScoreStats"
@@ -285,7 +308,7 @@
       "description" : "ncRNA and protein trees must have gene Gain/Loss trees",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckGeneGainLossData",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
@@ -295,8 +318,7 @@
       "description" : "Check all genome_dbs for each method_link_species_set is present in genomic_aligns",
       "groups" : [
          "compara",
-         "compara_multiple_alignments",
-         "compara_pairwise_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckGenomicAlignGenomeDBs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignGenomeDBs"
@@ -306,7 +328,7 @@
       "description" : "The multiple alignments should include all the MT sequences",
       "groups" : [
          "compara",
-         "compara_multiple_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckGenomicAlignMTs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignMTs"
@@ -316,7 +338,7 @@
       "description" : "Check the consistency and validity of genomic_align_tree",
       "groups" : [
          "compara",
-         "compara_multiple_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckGenomicAlignTreeTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignTreeTable"
@@ -326,7 +348,7 @@
       "description" : "Check homology_id are all one-to-many for homology_members",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
@@ -336,7 +358,7 @@
       "description" : "Check that all JSON objects in gene_tree_object_store are valid",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckJSONObjects",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckJSONObjects"
@@ -346,7 +368,7 @@
       "description" : "Coverage for a LastZ MLSS matches the coverage recorded in the  mlss_tag table",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckLastZCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckLastZCoverage"
@@ -356,8 +378,7 @@
       "description" : "Check that method_link_species_set_id are the same across genomic_align and genomic_align_block",
       "groups" : [
          "compara",
-         "compara_multiple_alignments",
-         "compara_pairwise_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckMLSSIDConsistencyInGenomicAlign",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMLSSIDConsistencyInGenomicAlign"
@@ -367,16 +388,20 @@
       "description" : "Ensure that every MSA method has a name in species_set_header",
       "groups" : [
          "compara",
-         "compara_multiple_alignments"
+         "compara_master",
+         "compara_genome_alignments"
       ],
       "name" : "CheckMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMSANames"
    },
    "CheckMethodLinkSpeciesSetNames" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Check for consistency of names in method_link_species_set (and species_set_header)",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_gene_trees",
+         "compara_master",
+         "compara_syntenies"
       ],
       "name" : "CheckMethodLinkSpeciesSetNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMethodLinkSpeciesSetNames"
@@ -386,7 +411,7 @@
       "description" : "Coverage for a multiple whole genome alignment MLSS matches the coverage recorded in the  mlss_tag table",
       "groups" : [
          "compara",
-         "compara_multiple_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
@@ -396,7 +421,7 @@
       "description" : "Check that some wga_coverage and goc_score thresholds have been populated",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckOrthologyQCThresholds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckOrthologyQCThresholds"
@@ -406,7 +431,8 @@
       "description" : "Ensure that there is only one method for pairwise alignment per species_set",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_master",
+         "compara_genome_alignments"
       ],
       "name" : "CheckPairAlignerUniqueMethod",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckPairAlignerUniqueMethod"
@@ -415,7 +441,10 @@
       "datacheck_type" : "critical",
       "description" : "Check for consistency between retired genomes and species_sets",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_gene_trees",
+         "compara_master",
+         "compara_syntenies"
       ],
       "name" : "CheckReleaseConsistency",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseConsistency"
@@ -424,7 +453,9 @@
       "datacheck_type" : "critical",
       "description" : "For release DB the last_release must be NULL but cannot have a NULL first_release",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master",
+         "compara_syntenies"
       ],
       "name" : "CheckReleaseNulls",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseNulls"
@@ -433,7 +464,8 @@
       "datacheck_type" : "critical",
       "description" : "Check for sequence length and availability",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_gene_trees"
       ],
       "name" : "CheckSequenceTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
@@ -443,8 +475,9 @@
       "description" : "Checks that the species-sets have the expected number of genomes",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments",
-         "compara_protein_trees",
+         "compara_master",
+         "compara_genome_alignments",
+         "compara_gene_trees",
          "compara_syntenies"
       ],
       "name" : "CheckSpeciesSetSizeByMethod",
@@ -454,7 +487,11 @@
       "datacheck_type" : "critical",
       "description" : "Check species_set_tags have no orphans and species_sets are unique",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies"
       ],
       "name" : "CheckSpeciesSetTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable"
@@ -464,7 +501,7 @@
       "description" : "Check some entries in species_tree_node_attr are > 0",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckSpeciesTreeNodeAttr",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr"
@@ -493,18 +530,17 @@
       "datacheck_type" : "advisory",
       "description" : "Tables must be populated and not differ significantly in row numbers",
       "groups" : [
-         "compara",
-         "compara_tables"
+         "compara"
       ],
       "name" : "CheckTableSizes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckTableSizes"
    },
    "CheckWGACoverageStats" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "The number of rows for WGA coverage have not dropped from previous release",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "CheckWGACoverageStats",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckWGACoverageStats"
@@ -525,7 +561,8 @@
       "description" : "The cigar_line must not have negative numbers or zeros in it",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_gene_trees",
+         "compara_genome_alignments"
       ],
       "name" : "CigarCheck",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
@@ -580,8 +617,7 @@
       "datacheck_type" : "advisory",
       "description" : "The species_sets from the previous database are still present",
       "groups" : [
-         "compara",
-         "compara_multiple_alignments"
+         "compara"
       ],
       "name" : "CompareMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMSANames"
@@ -867,6 +903,15 @@
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
    },
+   "DNAFragCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Top-level sequences in the core database match dnafrags in compara database",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "DNAFragCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
+   },
    "DataFilesExist" : {
       "datacheck_type" : "critical",
       "description" : "Data files are defined where necessary, and exist on the filesystem",
@@ -880,9 +925,14 @@
       "datacheck_type" : "critical",
       "description" : "All tables have the same collation (latin1_swedish_ci)",
       "groups" : [
-         "compara",
-         "core",
+         "ancestral",
          "brc4_core",
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies",
+         "core",
          "corelike",
          "funcgen",
          "schema",
@@ -934,15 +984,25 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
-   "DescriptionNewlines" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for newlines and tabs in gene descriptions",
+   "DisplayXrefExists" : {
+      "datacheck_type" : "advisory",
+      "description" : "At least one gene name exists",
       "groups" : [
-         "xref",
-         "core"
+         "core",
+         "xref"
       ],
-      "name" : "DescriptionNewlines",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DescriptionNewlines"
+      "name" : "DisplayXrefExists",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExists"
+   },
+   "DisplayXrefFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene names are correctly formatted",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "DisplayXrefFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefFormat"
    },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
@@ -1100,8 +1160,9 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships are not violated",
       "groups" : [
-         "core",
+         "ancestral",
          "brc4_core",
+         "core",
          "corelike",
          "funcgen",
          "schema",
@@ -1114,7 +1175,11 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships are not violated",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies"
       ],
       "name" : "ForeignKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
@@ -1184,6 +1249,16 @@
       "name" : "GeneCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneCounts"
    },
+   "GeneDescriptions" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene descriptions are correctly formatted",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "GeneDescriptions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneDescriptions"
+   },
    "GeneGC" : {
       "datacheck_type" : "critical",
       "description" : "All genes have a GC statistic",
@@ -1217,6 +1292,24 @@
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
    },
+   "GeneTreeHighlighting" : {
+      "datacheck_type" : "critical",
+      "description" : "GO and InterPro xrefs are loaded for highlighting annotated genes",
+      "groups" : [
+         "compara_annot_highlight"
+      ],
+      "name" : "GeneTreeHighlighting",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTreeHighlighting"
+   },
+   "GenomeDBCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "GenomeDBCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
+   },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
       "description" : "Genome statistics are present and correct",
@@ -1228,12 +1321,42 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "HGNCMultipleGenes" : {
+      "datacheck_type" : "advisory",
+      "description" : "HGNC-derived gene names are not given to multiple genes",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCMultipleGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCMultipleGenes"
+   },
+   "HGNCNumeric" : {
+      "datacheck_type" : "critical",
+      "description" : "HGNC xrefs do not have the accession as the display_label",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCNumeric",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCNumeric"
+   },
+   "HGNCTypes" : {
+      "datacheck_type" : "critical",
+      "description" : "HGNC xrefs are attached to the appropriate object",
+      "groups" : [
+         "core",
+         "xref"
+      ],
+      "name" : "HGNCTypes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCTypes"
+   },
    "HighConfidence" : {
       "datacheck_type" : "critical",
       "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "HighConfidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
@@ -1276,6 +1399,76 @@
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
    },
+   "MLSSTagGERP" : {
+      "datacheck_type" : "critical",
+      "description" : "GERP analyses have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagGERP",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagGERP"
+   },
+   "MLSSTagHomology" : {
+      "datacheck_type" : "critical",
+      "description" : "Homologies have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "MLSSTagHomology",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagHomology"
+   },
+   "MLSSTagMaxAlign" : {
+      "datacheck_type" : "critical",
+      "description" : "Max align tags have correct values",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagMaxAlign",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagMaxAlign"
+   },
+   "MLSSTagMultipleAlignment" : {
+      "datacheck_type" : "critical",
+      "description" : "Multiple alignments have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagMultipleAlignment",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagMultipleAlignment"
+   },
+   "MLSSTagPairwiseAlignment" : {
+      "datacheck_type" : "critical",
+      "description" : "Pairwise alignments have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "MLSSTagPairwiseAlignment",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagPairwiseAlignment"
+   },
+   "MLSSTagSynteny" : {
+      "datacheck_type" : "critical",
+      "description" : "Syntenies have appropriate tags",
+      "groups" : [
+         "compara",
+         "compara_syntenies"
+      ],
+      "name" : "MLSSTagSynteny",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagSynteny"
+   },
+   "MLSSTagThresholdDs" : {
+      "datacheck_type" : "critical",
+      "description" : "Threshold values for ds exist, if appropriate",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "MLSSTagThresholdDs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagThresholdDs"
+   },
    "MTCodonTable" : {
       "datacheck_type" : "critical",
       "description" : "MT seq region has codon table attribute",
@@ -1301,7 +1494,7 @@
       "description" : "Checks that the gene_member counts are appropriately populated",
       "groups" : [
          "compara",
-         "compara_protein_trees"
+         "compara_gene_trees"
       ],
       "name" : "MemberProductionCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
@@ -1347,8 +1540,9 @@
       "datacheck_type" : "critical",
       "description" : "A subset of meta keys must only have a single value",
       "groups" : [
-         "core",
+         "ancestral",
          "brc4_core",
+         "core",
          "meta"
       ],
       "name" : "MetaKeyCardinality",
@@ -1380,8 +1574,9 @@
       "datacheck_type" : "critical",
       "description" : "Meta values are correctly formatted and linked",
       "groups" : [
-         "core",
+         "ancestral",
          "brc4_core",
+         "core",
          "meta",
          "variation"
       ],
@@ -1392,8 +1587,14 @@
       "datacheck_type" : "critical",
       "description" : "Meta keys are correctly assigned at species or database level",
       "groups" : [
-         "core",
+         "ancestral",
          "brc4_core",
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies",
+         "core",
          "corelike",
          "funcgen",
          "meta",
@@ -1417,7 +1618,7 @@
       "description" : "Check that every genomic_align_block_id has more than one genomic_align_id",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_genome_alignments"
       ],
       "name" : "MultipleGenomicAlignBlockIds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MultipleGenomicAlignBlockIds"
@@ -1470,9 +1671,8 @@
       "description" : "Data is only allowed on principle genomes and not components",
       "groups" : [
          "compara",
-         "compara_multiple_alignments",
-         "compara_pairwise_alignments",
-         "compara_protein_trees",
+         "compara_gene_trees",
+         "compara_genome_alignments",
          "compara_syntenies"
       ],
       "name" : "NoDataOnGenomeComponents",
@@ -1543,6 +1743,16 @@
       ],
       "name" : "Population",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Population"
+   },
+   "PredictionTranscriptLabels" : {
+      "datacheck_type" : "critical",
+      "description" : "Predicted transcripts have display labels",
+      "groups" : [
+         "annotation",
+         "core"
+      ],
+      "name" : "PredictionTranscriptLabels",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PredictionTranscriptLabels"
    },
    "ProbeUnique" : {
       "datacheck_type" : "critical",
@@ -1677,9 +1887,13 @@
       "datacheck_type" : "critical",
       "description" : "Schema patches are up-to-date",
       "groups" : [
-         "compara",
-         "core",
          "brc4_core",
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies",
+         "core",
          "corelike",
          "funcgen",
          "schema",
@@ -1692,9 +1906,13 @@
       "datacheck_type" : "critical",
       "description" : "The schema type meta key matches the DB name",
       "groups" : [
-         "compara",
-         "core",
          "brc4_core",
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies",
+         "core",
          "corelike",
          "funcgen",
          "schema",
@@ -1707,9 +1925,10 @@
       "datacheck_type" : "critical",
       "description" : "The schema version meta key matches the DB name",
       "groups" : [
+         "ancestral",
+         "brc4_core",
          "compara",
          "core",
-         "brc4_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1731,9 +1950,10 @@
       "datacheck_type" : "critical",
       "description" : "Seq_region names are unique (top-level) or consistent (non-top-level)",
       "groups" : [
+         "ancestral",
          "assembly",
-         "core",
-         "brc4_core"
+         "brc4_core",
+         "core"
       ],
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
@@ -1782,16 +2002,6 @@
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
-   },
-   "SharedDisplayXref" : {
-      "datacheck_type" : "critical",
-      "description" : "Protein coding gene/transcript display xrefs are not shared between species inside a collection. This can lead to species-specific synonyms being applied to the wrong species",
-      "groups" : [
-         "xref",
-         "core"
-      ],
-      "name" : "SharedDisplayXref",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SharedDisplayXref"
    },
    "SignalControlMismatches" : {
       "datacheck_type" : "critical",
@@ -1896,7 +2106,8 @@
       "description" : "The coverage must not exceed the genome lengths",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_genome_alignments",
+         "compara_syntenies"
       ],
       "name" : "TagCoverageStats",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TagCoverageStats"
@@ -2090,7 +2301,7 @@
    },
    "XrefFormat" : {
       "datacheck_type" : "critical",
-      "description" : "Xrefs do not have HTML markup, non-printing characters, or blank values",
+      "description" : "Xref accessions, labels, and descriptions are validly formatted",
       "groups" : [
          "xref",
          "core"

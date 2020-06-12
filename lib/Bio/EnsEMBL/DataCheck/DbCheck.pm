@@ -183,7 +183,7 @@ sub _registry_default {
     $registry->clear;
     $registry->load_registry_from_url($self->server_uri);
   } else {
-    die "The '.$self->name.' datacheck needs data from another database, ".
+    die "The '".$self->name."' datacheck needs data from another database, ".
         "for which a registry needs to be specified with 'registry_file' or 'server_uri'";
   }
 
@@ -326,8 +326,6 @@ sub get_dna_dba {
   if (defined $dna_dba) {
     $self->registry->add_DNAAdaptor($self->species, $self->dba->group, $self->species, 'core');
     push @{$self->dba_list}, $dna_dba;
-  } else {
-    die "Could not retrieve DNA database for ".$self->dba->dbc->dbname;
   }
 
   return $dna_dba;
@@ -352,6 +350,8 @@ sub get_old_dba {
   my $uri = parse_uri($self->old_server_uri);
   my %params = $uri->generate_dbsql_params();
 
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+
   my $db_version;
   if (exists $params{'-DBNAME'}) {
     if ($params{'-DBNAME'} =~ /^(\d+)$/) {
@@ -359,35 +359,65 @@ sub get_old_dba {
       delete $params{'-DBNAME'};
     }
   } else {
-    my $mca = $self->dba->get_adaptor("MetaContainer");
     $db_version = ($mca->schema_version) - 1;
   }
 
   my $dbh;
   if (exists $params{'-DBNAME'}) {
-	my $message = 'Specified database does not exist';
-	$dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+    my $message = 'Specified database does not exist';
+    $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+  } elsif ($group =~ /compara|ontology/) {
+    my $dbname = $self->dba->dbc->dbname;
+    my $current = $mca->schema_version;
+    $dbname =~ s/$current/$db_version/; # Ensembl version
+    my ($eg_current, $eg_version) = ($current-53, $db_version-53);
+    $dbname =~ s/$eg_current/$eg_version/; # EG version
+    $params{'-DBNAME'} = $dbname;
+    my $message = 'Previous version of database does not exist';
+    $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
   } else {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
     die "No metadata database found in the registry" unless defined $meta_dba;
 
-    my $helper = $meta_dba->dbc->sql_helper;
-    my $sql = q/
-      SELECT gd.dbname FROM 
-        genome_database gd INNER JOIN
-        genome g USING (genome_id) INNER JOIN
-        organism o USING (organism_id) INNER JOIN
-        data_release dr USING (data_release_id)
-      WHERE gd.type = ? and o.name = ? and dr.ensembl_version = ?
-    /;
-    my $params = [$group, $species, $db_version];
+    my ($sql, $params);
+    if ($mca->can('get_division')) {
+      my $division = $mca->get_division;
+      $sql = q/
+        SELECT gd.dbname FROM
+          genome_database gd INNER JOIN
+          genome g USING (genome_id) INNER JOIN
+          organism o USING (organism_id) INNER JOIN
+          data_release dr USING (data_release_id) INNER JOIN
+          division d USING (division_id)
+        WHERE
+          gd.type = ? AND
+          o.name = ? AND
+          dr.ensembl_version = ? AND
+          d.name = ?
+      /;
+      $params = [$group, $species, $db_version, $division];
+    } else {
+      $sql = q/
+        SELECT gd.dbname FROM
+          genome_database gd INNER JOIN
+          genome g USING (genome_id) INNER JOIN
+          organism o USING (organism_id) INNER JOIN
+          data_release dr USING (data_release_id)
+        WHERE
+          gd.type = ? AND
+          o.name = ? AND
+          dr.ensembl_version = ?
+      /;
+      $params = [$group, $species, $db_version];
+    }
 
+    my $helper = $meta_dba->dbc->sql_helper;
     my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
 
     if (scalar(@dbnames) == 1) {
       $params{'-DBNAME'} = $dbnames[0];
       my $message = 'Database in metadata database does not exist';
-	  $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+      $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
     } elsif (scalar(@dbnames) > 1) {
       die "Multiple release $db_version $group databases for $species";
     }
@@ -409,27 +439,27 @@ sub get_old_dba {
     my $sql = qq/
       SELECT species_id FROM meta
       WHERE
-		meta_key = 'species.production_name' AND
-		meta_value = '$species'
+        meta_key = 'species.production_name' AND
+        meta_value = '$species'
     /;
     my $vals = $dbh->selectcol_arrayref($sql);
     my $species_id = $vals->[0];
     $params{'-SPECIES_ID'} = $species_id;
 
-	# We assume that if the new db is multispecies,
-	# the old one will be too.
+    # We assume that if the new db is multispecies,
+    # the old one will be too.
     if ($self->dba->is_multispecies) {
       $params{'-MULTISPECIES_DB'} = 1;
     }
 
     if (lc $group eq 'compara') {
-	$old_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->new(%params);
     } elsif (lc $group eq 'variation') {
-	$old_dba = Bio::EnsEMBL::Variation::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::Variation::DBSQL::DBAdaptor->new(%params);
     } elsif (lc $group eq 'funcgen') {
-	$old_dba = Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor->new(%params);
     } else {
-	$old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
+      $old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
     }
 
     push @{$self->dba_list}, $old_dba;
@@ -488,7 +518,11 @@ sub run_datacheck {
 
           plan skip_all => $skip_reason if $skip;
 
-          $self->tests(@_);
+          eval { $self->tests(@_) };
+          if ($@) {
+            fail("Datacheck ran without errors");
+            diag($@);
+          }
         }
       };
     }
@@ -511,7 +545,11 @@ sub run_datacheck {
 
         plan skip_all => $skip_reason if $skip;
 
-        $self->tests(@_);
+        eval { $self->tests(@_) };
+        if ($@) {
+          fail("Datacheck ran without errors");
+          diag($@);
+        }
       }
     }
   }

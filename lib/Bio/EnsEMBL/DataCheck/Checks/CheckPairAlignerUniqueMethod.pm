@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckPairAlignerUniqueMethod',
   DESCRIPTION    => 'Ensure that there is only one method for pairwise alignment per species_set',
-  GROUPS         => ['compara', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_master', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set']
@@ -62,11 +62,14 @@ sub tests {
   foreach my $method ( @methods ) {
     my $mlsses = $mlss_adap->fetch_all_by_method_link_type($method);
     foreach my $mlss ( @$mlsses ){
-      my $mlss_id = $mlss->dbID;
-      my $mlss_name = $mlss->name;
+      if (!$mlss->first_release || $mlss->last_release) {
+        # the rule only applies to current MLSSs
+        next;
+      }
       my $ss_name = $mlss->species_set->name;
       my $ss_id = $mlss->species_set->dbID;
-      $species_sets{"$ss_id ($ss_name)"}++;
+      my $ss_key = $ss_name ? "$ss_id ($ss_name)" : $ss_id;
+      $species_sets{$ss_key}++;
     }
   }
   foreach my $species_set ( sort keys %species_sets ) {

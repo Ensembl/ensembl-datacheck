@@ -40,9 +40,9 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $desc = 'No xrefs are associated with multiple object types';
-  my $diag = 'Xrefs are associated with multiple object types';
-  my $sql  = q/
+  my $desc_1 = 'No xrefs are associated with multiple object types';
+  my $diag_1 = 'Xrefs are associated with multiple object types';
+  my $sql_1  = q/
     SELECT external_db_id, db_name FROM
       external_db INNER JOIN
       xref USING (external_db_id) INNER JOIN
@@ -51,7 +51,20 @@ sub tests {
     HAVING COUNT(DISTINCT ensembl_object_type) > 1
   /;
 
-  is_rows_zero($self->dba, $sql, $desc, $diag);
+  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
+
+  my $desc_2 = 'GO xrefs are only associated with transcripts';
+  my $sql_2  = q/
+    SELECT COUNT(*) FROM
+      external_db INNER JOIN
+      xref USING (external_db_id) INNER JOIN
+      object_xref USING (xref_id)
+    WHERE
+      db_name = 'GO' AND
+      ensembl_object_type <> 'Transcript'
+  /;
+
+  is_rows_zero($self->dba, $sql_2, $desc_2);
 }
 
 1;

@@ -43,7 +43,7 @@ sub tests {
   my $desc_1 = "Gene co-ordinates are the same as the transcript extremities";
   my $diag_1 = "Gene";
   my $sql_1  = qq/
-    SELECT g.stable_id, g.seq_region_start, g.seq_region_end FROM
+    SELECT g.gene_id, g.stable_id, g.seq_region_start, g.seq_region_end FROM
       gene g INNER JOIN
       transcript t USING (gene_id) INNER JOIN
       seq_region sr ON g.seq_region_id = sr.seq_region_id INNER JOIN
@@ -51,7 +51,7 @@ sub tests {
     WHERE
       cs.species_id = $species_id
     GROUP BY
-      g.stable_id
+      g.gene_id, g.stable_id
     HAVING
       MIN(t.seq_region_start) <> g.seq_region_start OR
       MAX(t.seq_region_end) <> g.seq_region_end
@@ -61,7 +61,7 @@ sub tests {
   my $desc_2 = "Genes are on same seq_region and strand as their transcripts";
   my $diag_2 = "Gene and transcript";
   my $sql_2  = qq/
-    SELECT g.stable_id, t.stable_id FROM
+    SELECT g.gene_id, g.stable_id, t.transcript_id, t.stable_id FROM
       gene g INNER JOIN
       transcript t USING (gene_id) INNER JOIN
       seq_region sr ON g.seq_region_id = sr.seq_region_id INNER JOIN

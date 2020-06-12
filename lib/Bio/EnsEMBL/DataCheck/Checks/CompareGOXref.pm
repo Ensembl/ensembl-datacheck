@@ -51,6 +51,7 @@ sub go_xref_counts {
   my ($self, $old_dba) = @_;
 
   my $minimum_count = 500;
+  my $threshold = 0.80;
 
   my $desc = "Consistent GO xref counts between ".
              $self->dba->dbc->dbname.
@@ -77,7 +78,7 @@ sub go_xref_counts {
   /;
   my $sql1 = sprintf($sql, $self->dba->species_id);
   my $sql2 = sprintf($sql, $old_dba->species_id);
-  row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.80, $desc);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc);
 }
 
 1;

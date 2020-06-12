@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyFormat',
   DESCRIPTION => 'Meta values are correctly formatted and linked',
-  GROUPS      => ['core', 'brc4_core', 'meta', 'variation'],
+  GROUPS      => ['ancestral', 'brc4_core', 'core', 'meta', 'variation'],
   DB_TYPES    => ['core', 'variation'],
   TABLES      => ['meta']
 };
@@ -52,7 +52,7 @@ sub tests {
     'genebuild.start_date'           => '\d{4}\-\d{2}\-\S+',
     'patch'                          => '[^\n]+',
     'sample.location_param'          => '[\w\.\-]+:\d+\-\d+',
-    'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates)',
+    'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates|Viruses)',
     'species.production_name'        => '_?[a-z0-9]+_[a-z0-9_]+',
     'species.url'                    => '[A-Z_][a-z0-9]+_[A-Za-z0-9_]+',
     'web_accession_type'             => '(GenBank Assembly ID|EMBL\-Bank|WGS Master)',

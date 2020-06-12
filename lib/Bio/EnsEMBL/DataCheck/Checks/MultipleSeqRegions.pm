@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -35,17 +36,26 @@ use constant {
   TABLES      => ['structural_variation_feature', 'variation_feature']
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  my $sql = 'SELECT COUNT(*) FROM seq_region';
+
+  if ( sql_count($self->dba, $sql) == 1 ) {
+    return (1, 'The database has a single seq_region');
+  }
+}
+
 sub tests {
   my ($self) = @_;
-  
   # Check that tables have multiple distinct seq_region_id
   foreach my $table (@{$self->tables}) {
-       my $desc = "Table $table does not have 1 distinct seq region id";
-       my $sql  = qq/
-         SELECT COUNT(DISTINCT seq_region_id)
-         FROM $table
-       /;
-       cmp_rows($self->dba, $sql, '!=', 1, $desc);
+    my $desc = "Table $table does not have 1 distinct seq region id";
+    my $sql  = qq/
+      SELECT COUNT(DISTINCT seq_region_id)
+      FROM $table
+    /;
+    cmp_rows($self->dba, $sql, '!=', 1, $desc);
   }
 }
 

@@ -32,23 +32,30 @@ use constant {
   DESCRIPTION => 'Requisite core-like tables are identical to those in the core database',
   GROUPS      => ['corelike'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
-  TABLES      => ['assembly', 'coord_system', 'seq_region']
+  TABLES      => ['assembly', 'coord_system', 'seq_region'],
+  FORCE       => 1
 };
 
 sub tests {
   my ($self) = @_;
 
-  my $helper = $self->dba->dbc->sql_helper();
-  my $core_helper = $self->get_dna_dba->dbc->sql_helper();
+  my $desc_core = 'Core database found';
+  my $dna_dba = $self->get_dna_dba();
+  my $core_exists = ok(defined $dna_dba, $desc_core);
 
-  foreach my $table (@{$self->tables}) {
-    my $desc = "$table is identical in core and core-like database";
+  if ($core_exists) {
+    my $helper = $self->dba->dbc->sql_helper();
+    my $core_helper = $dna_dba->dbc->sql_helper();
 
-    my $sql = "CHECKSUM TABLE $table";
+    foreach my $table (@{$self->tables}) {
+      my $desc = "$table is identical in core and core-like database";
 
-    my $corelike = $helper->execute( -SQL => $sql );
-    my $core = $core_helper->execute( -SQL => $sql );
-    is($$corelike[0][1], $$core[0][1], $desc);
+      my $sql = "CHECKSUM TABLE $table";
+
+      my $corelike = $helper->execute( -SQL => $sql );
+      my $core = $core_helper->execute( -SQL => $sql );
+      is($$corelike[0][1], $$core[0][1], $desc);
+    }
   }
 }
 

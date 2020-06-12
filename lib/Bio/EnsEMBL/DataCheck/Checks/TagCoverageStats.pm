@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'TagCoverageStats',
   DESCRIPTION    => 'The coverage must not exceed the genome lengths',
-  GROUPS         => ['compara', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments', 'compara_syntenies'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link_species_set_tag', 'species_tree_node_tag'],

@@ -51,23 +51,38 @@ sub tests {
 sub go_xref_counts {
   my ($self, $old_dba) = @_;
 
-  my $minimum_count = 1000;
+  my $minimum_count = 500;
   my $threshold = 0.80;
 
-  my $desc = "Checking GO xref version between ".
+  my $desc = "Consistent GO xref counts between ".
              $self->dba->dbc->dbname.
              ' (species_id '.$self->dba->species_id.') and '.
              $old_dba->dbc->dbname.
              ' (species_id '.$old_dba->species_id.')';
   my $sql  = qq/
-      SELECT res.species, COUNT(*) FROM 
-        (SELECT substring_index(substring_index(info_text,' ',2),' ',-1) as species FROM xref x 
-      WHERE 
-        dbprimary_acc like 'GO:%' and 
-        info_type not in ('UNMAPPED', 'DEPENDENT')) as res
-      GROUP BY res.species 
-      HAVING COUNT(*) > $minimum_count
+    SELECT proj_source, COUNT(*)
+    FROM
+      (SELECT
+        xref_id,
+        substring_index(substring_index(info_text,' ',2),' ',-1) AS proj_source
+       FROM xref) x INNER JOIN
+      xref USING (xref_id) INNER JOIN
+      external_db USING (external_db_id) INNER JOIN
+      object_xref USING (xref_id) INNER JOIN
+      transcript ON ensembl_id = transcript_id INNER JOIN
+      seq_region USING (seq_region_id) INNER JOIN
+      coord_system USING (coord_system_id)
+    WHERE
+      db_name = 'GO' AND
+      ensembl_object_type = 'Transcript' AND
+      info_type not in ('UNMAPPED', 'DEPENDENT') AND
+      species_id = %d
+    GROUP BY proj_source
+    HAVING COUNT(*) > $minimum_count
   /;
-  row_subtotals($self->dba, $old_dba, $sql, undef, $threshold, $desc);
+  my $sql1 = sprintf($sql, $self->dba->species_id);
+  my $sql2 = sprintf($sql, $old_dba->species_id);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc);
 }
+
 1;

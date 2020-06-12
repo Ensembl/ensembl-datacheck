@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CheckConservationScorePerBlock',
   DESCRIPTION => 'Multiple alignments with >3 species and >3 sequences must have a conservation score',
-  GROUPS      => ['compara', 'compara_multiple_alignments'],
+  GROUPS      => ['compara', 'compara_genome_alignments'],
   DB_TYPES    => ['compara'],
   TABLES      => ['conservation_score', 'dnafrag', 'genome_db', 'genomic_align', 'genomic_align_block', 'method_link', 'method_link_species_set', 'method_link_species_set_tag']
 };
@@ -46,8 +46,7 @@ sub tests {
     FROM method_link_species_set mlss
       JOIN method_link USING(method_link_id)
       LEFT JOIN method_link_species_set_tag mlsst ON (mlss.method_link_species_set_id = mlsst.method_link_species_set_id AND tag = "msa_mlss_id" AND value != "")
-    WHERE (type = "GERP_CONSERVATION_SCORE" 
-      OR class LIKE "ConservationScore%") 
+    WHERE type = "GERP_CONSERVATION_SCORE"
       AND tag IS NULL;
   /;
   
@@ -59,8 +58,7 @@ sub tests {
     FROM method_link_species_set 
       LEFT JOIN method_link USING(method_link_id) 
       LEFT JOIN method_link_species_set_tag USING(method_link_species_set_id) 
-    WHERE (type = "GERP_CONSERVATION_SCORE" 
-      OR class LIKE "ConservationScore%") 
+    WHERE type = "GERP_CONSERVATION_SCORE"
       AND tag = "msa_mlss_id";
   /;
 

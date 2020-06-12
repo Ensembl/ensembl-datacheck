@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AssemblySeqregion',
   DESCRIPTION => 'Assembly and seq_region tables are consistent',
-  GROUPS      => ['assembly', 'core', 'brc4_core'],
+  GROUPS      => ['ancestral', 'assembly', 'brc4_core', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['assembly', 'coord_system', 'seq_region'],
   PER_DB      => 1,
@@ -85,19 +85,15 @@ sub tests {
   is_rows_zero($self->dba, $sql_5, $desc_5);
 
   my $desc_6 = 'assembly and seq_region lengths consistent';
-  my $diag_6 = 'seq_region length != largest asm_end value';
+  my $diag_6 = 'seq_region length < largest asm_end value';
   my $sql_6  = q/
-    SELECT
-      sr.name AS seq_region_name,
-      cs.name AS coord_system_name,
-      sr.length AS seq_length,
-      MAX(a.asm_end) AS max_asm_end
+    SELECT sr.name AS seq_region_name, sr.length, cs.name AS coord_system_name
     FROM
       seq_region sr INNER JOIN
       coord_system cs ON sr.coord_system_id = cs.coord_system_id INNER JOIN
       assembly a ON a.asm_seq_region_id = sr.seq_region_id
     GROUP BY a.asm_seq_region_id
-    HAVING sr.length != MAX(a.asm_end)
+    HAVING sr.length < MAX(a.asm_end)
   /;
   is_rows_zero($self->dba, $sql_6, $desc_6, $diag_6);
 }

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckConservationScore',
   DESCRIPTION    => 'The MLSS for GERP_CONSERVATION_SCORE should have conservation score entries',
-  GROUPS         => ['compara', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['conservation_score', 'genomic_align_block', 'method_link', 'method_link_species_set', 'method_link_species_set_tag']
@@ -64,7 +64,11 @@ sub tests {
         AND method_link_species_set_id = $mlss_id
     /;
     my $desc_1 = "There is an msa_mlss_id tag for $mlss_name";
-    my $msa_mlss_id = $helper->execute_single_result( -SQL => $sql_1 );
+    my $msa_mlss_id = $helper->execute_single_result( -SQL => $sql_1, -NO_ERROR => 1 );
+    ok($msa_mlss_id, $desc_1);
+
+    # Can't test this mlss without an msa_mlss_id
+    next unless $msa_mlss_id;
     
     my $sql_2 = qq/
       SELECT COUNT(*) 

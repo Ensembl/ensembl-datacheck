@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckMSANames',
   DESCRIPTION    => 'Ensure that every MSA method has a name in species_set_header',
-  GROUPS         => ['compara', 'compara_multiple_alignments'],
+  GROUPS         => ['compara', 'compara_master', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link', 'method_link_species_set', 'species_set_header']
@@ -38,7 +38,7 @@ use constant {
 sub skip_tests {
     my ($self) = @_;
     my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-    my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+    my @methods = qw( EPO EPO_EXTENDED PECAN );
     my $db_name = $self->dba->dbc->dbname;
     
     my @mlsses;
@@ -56,7 +56,7 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-  my @methods = qw( EPO EPO_LOW_COVERAGE PECAN );
+  my @methods = qw( EPO EPO_EXTENDED PECAN );
   my $db_name = $self->dba->dbc->dbname;
   my $dbc = $self->dba->dbc;
   my @mlsses;

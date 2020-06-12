@@ -291,7 +291,7 @@ sub row_subtotals {
   my %subtotals1 = map { $_->[0] => $_->[1] } @$rows1;
   my %subtotals2 = map { $_->[0] => $_->[1] } @$rows2;
 
-  my $ok = 1;
+  my @diag_msgs;
 
   # Note that there may be categories in %subtotals1 that aren't in
   # %subtotals2; that's usually not an issue, but if that's important
@@ -301,26 +301,28 @@ sub row_subtotals {
 
     if (defined $min_proportion) {
       if ($subtotals2{$category} * $min_proportion > $subtotals1{$category}) {
-        $ok = 0;
         my $diag_msg =
           "Lower count than expected for $category.\n".
           $subtotals1{$category} . ' < ' . $subtotals2{$category} . ' * ' . $min_proportion*100 . '%';
-        
-        $tb->diag( $diag_msg );
+        push @diag_msgs, $diag_msg;
       }
     } else {
       if ($subtotals2{$category} != $subtotals1{$category}) {
-        $ok = 0;
         my $diag_msg =
           "Counts do not match for $category.\n".
           $subtotals1{$category} . ' != ' . $subtotals2{$category};
-        
-        $tb->diag( $diag_msg );
+        push @diag_msgs, $diag_msg;
       }
     }
   }
 
-  return $tb->ok( $ok, $name );
+  my $ok = scalar(@diag_msgs) ? 0 : 1;
+  $tb->ok( $ok, $name );
+  foreach my $diag_msg (@diag_msgs) {
+    $tb->diag( $diag_msg );
+  }
+
+  return $ok;
 }
 
 =head2 Testing Referential Integrity 

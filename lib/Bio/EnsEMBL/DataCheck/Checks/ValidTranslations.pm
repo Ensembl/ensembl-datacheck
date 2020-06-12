@@ -70,6 +70,11 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
 
+  # To prevent the next two tests from failing for genes which span
+  # the origin on circular chromosomes, we test if the exon
+  # seq_region_start is less than seq_region_end. Note that the
+  # GeneBounds datacheck tests those values in relation to circular
+  # sequence attributes, so don't need that complexity here.
   my $desc_3 = "Start of CDS defined with exon bounds";
   my $diag_3 = "Translation";
   my $sql_3  = qq/
@@ -80,6 +85,7 @@ sub tests {
       coord_system cs USING (coord_system_id)
     WHERE
       (CAST(e.seq_region_end AS SIGNED) - CAST(e.seq_region_start AS SIGNED)) + 1 < tn.seq_start AND
+      e.seq_region_start < e.seq_region_end AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_3, $desc_3, $diag_3);
@@ -94,6 +100,7 @@ sub tests {
       coord_system cs USING (coord_system_id)
     WHERE
       (CAST(e.seq_region_end AS SIGNED) - CAST(e.seq_region_start AS SIGNED)) + 1 < tn.seq_end AND
+      e.seq_region_start < e.seq_region_end AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_4, $desc_4, $diag_4);

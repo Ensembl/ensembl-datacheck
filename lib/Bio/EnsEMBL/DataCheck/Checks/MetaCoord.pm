@@ -31,6 +31,7 @@ use constant {
   DESCRIPTION => 'The meta_coord table is correctly populated',
   GROUPS      => ['annotation', 'core', 'brc4_core', 'corelike', 'funcgen', 'geneset', 'protein_features', 'variation'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
+  FORCE       => 1
 };
 
 sub tests {
@@ -40,11 +41,16 @@ sub tests {
   my $meta_coord_lengths = $self->meta_coord_lengths($helper);
   my $feature_lengths    = $self->feature_lengths($helper);
 
-  my $desc = 'Contents of meta_coord table are correct';
-  my $pass = is_deeply($meta_coord_lengths, $feature_lengths, $desc);
-  if (!$pass) {
-    diag explain $meta_coord_lengths;
-    diag explain $feature_lengths;
+  my $desc_1 = 'Core database found';
+  my $pass_1 = ok(defined $feature_lengths, $desc_1);
+
+  if ($pass_1) {
+    my $desc_2 = 'Contents of meta_coord table are correct';
+    my $pass_2 = is_deeply($meta_coord_lengths, $feature_lengths, $desc_2);
+    if (!$pass_2) {
+      diag explain $meta_coord_lengths;
+      diag explain $feature_lengths;
+    }
   }
 }
 
@@ -128,34 +134,35 @@ sub feature_lengths_dnadb {
   # db, iterate over them and use the mapping to find the longest per
   # coord_system.
 
-  my @tables = $self->feature_tables;
-
   my $dna_dba = $self->get_dna_dba();
+  if (defined $dna_dba) {
+    my @tables = $self->feature_tables;
 
-  my $sr_sql = 'SELECT seq_region_id, coord_system_id FROM seq_region';
-  my $seq_regions = $dna_dba->dbc->sql_helper->execute_into_hash(-SQL => $sr_sql);
+    my $sr_sql = 'SELECT seq_region_id, coord_system_id FROM seq_region';
+    my $seq_regions = $dna_dba->dbc->sql_helper->execute_into_hash(-SQL => $sr_sql);
 
-  my %feature_lengths;
-  foreach my $table (sort @tables) {
-    my $sql = qq/
-      SELECT
-        seq_region_id, 
-        MAX(CAST(seq_region_end AS SIGNED) - CAST(seq_region_start AS SIGNED)) + 1 AS max_length
-      FROM
-        $table
-      GROUP BY seq_region_id
-    /;
-    my $max_lengths = $helper->execute_into_hash(-SQL => $sql);
-    foreach my $sr_id (keys %$max_lengths) {
-      my $cs_id = $$seq_regions{$sr_id};
-      $feature_lengths{$table}{$cs_id} = 0 unless exists $feature_lengths{$table}{$cs_id};
-      if ($$max_lengths{$sr_id} > $feature_lengths{$table}{$cs_id}) {
-        $feature_lengths{$table}{$cs_id} = $$max_lengths{$sr_id};
+    my %feature_lengths;
+    foreach my $table (sort @tables) {
+      my $sql = qq/
+        SELECT
+          seq_region_id, 
+          MAX(CAST(seq_region_end AS SIGNED) - CAST(seq_region_start AS SIGNED)) + 1 AS max_length
+        FROM
+          $table
+        GROUP BY seq_region_id
+      /;
+      my $max_lengths = $helper->execute_into_hash(-SQL => $sql);
+      foreach my $sr_id (keys %$max_lengths) {
+        my $cs_id = $$seq_regions{$sr_id};
+        $feature_lengths{$table}{$cs_id} = 0 unless exists $feature_lengths{$table}{$cs_id};
+        if ($$max_lengths{$sr_id} > $feature_lengths{$table}{$cs_id}) {
+          $feature_lengths{$table}{$cs_id} = $$max_lengths{$sr_id};
+        }
       }
     }
-  }
 
-  return \%feature_lengths;
+    return \%feature_lengths;
+  }
 }
 
 sub feature_tables {
