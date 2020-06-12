@@ -31,6 +31,7 @@ use constant {
   NAME           => 'DuplicateXref',
   DESCRIPTION    => 'Xrefs have been added twice with different descriptions or versions',
   GROUPS         => ['xref', 'core'],
+  DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['xref'],
   PER_DB         => 1,
