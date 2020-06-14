@@ -34,40 +34,54 @@ use TAP::Parser;
 
 
 use base ('Bio::EnsEMBL::Hive::Process');
+
 sub run {
 
   my $self = shift;
 
   my $output_dir   = $self->param('output_dir');
-  my @tap_files = map { $_->stringify } path($output_dir)->children;
-  
+  my $to_json   = 1;
+
+  parse_datachecks($output_dir, $output_dir, 1, 1, $to_json);
+}
+
+sub parse_datachecks {
+
+  my ($tap, $output_file, $by_species, $passed, $to_json) = @_;
+
+  my @tap_files;
+  if (-d $tap) {
+    @tap_files = map { $_->stringify } path($tap)->children;
+  } else {
+    push @tap_files, $tap;
+  }
+
   my %results;
   my $datacheck;
   my $species;
   my $test;
   my %tests;
-  my $passed = 1;
-  my $by_species = 1;
 
   foreach my $tap_file (@tap_files) {
     my $tap = path($tap_file)->slurp;
     my $parser = TAP::Parser->new( { tap => $tap } );
+
     while (my $result = $parser->next) {
       if ($result->is_comment) {
-         if ($result->as_string =~ /^# Subtest: (.+)/) {
-           $datacheck = $1;
-         }
+        if ($result->as_string =~ /^# Subtest: (.+)/) {
+          $datacheck = $1;
+        }
       } elsif ($result->is_unknown) {
-       if ($result->as_string =~ /^\s+# Subtest: (.+)/) {
+        if ($result->as_string =~ /^\s+# Subtest: (.+)/) {
           $species = $1;
           %tests = ();
-       } elsif ($result->as_string =~ /^\s{8}((?:not ok|# No tests run).*)/) {
+        } elsif ($result->as_string =~ /^\s{8}((?:not ok|# No tests run).*)/) {
           $test = $1;
           $tests{$test} = [];
-       } elsif ($result->as_string =~ /^\s{8}((?:ok|.* # SKIP).*)/ && $passed) {
+        } elsif ($result->as_string =~ /^\s{8}((?:ok|.* # SKIP).*)/ && $passed) {
           $test = $1;
           $tests{$test} = [];
-       } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
+        } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
           if (defined $test) {
             push @{$tests{$test}}, $1;
           } else {
@@ -93,12 +107,31 @@ sub run {
   }
 
   my $json = JSON->new->canonical->pretty->encode(\%results);
-  my $basename = path($output_dir)->basename;
-  my $output_file = $output_dir . '/' . $basename . '.json';
-  path($output_file)->parent->mkpath;
-  path($output_file)->spew($json)
+
+  if ($output_file) {
+    if($to_json){  
+      my $basename = path($output_file)->basename;
+      $output_file = $output_file . '/' . $basename . '.json';
+    } 
+      path($output_file)->parent->mkpath;
+      path($output_file)->spew($json)
+ 
+  } else {
+    print($json);
+  }
+
+
+
+
+
+
+
+
+
+
 
 }
+
 
 1;
   

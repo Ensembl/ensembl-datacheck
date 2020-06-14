@@ -60,90 +60,27 @@ use JSON;
 use Path::Tiny;
 use Pod::Usage;
 use TAP::Parser;
+use Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson;
 
-my ($help, $tap, $output_file, $by_species, $passed);
+my ($help, $tap); 
+my $output_file = '';
+my $by_species = 0;
+my $passed = 0;
 
 GetOptions(
   "help!",         \$help,
   "tap:s",         \$tap,
   "output_file:s", \$output_file,
   "by_species!",   \$by_species,
-  "passed!",       \$passed,
+  "passed!",       \$passed
 );
 
 pod2usage(1) if $help;
-
 if (! defined $tap) {
   die "Need a source of TAP data";
 } elsif (! -e $tap) {
   die "TAP source does not exist: $tap";
 }
 
-my @tap_files;
-if (-d $tap) {
-  @tap_files = map { $_->stringify } path($tap)->children;
-} else {
-  push @tap_files, $tap;
-}
+Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson::parse_datachecks($tap, $output_file, $by_species, $passed, 0);
 
-my %results;
-my $datacheck;
-my $species;
-my $test;
-my %tests;
-
-foreach my $tap_file (@tap_files) {
-  my $tap = path($tap_file)->slurp;
-  my $parser = TAP::Parser->new( { tap => $tap } );
-
-  # to-do: extract test number, use that as key with test message and diag messages as lists.
-  while (my $result = $parser->next) {
-    if ($result->is_comment) {
-      # Unindented 'Subtest' comment is the name of the datacheck,
-      # indented 'Subtest's are the species/database.
-      if ($result->as_string =~ /^# Subtest: (.+)/) {
-        $datacheck = $1;
-      }
-    } elsif ($result->is_unknown) {
-      if ($result->as_string =~ /^\s+# Subtest: (.+)/) {
-        $species = $1;
-        %tests = ();
-      } elsif ($result->as_string =~ /^\s{8}((?:not ok|# No tests run).*)/) {
-        $test = $1;
-        $tests{$test} = [];
-      } elsif ($result->as_string =~ /^\s{8}((?:ok|.* # SKIP).*)/ && $passed) {
-        $test = $1;
-        $tests{$test} = [];
-      } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
-        if (defined $test) {
-          push @{$tests{$test}}, $1;
-        } else {
-          warn "Premature diagnostication: diagnostics incomplete ".
-               "for $species because they cannot be linked to a test";
-        }
-      } elsif ($result->as_string =~ /^\s{4}((?:ok|not ok))/) {
-        my $ok = $1 eq 'ok' ? 1 : 0;
-        if (!$ok || $passed) {
-          my %datacheck_tests = %tests;
-          if ($by_species) {
-            $results{$species}{$datacheck}{'ok'} = $ok;
-            $results{$species}{$datacheck}{'tests'} = \%datacheck_tests;
-          } else {
-            $results{$datacheck}{$species}{'ok'} = $ok;
-            $results{$datacheck}{$species}{'tests'} = \%datacheck_tests;
-          }
-        }
-        $test = undef;
-      }  
-    }
-  }
-}
-
-my $json = JSON->new->canonical->pretty->encode(\%results);
-
-if ($output_file) {
-  path($output_file)->parent->mkpath;
-  path($output_file)->spew($json)
-} else {
-  say $json;
-}

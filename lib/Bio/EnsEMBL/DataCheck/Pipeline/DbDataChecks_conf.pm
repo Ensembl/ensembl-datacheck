@@ -71,6 +71,7 @@ sub default_options {
     email         => undef,
     report_per_db => 0,
     report_all    => 0,
+
   };
 }
 
@@ -301,7 +302,7 @@ sub pipeline_analyses {
       -max_retry_count   => 0,
       -rc_name           => 'default',
       -flow_into         => {
-                              '1' => ['?table_name=result', 'DataCheckTapToJson'],
+                              '1' =>  ['?table_name=result', 'DataCheckTapToJson']
                             },
     },
     {
@@ -309,6 +310,9 @@ sub pipeline_analyses {
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson',
       -analysis_capacity => 10,
       -max_retry_count   => 0,
+      -parameters        => {
+                                output_dir => $self->o('output_dir'),
+                            },
       -rc_name           => 'default',
     },
     
