@@ -52,6 +52,26 @@ sub tests {
     my $desc = "Value exists for meta_key $meta_key";
     ok(scalar @$values, $desc);
   }
+  
+  my $desc = "BRC4 component is valid";
+  my %ok_components = map { $_ => 1 } qw(
+    AmoebaDB
+    CryptoDB
+    FungiDB
+    GiardiaDB
+    HostDB
+    MicrosporidiaDB
+    PiroplasmaDB
+    PlasmoDB
+    ToxoDB
+    TrichDB
+    TriTrypDB
+    VectorBase
+  );
+  my ($component) = @{ $mca->list_value_by_key("BRC4.component") };
+  if ($component) {
+    ok(exists $ok_components{$component}, $desc);
+  }
 }
 
 1;
