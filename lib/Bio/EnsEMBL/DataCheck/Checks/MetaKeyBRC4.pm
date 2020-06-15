@@ -37,20 +37,19 @@ use constant {
 sub tests {
   my ($self) = @_;
 
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+
   my @expected = qw/
   assembly.accession
   species.taxonomy_id
   BRC4.component
   BRC4.organism_abbrev
   /;
-
-  my $mca = $self->dba->get_adaptor("MetaContainer");
-
   foreach my $meta_key (@expected) {
     my $values = $mca->list_value_by_key($meta_key);
 
-    my $desc = "Value exists for meta_key $meta_key";
-    ok(scalar @$values, $desc);
+    my $desc = "There is one value for meta_key $meta_key";
+    ok(scalar(@$values) == 1, $desc);
   }
   
   my $desc = "BRC4 component is valid";
