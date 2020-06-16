@@ -24,9 +24,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'RNASeqDNAAlignFeatureAnalyses',
-  DESCRIPTION    => 'In an RNA-seq database, '.
-                    'all DNA alignment features are linked to an RNA-seq DNA alignment feature analysis and '.
-                    'all RNA-seq DNA alignment feature analyses are linked to a DNA alignment feature.',
+  DESCRIPTION    => 'In an RNA-seq database all DNA alignment features and related analyses are linked correctly.',
   GROUPS         => ['corelike'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['rnaseq'],
