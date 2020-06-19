@@ -40,7 +40,7 @@ sub tests {
   my $species_id = $self->dba->species_id;
 
   my $mca = $self->dba->get_adaptor('MetaContainer');
-  my $method = $mca->get_single_value_by_key('genebuild.method');
+  my $method = $mca->single_value_by_key('genebuild.method');
 
   # If the geneset has been produced in-house, the 'method' meta_key
   # will have one of the following values:
