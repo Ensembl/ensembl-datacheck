@@ -48,7 +48,7 @@ sub tests {
   # or assemblies of the same species. Since the taxonomy database does
   # not always have that information, remove it before comparing.
   $sci_name =~ s/ \(GCA_\d+\)//;
-  $sci_name =~ s/ str\. .*//;
+  $sci_name =~ s/ (str\.|strain) .*//;
 
   my $desc_1 = 'Species-related meta data exists';
   ok(defined $taxon_id && defined $sci_name, $desc_1);
@@ -71,8 +71,9 @@ sub tests {
         # So we remove that here, if necessary. 
         my $tax_name = $node->name;
         if ($sci_name ne $tax_name) {
-          $tax_name =~ s/ $strain// if defined $strain;
-          $tax_name =~ s/ str\. .*//;
+          $tax_name =~ s/$strain// if defined $strain;
+          $tax_name =~ s/ (str\.|strain) .*//;
+          $tax_name =~ s/ $//;
         }
 
         my $alias = 0;
@@ -90,8 +91,9 @@ sub tests {
 
           foreach my $synonym (@synonyms) {
             if ($sci_name ne $synonym) {
-              $synonym =~ s/ $strain// if defined $strain;
-              $synonym =~ s/ str\. .*//;
+              $synonym =~ s/$strain// if defined $strain;
+              $synonym =~ s/ (str\.|strain) .*//;
+              $synonym =~ s/ $//;
             }
 
             if ($sci_name eq $synonym) {

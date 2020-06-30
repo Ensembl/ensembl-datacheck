@@ -40,31 +40,18 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
 
-  my $species_id = $self->dba->species_id;
-
-  my $sql = qq/
-    SELECT COUNT(*) FROM
-      seq_region INNER JOIN
-      coord_system USING (coord_system_id) INNER JOIN
-      seq_region_attrib USING (seq_region_id) INNER JOIN
-      attrib_type USING (attrib_type_id)
-    WHERE
-      species_id = $species_id AND
-      code = 'sequence_location' AND
-      value = 'mitochondrial_chromosome'
-  /;
-  
-  if (! sql_count($self->dba, $sql) ) {
+  my $number_of_MT = $self->count_mitochondria();
+  if ($number_of_MT == 0) {
     return (1, 'No mitochondrional seq_region.');
   }
 }
 
 sub tests {
   my ($self) = @_;
-
+  
   my $species_id = $self->dba->species_id;
 
-  my $desc = 'MT region has codon table attribute';
+  my $desc = 'MT regions have codon table attribute';
   my $sql  = qq/
     SELECT COUNT(*) FROM
       seq_region INNER JOIN
@@ -79,7 +66,28 @@ sub tests {
       sra1.value = 'mitochondrial_chromosome' AND
       at2.code   = 'codon_table'
   /;
-  is_rows($self->dba, $sql, 1, $desc);
+  my $number_of_MT = $self->count_mitochondria();
+  is_rows($self->dba, $sql, $number_of_MT, $desc);
+}
+
+sub count_mitochondria {
+  my ($self) = @_;
+  
+  my $species_id = $self->dba->species_id;
+
+  my $sql = qq/
+    SELECT COUNT(*) FROM
+      seq_region INNER JOIN
+      coord_system USING (coord_system_id) INNER JOIN
+      seq_region_attrib USING (seq_region_id) INNER JOIN
+      attrib_type USING (attrib_type_id)
+    WHERE
+      species_id = $species_id AND
+      code = 'sequence_location' AND
+      value = 'mitochondrial_chromosome'
+  /;
+  
+  return sql_count($self->dba, $sql);
 }
 
 1;

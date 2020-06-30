@@ -40,7 +40,7 @@ sub tests {
 
   my $species_id = $self->dba->species_id;
 
-  $self->check_seq_attrib_name($species_id, 'BRC4_seq_region_name');
+  $self->check_top_level_seq_attrib_name($species_id, 'BRC4_seq_region_name');
 
   # Check for INSDC accession (not systematic in case out assembly is not in sync with INSDC)
   #$self->check_seq_synonym($species_id, 'INSDC');
@@ -71,7 +71,7 @@ sub tests {
   $self->check_seq_attrib_name_coord($species_id, $coord_id, 'toplevel');
 }
 
-sub check_seq_attrib_name {
+sub check_top_level_seq_attrib_name {
   my ($self, $species_id, $attrib_code) = @_;
 
   my $desc = "All toplevel seq_regions have a '$attrib_code' attribute";
@@ -80,6 +80,16 @@ sub check_seq_attrib_name {
     SELECT sr.name
     FROM seq_region sr
       INNER JOIN coord_system cs USING (coord_system_id)
+
+      INNER JOIN
+      (
+        SELECT seq_region_id, value FROM
+          seq_region_attrib INNER JOIN
+          attrib_type USING (attrib_type_id)
+        WHERE
+          code = 'toplevel'
+      ) toplevel ON sr.seq_region_id = toplevel.seq_region_id
+      
       LEFT OUTER JOIN
       (
         SELECT seq_region_id, value FROM
