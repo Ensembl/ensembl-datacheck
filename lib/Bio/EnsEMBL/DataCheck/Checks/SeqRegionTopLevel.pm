@@ -86,9 +86,11 @@ sub tests_with_assembly {
       coord_system cs USING (coord_system_id) INNER JOIN
       seq_region_attrib sra USING (seq_region_id) INNER JOIN
       attrib_type at USING (attrib_type_id) INNER JOIN
-      assembly a ON sr.seq_region_id = a.cmp_seq_region_id
+      assembly a ON sr.seq_region_id = a.cmp_seq_region_id LEFT OUTER JOIN
+      assembly a2 ON sr.seq_region_id = a2.asm_seq_region_id
     WHERE
       at.code = 'toplevel' AND
+      a2.asm_seq_region_id IS NULL AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
