@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SeqRegionSynonyms',
   DESCRIPTION => 'Seq_region synonyms do not clash with seq region names',
-  GROUPS      => ['ancestral', 'assembly', 'brc4_core', 'core'],
+  GROUPS      => ['assembly', 'brc4_core', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_synonym']
 };
