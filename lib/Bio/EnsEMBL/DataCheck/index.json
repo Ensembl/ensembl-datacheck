@@ -1863,6 +1863,15 @@
       "name" : "RepeatFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
    },
+   "RNASeqDNAAlignFeatureAnalyses" : {
+      "datacheck_type" : "critical",
+      "description" : "In an RNA-seq database all DNA alignment features and related analyses are linked correctly.",
+      "groups" : [
+         "corelike"
+      ],
+      "name" : "RNASeqDNAAlignFeatureAnalyses",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
+   },
    "SNPCounts" : {
       "datacheck_type" : "critical",
       "description" : "SNP counts are correct",
