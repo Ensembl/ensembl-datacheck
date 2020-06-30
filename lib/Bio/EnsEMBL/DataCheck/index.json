@@ -1988,6 +1988,17 @@
       "name" : "SeqRegionRank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionRank"
    },
+   "SeqRegionSynonyms" : {
+      "datacheck_type" : "critical",
+      "description" : "Seq_region synonyms do not clash with seq region names",
+      "groups" : [
+         "assembly",
+         "brc4_core",
+         "core"
+      ],
+      "name" : "SeqRegionSynonyms",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionSynonyms"
+   },
    "SeqRegionTopLevel" : {
       "datacheck_type" : "critical",
       "description" : "Top-level seq_regions are appropriately configured",
