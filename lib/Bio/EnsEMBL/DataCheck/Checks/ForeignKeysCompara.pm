@@ -25,7 +25,7 @@ use Moose;
 use Path::Tiny;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/repo_location/;
+use Bio::EnsEMBL::DataCheck::Utils qw/repo_location is_ehive_db/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -110,8 +110,8 @@ sub compara_fk {
   fk($self->dba, 'synteny_region',      'synteny_region_id',      'dnafrag_region');
   fk($self->dba, 'genomic_align_block', 'genomic_align_block_id', 'genomic_align');
 
-  # Reverse direction FK constraint, but not applicable to compara_master dbs
-  if ($self->dba->dbc->dbname !~ /_master/) {
+  # Reverse direction FK constraint, but not applicable to compara_master or pipeline dbs
+  if ($self->dba->dbc->dbname !~ /_master/ && is_ehive_db($self->dba) != 1) {
     fk($self->dba, 'method_link', 'method_link_id', 'method_link_species_set');
     fk($self->dba, 'species_set', 'species_set_id', 'method_link_species_set');
     fk($self->dba, 'genome_db',   'genome_db_id',   'species_set',             undef, 'name != "ancestral_sequences"' );
@@ -139,16 +139,6 @@ sub compara_fk {
     )
   /;
   fk($self->dba, 'constrained_element', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $constrained_element_constraint);
-
-  my $species_tree_root_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id < 100 AND
-        (class LIKE 'GenomicAlignTree%' OR class LIKE '%multiple_alignment')
-    )
-  /;
-  fk($self->dba, 'species_tree_root',       'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $species_tree_root_constraint);
 
   my $synteny_region_constraint = q/
     method_link_id IN (

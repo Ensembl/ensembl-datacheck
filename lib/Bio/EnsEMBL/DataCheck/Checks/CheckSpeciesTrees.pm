@@ -83,7 +83,7 @@ sub tests {
         (class LIKE 'GenomicAlignTree%' OR class LIKE '%multiple_alignment')
     )
   /;
-  fk($self->dba, 'species_tree_root',       'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $species_tree_root_constraint);
+  fk($dba, 'species_tree_root', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $species_tree_root_constraint);
 }
 
 1;
