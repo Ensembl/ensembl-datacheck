@@ -35,23 +35,30 @@ sub tests {
   my ($self) = @_;
 
   my $table = 'dna_align_feature';
-  my $desc = "All $table rows have an analysis ending with '_daf' and viceversa.";
-  my $sql  = qq/
+
+  # All $table rows are linked to an analysis
+  fk($self->dba, $table, 'analysis_id', 'analysis');
+
+  my $desc_1 = "All $table rows have an analysis ending with '_daf'";
+  my $sql_1  = qq/
     SELECT DISTINCT a.logic_name FROM
-      analysis a RIGHT JOIN
+      analysis a INNER JOIN
       dna_align_feature daf USING (analysis_id)
     WHERE
-      a.logic_name NOT LIKE "%_daf" OR
-      a.logic_name IS NULL
-    UNION
-    SELECT DISTINCT logic_name FROM
+      a.logic_name NOT LIKE "%_daf"
+  /;
+  is_rows_zero($self->dba, $sql_1, $desc_1);
+
+  my $desc_2 = "All analyses ending in '_daf' are linked to $table rows";
+  my $sql_2  = qq/
+    SELECT DISTINCT a.logic_name FROM
       analysis a LEFT JOIN
       dna_align_feature daf USING (analysis_id)
     WHERE
       a.logic_name LIKE "%_daf" AND
       dna_align_feature_id IS NULL
   /;
-  is_rows_zero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql_2, $desc_2);
 }
 
 1;
