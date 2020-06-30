@@ -1983,7 +1983,6 @@
       "datacheck_type" : "critical",
       "description" : "Seq_region synonyms do not clash with seq region names",
       "groups" : [
-         "ancestral",
          "assembly",
          "brc4_core",
          "core"
