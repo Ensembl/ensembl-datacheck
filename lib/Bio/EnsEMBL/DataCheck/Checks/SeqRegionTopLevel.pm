@@ -85,10 +85,9 @@ sub tests_with_assembly {
       seq_region sr INNER JOIN
       coord_system cs USING (coord_system_id) INNER JOIN
       seq_region_attrib sra USING (seq_region_id) INNER JOIN
-      attrib_type at USING (attrib_type_id) LEFT OUTER JOIN
-      assembly a ON sr.seq_region_id = a.asm_seq_region_id
+      attrib_type at USING (attrib_type_id) INNER JOIN
+      assembly a ON sr.seq_region_id = a.cmp_seq_region_id
     WHERE
-      a.asm_seq_region_id IS NULL AND
       at.code = 'toplevel' AND
       cs.species_id = $species_id
   /;
