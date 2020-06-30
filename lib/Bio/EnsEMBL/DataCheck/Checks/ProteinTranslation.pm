@@ -47,7 +47,8 @@ sub tests {
   my @zero_length = ();
   my @internal_stop = ();
 
-  for my $transcript (@$transcripts) {
+  # Sort the transcripts in order to use the cache
+  for my $transcript (sort { $a->seq_region_name cmp $b->seq_region_name or $a->start <=> $b->start } @$transcripts) {
     my $seq_obj = $transcript->translate();
     if (defined $seq_obj) {
       my $aa_seq = $seq_obj->seq();
