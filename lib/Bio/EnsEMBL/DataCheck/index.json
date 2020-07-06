@@ -622,6 +622,19 @@
       "name" : "CompareMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMSANames"
    },
+   "CompareMetaKeys" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that appropriate meta_keys are updated when the assembly or geneset changes",
+      "groups" : [
+         "assembly",
+         "brc4_core",
+         "core",
+         "geneset",
+         "meta"
+      ],
+      "name" : "CompareMetaKeys",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMetaKeys"
+   },
    "CompareOntologyTerm" : {
       "datacheck_type" : "advisory",
       "description" : "Compare Term counts between current and previous ontology database",
