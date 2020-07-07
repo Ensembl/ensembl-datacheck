@@ -161,6 +161,7 @@ sub _registry_default {
   $uri->db_params->{dbname} = $self->dba->dbc->dbname;
   $uri->add_param('group', $self->dba->group);
   $uri->add_param('species', $species);
+  $uri->add_param('species_id', $self->dba->species_id);
 
   my $dba_url = $uri->generate_uri;
 
