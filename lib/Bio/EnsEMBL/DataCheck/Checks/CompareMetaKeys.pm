@@ -77,7 +77,7 @@ sub tests {
     if (
       !defined($geneset) ||
       !defined($old_geneset) ||
-      $geneset ne $old_geneset
+      $geneset eq $old_geneset
       )
     {
       $geneset_meta_key = 'genebuild.start_date';
@@ -89,7 +89,7 @@ sub tests {
       $self->geneset_changes($old_dba, $compare_dbs);
     } else {
       my $desc = "Meta key '$geneset_meta_key' is different between $compare_dbs";
-      isnt($assembly, $old_assembly, $desc);
+      isnt($geneset, $old_geneset, $desc);
     }
   }
 }
@@ -101,10 +101,10 @@ sub assembly_changes {
   # this is redundant with the second test, but in the case of
   # failures, having both is useful for diagnostics.
   my $desc_1 = "Assembly coord_system counts are the same between $compare_dbs";
-  my $sr_summary = $self->seq_region_summary($self->dba);
-  my $sr_summary_old = $self->seq_region_summary($old_dba);
-  my $pass = is_deeply($sr_summary, $sr_summary_old, $desc_1) ||
-    diag explain hash_diff($sr_summary, $sr_summary_old, 'current db', 'old db');
+  my $summary = $self->assembly_summary($self->dba);
+  my $summary_old = $self->assembly_summary($old_dba);
+  my $pass = is_deeply($summary, $summary_old, $desc_1) ||
+    diag explain hash_diff($summary, $summary_old, 'current db', 'old db');
 
   # We could do an MD5 sum on the DNA sequence, but that's
   # probably overkill - it's time-consuming, and not likely to detect
@@ -114,18 +114,34 @@ sub assembly_changes {
   # reported, and having just a single example is good enough to
   # understand the problem.
   my $desc_2 = "Sequence names, lengths, and levels are the same between $compare_dbs";
-  my $sr_details = $self->seq_region_details($self->dba);
-  my $sr_details_old = $self->seq_region_details($old_dba);
-  is_deeply($sr_details, $sr_details_old, $desc_2);
+  my $details = $self->assembly_details($self->dba);
+  my $details_old = $self->assembly_details($old_dba);
+  is_deeply($details, $details_old, $desc_2);
 }
 
 sub geneset_changes {
   my ($self, $old_dba, $compare_dbs) = @_;
 
-  pass;
+  # Do a quick overview as the first test, to find obvious problems;
+  # this is redundant with the second test, but in the case of
+  # failures, having both is useful for diagnostics.
+  my $desc_1 = "Gene counts are the same between $compare_dbs";
+  my $summary = $self->geneset_summary($self->dba);
+  my $summary_old = $self->geneset_summary($old_dba);
+  my $pass = is_deeply($summary, $summary_old, $desc_1) ||
+    diag explain hash_diff($summary, $summary_old, 'current db', 'old db');
+
+  # Detailed diagnostics are typically not useful in the case of
+  # failure - there will tend to be a huge number of differences
+  # reported, and having just a single example is good enough to
+  # understand the problem.
+  my $desc_2 = "Gene IDs, positions, and biotype groups are the same between $compare_dbs";
+  my $details = $self->geneset_details($self->dba);
+  my $details_old = $self->geneset_details($old_dba);
+  is_deeply($details, $details_old, $desc_2);
 }
 
-sub seq_region_summary {
+sub assembly_summary {
   my ($self, $dba) = @_;
   my $helper = $dba->dbc->sql_helper;
   my $species_id = $dba->species_id;
@@ -136,20 +152,21 @@ sub seq_region_summary {
       seq_region sr USING (coord_system_id)
     WHERE
       cs.attrib REGEXP 'default_version' AND
+      cs.name <> 'lrg' AND
       cs.species_id = ?
     GROUP BY cs.name
   /;
 
-  my $seq_region_summary =
+  my $assembly_summary =
     $helper->execute_into_hash(
       -SQL      => $sql,
       -PARAMS   => [$species_id]
     );
 
-  return $seq_region_summary;
+  return $assembly_summary;
 }
 
-sub seq_region_details {
+sub assembly_details {
   my ($self, $dba) = @_;
   my $helper = $dba->dbc->sql_helper;
   my $species_id = $dba->species_id;
@@ -182,17 +199,100 @@ sub seq_region_details {
       ) at ON sr.seq_region_id = at.seq_region_id
     WHERE
       cs.attrib REGEXP 'default_version' AND
+      cs.name <> 'lrg' AND
       cs.species_id = ?
   /;
 
-  my $seq_region_details =
+  my $assembly_details =
     $helper->execute_into_hash(
       -SQL      => $sql,
       -PARAMS   => [$species_id],
       -CALLBACK => $mapper
     );
 
-  return $seq_region_details;
+  return $assembly_details;
+}
+
+sub geneset_summary {
+  my ($self, $dba) = @_;
+  my $helper = $dba->dbc->sql_helper;
+  my $species_id = $dba->species_id;
+
+  my $sql = qq/
+    SELECT g.biotype, COUNT(g.gene_id) FROM
+      gene g INNER JOIN
+      seq_region sr USING (seq_region_id) INNER JOIN
+      coord_system cs USING (coord_system_id)
+    WHERE
+      cs.name <> 'lrg' AND
+      cs.species_id = ?
+    GROUP BY g.biotype
+  /;
+
+  my $geneset_summary =
+    $helper->execute_into_hash(
+      -SQL      => $sql,
+      -PARAMS   => [$species_id]
+    );
+
+  return $geneset_summary;
+}
+
+sub geneset_details {
+  my ($self, $dba) = @_;
+  my $helper = $dba->dbc->sql_helper;
+  my $species_id = $dba->species_id;
+  
+  my $mapper = sub {
+    my ($row, $value) = @_;
+    my %row = (
+      compound_seq_region_name => $$row[1],
+      biotype_group            => $$row[2],
+      gene_position            => $$row[3],
+      transcript_stable_id     => $$row[4],
+      transcript_position      => $$row[5],
+      translation_stable_id    => $$row[6],
+      translation_position     => $$row[7],
+      exon_stable_id           => $$row[8],
+      exon_position            => $$row[9]
+    );
+    return \%row;
+  };
+
+  my $sql = qq/
+    SELECT
+      g.stable_id AS gene_stable_id,
+      CONCAT(cs.name, '-', sr.name) AS compound_seq_region_name,
+      b.biotype_group,
+      CONCAT_WS(':', g.seq_region_start, g.seq_region_end, g.seq_region_strand) AS gene_position,
+      t.stable_id AS transcript_stable_id,
+      CONCAT_WS(':', t.seq_region_start, t.seq_region_end, t.seq_region_strand) AS transcript_position,
+      IFNULL(p.stable_id, 'NA') AS translation_stable_id,
+      CONCAT_WS(':', IFNULL(p.seq_start, 'NA'), IFNULL(p.seq_end, 'NA')) AS translation_position,
+      e.stable_id AS exon_stable_id,
+      CONCAT_WS(':', e.seq_region_start, e.seq_region_end, e.seq_region_strand) AS exon_position
+    FROM
+      gene g INNER JOIN
+      biotype b ON g.biotype = b.name INNER JOIN
+      seq_region sr USING (seq_region_id) INNER JOIN
+      coord_system cs USING (coord_system_id) INNER JOIN
+      transcript t USING (gene_id) INNER JOIN
+      exon_transcript et USING (transcript_id) INNER JOIN
+      exon e USING (exon_id) LEFT OUTER JOIN
+      translation p USING (transcript_id)
+    WHERE
+      cs.name <> 'lrg' AND
+      cs.species_id = ?
+  /;
+
+  my $geneset_details =
+    $helper->execute_into_hash(
+      -SQL      => $sql,
+      -PARAMS   => [$species_id],
+      -CALLBACK => $mapper
+    );
+
+  return $geneset_details;
 }
 
 1;
