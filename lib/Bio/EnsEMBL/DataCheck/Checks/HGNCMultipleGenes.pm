@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'HGNCMultipleGenes',
   DESCRIPTION    => 'HGNC-derived gene names are not given to multiple genes',
-  GROUPS         => ['core', 'xref'],
+  GROUPS         => ['core', 'xref', 'xref_name_projection'],
   DATACHECK_TYPE => 'advisory',
   TABLES         => ['external_db', 'gene', 'xref']
 };

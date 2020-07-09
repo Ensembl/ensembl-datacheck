@@ -30,10 +30,18 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DisplayXrefExists',
   DESCRIPTION    => 'At least one gene name exists',
-  GROUPS         => ['core', 'xref'],
+  GROUPS         => ['core', 'xref', 'xref_name_projection'],
   DATACHECK_TYPE => 'advisory',
   TABLES         => ['coord_system', 'gene', 'seq_region', 'transcript', 'xref'],
 };
+
+sub skip_tests {
+  my ($self) = @_;
+
+  if ( $self->dba->get_division ne 'vertebrates' ) {
+    return( 1, "Display xrefs are not typically expected for non-vertebrates" );
+  }
+}
 
 sub tests {
   my ($self) = @_;
