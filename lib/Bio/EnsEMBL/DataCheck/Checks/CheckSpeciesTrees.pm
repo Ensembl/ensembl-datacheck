@@ -73,7 +73,7 @@ sub tests {
   # Check that all the species_trees correspond to a method_link_species_set that should have a species tree
   my $desc_2 = "All the species_trees with corresponding method_link_species_sets are expected";
   my $row_count_sql = "SELECT COUNT(*) FROM species_tree_root";
-  cmp_rows($dba, $row_count_sql, "==", $expected_tree_count, $desc_2);
+  is_rows($dba, $row_count_sql, $expected_tree_count, $desc_2);
 
   my $species_tree_root_constraint = q/
     method_link_id IN (
@@ -87,4 +87,3 @@ sub tests {
 }
 
 1;
-
