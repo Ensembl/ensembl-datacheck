@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareProjectedGeneNames',
   DESCRIPTION    => 'Compare Projected Gene Name counts between two databases',
-  GROUPS         => ['compare_core', 'xref'],
+  GROUPS         => ['compare_core', 'xref', 'xref_name_projection'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['xref','gene','object_xref','seq_region','coord_system']
@@ -51,7 +51,7 @@ sub tests {
 sub projected_gene_name_counts {
   my ($self, $old_dba) = @_;
 
-  my $threshold = 0.80;
+  my $threshold = 0.66;
 
   my $desc = "Checking Projected Gene Names between ".
              $self->dba->dbc->dbname.
