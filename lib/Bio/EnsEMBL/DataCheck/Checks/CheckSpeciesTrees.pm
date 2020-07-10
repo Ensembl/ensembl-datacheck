@@ -75,15 +75,6 @@ sub tests {
   my $row_count_sql = "SELECT COUNT(*) FROM species_tree_root";
   is_rows($dba, $row_count_sql, $expected_tree_count, $desc_2);
 
-  my $species_tree_root_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id < 100 AND
-        (class LIKE 'GenomicAlignTree%' OR class LIKE '%multiple_alignment')
-    )
-  /;
-  fk($dba, 'species_tree_root', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $species_tree_root_constraint);
 }
 
 1;
