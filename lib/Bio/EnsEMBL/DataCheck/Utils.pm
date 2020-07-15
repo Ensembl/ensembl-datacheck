@@ -31,7 +31,7 @@ use feature 'say';
 
 require Exporter;
 our @ISA       = qw( Exporter );
-our @EXPORT_OK = qw( repo_location sql_count array_diff hash_diff is_ehive_db );
+our @EXPORT_OK = qw( repo_location sql_count array_diff hash_diff is_compara_ehive_db );
 
 use File::Spec::Functions qw/catdir splitdir/;
 
@@ -212,9 +212,9 @@ sub hash_diff {
   return (\%diff);
 }
 
-=item B<is_ehive_db>
+=item B<is_compara_ehive_db>
 
-is_ehive_db($dba);
+is_compara_ehive_db($dba);
 
 Takes the database adaptor and returns 1 if the database is an ehive
 pipeline database.
@@ -222,7 +222,7 @@ pipeline database.
 =back
 
 =cut
-sub is_ehive_db {
+sub is_compara_ehive_db {
   my $dba = shift;
   my $helper = $dba->dbc->sql_helper;
 

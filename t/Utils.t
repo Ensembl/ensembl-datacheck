@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Bio::EnsEMBL::DataCheck::Utils qw( repo_location sql_count array_diff hash_diff is_ehive_db );
+use Bio::EnsEMBL::DataCheck::Utils qw( repo_location sql_count array_diff hash_diff is_compara_ehive_db );
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
@@ -92,14 +92,14 @@ subtest 'Hash diff', sub {
   is_deeply($$diff{'In nocturnal only'}, {'vampire bat' => 'harriet'}, 'Named second set');
 };
 
-subtest 'E-hive check', sub {
+subtest 'Compara e-hive check', sub {
   my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new('multi');
   my $dba    = $testdb->get_DBAdaptor('metadata');
 
-  my $ehive_check = is_ehive_db($dba);
+  my $ehive_check = is_compara_ehive_db($dba);
   is($ehive_check, 0, 'Correct assignment - not an ehive db');
   $dba->dbc->db_handle->do("CREATE TABLE job ( column1 int )");
-  $ehive_check    = is_ehive_db($dba);
+  $ehive_check    = is_compara_ehive_db($dba);
   is($ehive_check, 1, 'Correct assignment - is an ehive db');
 };
 

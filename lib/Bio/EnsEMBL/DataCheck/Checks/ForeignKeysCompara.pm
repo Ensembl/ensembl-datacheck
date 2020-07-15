@@ -25,7 +25,7 @@ use Moose;
 use Path::Tiny;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/repo_location is_ehive_db/;
+use Bio::EnsEMBL::DataCheck::Utils qw/repo_location is_compara_ehive_db/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -111,7 +111,7 @@ sub compara_fk {
   fk($self->dba, 'genomic_align_block', 'genomic_align_block_id', 'genomic_align');
 
   # Reverse direction FK constraint, but not applicable to compara_master or pipeline dbs
-  if ($self->dba->dbc->dbname !~ /_master/ && is_ehive_db($self->dba) != 1) {
+  if ($self->dba->dbc->dbname !~ /_master/ && is_compara_ehive_db($self->dba) != 1) {
     fk($self->dba, 'method_link', 'method_link_id', 'method_link_species_set');
     fk($self->dba, 'species_set', 'species_set_id', 'method_link_species_set');
     fk($self->dba, 'genome_db',   'genome_db_id',   'species_set',             undef, 'name != "ancestral_sequences"' );
