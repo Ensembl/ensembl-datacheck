@@ -94,6 +94,9 @@ sub biotype_groups {
   my @group_mismatch;
   my @pseudogene_mismatch;
 
+  # Force a load of the core database sequences.
+  $self->get_dna_dba();
+
   my $ga = $self->dba->get_adaptor("Gene");
   foreach my $gene ( @{ $ga->fetch_all } ) {
     my $gene_group = $groups{$gene->biotype};
