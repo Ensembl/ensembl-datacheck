@@ -506,6 +506,17 @@
       "name" : "CheckSpeciesTreeNodeAttr",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr"
    },
+   "CheckSpeciesTrees" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of species trees have been merged",
+      "groups" : [
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments"
+      ],
+      "name" : "CheckSpeciesTrees",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTrees"
+   },
    "CheckSynteny" : {
       "datacheck_type" : "critical",
       "description" : "Every synteny_region_id should be seen more than once",
