@@ -931,15 +931,6 @@
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
    },
-   "DNAFragCore" : {
-      "datacheck_type" : "critical",
-      "description" : "Top-level sequences in the core database match dnafrags in compara database",
-      "groups" : [
-         "compara"
-      ],
-      "name" : "DNAFragCore",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
-   },
    "DataFilesExist" : {
       "datacheck_type" : "critical",
       "description" : "Data files are defined where necessary, and exist on the filesystem",
@@ -1329,15 +1320,6 @@
       ],
       "name" : "GeneTreeHighlighting",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTreeHighlighting"
-   },
-   "GenomeDBCore" : {
-      "datacheck_type" : "critical",
-      "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
-      "groups" : [
-         "compara"
-      ],
-      "name" : "GenomeDBCore",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
    },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
