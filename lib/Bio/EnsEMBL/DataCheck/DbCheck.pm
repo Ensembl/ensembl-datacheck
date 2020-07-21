@@ -290,16 +290,20 @@ sub species {
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   my $species;
-  if ($self->dba->is_multispecies) {
-    $species = $mca->single_value_by_key('species.db_name');
+  if (!defined $mca) {
+    $species = $self->dba->species;
   } else {
-    my $production_name = $mca->single_value_by_key('species.production_name');
-    if (defined $production_name) {
-      $species = $production_name;
+    if ($self->dba->is_multispecies) {
+      $species = $mca->single_value_by_key('species.db_name');
     } else {
-      $species = $self->dba->species;
+      my $production_name = $mca->single_value_by_key('species.production_name');
+      if (defined $production_name) {
+        $species = $production_name;
+      } else {
+        $species = $self->dba->species;
+      }
+      $species =~ s/_old$//;
     }
-    $species =~ s/_old$//;
   }
 
   return $species;
