@@ -58,13 +58,14 @@ sub skip_tests {
   # otherwise, and it doesn't really matter for this datacheck,
   # because the query runs quickly.
   if ($pass) {
-    my $mca = $self->dba->get_adaptor("MetaContainer");
-    if ($mca->can('get_division')) {
-      my $division = $mca->get_division;
+    my $mca = $dna_dba->get_adaptor("MetaContainer");
+    if (! defined $mca) {
+      die("no mca")  # Make a better die message!
+    }
 
-      if ($division ne 'EnsemblVertebrates') {
-        return (1, "$division can have phenotypes on single seq region");
-      }
+    my $division = $mca->get_division;
+    if ($division ne 'EnsemblVertebrates') {
+      return (1, "$division can have phenotypes on single seq region");
     }
   }
 }
