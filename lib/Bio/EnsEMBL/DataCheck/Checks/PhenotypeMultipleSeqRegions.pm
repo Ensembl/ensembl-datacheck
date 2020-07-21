@@ -60,7 +60,7 @@ sub skip_tests {
   if ($pass) {
     my $mca = $dna_dba->get_adaptor("MetaContainer");
     if (! defined $mca) {
-      die("no mca")  # Make a better die message!
+      die("no MetaContainer found for Core database\n");
     }
 
     my $division = $mca->get_division;
