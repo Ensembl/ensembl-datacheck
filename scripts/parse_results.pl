@@ -56,16 +56,13 @@ use strict;
 use feature 'say';
 
 use Getopt::Long qw(:config no_ignore_case);
-use JSON;
-use Path::Tiny;
-use Pod::Usage;
-use TAP::Parser;
-use Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson;
+#use JSON;
+#use Path::Tiny;
+#use Pod::Usage;
+#use TAP::Parser;
+#use Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson;
 
-my ($help, $tap); 
-my $output_file = '';
-my $by_species = 0;
-my $passed = 0;
+my ($help, $tap, $output_file, $by_species, $passed);
 
 GetOptions(
   "help!",         \$help,
@@ -82,5 +79,13 @@ if (! defined $tap) {
   die "TAP source does not exist: $tap";
 }
 
-Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson::parse_datachecks($tap, $output_file, $by_species, $passed, 0);
+my $parse_cmd =
+  "standaloneJob.pl ".
+  " Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson".
+  " -tap $tap";
+$parse_cmd .= " -json_output_file $output_file" if defined $output_file;
+$parse_cmd .= " -json_by_species $by_species" if defined $by_species;
+$parse_cmd .= " -json_passed $passed" if defined $passed;
 
+my $parse_return = system($parse_cmd);
+exit $parse_return;

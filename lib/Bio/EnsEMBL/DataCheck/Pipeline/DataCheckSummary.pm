@@ -37,11 +37,13 @@ sub run {
 
   my $submission_job_id = $self->param('submission_job_id');
 
-  my $history_file = $self->param('history_file');
-  my $output_dir   = $self->param('output_dir');
-  my $tag          = $self->param('tag');
-  my $email        = $self->param('email');
-  my $timestamp    = $self->param('timestamp');
+  my $history_file     = $self->param('history_file');
+  my $output_dir       = $self->param('output_dir');
+  my $json_output_file = $self->param('json_output_file');
+  my $json_passed      = $self->param('json_passed');
+  my $tag              = $self->param('tag');
+  my $email            = $self->param('email');
+  my $timestamp        = $self->param('timestamp');
 
   my $end_timestamp = localtime->cdate;
   my $start = Time::Piece->strptime($timestamp,'%a %b %d %H:%M:%S %Y');
@@ -71,14 +73,16 @@ sub run {
   }
 
   my %output = (
-    databases    => \%results,
-    passed_total => $passed_total,
-    failed_total => $failed_total,
-    history_file => $history_file,
-    output_dir   => $output_dir,
-    tag          => $tag,
-    timestamp    => $end_timestamp,
-    runtime_sec  => "$runtime_sec",
+    databases        => \%results,
+    passed_total     => $passed_total,
+    failed_total     => $failed_total,
+    history_file     => $history_file,
+    output_dir       => $output_dir,
+    json_output_file => $json_output_file,
+    json_passed      => $json_passed,
+    tag              => $tag,
+    timestamp        => $end_timestamp,
+    runtime_sec      => "$runtime_sec",
   );
 
   $self->param('output', \%output);
@@ -138,20 +142,35 @@ sub set_email_parameters {
 
   my $history_file = $output{history_file};
   if (defined $history_file) {
-    $text .= "The datacheck results were stored in a history file: $history_file.\n";
+    $text .= "The datacheck results were stored in a history file: $history_file\n";
   } else {
     $text .= "The datacheck results were not stored in a history file.\n";
   }
 
   my $output_dir = $output{output_dir};
   if (defined $output_dir) {
-    $text .= "The full output of the datachecks were stored in: $output_dir.\n";
+    $text .= "The full output of the datachecks were stored in: $output_dir\n";
   } else {
     $text .= "The full output of the datachecks were not stored.\n";
+  }
+
+  my $json_output_file = $output{json_output_file};
+  if (defined $json_output_file) {
+    if ($output{json_passed}) {
+      $text .= "All results were stored in JSON format: $json_output_file\n";
+    } else {
+      $text .= "Failures were stored in JSON format: $json_output_file\n";
+    }
+    if (-s $json_output_file < 2e6) {
+      push @{$self->param('attachments')}, $json_output_file;
+    } else {
+      $text .= "(JSON file not attached because it exceeds 2MB limit)";
+    }
+  } else {
+    $text .= "The results were not stored in JSON format.\n";
   }
 
   $self->param('text', $text);
 }
 
 1;
-  

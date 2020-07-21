@@ -72,6 +72,9 @@ sub default_options {
     report_per_db => 0,
     report_all    => 0,
 
+    tap_to_json     => 1,
+    json_passed     => 0,
+    json_by_species => 1,
   };
 }
 
@@ -178,6 +181,10 @@ sub pipeline_analyses {
                               email         => $self->o('email'),
                               report_per_db => $self->o('report_per_db'),
                               report_all    => $self->o('report_all'),
+
+                              tap_to_json     => $self->o('tap_to_json'),
+                              json_passed     => $self->o('json_passed'),
+                              json_by_species => $self->o('json_by_species'),
                             },
       -rc_name           => 'default',
       -flow_into         => {
@@ -198,7 +205,7 @@ sub pipeline_analyses {
                                 ELSE 
                                   ['RunDataChecks']
                                 ),
-                              'A->1' => ['DataCheckSummary'],
+                              'A->1' => ['DataCheckResults'],
                                   
                             },
       -rc_name           => 'default',
@@ -296,27 +303,41 @@ sub pipeline_analyses {
     },
 
     {
+      -logic_name        => 'DataCheckResults',
+      -module            => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
+      -max_retry_count   => 0,
+      -parameters        => {},
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '1' =>
+                                WHEN('#output_dir# && #tap_to_json#' =>
+                                  ['ConvertTapToJson'],
+                                ELSE
+                                  ['DataCheckSummary'],
+                                ),
+                            },
+    },
+
+    {
+      -logic_name        => 'ConvertTapToJson',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::ConvertTapToJson',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -parameters        => {
+                              tap => '#output_dir#',
+                            },
+      -rc_name           => 'default',
+      -flow_into         => ['DataCheckSummary'],
+    },
+
+    {
       -logic_name        => 'DataCheckSummary',
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSummary',
       -analysis_capacity => 10,
       -max_retry_count   => 0,
       -rc_name           => 'default',
-      -flow_into         => {
-                              '1' =>  ['?table_name=result', 'DataCheckTapToJson']
-                            },
+      -flow_into         => ['?table_name=result'],
     },
-    {
-      -logic_name        => 'DataCheckTapToJson',
-      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson',
-      -analysis_capacity => 10,
-      -max_retry_count   => 0,
-      -parameters        => {
-                                output_dir => $self->o('output_dir'),
-                            },
-      -rc_name           => 'default',
-    },
-    
-
   ];
 }
 
