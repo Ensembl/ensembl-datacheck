@@ -56,10 +56,6 @@ use strict;
 use feature 'say';
 
 use Getopt::Long qw(:config no_ignore_case);
-use JSON;
-use Path::Tiny;
-use Pod::Usage;
-use TAP::Parser;
 
 my ($help, $tap, $output_file, $by_species, $passed);
 
@@ -68,7 +64,7 @@ GetOptions(
   "tap:s",         \$tap,
   "output_file:s", \$output_file,
   "by_species!",   \$by_species,
-  "passed!",       \$passed,
+  "passed!",       \$passed
 );
 
 pod2usage(1) if $help;
@@ -79,71 +75,13 @@ if (! defined $tap) {
   die "TAP source does not exist: $tap";
 }
 
-my @tap_files;
-if (-d $tap) {
-  @tap_files = map { $_->stringify } path($tap)->children;
-} else {
-  push @tap_files, $tap;
-}
+my $parse_cmd =
+  "standaloneJob.pl ".
+  " Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson".
+  " -tap $tap";
+$parse_cmd .= " -json_output_file $output_file" if defined $output_file;
+$parse_cmd .= " -json_by_species $by_species" if defined $by_species;
+$parse_cmd .= " -json_passed $passed" if defined $passed;
 
-my %results;
-my $datacheck;
-my $species;
-my $test;
-my %tests;
-
-foreach my $tap_file (@tap_files) {
-  my $tap = path($tap_file)->slurp;
-  my $parser = TAP::Parser->new( { tap => $tap } );
-
-  # to-do: extract test number, use that as key with test message and diag messages as lists.
-  while (my $result = $parser->next) {
-    if ($result->is_comment) {
-      # Unindented 'Subtest' comment is the name of the datacheck,
-      # indented 'Subtest's are the species/database.
-      if ($result->as_string =~ /^# Subtest: (.+)/) {
-        $datacheck = $1;
-      }
-    } elsif ($result->is_unknown) {
-      if ($result->as_string =~ /^\s+# Subtest: (.+)/) {
-        $species = $1;
-        %tests = ();
-      } elsif ($result->as_string =~ /^\s{8}((?:not ok|# No tests run).*)/) {
-        $test = $1;
-        $tests{$test} = [];
-      } elsif ($result->as_string =~ /^\s{8}((?:ok|.* # SKIP).*)/ && $passed) {
-        $test = $1;
-        $tests{$test} = [];
-      } elsif ($result->as_string =~ /^\s{8}#\s(\s*.*)/) {
-        if (defined $test) {
-          push @{$tests{$test}}, $1;
-        } else {
-          warn "Premature diagnostication: diagnostics incomplete ".
-               "for $species because they cannot be linked to a test";
-        }
-      } elsif ($result->as_string =~ /^\s{4}((?:ok|not ok))/) {
-        my $ok = $1 eq 'ok' ? 1 : 0;
-        if (!$ok || $passed) {
-          my %datacheck_tests = %tests;
-          if ($by_species) {
-            $results{$species}{$datacheck}{'ok'} = $ok;
-            $results{$species}{$datacheck}{'tests'} = \%datacheck_tests;
-          } else {
-            $results{$datacheck}{$species}{'ok'} = $ok;
-            $results{$datacheck}{$species}{'tests'} = \%datacheck_tests;
-          }
-        }
-        $test = undef;
-      }  
-    }
-  }
-}
-
-my $json = JSON->new->canonical->pretty->encode(\%results);
-
-if ($output_file) {
-  path($output_file)->parent->mkpath;
-  path($output_file)->spew($json)
-} else {
-  say $json;
-}
+my $parse_return = system($parse_cmd);
+exit $parse_return;
