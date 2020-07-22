@@ -56,11 +56,6 @@ use strict;
 use feature 'say';
 
 use Getopt::Long qw(:config no_ignore_case);
-#use JSON;
-#use Path::Tiny;
-#use Pod::Usage;
-#use TAP::Parser;
-#use Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson;
 
 my ($help, $tap, $output_file, $by_species, $passed);
 
@@ -73,6 +68,7 @@ GetOptions(
 );
 
 pod2usage(1) if $help;
+
 if (! defined $tap) {
   die "Need a source of TAP data";
 } elsif (! -e $tap) {
