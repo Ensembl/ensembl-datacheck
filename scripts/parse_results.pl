@@ -56,6 +56,7 @@ use strict;
 use feature 'say';
 
 use Getopt::Long qw(:config no_ignore_case);
+use Pod::Usage;
 
 my ($help, $tap, $output_file, $by_species, $passed);
 
