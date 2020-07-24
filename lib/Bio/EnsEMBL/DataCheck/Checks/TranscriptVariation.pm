@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION => 'TranscriptVariation data is present and correct',
   GROUPS      => ['variation_effect'],
   DB_TYPES    => ['variation'],
-  TABLES      => ['transcript_variation ']
+  TABLES      => ['transcript_variation']
 };
 
 sub tests {
