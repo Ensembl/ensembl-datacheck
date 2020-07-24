@@ -1804,6 +1804,15 @@
       "name" : "ProteinFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinFeatures"
    },
+   "ProteinFunctionPredictions" : {
+      "datacheck_type" : "critical",
+      "description" : "prediction_matrix is not NULL or empty",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "ProteinFunctionPredictions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinFunctionPredictions"
+   },
    "ProteinTranslation" : {
       "datacheck_type" : "critical",
       "description" : "All protein-coding genes have a valid translation",
