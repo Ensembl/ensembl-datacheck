@@ -77,7 +77,7 @@ if (! defined $tap) {
 
 my $parse_cmd =
   "standaloneJob.pl ".
-  " Bio::EnsEMBL::DataCheck::Pipeline::DataCheckTapToJson".
+  " Bio::EnsEMBL::DataCheck::Pipeline::ConvertTapToJson".
   " -tap $tap";
 $parse_cmd .= " -json_output_file $output_file" if defined $output_file;
 $parse_cmd .= " -json_by_species $by_species" if defined $by_species;
