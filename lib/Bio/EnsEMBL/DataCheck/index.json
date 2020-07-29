@@ -343,6 +343,16 @@
       "name" : "CheckGenomicAlignTreeTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignTreeTable"
    },
+   "CheckGenomicAlignments" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of genomic alignments have been merged",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "CheckGenomicAlignments",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignments"
+   },
    "CheckHomology" : {
       "datacheck_type" : "critical",
       "description" : "Check homology_id are all one-to-many for homology_members",
@@ -519,7 +529,7 @@
    },
    "CheckSynteny" : {
       "datacheck_type" : "critical",
-      "description" : "Every synteny_region_id should be seen more than once",
+      "description" : "Every synteny_region_id should be seen more than once and correspond to an mlss",
       "groups" : [
          "compara",
          "compara_syntenies"
