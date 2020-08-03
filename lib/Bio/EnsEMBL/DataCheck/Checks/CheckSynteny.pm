@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'CheckSynteny',
-  DESCRIPTION    => 'Every synteny_region_id should be seen more than once',
+  DESCRIPTION    => 'Every synteny_region_id should be seen more than once and correspond to an mlss',
   GROUPS         => ['compara', 'compara_syntenies'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
@@ -64,6 +64,24 @@ sub tests {
 
   my $desc_2 = "All synteny_region_ids have been seen more than once";
   is_one_to_many( $dbc, "dnafrag_region", "synteny_region_id", $desc_2 );
+
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  my $mlsss     = $mlss_adap->fetch_all_by_method_link_type('SYNTENY');
+
+  foreach my $mlss ( @$mlsss ) {
+
+    my $mlss_id   = $mlss->dbID;
+    my $mlss_name = $mlss->name;
+
+    my $sql = qq/
+      SELECT COUNT(*)
+        FROM synteny_region
+      WHERE method_link_species_set_id = $mlss_id
+    /;
+
+    my $desc_3 = "The syntenies for $mlss_id ($mlss_name) are present as expected";
+    is_rows_nonzero($dbc, $sql, $desc_3);
+  }
 }
 
 1;
