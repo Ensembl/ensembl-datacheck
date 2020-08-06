@@ -53,9 +53,6 @@ sub tests {
       my $row_sql  = "SELECT * FROM $table LIMIT 1";
       my @row = @{ $helper->execute(-SQL => $row_sql, -use_hashrefs => 1) };
       my $columns = join(", ", keys %{$row[0]});
-      if (! defined $columns) {
-        
-      }
 
       my $sql = "SELECT * FROM $table ORDER BY $columns";
       my @data = @{ $helper->execute(-SQL => $sql, -use_hashrefs => 1) };
@@ -96,7 +93,6 @@ sub tests {
           is_deeply($data{$id}, $prod_data{$id}, $desc);
         } else {
           push @not_in_prod, "$table ($id_column: $id)";
-          fail($desc);
         }
       }
       my $desc_exists = "All data exists in master table";
