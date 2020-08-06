@@ -39,7 +39,7 @@ sub tests {
   my ($self) = @_;
 
   if ($self->dba->group eq 'variation') {
-    #$self->variation_core_fk();
+    $self->variation_core_fk();
     $self->variation_funcgen_fk();
   } elsif ($self->dba->group eq 'funcgen') {
     $self->funcgen_core_fk();
