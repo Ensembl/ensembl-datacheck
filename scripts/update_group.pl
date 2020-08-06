@@ -40,13 +40,13 @@ Whether to add or remove the group from the specified datachecks.
 
 =item B<-d[atacheck_dir]> <datacheck_dir>
 
-The directory in which to save the datacheck module. Defaults to the
+The directory in which to find the datacheck module. Defaults to the
 repository's default value (lib/Bio/EnsEMBL/DataCheck/Checks).
 Mandatory if -index_file is specified.
 
 =item B<-i[ndex_file]> <index_file>
 
-The path to the index_file that will be created/updated. Defaults to the
+The path to the index_file that will be updated. Defaults to the
 repository's default value (lib/Bio/EnsEMBL/DataCheck/index.json).
 Mandatory if -datacheck_dir is specified.
 
