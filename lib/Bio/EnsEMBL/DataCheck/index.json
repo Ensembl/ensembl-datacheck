@@ -853,6 +853,17 @@
       "name" : "ControlledMetaKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
    },
+   "ControlledTablesCompara" : {
+      "datacheck_type" : "advisory",
+      "description" : "Controlled tables are consistent with compara master database",
+      "groups" : [
+         "controlled_tables",
+         "compara",
+         "compara_master"
+      ],
+      "name" : "ControlledTablesCompara",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCompara"
+   },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
       "description" : "Controlled tables are consistent with production database",
@@ -907,7 +918,8 @@
       "datacheck_type" : "critical",
       "description" : "Top-level sequences in the core database match dnafrags in compara database",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "DNAFragCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
@@ -1305,7 +1317,8 @@
       "datacheck_type" : "critical",
       "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
       "groups" : [
-         "compara"
+         "compara",
+         "compara_master"
       ],
       "name" : "GenomeDBCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
