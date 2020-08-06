@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DuplicateTranscriptNames',
   DESCRIPTION    => 'Protein coding Transcript Names are unique',
-  GROUPS         => ['xref'],
+  GROUPS         => ['xref', 'xref_mapping'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['transcript','xref','seq_region','coord_system']
