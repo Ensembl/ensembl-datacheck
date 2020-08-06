@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'HGNCNumeric',
   DESCRIPTION    => 'HGNC xrefs do not have the accession as the display_label',
-  GROUPS         => ['core', 'xref'],
+  GROUPS         => ['core', 'xref', 'xref_mapping'],
   TABLES         => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'xref'],
 };
 

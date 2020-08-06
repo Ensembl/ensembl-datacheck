@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'HGNCTypes',
   DESCRIPTION    => 'HGNC xrefs are attached to the appropriate object',
-  GROUPS         => ['core', 'xref'],
+  GROUPS         => ['core', 'xref', 'xref_mapping'],
   DATACHECK_TYPE => 'critical',
   TABLES         => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'transcript', 'xref'],
 };

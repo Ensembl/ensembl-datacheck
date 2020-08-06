@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'GeneDescriptions',
   DESCRIPTION    => 'Gene descriptions are correctly formatted',
-  GROUPS         => ['core', 'xref'],
+  GROUPS         => ['core', 'xref', 'xref_mapping'],
   DATACHECK_TYPE => 'critical',
   TABLES         => ['coord_system', 'gene', 'seq_region']
 };

@@ -734,7 +734,8 @@
       "description" : "Compare synonym counts between two databases, categorised by external_db",
       "groups" : [
          "compare_core",
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "CompareSynonym",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSynonym"
@@ -798,7 +799,8 @@
       "description" : "Compare xref counts between two databases, categorised by external_db",
       "groups" : [
          "compare_core",
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "CompareXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareXref"
@@ -999,7 +1001,8 @@
       "description" : "Gene names are correctly formatted",
       "groups" : [
          "core",
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "DisplayXrefFormat",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefFormat"
@@ -1044,7 +1047,8 @@
       "datacheck_type" : "advisory",
       "description" : "Protein coding Transcript Names are unique",
       "groups" : [
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "DuplicateTranscriptNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateTranscriptNames"
@@ -1053,8 +1057,9 @@
       "datacheck_type" : "advisory",
       "description" : "Xrefs have been added twice with different descriptions or versions",
       "groups" : [
+         "core",
          "xref",
-         "core"
+         "xref_mapping"
       ],
       "name" : "DuplicateXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateXref"
@@ -1209,8 +1214,10 @@
       "datacheck_type" : "critical",
       "description" : "All GO xrefs have an evidence",
       "groups" : [
+         "core",
+         "protein_features",
          "xref",
-         "core"
+         "xref_go_projection"
       ],
       "name" : "GOXrefEvidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GOXrefEvidence"
@@ -1254,7 +1261,8 @@
       "description" : "Gene descriptions are correctly formatted",
       "groups" : [
          "core",
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "GeneDescriptions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneDescriptions"
@@ -1336,7 +1344,8 @@
       "description" : "HGNC xrefs do not have the accession as the display_label",
       "groups" : [
          "core",
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "HGNCNumeric",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCNumeric"
@@ -1346,7 +1355,8 @@
       "description" : "HGNC xrefs are attached to the appropriate object",
       "groups" : [
          "core",
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "HGNCTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCTypes"
@@ -1392,9 +1402,8 @@
       "datacheck_type" : "critical",
       "description" : "LRG features and seq_regions are correctly configured",
       "groups" : [
-         "core",
          "brc4_core",
-         "xref"
+         "core"
       ],
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
@@ -1821,6 +1830,15 @@
       "name" : "PublicationDisplay",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PublicationDisplay"
    },
+   "RNASeqDNAAlignFeatureAnalyses" : {
+      "datacheck_type" : "critical",
+      "description" : "In an RNA-seq database all DNA alignment features and related analyses are linked correctly.",
+      "groups" : [
+         "corelike"
+      ],
+      "name" : "RNASeqDNAAlignFeatureAnalyses",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
+   },
    "ReadFileNames" : {
       "datacheck_type" : "critical",
       "description" : "Checks that read file names are valid.",
@@ -1862,15 +1880,6 @@
       ],
       "name" : "RepeatFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
-   },
-   "RNASeqDNAAlignFeatureAnalyses" : {
-      "datacheck_type" : "critical",
-      "description" : "In an RNA-seq database all DNA alignment features and related analyses are linked correctly.",
-      "groups" : [
-         "corelike"
-      ],
-      "name" : "RNASeqDNAAlignFeatureAnalyses",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
    },
    "SNPCounts" : {
       "datacheck_type" : "critical",
@@ -2097,8 +2106,9 @@
       "datacheck_type" : "critical",
       "description" : "Genes/Transcript display_xref does not have display_label set as stable_id",
       "groups" : [
+         "core",
          "xref",
-         "core"
+         "xref_mapping"
       ],
       "name" : "StableIdDisplayXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIdDisplayXref"
@@ -2189,8 +2199,9 @@
       "datacheck_type" : "critical",
       "description" : "Uniprot xrefs do not have Unreviewed as their primary DB accession",
       "groups" : [
+         "core",
          "xref",
-         "core"
+         "xref_mapping"
       ],
       "name" : "UnreviewedXrefs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UnreviewedXrefs"
@@ -2323,8 +2334,9 @@
       "datacheck_type" : "critical",
       "description" : "Xref accessions, labels, and descriptions are validly formatted",
       "groups" : [
+         "core",
          "xref",
-         "core"
+         "xref_mapping"
       ],
       "name" : "XrefFormat",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefFormat"
@@ -2333,7 +2345,8 @@
       "datacheck_type" : "critical",
       "description" : "Check that xrefs have the correct prefix for their dbprimary_acc",
       "groups" : [
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "XrefPrefixes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefPrefixes"
@@ -2342,7 +2355,8 @@
       "datacheck_type" : "advisory",
       "description" : "Xrefs are only attached to one feature type.",
       "groups" : [
-         "xref"
+         "xref",
+         "xref_mapping"
       ],
       "name" : "XrefTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefTypes"
