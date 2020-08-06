@@ -187,8 +187,14 @@ sub hash_diff {
 
   foreach my $key (keys %$hash_1) {
     if (exists $$hash_2{$key}) {
-      if ($$hash_1{$key} ne $$hash_2{$key}) {
-        $different_values{$key} = [$$hash_1{$key}, $$hash_2{$key}];
+      if (defined $$hash_1{$key} || defined $$hash_2{$key}) {
+        if (
+          (defined $$hash_1{$key} && ! defined $$hash_2{$key}) ||
+          (defined $$hash_2{$key} && ! defined $$hash_1{$key}) ||
+          ($$hash_1{$key} ne $$hash_2{$key})
+        ) {
+          $different_values{$key} = [$$hash_1{$key}, $$hash_2{$key}];
+        }
       }
     } else {
       $hash_1_only{$key} = $$hash_1{$key};
