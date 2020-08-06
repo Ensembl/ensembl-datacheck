@@ -64,7 +64,6 @@ use feature 'say';
 
 use Bio::EnsEMBL::DataCheck::Manager;
 
-use File::Copy qw(move);
 use File::Spec::Functions qw(catdir);
 use Getopt::Long qw(:config no_ignore_case);
 use Path::Tiny;
