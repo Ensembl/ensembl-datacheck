@@ -38,7 +38,9 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
 
-  if ( $self->dba->get_division ne 'vertebrates' ) {
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $division = $mca->get_division;
+  if ($division ne 'EnsemblVertebrates') {
     return( 1, "Display xrefs are not typically expected for non-vertebrates" );
   }
 }
