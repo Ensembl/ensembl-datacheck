@@ -41,7 +41,7 @@ sub skip_tests {
   my ($self) = @_;
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
 
-  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN);
+  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN POLYPLOID);
   my @mlsss;
   foreach my $method (@method_links) {
     my $mlss = $mlss_adap->fetch_all_by_method_link_type($method);
