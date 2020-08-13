@@ -24,20 +24,19 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'HGNCTypes',
-  DESCRIPTION    => 'HGNC xrefs are attached to the appropriate object',
-  GROUPS         => ['core', 'xref'],
-  DATACHECK_TYPE => 'critical',
-  TABLES         => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'transcript', 'xref'],
+  NAME        => 'HGNCTypes',
+  DESCRIPTION => 'HGNC xrefs are attached to the appropriate object',
+  GROUPS      => ['core', 'xref'],
+  TABLES      => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'transcript', 'xref'],
+  PER_DB      => 1,
 };
 
 sub tests {
   my ($self) = @_;
-
-  my $species_id = $self->dba->species_id;
 
   my %check_type = (
    "HGNC" => "Gene",
@@ -53,12 +52,8 @@ sub tests {
       SELECT COUNT(*) FROM
         object_xref ox INNER JOIN
         xref USING (xref_id) INNER JOIN
-        external_db e USING (external_db_id) INNER JOIN
-        $table gt ON ox.ensembl_id = gt.${table}_id INNER JOIN
-        seq_region sr USING (seq_region_id) INNER JOIN
-        coord_system cs USING (coord_system_id) 
+        external_db e USING (external_db_id)
       WHERE
-        cs.species_id = $species_id AND
         e.db_name = '$source' AND
         ox.ensembl_object_type <> '$object_type'
     /;
