@@ -31,7 +31,7 @@ use constant {
   NAME        => 'HGNCNumeric',
   DESCRIPTION => 'HGNC xrefs do not have the accession as the display_label',
   GROUPS      => ['core', 'xref'],
-  TABLES      => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'xref'],
+  TABLES      => ['external_db', 'object_xref', 'xref'],
   PER_DB      => 1
 };
 

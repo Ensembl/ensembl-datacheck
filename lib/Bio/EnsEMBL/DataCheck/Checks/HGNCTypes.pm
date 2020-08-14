@@ -31,7 +31,7 @@ use constant {
   NAME        => 'HGNCTypes',
   DESCRIPTION => 'HGNC xrefs are attached to the appropriate object',
   GROUPS      => ['core', 'xref'],
-  TABLES      => ['coord_system', 'external_db', 'gene', 'object_xref', 'seq_region', 'transcript', 'xref'],
+  TABLES      => ['external_db', 'object_xref', 'xref'],
   PER_DB      => 1,
 };
 
