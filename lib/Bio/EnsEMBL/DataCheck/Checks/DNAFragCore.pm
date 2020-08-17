@@ -54,6 +54,8 @@ sub tests {
 
     next if $gdb_name eq 'ancestral_sequences';
 
+    next if defined $genome_db->genome_component;
+
     my $core_dba = $self->get_dba($genome_db->name, 'core');
 
     my $desc_1 = "Core database found for $gdb_name";
