@@ -130,9 +130,9 @@ sub consistent_data {
       # excessive number of 'ok' messages.
       my $diff = hash_diff($data{$id}, $master_data{$id});
       if (
-        keys($$diff{'Different values'}) ||
-        keys($$diff{'In first set only'}) ||
-        keys($$diff{'In second set only'})
+        keys(%{$diff->{'Different values'}}) ||
+        keys(%{$diff->{'In first set only'}}) ||
+        keys(%{$diff->{'In second set only'}})
       ) {
         push @not_consistent, "$table ($id_column: $id)";
       }
