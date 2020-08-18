@@ -49,24 +49,16 @@ sub tests {
     my $desc_1 = "Core database found for $gdb_name";
     next unless ok(defined $core_dba, $desc_1);
 
-    my $mca = $core_dba->get_adaptor('MetaContainer');
+    # Let the API build a fresh object as per the information in the Core database
+    my $expected_genome_db = Bio::EnsEMBL::Compara::GenomeDB->new_from_DBAdaptor($core_dba, $genome_db->genome_component);
 
-    my $species   = $mca->single_value_by_key('species.production_name');
-    my $taxon_id  = $mca->single_value_by_key('species.taxonomy_id');
-    my $assembly  = $mca->single_value_by_key('assembly.default');
-    my $genebuild = $mca->single_value_by_key('genebuild.start_date');
+    # Compare it to the object we have in the Compara database
+    my $diffs = $genome_db->_check_equals($expected_genome_db);
 
-    my $desc_2 = "Species name matches for $gdb_name";
-    is($genome_db->name, $species, $desc_1);
-
-    my $desc_3 = "Taxonomy ID matches for $gdb_name";
-    is($genome_db->taxon_id, $taxon_id, $desc_2);
-
-    my $desc_4 = "Assembly matches for $gdb_name";
-    is($genome_db->assembly, $assembly, $desc_3);
-
-    my $desc_5 = "Genebuild matches for $gdb_name";
-    is($genome_db->genebuild, $genebuild, $desc_4);
+    # Complain if there are any differences
+    my $desc = "The GenomeDB matches the Core database";
+    ok(!$diffs, $desc);
+    diag($diffs) if $diffs;
   }
 }
 
