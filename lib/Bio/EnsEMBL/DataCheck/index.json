@@ -1318,6 +1318,9 @@
       "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
       "groups" : [
          "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
          "compara_master"
       ],
       "name" : "GenomeDBCore",
