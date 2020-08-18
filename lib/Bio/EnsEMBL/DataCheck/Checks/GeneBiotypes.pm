@@ -95,10 +95,13 @@ sub biotype_groups {
   my @pseudogene_mismatch;
 
   # Force a load of the core database sequences.
-  $self->get_dna_dba();
+  if ($self->dba->group ne 'core') {
+    $self->get_dna_dba();
+  }
 
   my $ga = $self->dba->get_adaptor("Gene");
-  foreach my $gene ( @{ $ga->fetch_all } ) {
+  my $genes = $ga->fetch_all();
+  while (my $gene = shift @$genes) {
     my $gene_group = $groups{$gene->biotype};
 
     # Can't do anything sensible if a group isn't defined
