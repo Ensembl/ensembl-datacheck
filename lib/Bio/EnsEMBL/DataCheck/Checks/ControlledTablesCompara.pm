@@ -91,13 +91,7 @@ sub master_tables {
 sub consistent_data {
   my ($self, $helper, $master_helper, $table) = @_;
 
-  # We need things returned in a consistent order, for which we need
-  # columns names. Easiest way to get them is to return one row.
-  my $row_sql  = "SELECT * FROM $table LIMIT 1";
-  my @row = @{ $helper->execute(-SQL => $row_sql, -use_hashrefs => 1) };
-  my $columns = join(", ", keys %{$row[0]});
-
-  my $sql = "SELECT * FROM $table ORDER BY $columns";
+  my $sql = "SELECT * FROM $table $sql_filter";
   my @data =
     @{ $helper->execute(-SQL => $sql, -use_hashrefs => 1) };
   my @master_data =
