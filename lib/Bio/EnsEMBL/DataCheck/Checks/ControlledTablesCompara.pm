@@ -34,7 +34,7 @@ use constant {
   GROUPS         => ['controlled_tables', 'compara', 'compara_master'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
-  TABLES         => ['genome_db', 'mapping_session', 'method_link', 'method_link_species_set', 'ncbi_taxa_node', 'species_set']
+  TABLES         => ['genome_db', 'mapping_session', 'method_link', 'method_link_species_set', 'ncbi_taxa_node', 'species_set_header']
 };
 
 sub tests {
@@ -48,7 +48,7 @@ sub tests {
       'mapping_session',
       'method_link',
       'method_link_species_set',
-      'species_set'
+      'species_set_header',
     ];
     $self->master_tables($helper, $master_tables);
   }
@@ -82,14 +82,15 @@ sub master_tables {
       my $populated = is_rows_nonzero($self->dba, $count_sql, $desc_2);
 
       if ($populated) {
-        $self->consistent_data($helper, $master_helper, $table)
+        my $id_column = $table eq 'species_set_header' ? 'species_set_id' : "${table}_id";
+        $self->consistent_data($helper, $master_helper, $table, $id_column)
       }
     }
   }
 }
 
 sub consistent_data {
-  my ($self, $helper, $master_helper, $table) = @_;
+  my ($self, $helper, $master_helper, $table, $id_column) = @_;
 
   my $sql = "SELECT * FROM $table $sql_filter";
   my @data =
@@ -100,8 +101,6 @@ sub consistent_data {
   # Create hashes of db rows, indexed on the tables auto-increment ID.
   my %data;
   my %master_data;
-
-  my $id_column = "$table\_id";
 
   foreach (@data) {
     my $id = $_->{$id_column};
