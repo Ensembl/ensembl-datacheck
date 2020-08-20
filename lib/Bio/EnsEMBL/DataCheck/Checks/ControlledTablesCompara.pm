@@ -21,7 +21,9 @@ package Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCompara;
 use warnings;
 use strict;
 
+use DBI qw(:sql_types);
 use Moose;
+use Test::Differences;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 use Bio::EnsEMBL::DataCheck::Utils qw/ hash_diff /;
@@ -34,7 +36,7 @@ use constant {
   GROUPS         => ['controlled_tables', 'compara', 'compara_master'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
-  TABLES         => ['genome_db', 'mapping_session', 'method_link', 'method_link_species_set', 'ncbi_taxa_node', 'species_set_header']
+  TABLES         => ['genome_db', 'mapping_session', 'method_link', 'method_link_species_set', 'ncbi_taxa_node', 'species_set_header', 'species_set']
 };
 
 sub tests {
@@ -76,6 +78,7 @@ sub master_tables {
   if (ok(defined $master_dba, $desc_1)) {
     my $master_helper = $master_dba->dbc->sql_helper;
 
+    my %ids;
     foreach my $table (@$tables) {
       my $count_sql = "SELECT COUNT(*) FROM $table";
       my $desc_2 = "Table '$table' is populated";
@@ -83,9 +86,18 @@ sub master_tables {
 
       if ($populated) {
         my $id_column = $table eq 'species_set_header' ? 'species_set_id' : "${table}_id";
-        $self->consistent_data($helper, $master_helper, $table, $id_column)
+        $ids{$table} = $self->consistent_data($helper, $master_helper, $table, $id_column)
       }
     }
+
+    # We need an adaptor (any) in order to generate SQL IN clauses
+    my $gdb_adaptor = $master_dba->get_GenomeDBAdaptor;
+
+    $gdb_adaptor->split_and_callback($ids{'species_set_header'}, 'species_set_id', SQL_INTEGER, sub {
+        my $sql_filter = 'WHERE ' . (shift);
+        # Check that the species_set table is identical for the given species_set_ids
+        $self->same_data($helper, $master_helper, 'species_set', $sql_filter);
+    });
   }
 }
 
@@ -141,6 +153,31 @@ sub consistent_data {
   my $desc_4 = "All '$table' data is consistent";
   is(scalar(@not_consistent), 0, $desc_4) ||
     diag explain \@not_consistent;
+
+  return [keys %data];
+}
+
+# Check that the table, when filtered, has got the same data in both databases.
+sub same_data {
+  my ($self, $helper, $master_helper, $table, $sql_filter) = @_;
+
+  $sql_filter //= '';
+
+  # We need things returned in a consistent order, for which we need
+  # columns names. Easiest way to get them is to return one row.
+  my $row_sql  = "SELECT * FROM $table LIMIT 1";
+  my @row = @{ $helper->execute(-SQL => $row_sql, -use_hashrefs => 1) };
+  my $columns = join(", ", keys %{$row[0]});
+
+  my $sql = "SELECT * FROM $table $sql_filter ORDER BY $columns";
+  my @data =
+    @{ $helper->execute(-SQL => $sql, -use_hashrefs => 1) };
+  my @master_data =
+    @{ $master_helper->execute(-SQL => $sql, -use_hashrefs => 1) };
+
+  my $desc = "All '$table' data ${sql_filter}are identical with the master table";
+  $desc =~ s/,.*\)/,...) /;
+  eq_or_diff \@data, \@master_data, $desc, { context => 5 };
 }
 
 sub taxonomy_tables {
