@@ -36,7 +36,7 @@ use constant {
   GROUPS         => ['controlled_tables', 'compara', 'compara_master'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
-  TABLES         => ['genome_db', 'mapping_session', 'method_link', 'method_link_species_set', 'ncbi_taxa_node', 'species_set_header', 'species_set']
+  TABLES         => ['genome_db', 'mapping_session', 'method_link', 'method_link_species_set', 'method_link_species_set_tag', 'ncbi_taxa_node', 'species_set_header', 'species_set', 'species_set_tag']
 };
 
 sub tests {
@@ -78,6 +78,7 @@ sub master_tables {
   if (ok(defined $master_dba, $desc_1)) {
     my $master_helper = $master_dba->dbc->sql_helper;
 
+    # Check that the table is a subset of the master table
     my %ids;
     foreach my $table (@$tables) {
       my $count_sql = "SELECT COUNT(*) FROM $table";
@@ -86,7 +87,7 @@ sub master_tables {
 
       if ($populated) {
         my $id_column = $table eq 'species_set_header' ? 'species_set_id' : "${table}_id";
-        $ids{$table} = $self->consistent_data($helper, $master_helper, $table, $id_column)
+        $ids{$table} = $self->consistent_data($helper, $master_helper, $table, [$id_column])
       }
     }
 
@@ -97,12 +98,22 @@ sub master_tables {
         my $sql_filter = 'WHERE ' . (shift);
         # Check that the species_set table is identical for the given species_set_ids
         $self->same_data($helper, $master_helper, 'species_set', $sql_filter);
+        # Check that all the tags found in the master database are in the tested database
+        $self->consistent_data($master_helper, $helper, 'species_set_tag', ['species_set_id', 'tag'], $sql_filter);
+    });
+
+    $gdb_adaptor->split_and_callback($ids{'method_link_species_set'}, 'method_link_species_set_id', SQL_INTEGER, sub {
+        my $sql_filter = 'WHERE ' . (shift);
+        # Check that all the tags found in the master database are in the tested database
+        $self->consistent_data($master_helper, $helper, 'method_link_species_set_tag', ['method_link_species_set_id', 'tag'], $sql_filter);
     });
   }
 }
 
 sub consistent_data {
-  my ($self, $helper, $master_helper, $table, $id_column) = @_;
+  my ($self, $helper, $master_helper, $table, $id_columns, $sql_filter) = @_;
+
+  $sql_filter //= '';
 
   my $sql = "SELECT * FROM $table $sql_filter";
   my @data =
@@ -114,13 +125,13 @@ sub consistent_data {
   my %data;
   my %master_data;
 
-  foreach (@data) {
-    my $id = $_->{$id_column};
-    $data{$id} = $_;
+  foreach my $d (@data) {
+    my $id = join(':', map {$d->{$_}} @$id_columns);
+    $data{$id} = $d;
   }
-  foreach (@master_data) {
-    my $id = $_->{$id_column};
-    $master_data{$id} = $_;
+  foreach my $d (@master_data) {
+    my $id = join(':', map {$d->{$_}} @$id_columns);
+    $master_data{$id} = $d;
   }
 
   # We do not compare the compara and master hashes in a single test, because
@@ -129,7 +140,7 @@ sub consistent_data {
   # adequate diagnostic messages.
   my @not_in_master;
   my @not_consistent;
-  foreach my $id (sort {$a <=> $b} keys %data) {
+  foreach my $id (sort keys %data) {
     if (exists $master_data{$id}) {
       # Do this rather than 'is_deeply' to avoid an
       # excessive number of 'ok' messages.
@@ -139,18 +150,20 @@ sub consistent_data {
         keys(%{$diff->{'In first set only'}}) ||
         keys(%{$diff->{'In second set only'}})
       ) {
-        push @not_consistent, "$table ($id_column: $id)";
+        push @not_consistent, "$table ($id)";
       }
     } else {
-      push @not_in_master, "$table ($id_column: $id)";
+      push @not_in_master, "$table ($id)";
     }
   }
 
-  my $desc_3 = "All '$table' data exists in master table";
+  my $desc_3 = "All '$table' data ${sql_filter}exists";
+  $desc_3 =~ s/,.*\)/,...) /;
   is(scalar(@not_in_master), 0, $desc_3) ||
     diag explain \@not_in_master;
 
-  my $desc_4 = "All '$table' data is consistent";
+  my $desc_4 = "All '$table' data ${sql_filter}is consistent";
+  $desc_4 =~ s/,.*\)/,...) /;
   is(scalar(@not_consistent), 0, $desc_4) ||
     diag explain \@not_consistent;
 
