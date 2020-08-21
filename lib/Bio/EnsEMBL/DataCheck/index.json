@@ -854,7 +854,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
    },
    "ControlledTablesCompara" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "Controlled tables are consistent with compara master database",
       "groups" : [
          "controlled_tables",
