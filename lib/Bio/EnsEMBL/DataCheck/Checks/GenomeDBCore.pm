@@ -31,7 +31,8 @@ use constant {
   DESCRIPTION => 'Species, assembly, and geneset metadata are the same in core and compara databases',
   GROUPS      => ['compara', 'compara_genome_alignments', 'compara_gene_trees', 'compara_syntenies', 'compara_master'],
   DATACHECK_TYPE => 'critical',
-  DB_TYPES    => ['compara']
+  DB_TYPES    => ['compara'],
+  TABLES      => ['genome_db'],
 };
 
 sub tests {
