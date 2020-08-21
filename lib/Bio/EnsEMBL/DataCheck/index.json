@@ -859,6 +859,9 @@
       "groups" : [
          "controlled_tables",
          "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
          "compara_master"
       ],
       "name" : "ControlledTablesCompara",

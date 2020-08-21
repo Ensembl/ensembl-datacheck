@@ -33,7 +33,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'ControlledTablesCompara',
   DESCRIPTION    => 'Controlled tables are consistent with compara master database',
-  GROUPS         => ['controlled_tables', 'compara', 'compara_master'],
+  GROUPS         => ['controlled_tables', 'compara', 'compara_genome_alignments', 'compara_gene_trees', 'compara_syntenies', 'compara_master'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genome_db', 'mapping_session', 'method_link', 'method_link_species_set', 'method_link_species_set_tag', 'ncbi_taxa_node', 'species_set_header', 'species_set', 'species_set_tag']
