@@ -363,6 +363,16 @@
       "name" : "CheckHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
    },
+   "CheckHomologyMLSS" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of homologys MLSSs are present",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "CheckHomologyMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
+   },
    "CheckJSONObjects" : {
       "datacheck_type" : "critical",
       "description" : "Check that all JSON objects in gene_tree_object_store are valid",
