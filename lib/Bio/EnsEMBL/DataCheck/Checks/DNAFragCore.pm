@@ -94,7 +94,7 @@ sub tests {
         if (! defined $dnafrag) {
           push @name_mismatches, $slice_name;
         } else {
-          if ($slice->length != $dnafrag->length) {
+          if ($slice->seq_region_length != $dnafrag->length) {
             push @length_mismatches, $slice_name;
           }
           if ($slice->is_reference != $dnafrag->is_reference) {
