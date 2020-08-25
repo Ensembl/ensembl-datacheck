@@ -44,10 +44,10 @@ sub tests {
   # for that here.
   my $old_dba = $self->get_old_dba();
 
-  my $desc = 'Term counts have not decreased in '.
+  my $desc = 'Term counts by namespace have not decreased in '.
              $self->dba->dbc->dbname.' compared to '.$old_dba->dbc->dbname;
   my $sql  = q/
-    SELECT ontology.namespace, COUNT(*)
+    SELECT CONCAT('namespace: ', ontology.namespace), COUNT(*)
     FROM term
     INNER JOIN ontology ON term.ontology_id=ontology.ontology_id
     GROUP BY term.ontology_id
