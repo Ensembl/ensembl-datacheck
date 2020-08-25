@@ -44,13 +44,13 @@ sub tests {
   # for that here.
   my $old_dba = $self->get_old_dba();
 
-  my $desc = 'Term counts by namespace have not decreased in '.
+  my $desc = 'Term counts by NAME:namespace have not decreased in '.
              $self->dba->dbc->dbname.' compared to '.$old_dba->dbc->dbname;
   my $sql  = q/
-    SELECT CONCAT('namespace: ', ontology.namespace), COUNT(*)
+    SELECT CONCAT(ontology.name, ':', ontology.namespace), COUNT(*)
     FROM term
     INNER JOIN ontology ON term.ontology_id=ontology.ontology_id
-    GROUP BY term.ontology_id
+    GROUP BY ontology.ontology_id
   /;
   row_subtotals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
 }
