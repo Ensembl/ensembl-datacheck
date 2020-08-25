@@ -278,15 +278,32 @@ sub row_subtotals {
   $sql2 = $sql1 if ! defined $sql2;
   $min_proportion = 1 if ! defined $min_proportion;
 
-  if ($sql1 !~ /^\s*SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/ms) {
-    die "Invalid SQL statement for subtotals. Must select a single column first, then a count.\n($sql1)";
-  }
-  if ($sql2 !~ /^\s*SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/ms) {
-    die "Invalid SQL statement for subtotals. Must select a single column first, then a count.\n($sql2)";
-  }
-
   my ( undef, $rows1 ) = _query( $dbc1, $sql1 );
   my ( undef, $rows2 ) = _query( $dbc2, $sql2 );
+
+  my $len1 = @$rows1;
+  my $len2 = @$rows2;
+
+  if ($len1 > 0) {
+    my $len_elem1 = @{@$rows1[0]};
+    if ($len_elem1 != 2) {
+      die "SQL query must return exactly 2 columns, a key and a count.\n($sql1)"
+    }
+    else {
+      my $elem1 = @$rows1[0];
+      die "SQL query second column must be a number.\n($sql1)" unless @$elem1[1] =~ m/[0-9]+/;
+    }
+  }
+  if ($len2 > 0) {
+    my $len_elem2 = @{@$rows2[0]};
+    if ($len_elem2 != 2) {
+      die "SQL query must return exactly 2 columns, a key and a count.\n($sql2)"
+    }
+    else {
+      my $elem2 = @$rows2[0];
+      die "SQL query second column must be a number.\n($sql2)" unless @$elem2[1] =~ m/[0-9]+/;
+    }
+  }
 
   my %subtotals1 = map { $_->[0] => $_->[1] } @$rows1;
   my %subtotals2 = map { $_->[0] => $_->[1] } @$rows2;
