@@ -68,11 +68,7 @@ sub master_tables {
   # This test requires a compara_master database in the registry,
   # where the 'species' parameter is the same as the database name.
   my $desc_1 = "Compara master database found";
-  my $master_db_name = 'ensembl_compara_master';
-  my $division = $self->dba->get_division;
-  if ($division ne 'vertebrates') {
-    $master_db_name =~ s/ensembl/$division/;
-  }
+  my $master_db_name = 'compara_master';
   my $master_dba = $self->get_dba($master_db_name, 'compara');
 
   if (ok(defined $master_dba, $desc_1)) {
