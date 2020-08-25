@@ -31,7 +31,7 @@ use constant {
   NAME           => 'CompareOntologyTerm',
   DESCRIPTION    => 'Compare Term counts between current and previous ontology database',
   GROUPS         => ['ontologies'],
-  DATACHECK_TYPE => 'advisory',
+  DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['ontology'],
   TABLES         => ['term']
 };
@@ -44,10 +44,15 @@ sub tests {
   # for that here.
   my $old_dba = $self->get_old_dba();
 
-  my $desc = 'Term count has not decreased in '.
+  my $desc = 'Term counts have not decreased in '.
              $self->dba->dbc->dbname.' compared to '.$old_dba->dbc->dbname;
-  my $sql  = 'SELECT COUNT(*) FROM term';
-  row_totals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
+  my $sql  = q/
+    SELECT ontology.namespace, COUNT(*)
+    FROM term
+    INNER JOIN ontology ON term.ontology_id=ontology.ontology_id
+    GROUP BY term.ontology_id
+  /;
+  row_subtotals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
 }
 
 1;
