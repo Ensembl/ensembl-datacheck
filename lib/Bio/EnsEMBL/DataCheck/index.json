@@ -283,6 +283,16 @@
       "name" : "CheckEmptyLeavesTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees"
    },
+   "CheckFamiliesMLSS" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of families MLSSs are present",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "CheckFamiliesMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFamiliesMLSS"
+   },
    "CheckFlatProteinTrees" : {
       "datacheck_type" : "critical",
       "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
@@ -312,6 +322,16 @@
       ],
       "name" : "CheckGeneGainLossData",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
+   },
+   "CheckGeneTreeRootMLSS" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of gene_tree_root MLSSs are present",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "CheckGeneTreeRootMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneTreeRootMLSS"
    },
    "CheckGenomicAlignGenomeDBs" : {
       "datacheck_type" : "critical",
