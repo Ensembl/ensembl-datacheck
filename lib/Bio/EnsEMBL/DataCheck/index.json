@@ -990,6 +990,9 @@
       "description" : "Top-level sequences in the core database match dnafrags in compara database",
       "groups" : [
          "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
          "compara_master"
       ],
       "name" : "DNAFragCore",

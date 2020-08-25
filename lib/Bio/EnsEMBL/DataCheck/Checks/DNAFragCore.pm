@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'DNAFragCore',
   DESCRIPTION => 'Top-level sequences in the core database match dnafrags in compara database',
-  GROUPS      => ['compara', 'compara_master'],
+  GROUPS      => ['compara', 'compara_genome_alignments', 'compara_gene_trees', 'compara_syntenies', 'compara_master'],
   DB_TYPES    => ['compara'],
   TABLES      => ['dnafrag', 'genome_db']
 };
