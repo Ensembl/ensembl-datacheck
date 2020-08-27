@@ -61,6 +61,8 @@ sub tests {
     my $desc = "The GenomeDB matches the Core database";
     ok(!$diffs, $desc);
     diag($diffs) if $diffs;
+
+    $core_dba->dbc->disconnect_if_idle;
   }
 }
 

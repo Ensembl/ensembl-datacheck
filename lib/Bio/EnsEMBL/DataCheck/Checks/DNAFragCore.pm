@@ -133,6 +133,7 @@ sub tests {
     is(scalar(@codon_mismatches),  0, $desc_6) || diag explain \@codon_mismatches;
     is(scalar(@cell_mismatches),   0, $desc_7) || diag explain \@cell_mismatches;
     is(scalar(@coord_mismatches),  0, $desc_8) || diag explain \@coord_mismatches;
+    $core_dba->dbc->disconnect_if_idle;
   }
 }
 
