@@ -24,6 +24,9 @@ use strict;
 use Moose;
 use Test::More;
 
+use Bio::EnsEMBL::Compara::DnaFrag;
+use Bio::EnsEMBL::Compara::Utils::CoreDBAdaptor;
+
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
@@ -41,10 +44,6 @@ sub tests {
   my $dfa = $self->dba->get_DnaFragAdaptor;
   my $gdba = $self->dba->get_GenomeDBAdaptor;
 
-  # We get all the information we need in one hit, the cache
-  # will eat up all the memory if we let it...
-  $Bio::EnsEMBL::Utils::SeqRegionCache::SEQ_REGION_CACHE_SIZE = 1;
-
   my $genome_dbs = $gdba->fetch_all_current();
 
   my $desc = "Current genome_dbs exist";
@@ -55,59 +54,85 @@ sub tests {
 
     next if $gdb_name eq 'ancestral_sequences';
 
-    next if defined $genome_db->genome_component;
-
     my $core_dba = $self->get_dba($genome_db->name, 'core');
 
     my $desc_1 = "Core database found for $gdb_name";
     next unless ok(defined $core_dba, $desc_1);
 
-    my $sa = $core_dba->get_SliceAdaptor;
-    my $slices = $sa->fetch_all('toplevel', undef, 1, 1, 1);
+    # We want batches in order to load the DnaFrags more efficiently
+    my $it = Bio::EnsEMBL::Compara::Utils::CoreDBAdaptor::iterate_toplevel_slices($core_dba, $genome_db->genome_component, -RETURN_BATCHES => 1);
 
-    my $seq_region_count = scalar(@$slices);
+    my $seq_region_count = 0;
     my $dnafrag_count = $dfa->generic_count('genome_db_id = '.$genome_db->dbID);
+
+    my $desc_3 = "Name matches between all seq_regions and dnafrags for $gdb_name";
+    my $desc_4 = "Length matches between all seq_regions and dnafrags for $gdb_name";
+    my $desc_5 = "Reference status matches between all seq_region and dnafrag for $gdb_name";
+    my $desc_6 = "Codon table matches between all seq_region and dnafrag for $gdb_name";
+    my $desc_7 = "Cellular component matches between all seq_region and dnafrag for $gdb_name";
+    my $desc_8 = "Coordinate system matches between all seq_region and dnafrag for $gdb_name";
+
+    my @name_mismatches   = ();
+    my @length_mismatches = ();
+    my @is_ref_mismatches = ();
+    my @codon_mismatches  = ();
+    my @cell_mismatches   = ();
+    my @coord_mismatches  = ();
+
+    # The iterator returns batches of slices
+    while (my $slices = $it->next()) {
+
+      # Fetch the corresponding dnafrags
+      my @slice_names = map {$_->seq_region_name} @$slices;
+      my $dnafrags = $dfa->fetch_all_by_GenomeDB_and_names($genome_db, \@slice_names);
+      my %dnafrag_hash = map {$_->name => $_} @$dnafrags;
+
+      # Iterate over the slices
+      foreach my $slice (@$slices) {
+        $seq_region_count++;
+        my $slice_name = $slice->coord_system_name.':'.$slice->seq_region_name;
+
+        # Let the Compara API build the object as it should be
+        my $expected_dnafrag = Bio::EnsEMBL::Compara::DnaFrag->new_from_Slice($slice, $genome_db);
+        # And find the one we have in the database
+        my $dnafrag = $dnafrag_hash{$expected_dnafrag->name};
+
+        if (! defined $dnafrag) {
+          push @name_mismatches, $slice_name;
+
+        } else {
+
+          # And compare all the attributes one by one
+          if ($expected_dnafrag->length != $dnafrag->length) {
+            push @length_mismatches, [$slice_name, $expected_dnafrag->length, $dnafrag->length];
+          }
+          if ($expected_dnafrag->is_reference != $dnafrag->is_reference) {
+            push @is_ref_mismatches, [$slice_name, $expected_dnafrag->is_reference, $dnafrag->is_reference];
+          }
+          if ($expected_dnafrag->codon_table_id != $dnafrag->codon_table_id) {
+            push @codon_mismatches, [$slice_name, $expected_dnafrag->codon_table_id, $dnafrag->codon_table_id];
+          }
+          if ($expected_dnafrag->cellular_component ne $dnafrag->cellular_component) {
+            push @cell_mismatches, [$slice_name, $slice->{'attributes'}->{'sequence_location'}, $expected_dnafrag->cellular_component, $dnafrag->cellular_component];
+          }
+          if ($expected_dnafrag->coord_system_name ne $dnafrag->coord_system_name) {
+            push @coord_mismatches, [$slice_name, $expected_dnafrag->coord_system_name, $dnafrag->coord_system_name];
+          }
+        }
+      }
+    }
 
     my $desc_2 =
       "Equal number of top level seq_regions ($seq_region_count) ".
       "and dnafrags ($dnafrag_count) for $gdb_name";
     is($seq_region_count, $dnafrag_count, $desc_2);
 
-    # If we have lots of regions, it's time consuming to check them
-    # all - and if the numbers tally, it's very likely that everything
-    # is in sync anyway. Vertebrates take 20 mins with this condition,
-    # 6 hours without it.
-    if ($seq_region_count > 10000) {
-      diag "Too many seq_regions ($seq_region_count) to check individually";
-    } else {
-      my $desc_3 = "Name matches between all seq_regions and dnafrags for $gdb_name";
-      my $desc_4 = "Length matches between all seq_regions and dnafrags for $gdb_name";
-      my $desc_5 = "Reference status matches between all seq_region and dnafrag for $gdb_name";
-
-      my @name_mismatches   = ();
-      my @length_mismatches = ();
-      my @is_ref_mismatches = ();
-
-      foreach my $slice (@$slices) {
-        my $slice_name = $slice->coord_system_name.':'.$slice->seq_region_name;
-
-        my $dnafrag = $dfa->fetch_by_GenomeDB_and_name($genome_db, $slice->seq_region_name);
-        if (! defined $dnafrag) {
-          push @name_mismatches, $slice_name;
-        } else {
-          if ($slice->seq_region_length != $dnafrag->length) {
-            push @length_mismatches, $slice_name;
-          }
-          if ($slice->is_reference != $dnafrag->is_reference) {
-            push @is_ref_mismatches, $slice_name;
-          }
-        }
-      }
-
-      is(scalar(@name_mismatches),   0, $desc_3) || diag explain \@name_mismatches;
-      is(scalar(@length_mismatches), 0, $desc_4) || diag explain \@length_mismatches;
-      is(scalar(@is_ref_mismatches), 0, $desc_5) || diag explain \@is_ref_mismatches;
-    }
+    is(scalar(@name_mismatches),   0, $desc_3) || diag explain \@name_mismatches;
+    is(scalar(@length_mismatches), 0, $desc_4) || diag explain \@length_mismatches;
+    is(scalar(@is_ref_mismatches), 0, $desc_5) || diag explain \@is_ref_mismatches;
+    is(scalar(@codon_mismatches),  0, $desc_6) || diag explain \@codon_mismatches;
+    is(scalar(@cell_mismatches),   0, $desc_7) || diag explain \@cell_mismatches;
+    is(scalar(@coord_mismatches),  0, $desc_8) || diag explain \@coord_mismatches;
   }
 }
 
