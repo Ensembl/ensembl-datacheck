@@ -82,12 +82,16 @@ sub master_tables {
       my $populated = is_rows_nonzero($self->dba, $count_sql, $desc_2);
 
       if ($populated) {
+        # Check that the table is a subset of the master database, and record the dbIDs
         my $id_column = $table eq 'species_set_header' ? 'species_set_id' : "${table}_id";
         $ids{$table} = $self->consistent_data($helper, $master_helper, $table, [$id_column])
       }
     }
 
-    # We need an adaptor (any) in order to generate SQL IN clauses
+    # The following checks have to include the list of dbIDs in the SQL
+    # query. To keep things smooth, we should not put all the dbIDs in the
+    # same IN constraint, but make batches instead. This is achieved by the
+    # helper method "split_and_callback" available on Compara adaptors.
     my $gdb_adaptor = $master_dba->get_GenomeDBAdaptor;
 
     $gdb_adaptor->split_and_callback($ids{'species_set_header'}, 'species_set_id', SQL_INTEGER, sub {
