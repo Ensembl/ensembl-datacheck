@@ -416,6 +416,15 @@
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
    },
+   "CheckOntologyTerm" : {
+      "datacheck_type" : "critical",
+      "description" : "Check presence of critical terms",
+      "groups" : [
+         "ontologies"
+      ],
+      "name" : "CheckOntologyTerm",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckOntologyTerm"
+   },
    "CheckOrthologyQCThresholds" : {
       "datacheck_type" : "critical",
       "description" : "Check that some wga_coverage and goc_score thresholds have been populated",
