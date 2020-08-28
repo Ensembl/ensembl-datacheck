@@ -45,7 +45,7 @@ sub tests {
   );
   my $len = @critical_terms;
 
-  my $sql  = "SELECT COUNT(*) FROM term WHERE accession IN (".join(", ", @critical_terms).")";
+  my $sql = "SELECT COUNT(*) FROM term WHERE accession IN (".join(', ', @critical_terms).")";
 
   is_rows($self->dba, $sql, $len, $desc);
 }
