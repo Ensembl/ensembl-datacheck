@@ -37,7 +37,7 @@ use Test::Builder::Module;
 our $VERSION = 1.00;
 our @ISA     = qw(Test::Builder::Module);
 our @EXPORT  = qw(
-  is_rows cmp_rows is_rows_zero is_rows_nonzero 
+  is_rows cmp_rows is_rows_zero is_rows_nonzero
   row_totals row_subtotals
   fk denormalized denormalised
   has_data
@@ -342,7 +342,7 @@ sub row_subtotals {
   return $ok;
 }
 
-=head2 Testing Referential Integrity 
+=head2 Testing Referential Integrity
 
 =over 4
 
@@ -396,7 +396,7 @@ sub fk {
   return $result;
 }
 
-=head2 Testing Denormalization 
+=head2 Testing Denormalization
 
 =over 4
 
@@ -447,7 +447,7 @@ sub denormalised {
   return denormalized(@_);
 }
 
-=head2 Testing Database Columns  
+=head2 Testing Database Columns
 
 =over 4
 
@@ -459,7 +459,7 @@ Tests if the C<$column> in C<$table> has null or blank values.
 If all the rows have a non-NULL, non-blank value, the test will pass.
 The C<$id> parameter should be a column name that will be useful for
 diagnostics in the case of failure (typically this would be something
-that uniquely identifies a row, such as an auto-incremented ID). 
+that uniquely identifies a row, such as an auto-incremented ID).
 
 =back
 
@@ -470,16 +470,16 @@ sub has_data {
 
   my $sql = qq/
     SELECT $id
-    FROM $table 
-    WHERE $column IS NULL 
+    FROM $table
+    WHERE $column IS NULL
     OR $column = 'NULL'
-    OR $column = '' 
-  /;  
+    OR $column = ''
+  /;
 
-  is_rows_zero($dbc, $sql, $test_name, $diag_msg);  
+  is_rows_zero($dbc, $sql, $test_name, $diag_msg);
 }
 
-=head2 Testing one-to-many relationships  
+=head2 Testing one-to-many relationships
 
 =over 4
 
@@ -506,10 +506,10 @@ sub is_one_to_many {
   }
 
   my $sql = qq/
-    SELECT $column 
+    SELECT $column
     FROM $table
     $constraint
-    GROUP BY $column 
+    GROUP BY $column
     HAVING COUNT(*) = 1
   /;
 
