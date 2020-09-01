@@ -59,7 +59,7 @@ sub tests {
   my ($self) = @_;
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
-  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN);
+  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN POLYPLOID);
 
   my $expected_align_count;
   my @tables    = qw(genomic_align genomic_align_block);

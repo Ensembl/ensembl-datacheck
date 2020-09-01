@@ -921,6 +921,20 @@
       "name" : "ControlledMetaKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
    },
+   "ControlledTablesCompara" : {
+      "datacheck_type" : "critical",
+      "description" : "Controlled tables are consistent with compara master database",
+      "groups" : [
+         "controlled_tables",
+         "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
+         "compara_master"
+      ],
+      "name" : "ControlledTablesCompara",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCompara"
+   },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
       "description" : "Controlled tables are consistent with production database",
@@ -970,6 +984,19 @@
       ],
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
+   },
+   "DNAFragCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Top-level sequences in the core database match dnafrags in compara database",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
+         "compara_master"
+      ],
+      "name" : "DNAFragCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
    },
    "DataFilesExist" : {
       "datacheck_type" : "critical",
@@ -1360,6 +1387,19 @@
       ],
       "name" : "GeneTreeHighlighting",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTreeHighlighting"
+   },
+   "GenomeDBCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
+         "compara_master"
+      ],
+      "name" : "GenomeDBCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
    },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
