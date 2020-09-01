@@ -9,6 +9,8 @@ The datachecks require the following repositories to be checked out and their li
 * [ensembl](https://github.com/Ensembl/ensembl)
 * [ensembl-compara](https://github.com/Ensembl/ensembl-compara)
 * [ensembl-funcgen](https://github.com/Ensembl/ensembl-funcgen)
+* [ensembl-metadata](https://github.com/Ensembl/ensembl-metadata)
+* [ensembl-orm](https://github.com/Ensembl/ensembl-orm)
 * [ensembl-variation](https://github.com/Ensembl/ensembl-variation)
 
 ## Using git hooks to synchronise the datacheck index
