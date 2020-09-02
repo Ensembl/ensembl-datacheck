@@ -1821,6 +1821,17 @@
       "name" : "PhenotypeMultipleSeqRegions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeMultipleSeqRegions"
    },
+   "PlastidsAnnotated" : {
+      "datacheck_type" : "critical",
+      "description" : "Plastid seq_regions have appropriate attribute",
+      "groups" : [
+         "assembly",
+         "core",
+         "brc4_core"
+      ],
+      "name" : "PlastidsAnnotated",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PlastidsAnnotated"
+   },
    "PolyploidAttribs" : {
       "datacheck_type" : "critical",
       "description" : "Component genomes are annotated for polyploid genomes",
