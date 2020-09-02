@@ -42,7 +42,7 @@ sub tests {
   my ($self) = @_;
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
-  my @method_links = qw(ENSEMBL_ORTHOLOGUES ENSEMBL_PARALOGUES ENSEMBL_HOMOEOLOGUES);
+  my @method_links = qw(ENSEMBL_ORTHOLOGUES ENSEMBL_PARALOGUES ENSEMBL_HOMOEOLOGUES ENSEMBL_PROJECTIONS);
 
   my $expected_homology_count;
 
