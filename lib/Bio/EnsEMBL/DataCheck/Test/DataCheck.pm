@@ -300,8 +300,8 @@ sub row_subtotals {
       die "Invalid SQL query for row_subtotals. Must return exactly two columns, a key and a number.\n($sql2)"
     }
     else {
-      my $elem2 = @$rows2[0];
-      die "Invalid SQL query for row_subtotals. Second column must be a number.\n($sql2)" unless @$elem2[1] =~ m/[0-9]+/;
+      my $count2 = $$rows2[0][1];
+      die "Invalid SQL query for row_subtotals. Second column must be a number.\n($sql2)" unless $count2 =~ /^[0-9]+$/;
     }
   }
 
