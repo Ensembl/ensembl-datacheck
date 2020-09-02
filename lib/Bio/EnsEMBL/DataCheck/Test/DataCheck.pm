@@ -295,7 +295,7 @@ sub row_subtotals {
     }
   }
   if ($len2 > 0) {
-    my $len_elem2 = @{@$rows2[0]};
+    my $len_elem2 = @{$$rows2[0]};
     if ($len_elem2 != 2) {
       die "Invalid SQL query for row_subtotals. Must return exactly two columns, a key and a number.\n($sql2)"
     }
