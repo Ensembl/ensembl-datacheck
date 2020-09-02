@@ -33,7 +33,7 @@ use constant {
   GROUPS         => ['ontologies'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['ontology'],
-  TABLES         => ['term']
+  TABLES         => ['ontology', 'term']
 };
 
 sub tests {
