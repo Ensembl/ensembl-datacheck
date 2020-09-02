@@ -39,7 +39,7 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $desc = 'Critical terms are present in '.$self->dba->dbc->dbname;
+  my $desc = 'Critical terms are present in term table';
   my @critical_terms = (
       "'EFO:0003900'"
   );
