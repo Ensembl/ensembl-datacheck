@@ -632,7 +632,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMSANames"
    },
    "CompareOntologyTerm" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "Compare Term counts between current and previous ontology database",
       "groups" : [
          "ontologies"
