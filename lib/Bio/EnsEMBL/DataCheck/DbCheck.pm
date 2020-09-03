@@ -607,7 +607,10 @@ sub check_history {
       $run_required = 0;
       foreach my $table_name (@tables_to_check) {
         if (exists $$tables_in_db{$table_name}) {
-          if ($self->_started < $$tables_in_db{$table_name}) {
+          if (
+            (! defined $$tables_in_db{$table_name}) ||
+            ($self->_started < $$tables_in_db{$table_name}) )
+          {
             $run_required = 1;
             last;
           }
@@ -633,8 +636,10 @@ sub table_dates {
     FROM information_schema.tables
     WHERE table_schema = database()
   /;
+  my $results = $helper->execute(-SQL => $sql);
+  my %tables_in_db = map { $_->[0] => $_->[1] } @$results;
 
-  return $helper->execute_into_hash(-SQL =>$sql);
+  return \%tables_in_db;
 }
 
 sub skip_tests {
