@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTerm;
+package Bio::EnsEMBL::DataCheck::Checks::CheckOntologyTerm;
 
 use warnings;
 use strict;
@@ -28,31 +28,27 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CompareOntologyTerm',
-  DESCRIPTION    => 'Compare Term counts between current and previous ontology database',
+  NAME           => 'CheckOntologyTerm',
+  DESCRIPTION    => 'Check presence of critical terms',
   GROUPS         => ['ontologies'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['ontology'],
-  TABLES         => ['ontology', 'term']
+  TABLES         => ['term'],
 };
 
 sub tests {
   my ($self) = @_;
 
-  # Inherited code from DbCheck will always fail if the previous
-  # release's database cannot be found - so don't need to test
-  # for that here.
-  my $old_dba = $self->get_old_dba();
+  my $desc = 'Critical terms are present in term table';
+  my @critical_terms = (
+      "'EFO:0003900'"
+  );
+  my $len = @critical_terms;
 
-  my $desc = 'Term counts by NAME:namespace have not decreased in '.
-             $self->dba->dbc->dbname.' compared to '.$old_dba->dbc->dbname;
-  my $sql  = q/
-    SELECT CONCAT(ontology.name, ':', ontology.namespace), COUNT(*)
-    FROM term
-    INNER JOIN ontology ON term.ontology_id=ontology.ontology_id
-    GROUP BY ontology.ontology_id
-  /;
-  row_subtotals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
+  my $sql = "SELECT COUNT(*) FROM term WHERE accession IN (".join(', ', @critical_terms).")";
+
+  is_rows($self->dba, $sql, $len, $desc);
 }
 
 1;
+

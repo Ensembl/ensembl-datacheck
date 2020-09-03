@@ -37,7 +37,7 @@ use Test::Builder::Module;
 our $VERSION = 1.00;
 our @ISA     = qw(Test::Builder::Module);
 our @EXPORT  = qw(
-  is_rows cmp_rows is_rows_zero is_rows_nonzero 
+  is_rows cmp_rows is_rows_zero is_rows_nonzero
   row_totals row_subtotals
   fk denormalized denormalised
   has_data
@@ -278,15 +278,40 @@ sub row_subtotals {
   $sql2 = $sql1 if ! defined $sql2;
   $min_proportion = 1 if ! defined $min_proportion;
 
-  if ($sql1 !~ /^\s*SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/ms) {
-    die "Invalid SQL statement for subtotals. Must select a single column first, then a count.\n($sql1)";
-  }
-  if ($sql2 !~ /^\s*SELECT\s+[^,]+\s*,\s*COUNT[^,]+FROM.+GROUP\s+BY/ms) {
-    die "Invalid SQL statement for subtotals. Must select a single column first, then a count.\n($sql2)";
-  }
-
   my ( undef, $rows1 ) = _query( $dbc1, $sql1 );
   my ( undef, $rows2 ) = _query( $dbc2, $sql2 );
+
+  if (not defined $rows1) {
+    die "Invalid SQL query for row_subtotals.\n($sql1)";
+  };
+
+  if (not defined $rows2) {
+    die "Invalid SQL query for row_subtotals.\n($sql2)";
+  };
+
+  my $len1 = @$rows1;
+  my $len2 = @$rows2;
+
+  if ($len1 > 0) {
+    my $len_elem1 = @{$$rows1[0]};
+    if ($len_elem1 != 2) {
+      die "Invalid SQL query for row_subtotals. Must return exactly two columns, a key and a number.\n($sql1)"
+    }
+    else {
+      my $count1 = $$rows1[0][1];
+      die "Invalid SQL query for row_subtotal. Second column must be a number.\n($sql1)" unless $count1 =~ /^[0-9]+$/;
+    }
+  }
+  if ($len2 > 0) {
+    my $len_elem2 = @{$$rows2[0]};
+    if ($len_elem2 != 2) {
+      die "Invalid SQL query for row_subtotals. Must return exactly two columns, a key and a number.\n($sql2)"
+    }
+    else {
+      my $count2 = $$rows2[0][1];
+      die "Invalid SQL query for row_subtotals. Second column must be a number.\n($sql2)" unless $count2 =~ /^[0-9]+$/;
+    }
+  }
 
   my %subtotals1 = map { $_->[0] => $_->[1] } @$rows1;
   my %subtotals2 = map { $_->[0] => $_->[1] } @$rows2;
@@ -325,7 +350,7 @@ sub row_subtotals {
   return $ok;
 }
 
-=head2 Testing Referential Integrity 
+=head2 Testing Referential Integrity
 
 =over 4
 
@@ -379,7 +404,7 @@ sub fk {
   return $result;
 }
 
-=head2 Testing Denormalization 
+=head2 Testing Denormalization
 
 =over 4
 
@@ -430,7 +455,7 @@ sub denormalised {
   return denormalized(@_);
 }
 
-=head2 Testing Database Columns  
+=head2 Testing Database Columns
 
 =over 4
 
@@ -442,7 +467,7 @@ Tests if the C<$column> in C<$table> has null or blank values.
 If all the rows have a non-NULL, non-blank value, the test will pass.
 The C<$id> parameter should be a column name that will be useful for
 diagnostics in the case of failure (typically this would be something
-that uniquely identifies a row, such as an auto-incremented ID). 
+that uniquely identifies a row, such as an auto-incremented ID).
 
 =back
 
@@ -453,16 +478,16 @@ sub has_data {
 
   my $sql = qq/
     SELECT $id
-    FROM $table 
-    WHERE $column IS NULL 
+    FROM $table
+    WHERE $column IS NULL
     OR $column = 'NULL'
-    OR $column = '' 
-  /;  
+    OR $column = ''
+  /;
 
-  is_rows_zero($dbc, $sql, $test_name, $diag_msg);  
+  is_rows_zero($dbc, $sql, $test_name, $diag_msg);
 }
 
-=head2 Testing one-to-many relationships  
+=head2 Testing one-to-many relationships
 
 =over 4
 
@@ -489,10 +514,10 @@ sub is_one_to_many {
   }
 
   my $sql = qq/
-    SELECT $column 
+    SELECT $column
     FROM $table
     $constraint
-    GROUP BY $column 
+    GROUP BY $column
     HAVING COUNT(*) = 1
   /;
 
