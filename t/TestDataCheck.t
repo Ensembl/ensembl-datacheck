@@ -127,7 +127,7 @@ subtest 'Comparing Database Rows', sub {
   my $sql_3 = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
   my $sql_4 = 'SELECT biotype, COUNT(*) FROM gene WHERE biotype <> "protein_coding" GROUP BY biotype';
   my $sql_5 = 'SELECT COUNT(*) FROM gene';
-  my $sql_6 = 'SELECT * FROM gene';
+  my $sql_6 = 'SELECT * FROM gene GROUP BY biotype';
 
   subtest 'row_totals', sub {
     check_tests(
