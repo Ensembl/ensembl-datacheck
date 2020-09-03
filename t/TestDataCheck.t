@@ -1,11 +1,11 @@
 # Copyright [2018-2020] EMBL-European Bioinformatics Institute
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ subtest 'Counting Database Rows', sub {
   my $sql_2 = 'SELECT stable_id FROM gene';
   my $sql_3 = 'SELECT COUNT(*) FROM gene WHERE stable_id = "banana"';
   my $sql_4 = 'SELECT stable_id FROM gene WHERE stable_id = "banana"';
-  
+
   subtest 'is_rows', sub {
     check_tests(
       sub {
@@ -126,7 +126,8 @@ subtest 'Comparing Database Rows', sub {
   my $sql_2 = 'SELECT stable_id FROM gene LIMIT 250';
   my $sql_3 = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
   my $sql_4 = 'SELECT biotype, COUNT(*) FROM gene WHERE biotype <> "protein_coding" GROUP BY biotype';
-  my $sql_5 = 'SELECT * FROM gene';
+  my $sql_5 = 'SELECT COUNT(*) FROM gene';
+  my $sql_6 = 'SELECT * FROM gene';
 
   subtest 'row_totals', sub {
     check_tests(
@@ -179,6 +180,14 @@ subtest 'Comparing Database Rows', sub {
 
     throws_ok(
       sub { row_subtotals($dba, undef, $sql_3, $sql_5) },
+      qr/Invalid SQL query for row_subtotals/, 'SQL statement format');
+
+    throws_ok(
+      sub { row_subtotals($dba, undef, $sql_6, $sql_3) },
+      qr/Invalid SQL query for row_subtotals/, 'SQL statement format');
+
+    throws_ok(
+      sub { row_subtotals($dba, undef, $sql_3, $sql_6) },
       qr/Invalid SQL query for row_subtotals/, 'SQL statement format');
   };
 };
@@ -304,24 +313,24 @@ subtest 'Denormalized', sub {
 };
 
 subtest 'Testing column data', sub {
-  my $table_3_id = 'meta_id'; 
-  my $table_3 = 'meta'; 
-  my $col_empty_value = 'species_id'; 
+  my $table_3_id = 'meta_id';
+  my $table_3 = 'meta';
+  my $col_empty_value = 'species_id';
   my $col_value = 'meta_key';
 
   subtest 'has_data', sub {
     check_tests(
-      sub {  
-        has_data($dba, $table_3, $col_value, $table_3_id, 'pass: no missing values');  
+      sub {
+        has_data($dba, $table_3, $col_value, $table_3_id, 'pass: no missing values');
         has_data($dba, $table_3, $col_empty_value, $table_3_id, 'fail: missing values');
       },
       [
         { ok => 1, depth => undef },
-        { ok => 0, depth => undef }, 
-      ], 
-      'has_data method' 
-    ); 
-  }; 
-}; 
+        { ok => 0, depth => undef },
+      ],
+      'has_data method'
+    );
+  };
+};
 
 done_testing();
