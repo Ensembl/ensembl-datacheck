@@ -126,7 +126,7 @@ subtest 'Comparing Database Rows', sub {
   my $sql_2 = 'SELECT stable_id FROM gene LIMIT 250';
   my $sql_3 = 'SELECT biotype, COUNT(*) FROM gene GROUP BY biotype';
   my $sql_4 = 'SELECT biotype, COUNT(*) FROM gene WHERE biotype <> "protein_coding" GROUP BY biotype';
-  my $sql_5 = 'SELECT COUNT(*) FROM gene';
+  my $sql_5 = 'SELECT * FROM gene';
 
   subtest 'row_totals', sub {
     check_tests(
@@ -175,11 +175,11 @@ subtest 'Comparing Database Rows', sub {
 
     throws_ok(
       sub { row_subtotals($dba, undef, $sql_5, $sql_3) },
-      qr/Invalid SQL statement for subtotals/, 'SQL statement format');
+      qr/Invalid SQL query for row_subtotals/, 'SQL statement format');
 
     throws_ok(
       sub { row_subtotals($dba, undef, $sql_3, $sql_5) },
-      qr/Invalid SQL statement for subtotals/, 'SQL statement format');
+      qr/Invalid SQL query for row_subtotals/, 'SQL statement format');
   };
 };
 

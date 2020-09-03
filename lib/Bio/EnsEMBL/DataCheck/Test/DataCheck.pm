@@ -281,6 +281,14 @@ sub row_subtotals {
   my ( undef, $rows1 ) = _query( $dbc1, $sql1 );
   my ( undef, $rows2 ) = _query( $dbc2, $sql2 );
 
+  if (not defined $rows1) {
+    die "Invalid SQL query for row_subtotals.\n($sql1)";
+  };
+
+  if (not defined $rows2) {
+    die "Invalid SQL query for row_subtotals.\n($sql2)";
+  };
+
   my $len1 = @$rows1;
   my $len2 = @$rows2;
 
