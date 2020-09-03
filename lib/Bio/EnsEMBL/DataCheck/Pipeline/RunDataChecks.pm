@@ -41,7 +41,7 @@ sub param_defaults {
     index_file         => undef,
     history_file       => undef,
     output_dir         => undef,
-    output_filename    => undef,
+    output_file        => undef,
     config_file        => undef,
     overwrite_files    => 1,
     datacheck_names    => [],
