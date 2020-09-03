@@ -74,8 +74,9 @@ sub tests {
   my $diag_non_term = 'Row description is not useful';
   my $sql_non_term = qq/
       SELECT phenotype_id
-      FROM phenotype
+      FROM phenotype p JOIN attrib a ON p.class_attrib_id = a.attrib_id
       WHERE lower(description) in ("none", "not provided", "not specified", "not in omim", "variant of unknown significance", "not_provided", "clinvar: phenotype not specified", "?", ".")
+      AND a.value != 'non_specified'
   /;
   is_rows_zero($self->dba, $sql_non_term, $desc_non_term, $diag_non_term);
 

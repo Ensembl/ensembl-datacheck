@@ -101,21 +101,18 @@ sub variation_funcgen_fk {
     my $funcgen_dba = $self->get_dba(undef, 'funcgen');
     skip 'No funcgen database', 1 unless defined $funcgen_dba;
 
-    my $sql = 'SELECT COUNT(name) FROM regulatory_build WHERE is_current = 1';
-    skip 'The database has no regulatory build', 1 unless sql_count($funcgen_dba, $sql);
+    {
+      my $desc = "All stable IDs in motif_feature_variation exist in funcgen database";
+      my ($mfv_ids, undef) = $self->col_array($self->dba, 'motif_feature_variation', 'feature_stable_id');
+      my $mfa = $funcgen_dba->get_MotifFeatureAdaptor();
 
-    # The following is not tractable - there are 100s of millions of
-    # rows in one table, and 10s of millions in the other. I don't
-    # have a good alternative, so I'll leave this commented out for
-    # now, so that it's clear we're not checking this table.
-    #{
-    #  my $desc = "All stable IDs in motif_feature_variation exist in funcgen database";
-    #  my ($mf_ids) = $self->col_array($funcgen_dba, 'motif_feature', 'stable_id');
-    #  my ($mfv_ids, $label) = $self->col_array($self->dba, 'motif_feature_variation', 'feature_stable_id');
-    #  my $diff = array_diff($mfv_ids, $mf_ids, $label);
-    #  my @diffs = @{$$diff{"In $label only"}};
-    #  is(scalar(@diffs), 0, $desc);
-    #}
+      my $missing = 0;
+      while (my @batch = splice @$mfv_ids, 0, 1000) {
+        my $mf = $mfa->fetch_all_by_stable_id_list(\@batch);
+        $missing += scalar(@batch) - scalar(@$mf);
+      }
+      is($missing, 0, $desc);
+    }
 
     {
       my $desc = "All stable IDs in regulatory_feature_variation exist in funcgen database";

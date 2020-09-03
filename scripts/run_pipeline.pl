@@ -164,6 +164,12 @@ with what is already there.
 
 Path to a directory in which to store full output in TAP format.
 Files will be created with the same names as the databases.
+A JSON file with the results will also be created, summarising all the
+TAP output, by species - by default, it only contains failures.
+
+=item B<-json_passed>
+
+To include passes as well as failures in the JSON file, set this parameter.
 
 =item B<-parallelize_datachecks>
 
@@ -221,9 +227,9 @@ my (
     $registry_file, $old_server_uri, $data_file_path, $config_file, $dbtype,
     @species, @taxons, @divisions, $run_all, @antispecies, @antitaxons, @dbnames,
     @names, @patterns, @groups, @datacheck_types,
-    $datacheck_dir, $index_file, $history_file, $output_dir,
+    $datacheck_dir, $index_file, $history_file, $output_dir, $json_passed,
     $parallelize_datachecks,
-    $tag, $email, $report_per_db, $report_all
+    $tag, $email, $report_per_db, $report_all,
 );
 
 GetOptions(
@@ -257,6 +263,7 @@ GetOptions(
   "index_file:s",      \$index_file,
   "history_file:s",    \$history_file,
   "output_dir:s",      \$output_dir,
+  "json_passed",       \$json_passed,
 
   "parallelize_datachecks|parallelise_datachecks", \$parallelize_datachecks,
 
@@ -376,6 +383,7 @@ $input_id{datacheck_dir} = $datacheck_dir if defined $datacheck_dir;
 $input_id{index_file} = $index_file if defined $index_file;
 $input_id{history_file} = $history_file if defined $history_file;
 $input_id{output_dir} = $output_dir if defined $output_dir;
+$input_id{json_passed} = $json_passed if defined $json_passed;
 $input_id{config_file} = $config_file if defined $config_file;
 $input_id{parallelize_datachecks} = $parallelize_datachecks if defined $parallelize_datachecks;
 $input_id{tag} = $tag if defined $tag;

@@ -1,5 +1,5 @@
 1	1	schema_type	funcgen
-2	\N	schema_version	101
+2	\N	schema_version	102
 3	\N	patch	patch_87_88_a.sql|schema_version
 4	\N	patch	patch_87_88_b.sql|seq_region_name_255
 5	\N	patch	patch_87_88_c.sql|sample_regulatory_feature_id field for regulatory build
@@ -132,3 +132,5 @@
 132	\N	patch	patch_99_100_d.sql|update type column on external_db table
 133	\N	patch	patch_99_100_e.sql|Make some foreign keys not mandatory
 134	\N	patch	patch_100_101_a.sql|schema_version
+135	\N	patch	patch_101_102_a.sql|schema_version
+136	\N	patch	patch_101_102_b.sql|Drop underlying_structure table

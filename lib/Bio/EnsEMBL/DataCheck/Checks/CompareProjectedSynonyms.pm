@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareProjectedSynonyms',
   DESCRIPTION    => 'Compare Projected Synonyms counts between two databases, categorised by db_name coming from the external_db',
-  GROUPS         => ['compare_core', 'xref'],
+  GROUPS         => ['compare_core', 'xref', 'xref_name_projection'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['xref','external_db','external_synonym','object_xref']
@@ -51,7 +51,7 @@ sub tests {
 sub projected_synonyms_counts {
   my ($self, $old_dba) = @_;
 
-  my $threshold = 0.80;
+  my $threshold = 0.66;
 
   my $desc = "Checking Projected Synonyms between ".
              $self->dba->dbc->dbname.

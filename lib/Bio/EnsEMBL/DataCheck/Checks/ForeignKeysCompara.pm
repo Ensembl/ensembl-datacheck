@@ -25,7 +25,7 @@ use Moose;
 use Path::Tiny;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/repo_location/;
+use Bio::EnsEMBL::DataCheck::Utils qw/repo_location is_compara_ehive_db/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -95,14 +95,9 @@ sub compara_fk {
   # in the "table.sql" file.
 
   # Standard FK constraints that are missing from "table.sql".
-  fk($self->dba, 'species_tree_node', 'parent_id', 'species_tree_node', 'node_id');
-  fk($self->dba, 'species_tree_node', 'root_id', 'species_tree_node', 'node_id');
   fk($self->dba, 'species_tree_node', 'root_id', 'species_tree_root');
 
-  fk($self->dba, 'genomic_align_tree', 'parent_id', 'genomic_align_tree', 'node_id');
   fk($self->dba, 'genomic_align_tree', 'root_id', 'genomic_align_tree', 'node_id');
-  fk($self->dba, 'genomic_align_tree', 'left_node_id', 'genomic_align_tree', 'node_id');
-  fk($self->dba, 'genomic_align_tree', 'right_node_id', 'genomic_align_tree', 'node_id');
 
   # Cases in which we want to check for the reverse direction of the FK constraint
   fk($self->dba, 'family',              'family_id',              'family_member');
@@ -110,86 +105,14 @@ sub compara_fk {
   fk($self->dba, 'synteny_region',      'synteny_region_id',      'dnafrag_region');
   fk($self->dba, 'genomic_align_block', 'genomic_align_block_id', 'genomic_align');
 
-  # Reverse direction FK constraint, but not applicable to compara_master dbs
-  if ($self->dba->dbc->dbname !~ /_master/) {
+  # Reverse direction FK constraint, but not applicable to compara_master or pipeline dbs
+  if ($self->dba->dbc->dbname !~ /_master/ && is_compara_ehive_db($self->dba) != 1) {
     fk($self->dba, 'method_link', 'method_link_id', 'method_link_species_set');
     fk($self->dba, 'species_set', 'species_set_id', 'method_link_species_set');
     fk($self->dba, 'genome_db',   'genome_db_id',   'species_set',             undef, 'name != "ancestral_sequences"' );
   }
 
   # Cases in which we need to restrict to a subset of rows, using a constraint
-  my $genomic_align_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id < 100 AND
-        class LIKE "GenomicAlign%" AND
-        type NOT LIKE "CACTUS_HAL%"
-    )
-  /;
-  fk($self->dba, 'genomic_align',       'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $genomic_align_constraint);
-  fk($self->dba, 'genomic_align_block', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $genomic_align_constraint);
-
-  my $constrained_element_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id < 100 AND
-        class LIKE "ConstrainedElement.%"
-    )
-  /;
-  fk($self->dba, 'constrained_element', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $constrained_element_constraint);
-
-  my $species_tree_root_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id < 100 AND
-        (class LIKE 'GenomicAlignTree%' OR class LIKE '%multiple_alignment')
-    )
-  /;
-  fk($self->dba, 'species_tree_root',       'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $species_tree_root_constraint);
-
-  my $synteny_region_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id > 100 AND
-        method_link_id < 200
-    )
-  /;
-  fk($self->dba, 'synteny_region', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $synteny_region_constraint);
-
-  my $homology_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id > 200 AND
-        method_link_id < 300
-    )
-  /;
-  fk($self->dba, 'homology', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $homology_constraint);
-
-  my $family_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id > 300 AND
-        method_link_id < 400
-    )
-  /;
-  fk($self->dba, 'family', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $family_constraint);
-
-  my $tree_constraint = q/
-    method_link_id IN (
-      SELECT method_link_id FROM method_link
-      WHERE
-        method_link_id > 400 AND
-        method_link_id < 500
-    )
-  /;
-  fk($self->dba, 'gene_tree_root',    'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $tree_constraint);
-  fk($self->dba, 'species_tree_root', 'method_link_species_set_id', 'method_link_species_set', 'method_link_species_set_id', $tree_constraint);
 
   my $hom_stats_constraint = q/
     tree_type = 'tree' AND 

@@ -31,7 +31,7 @@ use feature 'say';
 
 require Exporter;
 our @ISA       = qw( Exporter );
-our @EXPORT_OK = qw( repo_location sql_count array_diff hash_diff );
+our @EXPORT_OK = qw( repo_location sql_count array_diff hash_diff is_compara_ehive_db );
 
 use File::Spec::Functions qw/catdir splitdir/;
 
@@ -187,8 +187,14 @@ sub hash_diff {
 
   foreach my $key (keys %$hash_1) {
     if (exists $$hash_2{$key}) {
-      if ($$hash_1{$key} ne $$hash_2{$key}) {
-        $different_values{$key} = [$$hash_1{$key}, $$hash_2{$key}];
+      if (defined $$hash_1{$key} || defined $$hash_2{$key}) {
+        if (
+          (defined $$hash_1{$key} && ! defined $$hash_2{$key}) ||
+          (defined $$hash_2{$key} && ! defined $$hash_1{$key}) ||
+          ($$hash_1{$key} ne $$hash_2{$key})
+        ) {
+          $different_values{$key} = [$$hash_1{$key}, $$hash_2{$key}];
+        }
       }
     } else {
       $hash_1_only{$key} = $$hash_1{$key};
@@ -210,6 +216,31 @@ sub hash_diff {
   );
 
   return (\%diff);
+}
+
+=item B<is_compara_ehive_db>
+
+is_compara_ehive_db($dba);
+
+Takes the database adaptor and returns 1 if the database is an ehive
+pipeline database.
+
+=back
+
+=cut
+sub is_compara_ehive_db {
+  my $dba = shift;
+  my $helper = $dba->dbc->sql_helper;
+
+  my $dbname = $dba->dbc->dbname;
+  my $sql = qq/
+    SELECT COUNT(*)
+      FROM information_schema.tables
+    WHERE table_name = "job"
+      AND table_schema = "$dbname"
+  /;
+
+  return $helper->execute_single_result(-SQL =>$sql);
 }
 
 1;

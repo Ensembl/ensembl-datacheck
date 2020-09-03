@@ -116,15 +116,17 @@ sub tests {
     
     my @counts = ($family_count, $genetree_count, $cafetrees_count, $genetree_count, $genetree_count, $polyploid_count);
 
-    if ( $division =~ /vertebrates/ && $collection =~ /default/ ) {
-      my $desc_5 = "The sum of entries for families in gene_member_hom_stats > 0 for the $collection collection";
-      cmp_ok( $sums->[0]->{sum_families}, ">", 0, $desc_5 );
-      my $desc_6 = "There are entries in the family table";
-      cmp_ok( $counts[0], ">", 0, $desc_6 );
-      my $desc_7 = "Found expected entries in gene_member_hom_stats with families > 0 for the $collection collection";
-      my $desc_8 = "There were no unexpected entries in gene_member_hom_stats with families > 0 for the $collection collection";
-      is( $sums->[0]->{sum_families} > 0, $counts[0] > 0, $desc_7 );
-    }
+    #Test for families commented out for duration of compara production freeze, this may return in the future
+
+    # if ( $division =~ /vertebrates/ && $collection =~ /default/ ) {
+    #   my $desc_5 = "The sum of entries for families in gene_member_hom_stats > 0 for the $collection collection";
+    #   cmp_ok( $sums->[0]->{sum_families}, ">", 0, $desc_5 );
+    #   my $desc_6 = "There are entries in the family table";
+    #   cmp_ok( $counts[0], ">", 0, $desc_6 );
+    #   my $desc_7 = "Found expected entries in gene_member_hom_stats with families > 0 for the $collection collection";
+    #   my $desc_8 = "There were no unexpected entries in gene_member_hom_stats with families > 0 for the $collection collection";
+    #   is( $sums->[0]->{sum_families} > 0, $counts[0] > 0, $desc_7 );
+    # }
     if ( $division =~ /vertebrates/ || $collection =~ /default/ ) {
       my $desc_5 = "The sum of entries for gene_trees in gene_member_hom_stats > 0 for the $collection collection";
       cmp_ok( $sums->[0]->{sum_gene_trees}, ">", 0, $desc_5 );

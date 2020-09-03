@@ -116,6 +116,10 @@ sub write_output {
     report_per_db => $self->param('report_per_db'),
     report_all    => $self->param('report_all'),
 
+    tap_to_json     => $self->param('tap_to_json'),
+    json_passed     => $self->param('json_passed'),
+    json_by_species => $self->param('json_by_species'),
+
     submission_job_id => $self->input_job->dbID,
   };
   $self->dataflow_output_id($params, 1);
