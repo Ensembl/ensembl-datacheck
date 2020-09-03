@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareGOXref',
   DESCRIPTION    => 'Compare GO xref counts between two databases, categorised by source',
-  GROUPS         => ['compare_core', 'xref'],
+  GROUPS         => ['compare_core', 'xref', 'xref_go_projection'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core']
 };

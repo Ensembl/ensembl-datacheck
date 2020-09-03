@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareProjectedGOXrefs',
   DESCRIPTION    => 'Compare GO xref counts between two databases, categorised by source coming from the info_type',
-  GROUPS         => ['compare_core', 'xref'],
+  GROUPS         => ['compare_core', 'xref', 'xref_go_projection'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['xref']
@@ -52,7 +52,7 @@ sub go_xref_counts {
   my ($self, $old_dba) = @_;
 
   my $minimum_count = 500;
-  my $threshold = 0.80;
+  my $threshold = 0.66;
 
   my $desc = "Consistent GO xref counts between ".
              $self->dba->dbc->dbname.

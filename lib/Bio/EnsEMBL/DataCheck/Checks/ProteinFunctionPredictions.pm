@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::HGNCNumeric;
+package Bio::EnsEMBL::DataCheck::Checks::ProteinFunctionPredictions;
 
 use warnings;
 use strict;
@@ -28,27 +28,22 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'HGNCNumeric',
-  DESCRIPTION => 'HGNC xrefs do not have the accession as the display_label',
-  GROUPS      => ['core', 'xref'],
-  TABLES      => ['external_db', 'object_xref', 'xref'],
-  PER_DB      => 1
+  NAME        => 'ProteinFunctionPredictions',
+  DESCRIPTION => 'prediction_matrix is not NULL or empty',
+  GROUPS      => ['variation'],
+  DB_TYPES    => ['variation'],
+  TABLES      => ['protein_function_predictions']
 };
 
 sub tests {
   my ($self) = @_;
-
-  my $desc_1 = "HGNC xrefs do not have the accession as the display_label";
-  my $sql_1  = qq/
-    SELECT COUNT(*) FROM
-      object_xref ox INNER JOIN
-      xref x USING (xref_id) INNER JOIN
-      external_db e USING (external_db_id)
-    WHERE
-      e.db_name = 'HGNC' AND
-      x.dbprimary_acc = x.display_label
+  my $desc = 'prediction_matrix is NOT NULL or empty';
+  my $sql  = qq/
+    SELECT COUNT(*) FROM protein_function_predictions
+    WHERE prediction_matrix IS NULL OR prediction_matrix = ''
   /;
-  is_rows_zero($self->dba, $sql_1, $desc_1);
+  is_rows_zero($self->dba, $sql, $desc);
+
 }
 
 1;

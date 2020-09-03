@@ -80,10 +80,12 @@ sub tests {
   my $sql_3  = qq/
     SELECT tn.translation_id, tn.stable_id FROM
       translation tn INNER JOIN
-      exon e ON tn.start_exon_id = e.exon_id INNER JOIN
+      exon_transcript et USING (transcript_id) INNER JOIN
+      exon e USING (exon_id) INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
     WHERE
+      tn.start_exon_id = e.exon_id AND
       (CAST(e.seq_region_end AS SIGNED) - CAST(e.seq_region_start AS SIGNED)) + 1 < tn.seq_start AND
       e.seq_region_start < e.seq_region_end AND
       cs.species_id = $species_id
@@ -95,10 +97,12 @@ sub tests {
   my $sql_4  = qq/
     SELECT tn.translation_id, tn.stable_id FROM
       translation tn INNER JOIN
-      exon e ON tn.end_exon_id = e.exon_id INNER JOIN
+      exon_transcript et USING (transcript_id) INNER JOIN
+      exon e USING (exon_id) INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
     WHERE
+      tn.end_exon_id = e.exon_id AND
       (CAST(e.seq_region_end AS SIGNED) - CAST(e.seq_region_start AS SIGNED)) + 1 < tn.seq_end AND
       e.seq_region_start < e.seq_region_end AND
       cs.species_id = $species_id
@@ -110,10 +114,12 @@ sub tests {
   my $sql_5  = qq/
     SELECT tn.translation_id, tn.stable_id FROM
       translation tn INNER JOIN
-      exon e ON tn.start_exon_id = e.exon_id INNER JOIN
+      exon_transcript et USING (transcript_id) INNER JOIN
+      exon e USING (exon_id) INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
     WHERE
+      tn.start_exon_id = e.exon_id AND
       tn.start_exon_id <> tn.end_exon_id AND
       end_phase = -1 AND
       cs.species_id = $species_id
@@ -125,10 +131,12 @@ sub tests {
   my $sql_6  = qq/
     SELECT tn.translation_id, tn.stable_id FROM
       translation tn INNER JOIN
-      exon e ON tn.end_exon_id = e.exon_id INNER JOIN
+      exon_transcript et USING (transcript_id) INNER JOIN
+      exon e USING (exon_id) INNER JOIN
       seq_region sr USING (seq_region_id) INNER JOIN
       coord_system cs USING (coord_system_id)
     WHERE
+      tn.end_exon_id = e.exon_id AND
       tn.start_exon_id <> tn.end_exon_id AND
       phase = -1 AND
       cs.species_id = $species_id

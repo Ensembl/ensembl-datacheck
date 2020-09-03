@@ -31,7 +31,7 @@ use constant {
   DESCRIPTION => 'Controlled tables are consistent with production database',
   GROUPS      => ['controlled_tables', 'variation'],
   DB_TYPES    => ['variation'],
-  TABLES      => ['attrib', 'attrib_set'],
+  TABLES      => ['attrib', 'attrib_set', 'attrib_type'],
   PER_DB      => 1
 };
 

@@ -25,36 +25,33 @@ use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
-
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'GOXrefEvidence',
   DESCRIPTION => 'All GO xrefs have an evidence',
-  GROUPS         => ['core', 'protein_features', 'xref', 'xref_go_projection'],
-  DB_TYPES       => ['core'],
-  TABLES         => ['coord_system', 'external_db', 'object_xref', 'ontology_xref', 'seq_region', 'transcript', 'xref']
+  GROUPS      => ['xref', 'core'],
+  DB_TYPES    => ['core'],
+  TABLES      => ['object_xref', 'ontology_xref', 'xref'],
+  PER_DB      => 1
 };
 
 sub tests {
   my ($self) = @_;
-  my $species_id = $self->dba->species_id;
 
+  # We deliberately do not join the external_db table and filter on
+  # db_name = 'GO', because there is no (usable) index on that field,
+  # and the query takes an exceptionally long time on collection dbs,
+  # which have millions of xref rows.
   my $desc = "All GO xrefs have an evidence";
   my $sql  = qq/
     SELECT COUNT(*) FROM
-      transcript t INNER JOIN
-      object_xref ox ON t.transcript_id = ox.ensembl_id INNER JOIN
-      xref x using (xref_id) INNER JOIN
-      external_db e using (external_db_id) LEFT OUTER JOIN
-      ontology_xref oox using (object_xref_id) INNER JOIN
-      seq_region USING (seq_region_id) INNER JOIN
-      coord_system USING (coord_system_id)
+      object_xref ox INNER JOIN
+      xref x using (xref_id) LEFT OUTER JOIN
+      ontology_xref oox using (object_xref_id)
     WHERE
-      ox.ensembl_object_type = 'Transcript' AND
-      e.db_name = 'GO' AND
-      oox.object_xref_id IS NULL AND
-      species_id = $species_id
+      x.dbprimary_acc = 'GO:%' AND
+      oox.object_xref_id IS NULL
     /;
     is_rows_zero($self->dba, $sql, $desc);
 }
