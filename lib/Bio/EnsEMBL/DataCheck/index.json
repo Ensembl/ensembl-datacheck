@@ -2221,15 +2221,6 @@
       "name" : "SpeciesTaxonomy",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesTaxonomy"
    },
-   "StableIDUnique" : {
-      "datacheck_type" : "critical",
-      "description" : "Stable IDs are unique, both within a database, and across all databases in the registry",
-      "groups" : [
-         "multi_db"
-      ],
-      "name" : "StableIDUnique",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIDUnique"
-   },
    "StableIdDisplayXref" : {
       "datacheck_type" : "critical",
       "description" : "Genes/Transcript display_xref does not have display_label set as stable_id",
