@@ -39,9 +39,10 @@ sub tests {
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
-  my $taxon_id = $mca->single_value_by_key('species.taxonomy_id');
-  my $sci_name = $mca->single_value_by_key('species.scientific_name');
-  my $strain   = $mca->single_value_by_key('species.strain');
+  my $taxon_id    = $mca->single_value_by_key('species.taxonomy_id');
+  my $sp_taxon_id = $mca->single_value_by_key('species.species_taxonomy_id');
+  my $sci_name    = $mca->single_value_by_key('species.scientific_name');
+  my $strain      = $mca->single_value_by_key('species.strain');
 
   # In collection dbs, sometimes a strain or the accession is added to the
   # scientific name, to disambiguate in the case of multiple strains
@@ -105,6 +106,14 @@ sub tests {
         }
         is($sci_name, $tax_name, $desc_3);
         diag('Species name matches alias, not scientific name') if $alias;
+      }
+
+      if (defined $sp_taxon_id) {
+        my $desc_4 = "Species Taxonomy ID ($sp_taxon_id) is valid";
+        my $desc_5 = "Species Taxonomy ID ($sp_taxon_id) is at 'species' level";
+        my $sp_node = $tna->fetch_by_taxon_id($sp_taxon_id);
+        ok(defined $sp_node, $desc_4);
+        is($sp_node->rank, 'species', $desc_5);
       }
     }
   }

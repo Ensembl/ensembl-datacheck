@@ -1784,6 +1784,17 @@
       "name" : "NoDataOnGenomeComponents",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NoDataOnGenomeComponents"
    },
+   "ObjectXrefNull" : {
+      "datacheck_type" : "advisory",
+      "description" : "Object_xrefs should be linked to an analysis",
+      "groups" : [
+         "brc4_core",
+         "core",
+         "xref"
+      ],
+      "name" : "ObjectXrefNull",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ObjectXrefNull"
+   },
    "PepstatsAttributes" : {
       "datacheck_type" : "critical",
       "description" : "All translations have peptide statistics",
@@ -1829,6 +1840,17 @@
       ],
       "name" : "PhenotypeMultipleSeqRegions",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PhenotypeMultipleSeqRegions"
+   },
+   "PlastidsAnnotated" : {
+      "datacheck_type" : "critical",
+      "description" : "Plastid seq_regions have appropriate attribute",
+      "groups" : [
+         "assembly",
+         "core",
+         "brc4_core"
+      ],
+      "name" : "PlastidsAnnotated",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PlastidsAnnotated"
    },
    "PolyploidAttribs" : {
       "datacheck_type" : "critical",
