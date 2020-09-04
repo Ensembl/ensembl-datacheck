@@ -1193,7 +1193,7 @@
    },
    "ExonRank" : {
       "datacheck_type" : "critical",
-      "description" : "Exon/transcript links are not duplicated, and rank=1 exons exist for every transcript",
+      "description" : "Exon ranks are unique and sequential",
       "groups" : [
          "core",
          "brc4_core",

@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ExonRank',
-  DESCRIPTION => 'Exon/transcript links are not duplicated, and rank=1 exons exist for every transcript',
+  DESCRIPTION => 'Exon ranks are unique and sequential',
   GROUPS      => ['core', 'brc4_core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   PER_DB      => 1
@@ -40,9 +40,10 @@ sub tests {
 
   my $desc_1 = 'No duplicate exon/transcript links';
   my $sql_1  = qq/
-    SELECT  exon_id,
-            transcript_id,
-            GROUP_CONCAT(`rank` SEPARATOR '-')
+    SELECT
+      exon_id,
+      transcript_id,
+      GROUP_CONCAT(`rank` SEPARATOR '-')
     FROM exon_transcript
     GROUP BY exon_id, transcript_id
     HAVING COUNT(`rank`) > 1
@@ -53,9 +54,21 @@ sub tests {
   my $sql_2  = qq/
     SELECT stable_id FROM transcript
     WHERE transcript_id NOT IN
-	  (SELECT transcript_id FROM exon_transcript WHERE rank = 1)
+	  (SELECT transcript_id FROM exon_transcript WHERE `rank` = 1)
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
+
+  my $desc_3 = 'Exon ranks are sequential';
+  my $sql_3  = qq/
+    SELECT
+      transcript_id,
+      count(`rank`) AS exon_count,
+      max(`rank`) AS max_rank
+    FROM exon_transcript
+    GROUP BY transcript_id
+    HAVING exon_count <> max_rank;
+  /;
+  is_rows_zero($self->dba, $sql_3, $desc_3);
 }
 
 1;
