@@ -283,6 +283,11 @@ sub geneset_details {
     WHERE
       cs.name <> 'lrg' AND
       cs.species_id = ?
+    ORDER BY
+      gene_stable_id, 
+      transcript_stable_id, 
+      translation_stable_id, 
+      exon_stable_id
   /;
 
   my $geneset_details =
