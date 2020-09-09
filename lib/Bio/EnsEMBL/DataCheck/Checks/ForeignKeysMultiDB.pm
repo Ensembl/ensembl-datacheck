@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeysMultiDB',
   DESCRIPTION => 'Foreign key relationships between tables from different databases are not violated',
-  GROUPS      => ['funcgen', 'schema', 'variation'],
+  GROUPS      => ['core_sync', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['funcgen', 'variation'],
   FORCE       => 1
 };
