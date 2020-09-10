@@ -168,7 +168,11 @@ sub load_config {
     die "Config file does not exist" unless -e $self->config_file;
 
     my $json = path($self->config_file)->slurp;
-    my %config = %{ JSON->new->decode($json) };
+    my %config;
+    eval {
+      %config = %{ JSON->new->decode($json) };
+    };
+    die $self->config_file . " is not a valid json file:\n$@" if $@;
 
     foreach my $key (keys %{$config{'datacheck_params'}}) {
       if (!exists $params{$key}) {
