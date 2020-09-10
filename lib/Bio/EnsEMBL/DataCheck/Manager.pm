@@ -364,9 +364,21 @@ sub read_history {
   my %history = ();
 
   if (-s $self->history_file) {
-    # slurp gets an exclusive lock on the file before reading it.
-    my $json = path($self->history_file)->slurp;
-    %history = %{ JSON->new->decode($json) };
+    # 'slurp' gets an exclusive lock on the file before reading it.
+    # But sometimes we get flock problems, if a bunch of datachecks
+    # are all completing very quickly, so have a brief pause to
+    # calm things down a bit. That doesn't always work, so give
+    # it a second go if the first attempt fails.
+    eval {
+      sleep(2);
+      my $json = path($self->history_file)->slurp;
+      %history = %{ JSON->new->decode($json) };
+    };
+    if ($@) {
+      sleep(2);
+      my $json = path($self->history_file)->slurp;
+      %history = %{ JSON->new->decode($json) };
+    }
 
     foreach (@$datachecks) {
       my $name = $_->name;
