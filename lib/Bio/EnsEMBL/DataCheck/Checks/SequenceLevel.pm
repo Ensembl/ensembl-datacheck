@@ -83,16 +83,18 @@ sub tests {
   my $desc_4 = 'Contigs shared between assemblies have null versions';
   my $diag_4 = 'Versioned contig in multiple assemblies';
   my $sql_4  = qq/
-    SELECT sr.name FROM
+    SELECT cs2.version FROM
       assembly a INNER JOIN
       seq_region sr on a.cmp_seq_region_id = sr.seq_region_id INNER JOIN
-      coord_system cs on sr.coord_system_id = cs.coord_system_id
+      coord_system cs on sr.coord_system_id = cs.coord_system_id INNER JOIN
+      seq_region sr2 on a.asm_seq_region_id = sr2.seq_region_id INNER JOIN
+      coord_system cs2 on sr2.coord_system_id = cs2.coord_system_id
     WHERE
       cs.name = 'contig' AND
       cs.version IS NOT NULL AND
-      species_id = $species_id
-    GROUP BY sr.name
-    HAVING COUNT(*) > 1
+      cs.species_id = $species_id
+    GROUP BY cs2.version
+    HAVING COUNT(DISTINCT cs2.version) > 1
   /;
   is_rows_zero($self->dba, $sql_4, $desc_4, $diag_4);
 }

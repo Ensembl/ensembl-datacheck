@@ -283,6 +283,16 @@
       "name" : "CheckEmptyLeavesTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees"
    },
+   "CheckFamiliesMLSS" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of families MLSSs are present",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "CheckFamiliesMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFamiliesMLSS"
+   },
    "CheckFlatProteinTrees" : {
       "datacheck_type" : "critical",
       "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
@@ -312,6 +322,16 @@
       ],
       "name" : "CheckGeneGainLossData",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
+   },
+   "CheckGeneTreeRootMLSS" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of gene_tree_root MLSSs are present",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "CheckGeneTreeRootMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneTreeRootMLSS"
    },
    "CheckGenomicAlignGenomeDBs" : {
       "datacheck_type" : "critical",
@@ -343,6 +363,16 @@
       "name" : "CheckGenomicAlignTreeTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignTreeTable"
    },
+   "CheckGenomicAlignments" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of genomic alignments have been merged",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "CheckGenomicAlignments",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGenomicAlignments"
+   },
    "CheckHomology" : {
       "datacheck_type" : "critical",
       "description" : "Check homology_id are all one-to-many for homology_members",
@@ -352,6 +382,16 @@
       ],
       "name" : "CheckHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
+   },
+   "CheckHomologyMLSS" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of homologys MLSSs are present",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "CheckHomologyMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
    },
    "CheckJSONObjects" : {
       "datacheck_type" : "critical",
@@ -506,9 +546,20 @@
       "name" : "CheckSpeciesTreeNodeAttr",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr"
    },
+   "CheckSpeciesTrees" : {
+      "datacheck_type" : "critical",
+      "description" : "The expected number of species trees have been merged",
+      "groups" : [
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments"
+      ],
+      "name" : "CheckSpeciesTrees",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTrees"
+   },
    "CheckSynteny" : {
       "datacheck_type" : "critical",
-      "description" : "Every synteny_region_id should be seen more than once",
+      "description" : "Every synteny_region_id should be seen more than once and correspond to an mlss",
       "groups" : [
          "compara",
          "compara_syntenies"
@@ -599,7 +650,8 @@
       "description" : "Compare GO xref counts between two databases, categorised by source",
       "groups" : [
          "compare_core",
-         "xref"
+         "xref",
+         "xref_go_projection"
       ],
       "name" : "CompareGOXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGOXref"
@@ -621,6 +673,19 @@
       ],
       "name" : "CompareMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMSANames"
+   },
+   "CompareMetaKeys" : {
+      "datacheck_type" : "critical",
+      "description" : "Ensure that appropriate meta_keys are updated when the assembly or geneset changes",
+      "groups" : [
+         "assembly",
+         "brc4_core",
+         "core",
+         "geneset",
+         "meta"
+      ],
+      "name" : "CompareMetaKeys",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMetaKeys"
    },
    "CompareOntologyTerm" : {
       "datacheck_type" : "advisory",
@@ -645,7 +710,8 @@
       "description" : "Compare GO xref counts between two databases, categorised by source coming from the info_type",
       "groups" : [
          "compare_core",
-         "xref"
+         "xref",
+         "xref_go_projection"
       ],
       "name" : "CompareProjectedGOXrefs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGOXrefs"
@@ -655,7 +721,8 @@
       "description" : "Compare Projected Gene Name counts between two databases",
       "groups" : [
          "compare_core",
-         "xref"
+         "xref",
+         "xref_name_projection"
       ],
       "name" : "CompareProjectedGeneNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedGeneNames"
@@ -665,7 +732,8 @@
       "description" : "Compare Projected Synonyms counts between two databases, categorised by db_name coming from the external_db",
       "groups" : [
          "compare_core",
-         "xref"
+         "xref",
+         "xref_name_projection"
       ],
       "name" : "CompareProjectedSynonyms",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedSynonyms"
@@ -853,6 +921,20 @@
       "name" : "ControlledMetaKeys",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys"
    },
+   "ControlledTablesCompara" : {
+      "datacheck_type" : "critical",
+      "description" : "Controlled tables are consistent with compara master database",
+      "groups" : [
+         "controlled_tables",
+         "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
+         "compara_master"
+      ],
+      "name" : "ControlledTablesCompara",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledTablesCompara"
+   },
    "ControlledTablesCore" : {
       "datacheck_type" : "critical",
       "description" : "Controlled tables are consistent with production database",
@@ -902,6 +984,19 @@
       ],
       "name" : "DNAEmpty",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAEmpty"
+   },
+   "DNAFragCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Top-level sequences in the core database match dnafrags in compara database",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
+         "compara_master"
+      ],
+      "name" : "DNAFragCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
    },
    "DataFilesExist" : {
       "datacheck_type" : "critical",
@@ -980,7 +1075,8 @@
       "description" : "At least one gene name exists",
       "groups" : [
          "core",
-         "xref"
+         "xref",
+         "xref_name_projection"
       ],
       "name" : "DisplayXrefExists",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExists"
@@ -1292,6 +1388,19 @@
       "name" : "GeneTreeHighlighting",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneTreeHighlighting"
    },
+   "GenomeDBCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments",
+         "compara_gene_trees",
+         "compara_syntenies",
+         "compara_master"
+      ],
+      "name" : "GenomeDBCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
+   },
    "GenomeStatistics" : {
       "datacheck_type" : "critical",
       "description" : "Genome statistics are present and correct",
@@ -1308,7 +1417,8 @@
       "description" : "HGNC-derived gene names are not given to multiple genes",
       "groups" : [
          "core",
-         "xref"
+         "xref",
+         "xref_name_projection"
       ],
       "name" : "HGNCMultipleGenes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCMultipleGenes"
@@ -1773,6 +1883,15 @@
       ],
       "name" : "ProteinFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinFeatures"
+   },
+   "ProteinFunctionPredictions" : {
+      "datacheck_type" : "critical",
+      "description" : "prediction_matrix is not NULL or empty",
+      "groups" : [
+         "variation"
+      ],
+      "name" : "ProteinFunctionPredictions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ProteinFunctionPredictions"
    },
    "ProteinTranslation" : {
       "datacheck_type" : "critical",

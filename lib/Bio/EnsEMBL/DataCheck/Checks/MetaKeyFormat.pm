@@ -55,6 +55,7 @@ sub tests {
     'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates|Viruses)',
     'species.production_name'        => '_?[a-z0-9]+_[a-z0-9_]+',
     'species.url'                    => '[A-Z_][a-z0-9]+_[A-Za-z0-9_.]+',
+    'species.db_name'                => '_?[a-z0-9]+_[a-z0-9_]+',
     'web_accession_type'             => '(GenBank Assembly ID|EMBL\-Bank|WGS Master)',
     'web_accession_source'           => '(NCBI|ENA|DDBJ)',
   );
