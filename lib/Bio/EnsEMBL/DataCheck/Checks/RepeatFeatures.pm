@@ -44,6 +44,11 @@ sub tests {
       skip "Repeat features not mandatory for species in collection dbs", 1;
     }
 
+    my $mca = $self->dba->get_adaptor('MetaContainer');
+    if ($mca->get_division eq 'EnsemblViruses') {
+      skip "Repeat features not mandatory for viruses", 1;
+    }
+
     # Don't need to worry about species_id, because we don't do this
     # query for collection dbs...
     my @logic_names = ('dust', 'trf');
