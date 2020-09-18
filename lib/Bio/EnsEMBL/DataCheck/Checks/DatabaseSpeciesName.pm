@@ -29,7 +29,6 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DatabaseSpeciesName',
   DESCRIPTION    => 'The species.production_name meta key matches the DB name',
-  DATACHECK_TYPE => 'advisory',
   GROUPS         => ['core', 'corelike', 'funcgen', 'meta', 'variation'],
   DB_TYPES       => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   TABLES         => ['meta'],
