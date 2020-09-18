@@ -91,6 +91,8 @@ sub tests {
       my $desc = "Meta key '$geneset_meta_key' is different between $compare_dbs";
       isnt($geneset, $old_geneset, $desc);
     }
+
+    $old_dba->dbc->disconnect_if_idle();
   }
 }
 

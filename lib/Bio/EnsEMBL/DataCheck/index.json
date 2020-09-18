@@ -972,6 +972,7 @@
       "datacheck_type" : "critical",
       "description" : "Requisite core-like tables are identical to those in the core database",
       "groups" : [
+         "core_sync",
          "corelike"
       ],
       "name" : "CoreTables",
@@ -1001,10 +1002,11 @@
       "description" : "Top-level sequences in the core database match dnafrags in compara database",
       "groups" : [
          "compara",
-         "compara_genome_alignments",
          "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
          "compara_syntenies",
-         "compara_master"
+         "core_sync"
       ],
       "name" : "DNAFragCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
@@ -1289,6 +1291,7 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships between tables from different databases are not violated",
       "groups" : [
+         "core_sync",
          "funcgen",
          "schema",
          "variation"
@@ -1408,10 +1411,11 @@
       "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
       "groups" : [
          "compara",
-         "compara_genome_alignments",
          "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
          "compara_syntenies",
-         "compara_master"
+         "core_sync"
       ],
       "name" : "GenomeDBCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
@@ -1610,8 +1614,9 @@
       "description" : "The meta_coord table is correctly populated",
       "groups" : [
          "annotation",
-         "core",
          "brc4_core",
+         "core",
+         "core_sync",
          "corelike",
          "funcgen",
          "geneset",
@@ -1670,6 +1675,7 @@
       "datacheck_type" : "critical",
       "description" : "Assembly and species meta keys are identical between core and core-like databases",
       "groups" : [
+         "core_sync",
          "corelike",
          "meta"
       ],
