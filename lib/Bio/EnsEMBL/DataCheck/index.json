@@ -1041,7 +1041,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseCollation"
    },
    "DatabaseSpeciesName" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "The species.production_name meta key matches the DB name",
       "groups" : [
          "core",
