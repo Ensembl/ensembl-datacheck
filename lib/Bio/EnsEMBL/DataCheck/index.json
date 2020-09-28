@@ -2465,6 +2465,34 @@
       "name" : "VersionedGenesBRC4",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenesBRC4"
    },
+   "WhitespaceAdvisory" : {
+      "datacheck_type" : "advisory",
+      "description" : "Fields do not contain tabs or newlines (\"\\t\", \"\\n\")",
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
+      "name" : "WhitespaceAdvisory",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::WhitespaceAdvisory"
+   },
+   "WhitespaceCritical" : {
+      "datacheck_type" : "critical",
+      "description" : "Fields do not contain carriage returns (\"\\r\")",
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
+      "name" : "WhitespaceCritical",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::WhitespaceCritical"
+   },
    "XrefFormat" : {
       "datacheck_type" : "critical",
       "description" : "Xref accessions, labels, and descriptions are validly formatted",
