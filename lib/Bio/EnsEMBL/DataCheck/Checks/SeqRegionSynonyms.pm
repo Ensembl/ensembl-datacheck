@@ -53,6 +53,7 @@ sub tests {
     WHERE
       sr1.name = ss2.synonym
       AND sr1.seq_region_id != sr2.seq_region_id
+      AND cs1.name = cs2.name
       AND cs1.version = cs2.version
       AND cs1.species_id = $species_id
       AND cs2.species_id = $species_id
