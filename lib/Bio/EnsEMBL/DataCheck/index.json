@@ -194,6 +194,8 @@
       "datacheck_type" : "critical",
       "description" : "Set columns do not have empty string values (unless default)",
       "groups" : [
+         "core",
+         "corelike",
          "variation"
       ],
       "name" : "BlankSets",

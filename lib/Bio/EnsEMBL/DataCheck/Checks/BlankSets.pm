@@ -30,8 +30,8 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'BlankSets',
   DESCRIPTION => 'Set columns do not have empty string values (unless default)',
-  GROUPS      => ['variation'],
-  DB_TYPES    => ['variation']
+  GROUPS      => ['core', 'corelike', 'variation'],
+  DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq', 'variation']
 };
 
 sub tests {
