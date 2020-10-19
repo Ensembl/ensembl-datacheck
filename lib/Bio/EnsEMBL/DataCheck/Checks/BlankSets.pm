@@ -43,7 +43,7 @@ sub tests {
     WHERE
       TABLE_SCHEMA = database() AND
       DATA_TYPE = 'set' AND 
-      COLUMN_DEFAULT <> ''
+      (COLUMN_DEFAULT <> '' OR COLUMN_DEFAULT IS NULL)
   /;
 
   my $sets = $self->dba->dbc->sql_helper->execute(-SQL => $set_sql);
