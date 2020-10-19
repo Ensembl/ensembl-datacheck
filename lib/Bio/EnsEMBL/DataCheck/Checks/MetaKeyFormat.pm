@@ -52,6 +52,7 @@ sub tests {
     'genebuild.start_date'           => '\d{4}\-\d{2}\-\S+',
     'patch'                          => '[^\n]+',
     'sample.location_param'          => '[\w\.\-]+:\d+\-\d+',
+    'sample.location_text'           => '[\w\.\-]+:\d+\-\d+',
     'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates|Viruses)',
     'species.production_name'        => '_?[a-z0-9]+_[a-z0-9_]+',
     'species.db_name'                => '_?[a-z0-9]+_[a-z0-9_]+',
@@ -88,6 +89,20 @@ sub tests {
   } elsif ($self->dba->group eq 'variation') {
     fk($self->dba, 'meta', 'meta_value', 'population', 'population_id', 'meta_key = "pairwise_ld.default_population"');
     fk($self->dba, 'meta', 'meta_value', 'sample', 'name', 'meta_key = "sample.default_strain"');
+  }
+
+  # Check for placeholder sample names
+  my $gene_text = $mca->single_value_by_key('sample.gene_text');
+  SKIP: {
+    my $desc = 'Value for sample.gene_text is not a placeholder';
+    skip "No sample.gene_text defined", 1 unless defined $gene_text;
+    isnt($gene_text, 'ensembl_gene', $desc);
+  }
+  my $transcript_text = $mca->single_value_by_key('sample.transcript_text');
+  SKIP: {
+    my $desc = 'Value for sample.transcript_text is not a placeholder';
+    skip "No sample.transcript_text defined", 1 unless defined $transcript_text;
+    isnt($transcript_text, 'ensembl_transcript', $desc);
   }
 }
 
