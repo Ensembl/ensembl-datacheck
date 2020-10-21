@@ -30,8 +30,8 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'BlankSets',
   DESCRIPTION => 'Set columns do not have empty string values (unless default)',
-  GROUPS      => ['variation'],
-  DB_TYPES    => ['variation']
+  GROUPS      => ['core', 'corelike', 'variation'],
+  DB_TYPES    => ['cdna', 'core', 'otherfeatures', 'rnaseq', 'variation']
 };
 
 sub tests {
@@ -43,7 +43,7 @@ sub tests {
     WHERE
       TABLE_SCHEMA = database() AND
       DATA_TYPE = 'set' AND 
-      COLUMN_DEFAULT <> ''
+      (COLUMN_DEFAULT <> '' OR COLUMN_DEFAULT IS NULL)
   /;
 
   my $sets = $self->dba->dbc->sql_helper->execute(-SQL => $set_sql);

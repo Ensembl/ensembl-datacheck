@@ -127,9 +127,25 @@ sub mapping_test {
   
   my $condition = '';
   if ($mapping_type eq 'assembly') {
-    $condition = 'cs1.attrib rlike "default_version" AND cs2.attrib rlike "default_version" AND';
+    $condition .=
+      '('.
+        '(cs1.version = cs2.version) OR '.
+        '(cs1.version IS NULL) OR '.
+        '(cs2.version IS NULL)'.
+      ') AND';
+    $condition .=
+      '('.
+        '(cs1.attrib rlike "default_version" OR cs2.attrib rlike "default_version") OR '.
+        '(cs1.attrib IS NULL AND cs2.attrib IS NULL)'.
+      ') AND';
   } elsif ($mapping_type eq 'liftover') {
-    $condition = '(cs1.attrib IS NULL OR cs2.attrib IS NULL) AND';
+    $condition .= 'cs1.version <> cs2.version AND';
+    $condition .=
+      '('.
+        '(cs1.attrib IS NULL AND cs2.attrib = "default_version") OR '.
+        '(cs1.attrib = "default_version" AND cs2.attrib IS NULL) OR '.
+        '(cs1.attrib IS NULL AND cs2.attrib IS NULL)'.
+      ') AND';
   }
 
   my $sql_implicit_mappings = qq/
