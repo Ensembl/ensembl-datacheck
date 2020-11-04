@@ -23,10 +23,9 @@ use strict;
 use feature 'say';
 
 use Moose;
-use Path::Tiny;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/repo_location/;
+use Bio::EnsEMBL::DataCheck::Utils qw/foreign_keys/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -41,30 +40,15 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $fk_sql_file = $self->fk_sql_file();
+  my ($foreign_keys, $failed_to_parse) = foreign_keys($self->dba->group);
 
-  my @failed_to_parse;
-
-  foreach my $line ( path($fk_sql_file)->lines ) {
-    next if $line =~ /^\-\-/;
-    next unless $line =~ /FOREIGN KEY/;
-
-    my ($table1, $col1, $table2, $col2) = $line =~
-      /ALTER\s+TABLE\s+(\S+)\s+ADD\s+FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
-
-    if (defined $table1 && defined $col1 && defined $table2 && defined $col2) {
-      # In theory, need exceptions for gene_archive.peptide_archive_id and object_xref.analysis_id
-      # which can be zero. But really, they should be null. And if they're not supposed
-      # to be null, then they shouldn't be zero either.
-      fk($self->dba, $table1, $col1, $table2, $col2);
-    } else {
-      push @failed_to_parse, $line;
-    }
+  foreach my $relationship (@$foreign_keys) {
+    fk($self->dba, @$relationship);
   }
 
   my $desc_parsed = "Parsed all foreign key relationships from file";
-  is(scalar(@failed_to_parse), 0, $desc_parsed) ||
-    diag explain @failed_to_parse;
+  is(scalar(@$failed_to_parse), 0, $desc_parsed) ||
+    diag explain @$failed_to_parse;
 
   if ($self->dba->group eq 'core') {
     $self->core_fk();
@@ -76,22 +60,6 @@ sub tests {
   } elsif ($self->dba->group eq 'variation') {
     $self->variation_fk();
   }
-}
-
-sub fk_sql_file {
-  my ($self) = @_;
-
-  # Don't need checking here, the DB_TYPES ensure we won't get
-  # a $dba from a group that we can't handle, and the repo_location
-  # method will die if the repo path isn't visible to Perl.
-  my $repo_location = repo_location($self->dba->group);
-  my $fk_sql_file   = "$repo_location/sql/foreign_keys.sql";
-
-  if (! -e $fk_sql_file) {
-    die "Foreign keys file does not exist: $fk_sql_file";
-  }
-
-  return $fk_sql_file;
 }
 
 sub core_fk {
