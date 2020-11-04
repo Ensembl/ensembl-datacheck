@@ -334,7 +334,7 @@ sub write_index {
 
   my @datacheck_files = $dir->children( qr/\.pm$/ );
 
-  foreach (@datacheck_files) {
+  foreach (sort @datacheck_files) {
     eval { require $_ };
     die $@ if $@;
 
