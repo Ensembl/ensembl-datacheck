@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Bio::EnsEMBL::DataCheck::Utils qw( repo_location sql_count array_diff hash_diff is_compara_ehive_db );
+use Bio::EnsEMBL::DataCheck::Utils qw( repo_location foreign_keys sql_count array_diff hash_diff is_compara_ehive_db );
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
@@ -43,6 +43,21 @@ subtest 'Repository Location', sub {
   throws_ok(
     sub { repo_location('ensembl-bananas') },
     qr/was not found/, 'non-existent repository not located');
+};
+
+subtest 'Foreign Keys', sub {
+  my @db_types = qw(core funcgen variation compara); 
+
+  foreach my $db_type (@db_types) {
+    my ($foreign_keys, $failed_to_parse) = foreign_keys($db_type);
+    ok(scalar(@$foreign_keys), "Retrieved $db_type db foreign keys");
+    is(scalar(@{$$foreign_keys[0]}), 4, "Relationships have four elements");
+    is(scalar(@$failed_to_parse), 0, "No $db_type db parsing failures");
+  }
+
+  throws_ok(
+    sub { foreign_keys('ensembl-datacheck') },
+    qr/file does not exist/, 'fail on invalid repository');
 };
 
 foreach my $species (@species) {
