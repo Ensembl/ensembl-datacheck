@@ -1,2 +1,8 @@
 1	1	drosophila_melanogaster_core_95_6	1	core
 2	2	strigamia_maritima_core_42_95_1	1	core
+3	3	homo_sapiens_core_95_38	1	core
+4	3	homo_sapiens_funcgen_95_38	1	funcgen
+5	3	homo_sapiens_variation_95_38	1	variation
+6	4	protists_fornicata1_collection_core_42_95_1	1	core
+7	5	protists_fornicata1_collection_core_42_95_1	2	core
+8	6	protists_fornicata1_collection_core_42_95_1	3	core

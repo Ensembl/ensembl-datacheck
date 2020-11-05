@@ -1,2 +1,6 @@
 1	7227	0	7227	drosophila_melanogaster	Drosophila_melanogaster	Drosophila melanogaster	Drosophila melanogaster	\N	\N	\N	\N
 2	126957	0	126957	strigamia_maritima	Strigamia_maritima	Strigamia maritima	Strigamia maritima	\N	\N	\N	\N
+3	9606	0	9606	homo_sapiens	Homo_sapiens	Human	Homo sapiens	\N	\N	\N	\N
+4	5741	0	5741	giardia_intestinalis	Giardia_intestinalis	Giardia intestinalis	Giardia intestinalis	GS	\N	\N	\N
+5	658858	0	5741	giardia_lamblia_p15	Giardia_lamblia_p15	Giardia lamblia P15	Giardia lamblia P15	P15	\N	\N	\N
+6	348837	0	348837	spironucleus_salmonicida	Spironucleus_salmonicida	Spironucleus salmonicida	Spironucleus salmonicida	\N	\N	\N	\N
