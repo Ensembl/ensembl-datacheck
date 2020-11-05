@@ -26,6 +26,7 @@ use BaseCheck_0;
 use BaseCheck_1;
 use BaseCheck_2;
 use BaseCheck_3;
+use BaseCheck_4;
 
 # Note that you cannot, by design, create a BaseCheck object; datachecks
 # must inherit from it and define mandatory, read-only parameters that
@@ -151,6 +152,23 @@ subtest 'DataCheck with skipping test', sub {
   like($basecheck->_started, qr/^\d+$/, '_started attribute has numeric value');
   is($basecheck->_finished,  undef,     '_finished attribute is undefined');
   is($basecheck->_passed,    1,         '_passed attribute is true');
+};
+
+subtest 'DataCheck with fatal error', sub {
+  my $basecheck = TestChecks::BaseCheck_4->new();
+  isa_ok($basecheck, $module);
+
+  # The tests that are run are Test::More tests. Running them within a test
+  # is a bit confusing. To simulate a proper test of the tests, need to reset
+  # the Test::More framework.
+  Test::More->builder->reset();
+  my $result = $basecheck->run;
+
+  my $name = $basecheck->name;
+  diag("Test enumeration reset by the datacheck object ($name)");
+
+  is($result, 1, 'fatal error causes datacheck failure');
+  like($basecheck->output, qr/Datacheck ran without errors/m, 'fatal error datacheck failure message');
 };
 
 done_testing();
