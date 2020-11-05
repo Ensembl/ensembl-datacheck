@@ -276,7 +276,6 @@ sub row_subtotals {
 
   $dbc2 = $dbc1 if ! defined $dbc2;
   $sql2 = $sql1 if ! defined $sql2;
-  $min_proportion = 1 if ! defined $min_proportion;
 
   my ( undef, $rows1 ) = _query( $dbc1, $sql1 );
   my ( undef, $rows2 ) = _query( $dbc2, $sql2 );
