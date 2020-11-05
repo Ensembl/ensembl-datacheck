@@ -16,7 +16,8 @@
       'variation' => 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor',
     },
     'multi' => {
-	  'metadata' => 'Bio::EnsEMBL::MetaData::DBSQL::MetaDataDBAdaptor',
-	},
+      'compara' => 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor',
+      'metadata' => 'Bio::EnsEMBL::MetaData::DBSQL::MetaDataDBAdaptor',
+    },
   },
 }

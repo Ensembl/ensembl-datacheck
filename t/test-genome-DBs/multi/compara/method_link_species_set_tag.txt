@@ -1,0 +1,48 @@
+478	ensembl_release	60
+478	max_align	30748
+478	non_reference_species	oryctolagus_cuniculus
+478	non_ref_coding_coverage	27856841
+478	non_ref_coding_length	29950200
+478	non_ref_dna_collection	{'chunk_size' => 10100000, 'overlap' => 100000, 'group_set_size' => 10100000, "masking" => "soft"}
+478	non_ref_genome_coverage	1221978809
+478	non_ref_genome_length	2737473256
+478	num_blocks	2036094
+478	param	T=1 L=3000 H=2200 O=400 E=30 K=3000 M=50 --ambiguous=iupac
+478	reference_species	homo_sapiens
+478	ref_coding_coverage	32930581
+478	ref_coding_length	35155918
+478	ref_dna_collection	{'chunk_size' => 30000000, 'overlap' => 0, 'group_set_size' => 0}
+478	ref_genome_coverage	1326966577
+478	ref_genome_length	3098825702
+483	ensembl_release	60
+483	max_align	28421
+483	non_reference_species	ailuropoda_melanoleuca
+483	non_ref_coding_coverage	30151759
+483	non_ref_coding_length	31119599
+483	non_ref_dna_collection	{'chunk_size' => 10100000, 'overlap' => 100000, 'group_set_size' => 10100000, "masking" => "soft"}
+483	non_ref_genome_coverage	1497681881
+483	non_ref_genome_length	2299492210
+483	num_blocks	2018327
+483	param	T=1 L=3000 H=2200 O=400 E=30 K=3000 M=50 --ambiguous=iupac
+483	reference_species	homo_sapiens
+483	ref_coding_coverage	34296680
+483	ref_coding_length	35155918
+483	ref_dna_collection	{'chunk_size' => 30000000, 'overlap' => 0, 'group_set_size' => 0}
+483	ref_genome_coverage	1584612089
+483	ref_genome_length	3098825702
+498	ensembl_release	61
+498	max_align	66520
+498	non_reference_species	meleagris_gallopavo
+498	non_ref_coding_coverage	21944292
+498	non_ref_coding_length	22787503
+498	non_ref_dna_collection	{'chunk_size' => 10100000, 'overlap' => 100000, 'group_set_size' => 10100000, "masking" => "soft"}
+498	non_ref_genome_coverage	875520119
+498	non_ref_genome_length	1061982190
+498	num_blocks	455970
+498	param	T=1 L=3000 H=2200 O=400 E=30 K=3000 M=50 
+498	reference_species	gallus_gallus
+498	ref_coding_coverage	23466332
+498	ref_coding_length	24644731
+498	ref_dna_collection	{'chunk_size' => 30000000, 'overlap' => 0, 'group_set_size' => 0, "masking" => "soft"}
+498	ref_genome_coverage	942910163
+498	ref_genome_length	1100480441

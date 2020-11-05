@@ -1,0 +1,3 @@
+478	16	33237	H.sap-O.cun lastz-net (on H.sap)	ensembl		80	\N
+483	16	33247	H.sap-A.mel lastz-net (on H.sap)	ensembl		80	\N
+498	16	33396	G.gal-M.gal lastz-net (on G.gal)	ensembl		80	\N
