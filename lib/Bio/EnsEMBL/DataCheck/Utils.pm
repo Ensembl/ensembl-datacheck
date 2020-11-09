@@ -31,9 +31,10 @@ use feature 'say';
 
 require Exporter;
 our @ISA       = qw( Exporter );
-our @EXPORT_OK = qw( repo_location sql_count array_diff hash_diff is_compara_ehive_db );
+our @EXPORT_OK = qw( repo_location foreign_keys sql_count array_diff hash_diff is_compara_ehive_db );
 
 use File::Spec::Functions qw/catdir splitdir/;
+use Path::Tiny;
 
 =head2 Utility functions
 
@@ -82,6 +83,80 @@ sub repo_location {
   }
 
   die "$repo_name was not found in \@INC:\n" . join("\n", @INC);
+}
+
+=item B<foreign_keys>
+
+foreign_keys($repo_name_or_dbtype);
+
+Retrieves and parses a file with foreign key definitions, via an
+Ensembl repository in your Perl environment.
+The C<$repo_name_or_dbtype> parameter can be either the repository name
+or a database type. E.g. C<foreign_keys('ensembl-variation')> and
+C<foreign_keys('variation')> are equivalent.
+
+The return values are two array references. The first return value is a
+list of relationships of the format C<[$table1, $col1, $table2, $col2]>,
+where $table1.$col1 is the foreign key. The second return value is a
+list of lines which could not be parsed - this should be empty, it is
+returned so that this can be tested/reported within a datacheck.
+
+=cut
+
+sub foreign_keys {
+  my ($repo_name_or_dbtype) = @_;
+
+  my $repo_location = repo_location($repo_name_or_dbtype);
+  my $fk_sql_file   = "$repo_location/sql/foreign_keys.sql";
+
+  if (! -e $fk_sql_file) {
+    $fk_sql_file   = "$repo_location/sql/table.sql";
+    if (! -e $fk_sql_file) {
+      die "Foreign keys file does not exist in '$repo_location/sql'";
+    }
+  }
+
+  my @foreign_keys;
+  my @failed_to_parse;
+
+  # The code is a little repetitive here within each branch of the
+  # conditional here, but we tolerate that for the sake of avoiding
+  # more complex code.
+  if ($repo_name_or_dbtype !~ /compara/) {
+    foreach my $line ( path($fk_sql_file)->lines ) {
+      next if $line =~ /^\-\-/;
+      next unless $line =~ /FOREIGN KEY/;
+
+      my ($table1, $col1, $table2, $col2) = $line =~
+        /ALTER\s+TABLE\s+(\S+)\s+ADD\s+FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
+
+      if (defined $table1 && defined $col1 && defined $table2 && defined $col2) {
+        push @foreign_keys, [$table1, $col1, $table2, $col2];
+      } else {
+        push @failed_to_parse, $line;
+      }
+    }
+  } else {
+    my $table1;
+    foreach my $line ( path($fk_sql_file)->lines ) {
+      if ($line =~ /CREATE TABLE `?(\w+)`?/) {
+        $table1 = $1;
+      } elsif (defined $table1) {
+        next if $line =~ /^\-\-/;
+        next unless $line =~ /FOREIGN KEY/;
+
+        my ($col1, $table2, $col2) = $line =~
+          /\s*FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
+        if (defined $col1 && defined $table2 && defined $col2) {
+          push @foreign_keys, [$table1, $col1, $table2, $col2];
+        } else {
+          push @failed_to_parse, $line;
+        }
+      }
+    }
+  }
+
+  return (\@foreign_keys, \@failed_to_parse);
 }
 
 =item B<sql_count>

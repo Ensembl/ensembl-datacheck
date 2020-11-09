@@ -22,10 +22,9 @@ use warnings;
 use strict;
 
 use Moose;
-use Path::Tiny;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
-use Bio::EnsEMBL::DataCheck::Utils qw/repo_location is_compara_ehive_db/;
+use Bio::EnsEMBL::DataCheck::Utils qw/foreign_keys is_compara_ehive_db/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -40,53 +39,21 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $table_sql_file = $self->table_sql_file();
+  my ($foreign_keys, $failed_to_parse) = foreign_keys($self->dba->group);
 
-  my @failed_to_parse;
-
-  my $table1;
-  foreach my $line ( path($table_sql_file)->lines ) {
-    if ($line =~ /CREATE TABLE `?(\w+)`?/) {
-      $table1 = $1;
-    } elsif (defined $table1) {
-      next if $line =~ /^\-\-/;
-      next unless $line =~ /FOREIGN KEY/;
-
-      my ($col1, $table2, $col2) = $line =~
-        /\s*FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
-      if (defined $col1 && defined $table2 && defined $col2) {
-        # Because the master database may have old genomes linked to deprecated taxon_ids
-        if ($self->dba->dbc->dbname =~ /master/) {
-          next if "$table1 $col1 $table2 $col2" eq 'genome_db taxon_id ncbi_taxa_node taxon_id';
-        }
-        fk($self->dba, $table1, $col1, $table2, $col2);
-      } else {
-        push @failed_to_parse, $line;
-      }
+  foreach my $relationship (@$foreign_keys) {
+    # Because the master database may have old genomes linked to deprecated taxon_ids
+    if ($self->dba->dbc->dbname =~ /master/) {
+      next if join(" ", @$relationship) eq 'genome_db taxon_id ncbi_taxa_node taxon_id';
     }
+    fk($self->dba, @$relationship);
   }
 
   my $desc_parsed = "Parsed all foreign key relationships from file";
-  is(scalar(@failed_to_parse), 0, $desc_parsed) ||
-    diag explain @failed_to_parse;
+  is(scalar(@$failed_to_parse), 0, $desc_parsed) ||
+    diag explain @$failed_to_parse;
 
   $self->compara_fk();
-}
-
-sub table_sql_file {
-  my ($self) = @_;
-
-  # Don't need checking here, the DB_TYPES ensure we won't get
-  # a $dba from a group that we can't handle, and the repo_location
-  # method will die if the repo path isn't visible to Perl.
-  my $repo_location  = repo_location($self->dba->group);
-  my $table_sql_file = "$repo_location/sql/table.sql";
-
-  if (! -e $table_sql_file) {
-    die "Table file does not exist: $table_sql_file";
-  }
-
-  return $table_sql_file;
 }
 
 sub compara_fk {

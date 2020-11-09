@@ -900,7 +900,6 @@
       "description" : "Analysis descriptions and display settings are consistent with production database",
       "groups" : [
          "analysis_description",
-         "controlled_tables",
          "core",
          "brc4_core",
          "corelike"
@@ -912,7 +911,7 @@
       "datacheck_type" : "advisory",
       "description" : "Analysis db_verion is consistent with production database",
       "groups" : [
-         "controlled_tables",
+         "analysis_description",
          "core",
          "brc4_core",
          "corelike"
@@ -924,7 +923,6 @@
       "datacheck_type" : "critical",
       "description" : "Meta keys are consistent with production database",
       "groups" : [
-         "controlled_tables",
          "core",
          "corelike",
          "meta",
@@ -1287,6 +1285,24 @@
       "name" : "ForeignKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
    },
+   "ForeignKeysControlledTablesCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Foreign key relationships for tables imported from the production database",
+      "groups" : [
+         "controlled_tables"
+      ],
+      "name" : "ForeignKeysControlledTablesCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysControlledTablesCore"
+   },
+   "ForeignKeysControlledTablesVariation" : {
+      "datacheck_type" : "critical",
+      "description" : "Foreign key relationships for tables imported from the production database",
+      "groups" : [
+         "controlled_tables"
+      ],
+      "name" : "ForeignKeysControlledTablesVariation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysControlledTablesVariation"
+   },
    "ForeignKeysMultiDB" : {
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships between tables from different databases are not violated",
@@ -1322,6 +1338,7 @@
       "datacheck_type" : "critical",
       "description" : "Genes and transcripts have valid biotypes",
       "groups" : [
+         "controlled_tables",
          "core",
          "brc4_core",
          "corelike",
