@@ -29,14 +29,6 @@ use DbCheck_1;
 my $test_db_dir = $FindBin::Bin;
 
 {
-  my $species  = 'homo_sapiens';
-  my %dba_types = (
-    'core'      => 'Bio::EnsEMBL::DBSQL::DBAdaptor',
-    'funcgen'   => 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor',
-    'variation' => 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor',
-  );
-  my $testdb   = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-
   # Need a test metadata db for retrieving the name of a previous
   # release's database. (Do it like this to prevent loading the
   # compara test db, which is also 'multi'.)
@@ -45,6 +37,14 @@ my $test_db_dir = $FindBin::Bin;
   $multi->store_config();
   $multi->create_adaptors();
   my $metadata_dba = $multi->get_DBAdaptor('metadata');
+
+  my $species = 'homo_sapiens';
+  my %dba_types = (
+    'core'      => 'Bio::EnsEMBL::DBSQL::DBAdaptor',
+    'funcgen'   => 'Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor',
+    'variation' => 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor',
+  );
+  my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
 
   foreach my $db_type (sort keys %dba_types) {
     subtest "Fetch old DBA - $db_type", sub {
@@ -112,85 +112,78 @@ my $test_db_dir = $FindBin::Bin;
       ok(! defined $old_dba, 'undef if no information in metadata database');
     }
   }
+
+  subtest "Fetch old DBA - collection", sub {
+    my $species  = 'collection';
+    my $db_type  = 'core';
+    my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+    my $dba = $testdb->get_DBAdaptor($db_type);
+    $dba->is_multispecies(1);
+    my $dba_type = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
+
+    my $server_uri = get_server_uri($testdb, $db_type);
+
+    my $check = TestChecks::DbCheck_1->new(
+      dba            => $dba,
+      server_uri     => $server_uri,
+      old_server_uri => $server_uri.$dba->dbc->dbname,
+    );
+    my $old_dba = $check->get_old_dba();
+    isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
+    is($old_dba->species, 'giardia_intestinalis_old', 'Species has "_old" suffix');
+
+    $check = TestChecks::DbCheck_1->new(
+      dba            => $dba,
+      server_uri     => $server_uri,
+      old_server_uri => $server_uri.'95',
+    );
+    $check->load_registry();
+    $check->registry->add_DBAdaptor('multi', 'metadata', $metadata_dba);
+    throws_ok(
+      sub { $check->get_old_dba },
+      qr/Database in metadata database does not exist/,
+      'Fail if database from metadata database does not exist (1/2)');
+    throws_ok(
+      sub { $check->get_old_dba('giardia_intestinalis', $db_type) },
+      qr/Database in metadata database does not exist/,
+      'Fail if database from metadata database does not exist (2/2)');
+  };
 }
 
-subtest 'Fetch old DBA - compara', sub {
-  my $species  = 'multi';
-  my $db_type  = 'compara';
-  my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir, 1);
-  $testdb->load_database($db_type);
-  $testdb->store_config();
-  $testdb->create_adaptors();
-  my $dba = $testdb->get_DBAdaptor($db_type);
-  my $dba_type = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor';
+{
+  subtest 'Fetch old DBA - compara', sub {
+    my $species  = 'multi';
+    my $db_type  = 'compara';
+    my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir, 1);
+    $testdb->load_database($db_type);
+    $testdb->store_config();
+    $testdb->create_adaptors();
+    my $dba = $testdb->get_DBAdaptor($db_type);
+    my $dba_type = 'Bio::EnsEMBL::Compara::DBSQL::DBAdaptor';
 
-  my $server_uri = get_server_uri($testdb, $db_type);
+    my $server_uri = get_server_uri($testdb, $db_type);
 
-  my $check = TestChecks::DbCheck_1->new(
-    dba            => $dba,
-    server_uri     => $server_uri,
-    old_server_uri => $server_uri.$dba->dbc->dbname,
-  );
-  my $old_dba = $check->get_old_dba();
-  isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
-  is($old_dba->species, "${species}_old", 'Species has "_old" suffix');
+    my $check = TestChecks::DbCheck_1->new(
+      dba            => $dba,
+      server_uri     => $server_uri,
+      old_server_uri => $server_uri.$dba->dbc->dbname,
+    );
+    my $old_dba = $check->get_old_dba();
+    isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
+    is($old_dba->species, "${species}_old", 'Species has "_old" suffix');
 
-  $check = TestChecks::DbCheck_1->new(
-    dba            => $dba,
-    server_uri     => $server_uri,
-    old_server_uri => $server_uri.'95',
-  );
-  my $uri = parse_uri($server_uri.'95');
-  throws_ok(
-    sub { $check->old_dbname_from_version('ensembl_compara_96', 96, 95, $uri) },
-    qr/Previous version of database does not exist/,
-    'Fail if old database does not exist');
-};
-
-subtest "Fetch old DBA - collection", sub {
-  my $species  = 'collection';
-  my $db_type  = 'core';
-  my $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-  my $dba = $testdb->get_DBAdaptor($db_type);
-  $dba->is_multispecies(1);
-  my $dba_type = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
-
-  my $server_uri = get_server_uri($testdb, $db_type);
-
-  # Need a test metadata db for retrieving the name of a previous
-  # release's database. (Do it like this to prevent loading the
-  # compara test db, which is also 'multi'.)
-  my $multi = Bio::EnsEMBL::Test::MultiTestDB->new('multi', $test_db_dir, 1);
-  $multi->load_database('metadata');
-  $multi->store_config();
-  $multi->create_adaptors();
-  my $metadata_dba = $multi->get_DBAdaptor('metadata');
-
-  my $check = TestChecks::DbCheck_1->new(
-    dba            => $dba,
-    server_uri     => $server_uri,
-    old_server_uri => $server_uri.$dba->dbc->dbname,
-  );
-  my $old_dba = $check->get_old_dba();
-  isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
-  is($old_dba->species, 'giardia_intestinalis_old', 'Species has "_old" suffix');
-
-  $check = TestChecks::DbCheck_1->new(
-    dba            => $dba,
-    server_uri     => $server_uri,
-    old_server_uri => $server_uri.'95',
-  );
-  $check->load_registry();
-  $check->registry->add_DBAdaptor('multi', 'metadata', $metadata_dba);
-  throws_ok(
-    sub { $check->get_old_dba },
-    qr/Database in metadata database does not exist/,
-    'Fail if database from metadata database does not exist (1/2)');
-  throws_ok(
-    sub { $check->get_old_dba('giardia_intestinalis', $db_type) },
-    qr/Database in metadata database does not exist/,
-    'Fail if database from metadata database does not exist (2/2)');
-};
+    $check = TestChecks::DbCheck_1->new(
+      dba            => $dba,
+      server_uri     => $server_uri,
+      old_server_uri => $server_uri.'95',
+    );
+    my $uri = parse_uri($server_uri.'95');
+    throws_ok(
+      sub { $check->old_dbname_from_version('ensembl_compara_96', 96, 95, $uri) },
+      qr/Previous version of database does not exist/,
+      'Fail if old database does not exist');
+  };
+}
 
 sub get_server_uri {
   my ($testdb, $db_type) = @_;
