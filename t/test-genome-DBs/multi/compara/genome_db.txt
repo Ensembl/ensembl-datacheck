@@ -1,0 +1,5 @@
+42	9031	gallus_gallus	WASHUC2	2006-08-Ensembl	0	0	\N	\N	Chicken	\N	80	\N
+90	9606	homo_sapiens	GRCh37	2010-07-Ensembl	0	0	\N	\N	Human	\N	80	\N
+108	9986	oryctolagus_cuniculus	oryCun2	2009-11-Ensembl	0	0	\N	\N	Rabbit	\N	80	\N
+109	9646	ailuropoda_melanoleuca	ailMel1	2010-01-Ensembl	0	0	\N	\N	Panda	\N	80	\N
+112	9103	meleagris_gallopavo	UMD2	2010-09-Ensembl	0	0	\N	\N	Turkey	\N	80	\N

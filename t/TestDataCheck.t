@@ -154,13 +154,13 @@ subtest 'Comparing Database Rows', sub {
   subtest 'row_subtotals', sub {
     check_tests(
       sub {
-        row_subtotals($dba, undef, $sql_3, $sql_3, 1, 'pass: Row subtotals identical');
-        row_subtotals($dba, undef, $sql_3, $sql_4, 1, 'pass: Row subtotals asymmetry');
-        row_subtotals($dba, undef, $sql_4, $sql_3, 1, 'fail: Row subtotals asymmetry');
-        row_subtotals($dba, undef, $sql_3, $sql_4, 0,   'pass: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_3, $sql_3, undef, 'pass: Row subtotals identical');
+        row_subtotals($dba, undef, $sql_3, $sql_4, undef, 'pass: Row subtotals asymmetry');
+        row_subtotals($dba, undef, $sql_4, $sql_3, undef, 'fail: Row subtotals asymmetry');
         row_subtotals($dba, undef, $sql_3, $sql_4, 0.5, 'pass: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_3, $sql_4, 1,   'pass: Row subtotals with min_proportion');
         row_subtotals($dba, undef, $sql_4, $sql_3, 0,   'pass: Row subtotals with min_proportion');
-        row_subtotals($dba, undef, $sql_4, $sql_3, 0.5, 'fail: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_4, $sql_3, 1,   'fail: Row subtotals with min_proportion');
       },
       [
         { ok => 1, depth => undef, name => 'pass: Row subtotals identical' },

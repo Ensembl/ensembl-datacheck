@@ -29,6 +29,7 @@ use DbCheck_2;
 use DbCheck_3;
 use DbCheck_4;
 use DbCheck_5;
+use DbCheck_6;
 
 my $test_db_dir = $FindBin::Bin;
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
@@ -288,6 +289,18 @@ subtest 'DbCheck with skip_tests method defined', sub {
   is($skip_reason, 'All good here, thank you', 'Correct skip reason');
 };
 
+subtest 'DbCheck with fatal error', sub {
+  my $dbcheck = TestChecks::DbCheck_6->new(
+    dba => $dba,
+  );
+  isa_ok($dbcheck, $module);
+
+  my $result = $dbcheck->run;
+
+  is($result, 1, 'fatal error causes datacheck failure');
+  like($dbcheck->output, qr/Datacheck ran without errors/m, 'fatal error datacheck failure message');
+};
+
 subtest 'DbCheck with and without dba attribute', sub {
   my $dbcheck = TestChecks::DbCheck_1->new();
   isa_ok($dbcheck, $module);
@@ -500,6 +513,18 @@ subtest 'DbCheck with collection database, per_db', sub {
 
   unlike($dbcheck->output, qr/\s*1\.\.3/, 'Test not run for three species');
   like($dbcheck->output, qr/Subtest: DbCheck_4/, 'Test run for whole collection database');
+};
+
+subtest 'DbCheck with collection database, fatal error', sub {
+  my $dbcheck = TestChecks::DbCheck_6->new(
+    dba => $dba,
+  );
+  isa_ok($dbcheck, $module);
+
+  my $result = $dbcheck->run;
+
+  is($result, 1, 'fatal error causes datacheck failure');
+  like($dbcheck->output, qr/Datacheck ran without errors/m, 'fatal error datacheck failure message');
 };
 
 done_testing();

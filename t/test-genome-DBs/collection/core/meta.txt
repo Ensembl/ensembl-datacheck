@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	103
+2	\N	schema_version	104
 3	\N	patch	patch_88_89_a.sql|schema_version
 4	1	schema.load_started	2017-05-08 19:14:41
 5	1	schema.load_started	2017-05-08 19:14:45
@@ -188,3 +188,4 @@
 560	\N	patch	patch_100_101_a.sql|schema_version
 561	\N	patch	patch_101_102_a.sql|schema_version
 562	\N	patch	patch_102_103_a.sql|schema_version
+563	\N	patch	patch_103_104_a.sql|schema_version

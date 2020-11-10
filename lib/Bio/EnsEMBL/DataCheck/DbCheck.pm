@@ -371,67 +371,21 @@ sub get_old_dba {
   if (exists $params{'-DBNAME'}) {
     my $message = 'Specified database does not exist';
     $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
-  } elsif ($group =~ /compara|ontology/) {
-    my $dbname = $self->dba->dbc->dbname;
-    my $current = $mca->schema_version;
-    $dbname =~ s/$current/$db_version/; # Ensembl version
-    my ($eg_current, $eg_version) = ($current-53, $db_version-53);
-    $dbname =~ s/$eg_current/$eg_version/; # EG version
-    $params{'-DBNAME'} = $dbname;
-    my $message = 'Previous version of database does not exist';
-    $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
   } else {
-    my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
-    die "No metadata database found in the registry" unless defined $meta_dba;
-
-    my ($sql, $params);
-    if ($mca->can('get_division')) {
-      my $division = $mca->get_division;
-      $sql = q/
-        SELECT gd.dbname FROM
-          genome_database gd INNER JOIN
-          genome g USING (genome_id) INNER JOIN
-          organism o USING (organism_id) INNER JOIN
-          data_release dr USING (data_release_id) INNER JOIN
-          division d USING (division_id)
-        WHERE
-          gd.type = ? AND
-          o.name = ? AND
-          dr.ensembl_version = ? AND
-          d.name = ?
-      /;
-      $params = [$group, $species, $db_version, $division];
-    } else {
-      $sql = q/
-        SELECT gd.dbname FROM
-          genome_database gd INNER JOIN
-          genome g USING (genome_id) INNER JOIN
-          organism o USING (organism_id) INNER JOIN
-          data_release dr USING (data_release_id)
-        WHERE
-          gd.type = ? AND
-          o.name = ? AND
-          dr.ensembl_version = ?
-      /;
-      $params = [$group, $species, $db_version];
-    }
-
-    my $helper = $meta_dba->dbc->sql_helper;
-    my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
-
-    if (scalar(@dbnames) == 1) {
-      $params{'-DBNAME'} = $dbnames[0];
-      my $message = 'Database in metadata database does not exist';
-      $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
-    } elsif (scalar(@dbnames) > 1) {
-      die "Multiple release $db_version $group databases for $species";
-    }
+    ($params{'-DBNAME'}, $dbh) = $self->find_old_dbname(
+      $self->dba->dbc->dbname,
+      $mca,
+      $species,
+      $group,
+      $db_version,
+      $uri
+    );
   }
 
   # $old_dba can be undefined if there is no entry in the metadata db;
   # a datacheck could use the undefined-ness to skip tests in this case.
   my $old_dba;
-  if (exists $params{'-DBNAME'}) {
+  if (defined $params{'-DBNAME'}) {
     # We need to suffix '_old' to the species name to comply
     # with uniqueness rules, and ensure we can distinguish between the
     # two databases in the registry.
@@ -471,6 +425,71 @@ sub get_old_dba {
   }
 
   return $old_dba;
+}
+
+sub find_old_dbname {
+  my $self = shift;
+  my ($dbname, $mca, $species, $group, $db_version, $uri) = @_;
+
+  my ($old_dbname, $dbh);
+  if ($group =~ /(compara|ontology)/i) {
+    my $current = $mca->schema_version;
+    $old_dbname = $dbname;
+    $old_dbname =~ s/_${current}$/_${db_version}/; # Ensembl version
+    my ($eg_current, $eg_version) = ($current-53, $db_version-53);
+    $old_dbname =~ s/_${eg_current}_/_${eg_version}_/; # EG version
+
+    my $message = 'Previous version of database does not exist';
+    $dbh = $self->test_db_connection($uri, $old_dbname, $message);
+  } else {
+    my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
+    die "No metadata database found in the registry" unless defined $meta_dba;
+
+    my ($sql, $params);
+    if ($group =~ /(funcgen|variation)/i) {
+      $sql = q/
+        SELECT gd.dbname FROM
+          genome_database gd INNER JOIN
+          genome g USING (genome_id) INNER JOIN
+          organism o USING (organism_id) INNER JOIN
+          data_release dr USING (data_release_id)
+        WHERE
+          gd.type = ? AND
+          o.name = ? AND
+          dr.ensembl_version = ?
+      /;
+      $params = [$group, $species, $db_version];
+    } else {
+      my $division = $mca->get_division;
+      $sql = q/
+        SELECT gd.dbname FROM
+          genome_database gd INNER JOIN
+          genome g USING (genome_id) INNER JOIN
+          organism o USING (organism_id) INNER JOIN
+          data_release dr USING (data_release_id) INNER JOIN
+          division d USING (division_id)
+        WHERE
+          gd.type = ? AND
+          o.name = ? AND
+          dr.ensembl_version = ? AND
+          d.name = ?
+      /;
+      $params = [$group, $species, $db_version, $division];
+    }
+
+    my $helper = $meta_dba->dbc->sql_helper;
+    my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
+
+    if (scalar(@dbnames) == 1) {
+      $old_dbname = $dbnames[0];
+      my $message = 'Database in metadata database does not exist';
+      $dbh = $self->test_db_connection($uri, $old_dbname, $message);
+    } elsif (scalar(@dbnames) > 1) {
+      die "Multiple release $db_version $group databases for $species";
+    }
+  }
+
+  return ($old_dbname, $dbh);
 }
 
 sub test_db_connection {
