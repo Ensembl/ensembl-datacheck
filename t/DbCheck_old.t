@@ -177,9 +177,10 @@ my $test_db_dir = $FindBin::Bin;
       server_uri     => $server_uri,
       old_server_uri => $server_uri.'95',
     );
+    my $mca = $dba->get_adaptor("MetaContainer");
     my $uri = parse_uri($server_uri.'95');
     throws_ok(
-      sub { $check->old_dbname_from_version('ensembl_compara_96', 96, 95, $uri) },
+      sub { $check->find_old_dbname('ensembl_compara_96', $mca, $species, $db_type, 95, $uri) },
       qr/Previous version of database does not exist/,
       'Fail if old database does not exist');
   };
