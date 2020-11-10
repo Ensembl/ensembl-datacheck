@@ -771,6 +771,7 @@
       "datacheck_type" : "critical",
       "description" : "Compare database schema to definition in SQL file",
       "groups" : [
+         "compara",
          "core",
          "brc4_core",
          "corelike",
