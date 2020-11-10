@@ -167,7 +167,21 @@ sub load_config {
   if (defined $self->config_file) {
     die "Config file does not exist" unless -e $self->config_file;
 
-    my $json = path($self->config_file)->slurp;
+    # 'slurp' gets an exclusive lock on the file before reading it.
+    # But sometimes we get flock problems, if a bunch of datachecks
+    # are all completing very quickly, so have a brief pause to
+    # calm things down a bit. That doesn't always work, so give
+    # it a second go if the first attempt fails.
+    my $json;
+    eval {
+      sleep(2);
+      $json = path($self->config_file)->slurp;
+    };
+    if ($@) {
+      sleep(2);
+      $json = path($self->config_file)->slurp;
+    }
+
     my %config;
     eval {
       %config = %{ JSON->new->decode($json) };
