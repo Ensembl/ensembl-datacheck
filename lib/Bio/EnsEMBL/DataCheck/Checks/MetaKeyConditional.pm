@@ -183,6 +183,8 @@ sub repeat_analysis {
         analysis USING (analysis_id)
       WHERE
         species_id = $species_id
+      AND
+        logic_name not like "%repeatmodeler%"
       GROUP BY
         logic_name
       ORDER BY logic_name
