@@ -174,11 +174,11 @@ sub load_config {
     # it a second go if the first attempt fails.
     my $json;
     eval {
-      sleep(2);
+      sleep(int(rand(10)));
       $json = path($self->config_file)->slurp;
     };
     if ($@) {
-      sleep(2);
+      sleep(int(rand(10)));
       $json = path($self->config_file)->slurp;
     }
 
@@ -388,12 +388,12 @@ sub read_history {
     # calm things down a bit. That doesn't always work, so give
     # it a second go if the first attempt fails.
     eval {
-      sleep(2);
+      sleep(int(rand(10)));
       my $json = path($self->history_file)->slurp;
       %history = %{ JSON->new->decode($json) };
     };
     if ($@) {
-      sleep(2);
+      sleep(int(rand(10)));
       my $json = path($self->history_file)->slurp;
       %history = %{ JSON->new->decode($json) };
     }
