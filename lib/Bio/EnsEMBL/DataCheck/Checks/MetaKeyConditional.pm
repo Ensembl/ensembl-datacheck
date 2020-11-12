@@ -184,7 +184,7 @@ sub repeat_analysis {
       WHERE
         species_id = $species_id
       AND
-        logic_name not like "%repeatmodeler%"
+        logic_name <> "repeatmask_repeatmodeler"
       GROUP BY
         logic_name
       ORDER BY logic_name
