@@ -42,6 +42,8 @@ sub tests {
 
   # Check that the format of meta_values conforms to expectations.
   my %formats = (
+    'annotation.provider_url'        => '^https?:\/\/.+$',
+    'assembly.provider_url'          => '^https?:\/\/.+$',
     'assembly.accession'             => 'GCA_\d+\.\d+',
     'assembly.date'                  => '\d{4}-\d{2}',
     'assembly.default'               => '[\w\.\-]+',
