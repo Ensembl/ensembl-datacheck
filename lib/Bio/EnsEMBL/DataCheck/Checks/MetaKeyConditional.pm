@@ -194,7 +194,7 @@ sub repeat_analysis {
 
     skip 'No repeat features', 1 unless scalar(@logic_names);
 
-    my $desc = "'repeat.analysis' meta_keys exist for every repeat analysis";
+    my $desc = "'repeat.analysis' meta_keys exist for appropriate repeat analyses";
     my $mca = $self->dba->get_adaptor('MetaContainer');
     my @values = sort @{ $mca->list_value_by_key('repeat.analysis') };
     is_deeply(\@values, \@logic_names, $desc);
