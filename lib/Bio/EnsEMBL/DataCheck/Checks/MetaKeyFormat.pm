@@ -60,6 +60,10 @@ sub tests {
     'web_accession_source'           => '(NCBI|ENA|DDBJ)',
   );
 
+  my %anti_formats = (
+    'genebuild.version' => '\d+',
+  );
+
   foreach my $meta_key (sort keys %formats) {
     my $desc   = "Value for $meta_key has correct format";
     my $format = $formats{$meta_key};
@@ -68,6 +72,18 @@ sub tests {
       skip "No $meta_key defined", 1 unless scalar(@$values);
       foreach my $value (@$values) {
         like($value, qr/^$format$/, $desc);
+      }
+    }
+  }
+
+  foreach my $meta_key (sort keys %anti_formats) {
+    my $desc   = "Value for $meta_key does not have incorrect format";
+    my $format = $anti_formats{$meta_key};
+    my $values = $mca->list_value_by_key($meta_key);
+    SKIP: {
+      skip "No $meta_key defined", 1 unless scalar(@$values);
+      foreach my $value (@$values) {
+        unlike($value, qr/^$format$/, $desc);
       }
     }
   }
