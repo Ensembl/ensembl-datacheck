@@ -99,7 +99,10 @@ sub tests {
   /;
 
   my $helper = $self->dba->dbc->sql_helper;
-  my $all_exons = $helper->execute(-SQL => $all_exons_sql);
+  my $exon_iterator = $helper->execute(
+    -SQL => $all_exons_sql,
+    -ITERATOR => 1
+  );
 
   my $last_transcript_id;
   my $last_exon_id;
@@ -108,7 +111,8 @@ sub tests {
 
   my @exon_overlaps;
 
-  foreach my $exon (@$all_exons) {
+  while ($exon_iterator->has_next) {
+    my $exon = $exon_iterator->next;
     my ($transcript_id, $exon_id, $start, $end, $strand) = @$exon;
 
     if (defined $last_transcript_id && $last_transcript_id == $transcript_id) {

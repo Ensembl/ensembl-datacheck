@@ -56,25 +56,33 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
 
-  my $orthologue_tags = [
-    'n_protein_many-to-many_groups',
-    'n_protein_many-to-many_pairs',
-    'n_protein_many-to-one_groups',
-    'n_protein_many-to-one_pairs',
-    'n_protein_one-to-many_groups',
-    'n_protein_one-to-many_pairs',
-    'n_protein_one-to-one_groups',
-    'n_protein_one-to-one_pairs'
-  ];
-  my $paralogue_tags = [
-    'n_protein_within_species_paralog_genes',
-    'n_protein_within_species_paralog_groups',
-    'n_protein_within_species_paralog_pairs',
-    'avg_protein_within_species_paralog_perc_id'
-  ];
+  foreach my $member_type ( qw(protein ncrna) ) {
+    my $trees = $self->dba->get_GeneTreeAdaptor->fetch_all(
+      -TREE_TYPE   => 'clusterset',
+      -MEMBER_TYPE => $member_type
+    );
+    next unless scalar(@$trees);
 
-  has_tags($self->dba, 'ENSEMBL_ORTHOLOGUES', $orthologue_tags);
-  has_tags($self->dba, 'ENSEMBL_PARALOGUES', $paralogue_tags);
+    my $orthologue_tags = [
+      "n_${member_type}_many-to-many_groups",
+      "n_${member_type}_many-to-many_pairs",
+      "n_${member_type}_many-to-one_groups",
+      "n_${member_type}_many-to-one_pairs",
+      "n_${member_type}_one-to-many_groups",
+      "n_${member_type}_one-to-many_pairs",
+      "n_${member_type}_one-to-one_groups",
+      "n_${member_type}_one-to-one_pairs"
+    ];
+    my $paralogue_tags = [
+      "n_${member_type}_within_species_paralog_genes",
+      "n_${member_type}_within_species_paralog_groups",
+      "n_${member_type}_within_species_paralog_pairs",
+      "avg_${member_type}_within_species_paralog_perc_id"
+    ];
+
+    has_tags($self->dba, 'ENSEMBL_ORTHOLOGUES', $orthologue_tags);
+    has_tags($self->dba, 'ENSEMBL_PARALOGUES', $paralogue_tags);
+  }
 }
 
 1;

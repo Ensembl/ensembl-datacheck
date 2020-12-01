@@ -167,8 +167,26 @@ sub load_config {
   if (defined $self->config_file) {
     die "Config file does not exist" unless -e $self->config_file;
 
-    my $json = path($self->config_file)->slurp;
-    my %config = %{ JSON->new->decode($json) };
+    # 'slurp' gets an exclusive lock on the file before reading it.
+    # But sometimes we get flock problems, if a bunch of datachecks
+    # are all completing very quickly, so have a brief pause to
+    # calm things down a bit. That doesn't always work, so give
+    # it a second go if the first attempt fails.
+    my $json;
+    eval {
+      sleep(int(rand(10)));
+      $json = path($self->config_file)->slurp;
+    };
+    if ($@) {
+      sleep(int(rand(10)));
+      $json = path($self->config_file)->slurp;
+    }
+
+    my %config;
+    eval {
+      %config = %{ JSON->new->decode($json) };
+    };
+    die $self->config_file . " is not a valid json file:\n$@" if $@;
 
     foreach my $key (keys %{$config{'datacheck_params'}}) {
       if (!exists $params{$key}) {
@@ -364,9 +382,21 @@ sub read_history {
   my %history = ();
 
   if (-s $self->history_file) {
-    # slurp gets an exclusive lock on the file before reading it.
-    my $json = path($self->history_file)->slurp;
-    %history = %{ JSON->new->decode($json) };
+    # 'slurp' gets an exclusive lock on the file before reading it.
+    # But sometimes we get flock problems, if a bunch of datachecks
+    # are all completing very quickly, so have a brief pause to
+    # calm things down a bit. That doesn't always work, so give
+    # it a second go if the first attempt fails.
+    eval {
+      sleep(int(rand(10)));
+      my $json = path($self->history_file)->slurp;
+      %history = %{ JSON->new->decode($json) };
+    };
+    if ($@) {
+      sleep(int(rand(10)));
+      my $json = path($self->history_file)->slurp;
+      %history = %{ JSON->new->decode($json) };
+    }
 
     foreach (@$datachecks) {
       my $name = $_->name;

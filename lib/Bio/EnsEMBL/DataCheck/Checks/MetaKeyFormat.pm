@@ -57,10 +57,14 @@ sub tests {
     'sample.location_text'           => '[\w\.\-]+:\d+\-\d+',
     'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates|Viruses)',
     'species.production_name'        => '_?[a-z0-9]+_[a-z0-9_]+',
+    'species.url'                    => '[A-Z_][a-z0-9]+_[A-Za-z0-9_.]+',
     'species.db_name'                => '_?[a-z0-9]+_[a-z0-9_]+',
-    'species.url'                    => '[A-Z_][a-z0-9]+_[A-Za-z0-9_]+',
     'web_accession_type'             => '(GenBank Assembly ID|EMBL\-Bank|WGS Master)',
     'web_accession_source'           => '(NCBI|ENA|DDBJ)',
+  );
+
+  my %anti_formats = (
+    'genebuild.version' => '\d+',
   );
 
   foreach my $meta_key (sort keys %formats) {
@@ -71,6 +75,18 @@ sub tests {
       skip "No $meta_key defined", 1 unless scalar(@$values);
       foreach my $value (@$values) {
         like($value, qr/^$format$/, $desc);
+      }
+    }
+  }
+
+  foreach my $meta_key (sort keys %anti_formats) {
+    my $desc   = "Value for $meta_key does not have incorrect format";
+    my $format = $anti_formats{$meta_key};
+    my $values = $mca->list_value_by_key($meta_key);
+    SKIP: {
+      skip "No $meta_key defined", 1 unless scalar(@$values);
+      foreach my $value (@$values) {
+        unlike($value, qr/^$format$/, $desc);
       }
     }
   }

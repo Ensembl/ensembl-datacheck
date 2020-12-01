@@ -40,14 +40,19 @@ sub skip_tests {
 
   my $sa = $self->dba->get_adaptor('Slice');
 
-  my @names = ('chrPT', 'PT');
+  my %pt_names = map { lc($_) => 1 } ('chrPT', 'PT');
 
   my $pt = 0;
-  foreach my $name (@names) {
-    my $slice = $sa->fetch_by_region('toplevel', $name);
-    if (defined $slice) {
-      $pt = 1;
-      last;
+  foreach my $pt_name (keys %pt_names) {
+    my $slice = $sa->fetch_by_region('toplevel', $pt_name);
+    # Need to iterate over names due to unavoidable fuzzy matching of synonyms.
+    if (defined $slice && $slice->is_toplevel) {
+      my @names = ($slice->seq_region_name, @{$slice->get_all_synonyms});
+      foreach my $name (@names) {
+        if (exists $pt_names{lc($name)}) {
+          $pt = 1;
+        }
+      }
     }
   }
 
