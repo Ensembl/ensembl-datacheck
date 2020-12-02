@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CoreTables',
   DESCRIPTION => 'Requisite core-like tables are identical to those in the core database',
-  GROUPS      => ['corelike'],
+  GROUPS      => ['core_sync', 'corelike'],
   DB_TYPES    => ['cdna', 'otherfeatures', 'rnaseq'],
   TABLES      => ['assembly', 'coord_system', 'seq_region'],
   FORCE       => 1

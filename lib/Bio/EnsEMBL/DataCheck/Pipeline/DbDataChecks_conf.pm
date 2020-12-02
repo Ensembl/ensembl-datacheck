@@ -205,7 +205,10 @@ sub pipeline_analyses {
                                 ELSE 
                                   ['RunDataChecks']
                                 ),
-                              'A->1' => ['DataCheckResults'],
+                              'A->1' =>
+                                WHEN('scalar @{#all_dbs#}' =>
+                                  ['DataCheckResults']
+                                ),
                                   
                             },
       -rc_name           => 'default',

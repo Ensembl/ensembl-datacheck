@@ -89,12 +89,24 @@ sub density_features {
     longnoncodingdensity  => 'noncoding_cnt_l',
   );
 
+  # A few species have a large number of small 'chromosomes' (often
+  # actually fragments that are known to be chromosomal, but are
+  # unassembled). It's not useful to calculate statistics on everything,
+  # so the Core Statistics pipeline has a 'max_run' parameter, to act
+  # as a threshold - this is effectively a constant, so we can rely
+  # on it having the following value, so that we know for which slices
+  # to expect features.
+  my $max_run = 100;
+
   my $dfa = $self->dba->get_adaptor('DensityFeature');
   my $sa  = $self->dba->get_adaptor('Slice');
 
   my $slices = $sa->fetch_all_karyotype();
 
-  foreach my $slice (@$slices) {
+  my $counter = 0;
+  foreach my $slice (sort {$b->length <=> $a->length} @$slices) {
+    last if ++$counter == $max_run;
+
     my $sr_name = $slice->coord_system_name . ' ' . $slice->seq_region_name;
 
     $self->gc_density($dfa, $slice,
@@ -145,7 +157,7 @@ sub attrib_density {
   my ($attrib) = @{$slice->get_all_Attributes($attrib_name)};
   if (defined $attrib) {
     my $dfs = $dfa->fetch_all_by_Slice($slice, $logic_name);
-    my $density_total;
+    my $density_total = 0;
     foreach my $df (@$dfs) {
       $density_total += $df->density_value();
     }

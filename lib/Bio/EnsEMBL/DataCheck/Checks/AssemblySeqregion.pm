@@ -84,7 +84,7 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql_5, $desc_5);
 
-  my $desc_6 = 'assembly and seq_region lengths consistent';
+  my $desc_6 = 'Assembled seq_region lengths consistent';
   my $diag_6 = 'seq_region length < largest asm_end value';
   my $sql_6  = q/
     SELECT sr.name AS seq_region_name, sr.length, cs.name AS coord_system_name
@@ -92,10 +92,25 @@ sub tests {
       seq_region sr INNER JOIN
       coord_system cs ON sr.coord_system_id = cs.coord_system_id INNER JOIN
       assembly a ON a.asm_seq_region_id = sr.seq_region_id
+    WHERE cs.attrib RLIKE 'default_version'
     GROUP BY a.asm_seq_region_id
     HAVING sr.length < MAX(a.asm_end)
   /;
   is_rows_zero($self->dba, $sql_6, $desc_6, $diag_6);
+
+  my $desc_7 = 'Component seq_region lengths consistent';
+  my $diag_7 = 'seq_region length < largest cmp_end value';
+  my $sql_7  = q/
+    SELECT sr.name AS seq_region_name, sr.length, cs.name AS coord_system_name
+    FROM
+      seq_region sr INNER JOIN
+      coord_system cs ON sr.coord_system_id = cs.coord_system_id INNER JOIN
+      assembly a ON a.cmp_seq_region_id = sr.seq_region_id
+    WHERE cs.attrib RLIKE 'default_version'
+    GROUP BY a.cmp_seq_region_id
+    HAVING sr.length < MAX(a.cmp_end)
+  /;
+  is_rows_zero($self->dba, $sql_7, $desc_7, $diag_7);
 }
 
 1;

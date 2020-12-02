@@ -973,6 +973,7 @@
       "datacheck_type" : "critical",
       "description" : "Requisite core-like tables are identical to those in the core database",
       "groups" : [
+         "core_sync",
          "corelike"
       ],
       "name" : "CoreTables",
@@ -1002,10 +1003,11 @@
       "description" : "Top-level sequences in the core database match dnafrags in compara database",
       "groups" : [
          "compara",
-         "compara_genome_alignments",
          "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
          "compara_syntenies",
-         "compara_master"
+         "core_sync"
       ],
       "name" : "DNAFragCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DNAFragCore"
@@ -1040,7 +1042,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DatabaseCollation"
    },
    "DatabaseSpeciesName" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "The species.production_name meta key matches the DB name",
       "groups" : [
          "core",
@@ -1308,6 +1310,7 @@
       "datacheck_type" : "critical",
       "description" : "Foreign key relationships between tables from different databases are not violated",
       "groups" : [
+         "core_sync",
          "funcgen",
          "schema",
          "variation"
@@ -1428,10 +1431,11 @@
       "description" : "Species, assembly, and geneset metadata are the same in core and compara databases",
       "groups" : [
          "compara",
-         "compara_genome_alignments",
          "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
          "compara_syntenies",
-         "compara_master"
+         "core_sync"
       ],
       "name" : "GenomeDBCore",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeDBCore"
@@ -1630,8 +1634,9 @@
       "description" : "The meta_coord table is correctly populated",
       "groups" : [
          "annotation",
-         "core",
          "brc4_core",
+         "core",
+         "core_sync",
          "corelike",
          "funcgen",
          "geneset",
@@ -1690,6 +1695,7 @@
       "datacheck_type" : "critical",
       "description" : "Assembly and species meta keys are identical between core and core-like databases",
       "groups" : [
+         "core_sync",
          "corelike",
          "meta"
       ],
@@ -2323,6 +2329,19 @@
       "name" : "UniProtDisplayXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UniProtDisplayXref"
    },
+   "UniqueKeysCompara" : {
+      "datacheck_type" : "critical",
+      "description" : "Unique key relationships are not violated",
+      "groups" : [
+         "compara",
+         "compara_gene_trees",
+         "compara_genome_alignments",
+         "compara_master",
+         "compara_syntenies"
+      ],
+      "name" : "UniqueKeysCompara",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UniqueKeysCompara"
+   },
    "UnlocatedTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Transcripts are linked to sequences",
@@ -2469,6 +2488,34 @@
       ],
       "name" : "VersionedGenesBRC4",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenesBRC4"
+   },
+   "WhitespaceAdvisory" : {
+      "datacheck_type" : "advisory",
+      "description" : "Fields do not contain tabs or newlines (\"\\t\", \"\\n\")",
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
+      "name" : "WhitespaceAdvisory",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::WhitespaceAdvisory"
+   },
+   "WhitespaceCritical" : {
+      "datacheck_type" : "critical",
+      "description" : "Fields do not contain carriage returns (\"\\r\")",
+      "groups" : [
+         "compara",
+         "core",
+         "corelike",
+         "funcgen",
+         "schema",
+         "variation"
+      ],
+      "name" : "WhitespaceCritical",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::WhitespaceCritical"
    },
    "XrefFormat" : {
       "datacheck_type" : "critical",

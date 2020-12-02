@@ -91,6 +91,8 @@ sub tests {
       my $desc = "Meta key '$geneset_meta_key' is different between $compare_dbs";
       isnt($geneset, $old_geneset, $desc);
     }
+
+    $old_dba->dbc->disconnect_if_idle();
   }
 }
 
@@ -283,6 +285,11 @@ sub geneset_details {
     WHERE
       cs.name <> 'lrg' AND
       cs.species_id = ?
+    ORDER BY
+      gene_stable_id, 
+      transcript_stable_id, 
+      translation_stable_id, 
+      exon_stable_id
   /;
 
   my $geneset_details =
