@@ -42,8 +42,8 @@ sub tests {
 
   # Check that the format of meta_values conforms to expectations.
   my %formats = (
-    'annotation.provider_url'        => '^https?:\/\/.+$',
-    'assembly.provider_url'          => '^https?:\/\/.+$',
+    'annotation.provider_url'        => '(https?:\/\/.+|www.*\.ensembl\.org)',
+    'assembly.provider_url'          => '(https?:\/\/.+|www.*\.ensembl\.org)',
     'assembly.accession'             => 'GCA_\d+\.\d+',
     'assembly.date'                  => '\d{4}-\d{2}',
     'assembly.default'               => '[\w\.\-]+',
@@ -71,6 +71,8 @@ sub tests {
     my $desc   = "Value for $meta_key has correct format";
     my $format = $formats{$meta_key};
     my $values = $mca->list_value_by_key($meta_key);
+    @$values = grep { $_ ne '' } @$values;
+
     SKIP: {
       skip "No $meta_key defined", 1 unless scalar(@$values);
       foreach my $value (@$values) {
