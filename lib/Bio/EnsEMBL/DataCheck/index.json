@@ -2540,9 +2540,10 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefPrefixes"
    },
    "XrefTypes" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "Xrefs are only attached to one feature type.",
       "groups" : [
+         "core",
          "xref",
          "xref_mapping"
       ],
