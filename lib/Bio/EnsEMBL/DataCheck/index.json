@@ -1511,10 +1511,11 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::InterProFeatures"
    },
    "Karyotype" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "Karyotype data exists for human, mouse and rat",
       "groups" : [
-         "assembly"
+         "assembly",
+         "core"
       ],
       "name" : "Karyotype",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Karyotype"
