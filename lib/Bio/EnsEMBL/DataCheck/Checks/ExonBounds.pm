@@ -43,7 +43,7 @@ sub tests {
   my $attrib = $aa->fetch_by_code('trans_spliced');
   my $attrib_type_id = $attrib->[0] || 0;
 
-  my $exon_transcript_sql = qq/
+  my $sql_tables = qq/
       exon e INNER JOIN
       exon_transcript et USING (exon_id) INNER JOIN
       transcript t USING (transcript_id) INNER JOIN
@@ -53,22 +53,57 @@ sub tests {
         t.transcript_id = ta.transcript_id AND
         ta.attrib_type_id = $attrib_type_id
       )
+  /;
+  my $sql_conditions = qq/
     WHERE
       cs.species_id = $species_id AND
       ta.transcript_id IS NULL
   /;
+  my $exon_transcript_sql = "$sql_tables $sql_conditions";
 
-  my $desc_1 = "Transcript co-ordinates are the same as the exon extremities";
+  my $desc_1 = "Exon bounds match transcript bounds";
   my $diag_1 = "Exon bounds do not match transcript bounds";
-  my $sql_1  = qq/
+  my $sql_1a = qq/
     SELECT t.transcript_id, t.stable_id, t.seq_region_start, t.seq_region_end FROM
-    $exon_transcript_sql
-    GROUP BY t.transcript_id, t.stable_id
-    HAVING
-      MIN(e.seq_region_start) <> t.seq_region_start OR
-      MAX(e.seq_region_end) <> t.seq_region_end
+    $exon_transcript_sql AND
+      et.rank = 1 AND
+      t.seq_region_strand = 1 AND
+      e.seq_region_start <> t.seq_region_start
     /;
-  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
+  my $sql_1b = qq/
+    SELECT t.transcript_id, t.stable_id, t.seq_region_start, t.seq_region_end FROM
+    $exon_transcript_sql AND
+      et.rank = 1 AND
+      t.seq_region_strand = -1 AND
+      e.seq_region_end <> t.seq_region_end
+    /;
+  my $sql_1c = qq/
+    SELECT t.transcript_id, t.stable_id, t.seq_region_start, t.seq_region_end FROM
+    $sql_tables INNER JOIN
+      (SELECT transcript_id, MAX(rank) AS max_rank FROM
+        exon_transcript GROUP BY transcript_id) et2
+      ON t.transcript_id = et2.transcript_id
+    $sql_conditions AND
+      et.rank = et2.max_rank AND
+      t.seq_region_strand = 1 AND
+      e.seq_region_end <> t.seq_region_end
+    /;
+  my $sql_1d = qq/
+    SELECT t.transcript_id, t.stable_id, t.seq_region_start, t.seq_region_end FROM
+    $sql_tables INNER JOIN
+      (SELECT transcript_id, MAX(rank) AS max_rank FROM
+        exon_transcript GROUP BY transcript_id) et2
+      ON t.transcript_id = et2.transcript_id
+    $sql_conditions AND
+      et.rank = et2.max_rank AND
+      t.seq_region_strand = -1 AND
+      e.seq_region_start <> t.seq_region_start
+    /;
+
+  is_rows_zero($self->dba, $sql_1a, "$desc_1 (1/4)", $diag_1);
+  is_rows_zero($self->dba, $sql_1b, "$desc_1 (2/4)", $diag_1);
+  is_rows_zero($self->dba, $sql_1c, "$desc_1 (3/4)", $diag_1);
+  is_rows_zero($self->dba, $sql_1d, "$desc_1 (4/4)", $diag_1);
 
   my $desc_2 = "Exon and transcript have the same strand";
   my $diag_2 = "Transcript and exon have different strands";
@@ -117,11 +152,11 @@ sub tests {
 
     if (defined $last_transcript_id && $last_transcript_id == $transcript_id) {
       if ($strand == 1) {
-        if ($last_end > $start) {
+        if ($last_end > $start && $last_start < $start) {
           push(@exon_overlaps, "Exons $last_exon_id and $exon_id overlap ($last_end > $start)");
         }
       } else {
-        if ($last_start < $end) {
+        if ($last_start < $end && $last_end < $end) {
           push(@exon_overlaps, "Exons $last_exon_id and $exon_id overlap ($last_start < $end)");
         }
       }
