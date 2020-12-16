@@ -68,7 +68,7 @@ sub tests {
   'RefSeq_mRNA_predicted' => '^XM_',
   'RefSeq_ncRNA' => '^NR_|^XR_',
   'RefSeq_ncRNA_predicted' => '^XR_',
-  'RefSeq_peptide' => '^NP|^YP|^AP|^XP',
+  'RefSeq_peptide' => '^RW|^NP|^YP|^AP|^XP',
   'RefSeq_peptide_predicted' => '^XP',
   'SGD' => '^S',
   'SGD_GENE' => '^S',
