@@ -77,15 +77,21 @@ sub run {
   my $passed      = $self->param('json_passed');
   my $by_species  = $self->param('json_by_species');
 
-  $self->parse_results($tap, $output_file, $by_species, $passed);
+  if (-e $tap) {
+    $self->parse_results($tap, $output_file, $by_species, $passed);
+  }
 }
 
 sub write_output {
   my $self = shift;
 
-  $self->dataflow_output_id(
-    { json_output_file => $self->param('json_output_file') }, 1
-  );
+  my $json_output_file = $self->param('json_output_file');
+
+  if (-e $json_output_file) {
+    $self->dataflow_output_id(
+      { json_output_file => $json_output_file }, 1
+    );
+  }
 }
 
 sub parse_results {
