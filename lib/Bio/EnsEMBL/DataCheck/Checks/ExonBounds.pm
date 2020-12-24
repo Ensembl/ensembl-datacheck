@@ -152,7 +152,7 @@ sub tests {
 
     if (defined $last_transcript_id && $last_transcript_id == $transcript_id) {
       if ($strand == 1) {
-        if ($last_end > $start && $last_start < $start) {
+        if ($last_start < $start && $start < $last_end) {
           push(@exon_overlaps, "Exons $last_exon_id and $exon_id overlap ($last_end > $start)");
         }
       } else {
