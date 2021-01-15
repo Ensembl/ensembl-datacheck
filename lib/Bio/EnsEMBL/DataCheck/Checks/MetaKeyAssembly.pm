@@ -53,7 +53,7 @@ sub tests {
       cs.attrib RLIKE 'default_version' AND
       at.code = 'toplevel' AND
       m.meta_key = 'assembly.default' AND
-      MD5(cs.version) <> MD5(m.meta_value) AND
+      BINARY(cs.version) <> BINARY(m.meta_value) AND
       m.species_id = $species_id AND
       cs.species_id = $species_id
     GROUP BY
