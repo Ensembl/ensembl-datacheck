@@ -911,12 +911,7 @@
    "ControlledAnalysisVersion" : {
       "datacheck_type" : "advisory",
       "description" : "Analysis db_verion is consistent with production database",
-      "groups" : [
-         "analysis_description",
-         "core",
-         "brc4_core",
-         "corelike"
-      ],
+      "groups" : [],
       "name" : "ControlledAnalysisVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ControlledAnalysisVersion"
    },
