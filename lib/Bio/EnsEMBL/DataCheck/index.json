@@ -749,6 +749,15 @@
       "name" : "CompareProjectedSynonyms",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProjectedSynonyms"
    },
+   "CompareProteinFunctionPredictions" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare protein function predictions and prediction attributes between two databases, categorised by analysis",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareProteinFunctionPredictions",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareProteinFunctionPredictions"
+   },
    "CompareReadCoverage" : {
       "datacheck_type" : "advisory",
       "description" : "Compare read coverage by sample between two databases",
