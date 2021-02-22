@@ -448,7 +448,7 @@ sub find_old_dbname {
     my ($sql, $params);
     if ($group =~ /(funcgen|variation)/i) {
       $sql = q/
-        SELECT gd.dbname FROM
+        SELECT DISTINCT gd.dbname FROM
           genome_database gd INNER JOIN
           genome g USING (genome_id) INNER JOIN
           organism o USING (organism_id) INNER JOIN
@@ -462,7 +462,7 @@ sub find_old_dbname {
     } else {
       my $division = $mca->get_division;
       $sql = q/
-        SELECT gd.dbname FROM
+        SELECT DISTINCT gd.dbname FROM
           genome_database gd INNER JOIN
           genome g USING (genome_id) INNER JOIN
           organism o USING (organism_id) INNER JOIN
