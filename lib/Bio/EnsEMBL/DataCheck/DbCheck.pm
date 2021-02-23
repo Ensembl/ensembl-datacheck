@@ -446,7 +446,10 @@ sub find_old_dbname {
     die "No metadata database found in the registry" unless defined $meta_dba;
 
     my ($sql, $params);
-    if ($group =~ /(funcgen|variation)/i) {
+    if (
+      $group =~ /(funcgen|variation)/i ||
+      $mca->single_value_by_key('schema_type') =~ /(funcgen|variation)/i
+    ) {
       $sql = q/
         SELECT DISTINCT gd.dbname FROM
           genome_database gd INNER JOIN
