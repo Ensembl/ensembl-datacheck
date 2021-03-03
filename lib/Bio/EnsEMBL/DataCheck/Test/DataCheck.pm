@@ -213,7 +213,7 @@ Rather than compare a row count with an expected value, we might want to
 compare with a count from another database. The simplest scenario is when
 there's a single total to compare.
 
-row_totals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
+row_totals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name, $minimum_count);
 
 This runs an SQL statement C<$sql1> against database connection C<$dbc1>,
 and C<$sql2> against C<$dbc2>. In most cases one of these parameters will
@@ -237,10 +237,17 @@ C<$sql1> must not be less than 75% of the count for C<$sql2>.
 C<$test_name> is a very short description of the test that will be printed
 out; it is optional, but we B<very> strongly encourage its use.
 
+C<$minimum_count> is an optional parameter that sets the minimum number of rows
+that have to be returned by the SQL statemets for the test to be performed. For
+example if C<$minimum_count> is 500 and B<both> SQL evaluations on C<$dbc1> and
+C<$dbc2> return less than 500 rows, then the test is automatically passed; if
+at least one evaluation returns more than 500 then the test is performed.
+Default value is 0.
+
 A slightly more complex case is when you want to compare counts within
 categories, i.e. with an SQL query that uses a GROUP BY statement.
 
-row_subtotals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name);
+row_subtotals($dbc1, $dbc2, $sql1, $sql2, $min_proportion, $test_name, $minimum_count);
 
 In this case the SQL statements must return only two columns, the subtotal
 category and the count, e.g. C<SELECT biotype, COUNT(*) FROM gene GROUP BY biotype>.
@@ -252,30 +259,36 @@ will be provided in a diagnostic message.
 =cut
 
 sub row_totals {
-  my ( $dbc1, $dbc2, $sql1, $sql2, $min_proportion, $name ) = @_;
+  my ( $dbc1, $dbc2, $sql1, $sql2, $min_proportion, $name, $minimum_count ) = @_;
 
   my $tb = $CLASS->builder;
 
   $dbc2 = $dbc1 if ! defined $dbc2;
   $sql2 = $sql1 if ! defined $sql2;
+  $minimum_count = 0 if ! defined $minimum_count;
 
   my ( $count1, undef ) = _query( $dbc1, $sql1 );
   my ( $count2, undef ) = _query( $dbc2, $sql2 );
 
-  if (defined $min_proportion) {
-    return $tb->cmp_ok( $count2 * $min_proportion, '<=', $count1, $name );
+  if ($count1 >= $minimum_count || $count2 >= $minimum_count) {
+    if (defined $min_proportion) {
+      return $tb->cmp_ok( $count2 * $min_proportion, '<=', $count1, $name );
+    } else {
+      return $tb->is_eq( $count2, $count1, $name );
+    }
   } else {
-    return $tb->is_eq( $count2, $count1, $name );
+    return $tb->ok( 1, $name );
   }
 }
 
 sub row_subtotals {
-  my ( $dbc1, $dbc2, $sql1, $sql2, $min_proportion, $name ) = @_;
+  my ( $dbc1, $dbc2, $sql1, $sql2, $min_proportion, $name, $minimum_count ) = @_;
 
   my $tb = $CLASS->builder;
 
   $dbc2 = $dbc1 if ! defined $dbc2;
   $sql2 = $sql1 if ! defined $sql2;
+  $minimum_count = 0 if ! defined $minimum_count;
 
   my ( undef, $rows1 ) = _query( $dbc1, $sql1 );
   my ( undef, $rows2 ) = _query( $dbc2, $sql2 );
@@ -322,20 +335,23 @@ sub row_subtotals {
   # the test can be called again with dbc/sql parameters flipped.
   foreach my $category (keys %subtotals2) {
     $subtotals1{$category} = 0 unless exists $subtotals1{$category};
-
-    if (defined $min_proportion) {
-      if ($subtotals2{$category} * $min_proportion > $subtotals1{$category}) {
-        my $diag_msg =
-          "Lower count than expected for $category.\n".
-          $subtotals1{$category} . ' < ' . $subtotals2{$category} . ' * ' . $min_proportion*100 . '%';
-        push @diag_msgs, $diag_msg;
-      }
-    } else {
-      if ($subtotals2{$category} != $subtotals1{$category}) {
-        my $diag_msg =
-          "Counts do not match for $category.\n".
-          $subtotals1{$category} . ' != ' . $subtotals2{$category};
-        push @diag_msgs, $diag_msg;
+    my $count1 = $subtotals1{$category};
+    my $count2 = $subtotals2{$category};
+    if ($count2 >= $minimum_count || $count1 >= $minimum_count) {
+      if (defined $min_proportion) {
+        if ($count1 < $count2 * $min_proportion) {
+          my $diag_msg =
+            "Lower count than expected for $category.\n".
+            $count1 . ' < ' . $count2 . ' * ' . $min_proportion * 100 . '%';
+          push @diag_msgs, $diag_msg;
+        }
+      } else {
+        if ($count1 != $count2) {
+          my $diag_msg =
+            "Counts do not match for $category.\n".
+            $count1 . ' != ' . $count2;
+          push @diag_msgs, $diag_msg;
+        }
       }
     }
   }

@@ -128,6 +128,8 @@ subtest 'Comparing Database Rows', sub {
   my $sql_4 = 'SELECT biotype, COUNT(*) FROM gene WHERE biotype <> "protein_coding" GROUP BY biotype';
   my $sql_5 = 'SELECT COUNT(*) FROM gene';
   my $sql_6 = 'SELECT * FROM gene GROUP BY biotype';
+  my $sql_7 = 'SELECT stable_id, COUNT(*) FROM gene';
+  my $sql_8 = 'SELECT stable_id, COUNT(*) FROM gene LIMIT 250';
 
   subtest 'row_totals', sub {
     check_tests(
@@ -138,12 +140,16 @@ subtest 'Comparing Database Rows', sub {
         row_totals($dba, undef, $sql_1, $sql_2, 0.9, 'pass: Row totals with min_proportion');
         row_totals($dba, undef, $sql_2, $sql_1, 0.5, 'pass: Row totals with min_proportion');
         row_totals($dba, undef, $sql_2, $sql_1, 0.9, 'fail: Row totals with min_proportion');
+        row_totals($dba, undef, $sql_2, $sql_2, 0.9, 'pass: Row totals below minimum_count', 500);
+        row_totals($dba, undef, $sql_2, $sql_1, 0.9, 'fail: Row totals below minimum_count', 500);
       },
       [
         { ok => 1, depth => undef, name => 'pass: Exact row totals' },
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
       ],
@@ -161,6 +167,8 @@ subtest 'Comparing Database Rows', sub {
         row_subtotals($dba, undef, $sql_3, $sql_4, 1,   'pass: Row subtotals with min_proportion');
         row_subtotals($dba, undef, $sql_4, $sql_3, 0,   'pass: Row subtotals with min_proportion');
         row_subtotals($dba, undef, $sql_4, $sql_3, 1,   'fail: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_8, $sql_8, 0.9, 'pass: Row totals below minimum_count', 500);
+        row_subtotals($dba, undef, $sql_8, $sql_7, 0.9, 'fail: Row totals below minimum_count', 500);
       },
       [
         { ok => 1, depth => undef, name => 'pass: Row subtotals identical' },
@@ -168,6 +176,8 @@ subtest 'Comparing Database Rows', sub {
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
       ],
