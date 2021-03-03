@@ -74,11 +74,10 @@ sub go_xref_counts {
       ox.ensembl_object_type = 'Transcript' AND
       cs.species_id = %d
     GROUP BY edb2.db_name
-    HAVING COUNT(*) > $minimum_count
   /;
   my $sql1 = sprintf($sql, $self->dba->species_id);
   my $sql2 = sprintf($sql, $old_dba->species_id);
-  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc, $minimum_count);
 }
 
 1;

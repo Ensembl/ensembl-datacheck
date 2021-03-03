@@ -78,11 +78,10 @@ sub go_xref_counts {
       info_type not in ('UNMAPPED', 'DEPENDENT') AND
       species_id = %d
     GROUP BY proj_source
-    HAVING COUNT(*) > $minimum_count
   /;
   my $sql1 = sprintf($sql, $self->dba->species_id);
   my $sql2 = sprintf($sql, $old_dba->species_id);
-  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc, $minimum_count);
 }
 
 1;

@@ -79,11 +79,10 @@ sub xref_counts {
       ensembl_object_type = '$table_obj' AND
       species_id = %d
     GROUP BY db_name
-    HAVING COUNT(*) > $minimum_count
   /;
   my $sql1 = sprintf($sql, $self->dba->species_id);
   my $sql2 = sprintf($sql, $old_dba->species_id);
-  row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.66, $desc);
+  row_subtotals($self->dba, $old_dba, $sql1, $sql2, 0.66, $desc, $minimum_count);
 }
 
 1;
