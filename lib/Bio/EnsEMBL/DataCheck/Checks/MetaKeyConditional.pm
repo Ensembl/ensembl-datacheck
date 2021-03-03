@@ -185,6 +185,8 @@ sub repeat_analysis {
         species_id = $species_id
       AND
         logic_name <> "repeatmask_repeatmodeler"
+      AND
+        logic_name <> "repeatdetector"
       GROUP BY
         logic_name
       ORDER BY logic_name
