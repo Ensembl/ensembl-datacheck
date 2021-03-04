@@ -237,12 +237,11 @@ C<$sql1> must not be less than 75% of the count for C<$sql2>.
 C<$test_name> is a very short description of the test that will be printed
 out; it is optional, but we B<very> strongly encourage its use.
 
-C<$minimum_count> is an optional parameter that sets the minimum number of rows
-that have to be returned by the SQL statemets for the test to be performed. For
-example if C<$minimum_count> is 500 and B<both> SQL evaluations on C<$dbc1> and
-C<$dbc2> return less than 500 rows, then the test is automatically passed; if
-at least one evaluation returns more than 500 then the test is performed.
-Default value is 0.
+C<$minimum_count> is an optional parameter that sets the minimum count that have
+to be returned by the SQL statemets for the test to be performed. For example if
+C<$minimum_count> is 500 and B<both> SQL evaluations on C<$dbc1> and C<$dbc2>
+return less than 500, then the test is automatically passed; if at least one
+evaluation returns more than 500 then the test is performed. Default value is 0.
 
 A slightly more complex case is when you want to compare counts within
 categories, i.e. with an SQL query that uses a GROUP BY statement.
