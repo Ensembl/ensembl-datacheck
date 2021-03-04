@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckHomologyMLSS',
   DESCRIPTION    => 'The expected number of homologys MLSSs are present',
-  GROUPS         => ['compara', 'compara_gene_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_homology_annotation'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link_species_set', 'homology']
@@ -43,6 +43,9 @@ sub tests {
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my @method_links = qw(ENSEMBL_ORTHOLOGUES ENSEMBL_PARALOGUES ENSEMBL_HOMOEOLOGUES ENSEMBL_PROJECTIONS);
+  if ($dba->dbc->dbname !~ /[ensembl_compara|protein_trees|ncrna_trees]/) {
+    @method_links = qw(ENSEMBL_HOMOLOGUES);
+  }
 
   my $expected_homology_count;
 

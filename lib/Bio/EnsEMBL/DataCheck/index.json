@@ -162,6 +162,7 @@
          "compara_master",
          "compara_syntenies",
          "compara_references",
+         "compara_homology_annotation",
          "core",
          "corelike",
          "funcgen",
@@ -182,7 +183,8 @@
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
-         "compara_referenes",
+         "compara_references",
+         "compara_homology_annotation",
          "core",
          "corelike",
          "funcgen",
@@ -229,8 +231,7 @@
       "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
       "groups" : [
          "compara",
-         "compara_gene_trees",
-         "compara_references"
+         "compara_gene_trees"
       ],
       "name" : "CheckComparaStableIDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
@@ -274,7 +275,8 @@
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
-         "compara_references"
+         "compara_references",
+         "compara_homology_annotation"
       ],
       "name" : "CheckDuplicatedTaxaNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
@@ -384,7 +386,8 @@
       "description" : "Check homology_id are all one-to-many for homology_members",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_homology_annotation"
       ],
       "name" : "CheckHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
@@ -394,7 +397,8 @@
       "description" : "The expected number of homologys MLSSs are present",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_homology_annotation"
       ],
       "name" : "CheckHomologyMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
@@ -523,7 +527,8 @@
       "groups" : [
          "compara",
          "compara_gene_trees",
-         "compara_references"
+         "compara_references",
+         "compara_homology_annotation"
       ],
       "name" : "CheckSequenceTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
@@ -550,7 +555,8 @@
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
-         "compara_references"
+         "compara_references",
+         "compara_homology_annotation"
       ],
       "name" : "CheckSpeciesSetTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable"
@@ -632,7 +638,8 @@
       "groups" : [
          "compara",
          "compara_gene_trees",
-         "compara_genome_alignments"
+         "compara_genome_alignments",
+         "compara_homology_annotation"
       ],
       "name" : "CigarCheck",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
@@ -1296,7 +1303,8 @@
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
-         "compara_references"
+         "compara_references",
+         "compara_homology_annotation"
       ],
       "name" : "ForeignKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
@@ -1818,7 +1826,8 @@
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_homology_annotation"
       ],
       "name" : "NoDataOnGenomeComponents",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NoDataOnGenomeComponents"
@@ -2079,6 +2088,7 @@
          "compara_master",
          "compara_syntenies",
          "compara_references",
+         "compara_homology_annotation",
          "core",
          "corelike",
          "funcgen",
@@ -2099,6 +2109,7 @@
          "compara_master",
          "compara_syntenies",
          "compara_references",
+         "compara_homology_annotation",
          "core",
          "corelike",
          "funcgen",
