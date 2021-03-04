@@ -161,6 +161,7 @@
          "compara_gene_trees",
          "compara_master",
          "compara_syntenies",
+         "compara_references",
          "core",
          "corelike",
          "funcgen",
@@ -181,6 +182,7 @@
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
+         "compara_referenes",
          "core",
          "corelike",
          "funcgen",
@@ -227,7 +229,8 @@
       "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_references"
       ],
       "name" : "CheckComparaStableIDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
@@ -270,7 +273,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_references"
       ],
       "name" : "CheckDuplicatedTaxaNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
@@ -495,7 +499,8 @@
          "compara",
          "compara_gene_trees",
          "compara_master",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_references"
       ],
       "name" : "CheckReleaseConsistency",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseConsistency"
@@ -506,7 +511,8 @@
       "groups" : [
          "compara",
          "compara_master",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_references"
       ],
       "name" : "CheckReleaseNulls",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckReleaseNulls"
@@ -516,7 +522,8 @@
       "description" : "Check for sequence length and availability",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_references"
       ],
       "name" : "CheckSequenceTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
@@ -542,7 +549,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_references"
       ],
       "name" : "CheckSpeciesSetTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable"
@@ -1287,7 +1295,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_references"
       ],
       "name" : "ForeignKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
@@ -2069,6 +2078,7 @@
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
+         "compara_references",
          "core",
          "corelike",
          "funcgen",
@@ -2088,6 +2098,7 @@
          "compara_genome_alignments",
          "compara_master",
          "compara_syntenies",
+         "compara_references",
          "core",
          "corelike",
          "funcgen",
@@ -2108,7 +2119,8 @@
          "corelike",
          "funcgen",
          "schema",
-         "variation"
+         "variation",
+         "compara_references"
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"

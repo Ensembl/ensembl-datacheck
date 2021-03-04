@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ForeignKeysCompara',
   DESCRIPTION => 'Foreign key relationships are not violated',
-  GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies'],
+  GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'compara_references'],
   DB_TYPES    => ['compara'],
   PER_DB      => 1
 };
@@ -73,7 +73,7 @@ sub compara_fk {
   fk($self->dba, 'genomic_align_block', 'genomic_align_block_id', 'genomic_align');
 
   # Reverse direction FK constraint, but not applicable to compara_master or pipeline dbs
-  if ($self->dba->dbc->dbname !~ /_master/ && is_compara_ehive_db($self->dba) != 1) {
+  if ($self->dba->dbc->dbname !~ /[_master|_reference]/ && is_compara_ehive_db($self->dba) != 1) {
     fk($self->dba, 'method_link', 'method_link_id', 'method_link_species_set');
     fk($self->dba, 'species_set', 'species_set_id', 'method_link_species_set');
     fk($self->dba, 'genome_db',   'genome_db_id',   'species_set',             undef, 'name != "ancestral_sequences"' );

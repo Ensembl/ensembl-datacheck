@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckReleaseConsistency',
   DESCRIPTION    => 'Check for consistency between retired genomes and species_sets',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_master', 'compara_syntenies'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_master', 'compara_syntenies', 'compara_references'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genome_db', 'method_link_species_set', 'species_set_header']
