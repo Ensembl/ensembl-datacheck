@@ -138,12 +138,16 @@ subtest 'Comparing Database Rows', sub {
         row_totals($dba, undef, $sql_1, $sql_2, 0.9, 'pass: Row totals with min_proportion');
         row_totals($dba, undef, $sql_2, $sql_1, 0.5, 'pass: Row totals with min_proportion');
         row_totals($dba, undef, $sql_2, $sql_1, 0.9, 'fail: Row totals with min_proportion');
+        row_totals($dba, undef, $sql_2, $sql_2, 0.9, 'pass: Row totals below minimum_count', 500);
+        row_totals($dba, undef, $sql_2, $sql_1, 0.9, 'fail: Row totals below minimum_count', 250);
       },
       [
         { ok => 1, depth => undef, name => 'pass: Exact row totals' },
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
       ],
@@ -161,6 +165,8 @@ subtest 'Comparing Database Rows', sub {
         row_subtotals($dba, undef, $sql_3, $sql_4, 1,   'pass: Row subtotals with min_proportion');
         row_subtotals($dba, undef, $sql_4, $sql_3, 0,   'pass: Row subtotals with min_proportion');
         row_subtotals($dba, undef, $sql_4, $sql_3, 1,   'fail: Row subtotals with min_proportion');
+        row_subtotals($dba, undef, $sql_4, $sql_3, 1, 'pass: Row totals below minimum_count', 500);
+        row_subtotals($dba, undef, $sql_4, $sql_3, 1, 'fail: Row totals below minimum_count', 3);
       },
       [
         { ok => 1, depth => undef, name => 'pass: Row subtotals identical' },
@@ -168,6 +174,8 @@ subtest 'Comparing Database Rows', sub {
         { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 1, depth => undef },
+        { ok => 1, depth => undef },
+        { ok => 0, depth => undef },
         { ok => 1, depth => undef },
         { ok => 0, depth => undef },
       ],
