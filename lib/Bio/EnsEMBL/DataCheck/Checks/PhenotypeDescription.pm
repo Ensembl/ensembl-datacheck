@@ -42,7 +42,7 @@ sub tests {
   my $desc_length = 'Phenotype description length';
   my $diag_length = "Row with suspiciously short description";
   my $sql_length = qq/
-      SELECT phenotype_id
+      SELECT phenotype_id, description
       FROM phenotype
       WHERE description IS NOT NULL
       AND LENGTH(description) < 4
@@ -62,7 +62,7 @@ sub tests {
   my $desc_ascii = 'ASCII chars printable in description';
   my $diag_ascii = "Row with unsupported ASCII chars";
   my $sql_ascii = qq/
-      SELECT phenotype_id
+      SELECT phenotype_id, description
       FROM phenotype
       WHERE description REGEXP '[^ -;=\?-~]'
       OR LEFT(description, 1) REGEXP '[^A-Za-z0-9]'
