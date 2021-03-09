@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'BlankNulls',
   DESCRIPTION => 'Nullable columns do not have empty string values',
-  GROUPS      => ['ancestral', 'brc4_core', 'compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['ancestral', 'brc4_core', 'compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'compara_references', 'compara_homology_annotation', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1
 };

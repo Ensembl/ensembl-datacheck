@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'NoDataOnGenomeComponents',
   DESCRIPTION    => 'Data is only allowed on principle genomes and not components',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_syntenies'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_syntenies', 'compara_homology_annotation'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['constrained_element', 'dnafrag', 'dnafrag_region', 'gene_member', 'genome_db', 'genomic_align', 'seq_member']
