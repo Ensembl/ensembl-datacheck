@@ -43,14 +43,13 @@ sub tests {
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my @method_links = qw(ENSEMBL_ORTHOLOGUES ENSEMBL_PARALOGUES ENSEMBL_HOMOEOLOGUES ENSEMBL_PROJECTIONS);
-  if ($dba->dbc->dbname !~ /[ensembl_compara|protein_trees|ncrna_trees]/) {
+  if ($dba->dbc->dbname !~ /ensembl_compara|protein_trees|ncrna_trees/) {
     @method_links = qw(ENSEMBL_HOMOLOGUES);
   }
 
   my $expected_homology_count;
 
   foreach my $method_link_type ( @method_links ) {
-
     my $mlsss = $self->dba->get_MethodLinkSpeciesSetAdaptor->fetch_all_by_method_link_type($method_link_type);
     # Only check from the method_links that have mlsss there are other datachecks to check if mlsss are correct
     next if scalar(@$mlsss) == 0;
