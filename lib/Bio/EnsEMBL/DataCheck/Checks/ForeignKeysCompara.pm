@@ -46,7 +46,7 @@ sub tests {
     if ($self->dba->dbc->dbname =~ /master/) {
       next if join(" ", @$relationship) eq 'genome_db taxon_id ncbi_taxa_node taxon_id';
     }
-    if ($self->dba->dbc->dbname !~ /[ensembl_compara|protein_trees|ncrna_trees]/) {
+    if ($self->dba->dbc->dbname !~ /ensembl_compara|protein_trees|ncrna_trees/) {
       next if join(" ", @$relationship) =~ /homology_member.*[gene_member_id|seq_member_id]/;
       next if join(" ", @$relationship) =~ /peptide_align_feature.*[gene_member_id|seq_member_id]/;
     }
