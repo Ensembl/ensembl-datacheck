@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'Denormalized',
   DESCRIPTION => 'Denormalized columns are synchronised',
-  GROUPS      => ['long_running_dc', 'schema'],
+  GROUPS      => ['long_running', 'schema'],
   DB_TYPES    => ['variation'],
   TABLES      => ['structural_variation', 'structural_variation_feature', 'transcript_variation', 'variation', 'variation_feature']
 };
@@ -48,4 +48,3 @@ sub tests {
 }
 
 1;
-
