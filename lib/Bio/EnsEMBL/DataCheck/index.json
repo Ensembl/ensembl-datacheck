@@ -1077,7 +1077,7 @@
       "datacheck_type" : "critical",
       "description" : "Denormalized columns are synchronised",
       "groups" : [
-         "long_running_dc",
+         "long_running",
          "schema"
       ],
       "name" : "Denormalized",
