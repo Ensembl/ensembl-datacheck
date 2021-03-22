@@ -444,6 +444,15 @@
       "name" : "CheckMSANames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMSANames"
    },
+   "CheckMemberIDRange" : {
+      "datacheck_type" : "advisory",
+      "description" : "All members are within the offset range for each genome_db",
+      "groups" : [
+         "compara_references"
+      ],
+      "name" : "CheckMemberIDRange",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMemberIDRange"
+   },
    "CheckMethodLinkSpeciesSetNames" : {
       "datacheck_type" : "advisory",
       "description" : "Check for consistency of names in method_link_species_set (and species_set_header)",
