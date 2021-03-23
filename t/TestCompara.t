@@ -36,7 +36,7 @@ my $dba      = $testdb->get_DBAdaptor($db_type);
 my $module = 'Bio::EnsEMBL::DataCheck::Test::Compara';
 
 diag('Methods');
-can_ok($module, qw( has_tags cmp_tag ));
+can_ok($module, qw( has_tags cmp_tag check_id_range ));
   
 subtest 'MLSS Tags', sub {
   my $real_tags = ['ref_genome_coverage', 'ref_genome_length'];
@@ -77,6 +77,22 @@ subtest 'MLSS Tags', sub {
       'cmp_tag method'
     );
   };
+};
+
+subtest 'Offset IDs', sub {
+  my $real_genome_db_id = 90;
+  my $fake_genome_db_id = 1;
+
+  check_tests(
+    sub {
+      check_id_range($dba, "seq_member", "genome_db_id", $real_genome_db_id);
+      check_id_range($dba, "seq_member", "genome_db_id", $fake_genome_db_id);
+    },
+    [
+      { ok => 1, name => "seq_member_id in seq_member is correctly offset by 90", diag => undef, depth => undef },
+      { ok => 0, name => "seq_member_id in seq_member is correctly offset by 1", diag => "         got: '0'\n    expected: '1'", depth => undef },
+    ],
+  );
 };
 
 done_testing();
