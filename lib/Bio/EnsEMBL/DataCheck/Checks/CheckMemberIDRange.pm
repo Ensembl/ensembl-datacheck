@@ -44,9 +44,9 @@ sub tests {
 
   foreach my $genome_db ( sort { $a->dbID() <=> $b->dbID() } @$genome_dbs ) {
     my $genome_db_id = $genome_db->dbID();
+    check_id_range($dba, "gene_member", "genome_db_id", $genome_db_id);
     check_id_range($dba, "seq_member", "genome_db_id", $genome_db_id);
   }
 }
 
 1;
-

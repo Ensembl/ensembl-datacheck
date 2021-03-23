@@ -166,7 +166,7 @@ out; if not provided, a default will be used.
 sub check_id_range {
   my ($dba, $table_name, $id_column, $id_column_val, $name) = @_;
 
-my $tb = $CLASS->builder;
+  my $tb = $CLASS->builder;
   my $helper = $dba->dbc->sql_helper;
   # The naming convention of the id column in table_name follows table_name_id
   my $table_column = $table_name . "_id";
