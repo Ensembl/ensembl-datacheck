@@ -33,9 +33,7 @@ use strict;
 use feature 'say';
 
 use Test::Builder::Module;
-use Test::More;
 
-use Bio::EnsEMBL::Utils::SqlHelper;
 
 our $VERSION = 1.00;
 our @ISA     = qw(Test::Builder::Module);
@@ -150,7 +148,7 @@ sub cmp_tag {
 
 =item B<check_id_range>
 
-check_id_range($dba, $table_name, $id_column, $id_column_val);
+check_id_range($dba, $table_name, $id_column, $id_column_val, $test_name);
 
 Takes C<$table_name> and $table_name . "_id" in C<$table_name> and checks that
 $table_name . "_id" is offset by C<$id_column> using C<$id_column_val>.
@@ -158,13 +156,17 @@ $table_name . "_id" is offset by C<$id_column> using C<$id_column_val>.
 This is an offset type commonly used in compara databases using genome_db_id or
 method_link_species_set_id for example.
 
+C<$test_name> is a short description of the test that will be printed
+out; if not provided, a default will be used.
+
 =back
 
 =cut
 
 sub check_id_range {
-  my ($dba, $table_name, $id_column, $id_column_val) = @_;
+  my ($dba, $table_name, $id_column, $id_column_val, $name) = @_;
 
+my $tb = $CLASS->builder;
   my $helper = $dba->dbc->sql_helper;
   # The naming convention of the id column in table_name follows table_name_id
   my $table_column = $table_name . "_id";
@@ -179,8 +181,8 @@ sub check_id_range {
   /;
 
   my $results = $helper->execute_single_result(-SQL => $sql);
-  my $test = "$table_column in $table_name is correctly offset by $id_column_val";
-  is( $results, 1, $test );
+  $name = "$table_column in $table_name is correctly offset by $id_column_val" unless defined $name;
+  $tb->is_eq( $results, 1, $name );
 }
 
 1;
