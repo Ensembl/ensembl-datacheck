@@ -2139,8 +2139,7 @@
          "corelike",
          "funcgen",
          "schema",
-         "variation",
-         "compara_references"
+         "variation"
       ],
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
