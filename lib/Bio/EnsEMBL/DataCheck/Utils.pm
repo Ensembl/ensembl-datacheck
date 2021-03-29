@@ -145,6 +145,9 @@ sub foreign_keys {
         next if $line =~ /^\-\-/;
         next unless $line =~ /FOREIGN KEY/;
 
+        if ($line =~ /ALTER TABLE/) {
+          ($table1) = $line =~ /ALTER\s+TABLE\s+(\S+)\s+ADD\s+/i;
+        }
         my ($col1, $table2, $col2) = $line =~
           /\s*FOREIGN\s+KEY\s+\((\S+)\)\s+REFERENCES\s+(\S+)\s*\((\S+)\)/i;
         if (defined $col1 && defined $table2 && defined $col2) {
