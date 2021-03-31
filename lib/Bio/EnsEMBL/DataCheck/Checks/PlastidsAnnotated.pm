@@ -47,7 +47,8 @@ sub skip_tests {
     my $slice = $sa->fetch_by_region('toplevel', $pt_name);
     # Need to iterate over names due to unavoidable fuzzy matching of synonyms.
     if (defined $slice && $slice->is_toplevel) {
-      my @names = ($slice->seq_region_name, @{$slice->get_all_synonyms});
+      my @synonyms = map { $_->name } @{$slice->get_all_synonyms};
+      my @names = ($slice->seq_region_name, @synonyms);
       foreach my $name (@names) {
         if (exists $pt_names{lc($name)}) {
           $pt = 1;
