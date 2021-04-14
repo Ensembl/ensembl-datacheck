@@ -40,11 +40,14 @@ sub skip_tests {
 
   my $sa = $self->dba->get_adaptor('Slice');
 
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $cs_version = $mca->single_value_by_key('assembly.default');
+
   my @chromosomal = ('chromosome', 'chromosome_group', 'plasmid');
 
   my $chr_count = 0;
   foreach my $cs_name (@chromosomal) {
-    my $slices = $sa->fetch_all($cs_name);
+    my $slices = $sa->fetch_all($cs_name, $cs_version);
     foreach (@$slices) {
       # seq_regions that are not genuine biological chromosomes,
       # but are instead collections of unmapped sequence,
@@ -67,10 +70,13 @@ sub tests {
 
   my $sa = $self->dba->get_adaptor('Slice');
 
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $cs_version = $mca->single_value_by_key('assembly.default');
+
   my @chromosomal = ('chromosome', 'chromosome_group', 'plasmid');
 
   foreach my $cs_name (@chromosomal) {
-    my $slices = $sa->fetch_all($cs_name);
+    my $slices = $sa->fetch_all($cs_name, $cs_version);
     foreach (@$slices) {
       my @non_bio_chr = @{$_->get_all_Attributes('chromosome')};
       next if scalar(@non_bio_chr);
