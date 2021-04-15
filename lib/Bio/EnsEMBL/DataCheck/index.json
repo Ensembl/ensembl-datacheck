@@ -1,4 +1,22 @@
 {
+   "APPRISAttribValuesExist" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that APPRIS attributes exist",
+      "groups" : [
+         "geneset_support_level"
+      ],
+      "name" : "APPRISAttribValuesExist",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::APPRISAttribValuesExist"
+   },
+   "APPRISCoverage" : {
+      "datacheck_type" : "advisory",
+      "description" : "APPRIS covers 95% of protein-coding gene on each chromosome",
+      "groups" : [
+         "geneset_support_level"
+      ],
+      "name" : "APPRISCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::APPRISCoverage"
+   },
    "AlignFeatureExternalDB" : {
       "datacheck_type" : "advisory",
       "description" : "All alignment features are linked to an external DB",
@@ -133,19 +151,11 @@
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
    },
-   "AttribValuesCoverage" : {
-      "datacheck_type" : "advisory",
-      "description" : "TSL and APPRIS covers 95% of protein-coding gene on each chromosome",
-      "groups" : [
-         "geneset_support_level"
-      ],
-      "name" : "AttribValuesCoverage",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValuesCoverage"
-   },
    "AttribValuesExist" : {
       "datacheck_type" : "critical",
-      "description" : "Check that TSL, APPRIS and GENCODE attributes exist",
+      "description" : "Check that TSL and GENCODE attributes exist",
       "groups" : [
+         "core",
          "geneset_support_level"
       ],
       "name" : "AttribValuesExist",
@@ -2310,6 +2320,15 @@
       ],
       "name" : "StructuralVariationSomatic",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationSomatic"
+   },
+   "TSLCoverage" : {
+      "datacheck_type" : "advisory",
+      "description" : "TSL covers 95% of protein-coding gene on each chromosome",
+      "groups" : [
+         "geneset_support_level"
+      ],
+      "name" : "TSLCoverage",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TSLCoverage"
    },
    "TagCoverageStats" : {
       "datacheck_type" : "critical",

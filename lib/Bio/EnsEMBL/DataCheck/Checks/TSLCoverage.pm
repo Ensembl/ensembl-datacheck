@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AttribValuesCoverage;
+package Bio::EnsEMBL::DataCheck::Checks::TSLCoverage;
 
 use warnings;
 use strict;
@@ -28,8 +28,8 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'AttribValuesCoverage',
-  DESCRIPTION    => 'TSL and APPRIS covers 95% of protein-coding gene on each chromosome',
+  NAME           => 'TSLCoverage',
+  DESCRIPTION    => 'TSL covers 95% of protein-coding gene on each chromosome',
   GROUPS         => ['geneset_support_level'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
@@ -40,39 +40,10 @@ sub tests {
   my ($self) = @_;
   my $helper = $self->dba->dbc->sql_helper;
 
-  my $desc_1 = '95% of the protein-coding genes on each chromosome have APPRIS attributes';
-  my $sql_1a = q/
-    SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
-      gene g INNER JOIN
-      seq_region sr USING (seq_region_id) INNER JOIN
-      seq_region_attrib sra USING (seq_region_id) INNER JOIN
-      attrib_type at ON sra.attrib_type_id = at.attrib_type_id INNER JOIN
-      transcript t USING (gene_id) INNER JOIN
-      transcript_attrib ta USING (transcript_id) INNER JOIN
-      attrib_type at2 ON ta.attrib_type_id = at2.attrib_type_id
-    WHERE
-      g.biotype = 'protein_coding' AND
-      at.code = 'karyotype_rank' AND
-      at2.code like 'appris%'
-    GROUP BY sr.name
-  /;
-  my $sql_1b = q/
-    SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
-      gene g INNER JOIN
-      seq_region sr USING (seq_region_id) INNER JOIN
-      seq_region_attrib sra USING (seq_region_id) INNER JOIN
-      attrib_type at ON sra.attrib_type_id = at.attrib_type_id
-    WHERE
-      g.biotype = 'protein_coding' AND
-      at.code = 'karyotype_rank'
-    GROUP BY sr.name
-  /;
-  row_subtotals($self->dba, undef, $sql_1a, $sql_1b, 0.95, $desc_1);
-
   if ($self->species =~ /(homo_sapiens|mus_musculus)/) {
 
-    my $desc_2 = '95% of the protein-coding genes on each chromosome have TSL attributes';
-    my $sql_2a = q/
+    my $desc_1 = '95% of the protein-coding genes on each chromosome have TSL attributes';
+    my $sql_1a = q/
       SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
         gene g INNER JOIN
         seq_region sr USING (seq_region_id) INNER JOIN
@@ -87,7 +58,7 @@ sub tests {
         at2.code like 'tsl%'
       GROUP BY sr.name
     /;
-    my $sql_2b = q/
+    my $sql_1b = q/
       SELECT sr.name, COUNT(DISTINCT g.stable_id) FROM
         gene g INNER JOIN
         seq_region sr USING (seq_region_id) INNER JOIN
@@ -98,7 +69,7 @@ sub tests {
         at.code = 'karyotype_rank'
       GROUP BY sr.name
     /;
-    row_subtotals($self->dba, undef, $sql_2a, $sql_2b, 0.95, $desc_2);
+    row_subtotals($self->dba, undef, $sql_1a, $sql_1b, 0.95, $desc_1);
   }
 }
 
