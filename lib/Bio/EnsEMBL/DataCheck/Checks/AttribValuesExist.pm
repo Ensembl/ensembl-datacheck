@@ -29,57 +29,53 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'AttribValuesExist',
-  DESCRIPTION    => 'Check that TSL, APPRIS and GENCODE attributes exist',
-  GROUPS         => ['geneset_support_level'],
+  DESCRIPTION    => 'Check that TSL and GENCODE attributes exist',
+  GROUPS         => ['core', 'geneset_support_level'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'transcript', 'transcript_attrib']
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  if ( $self->species !~ /^(homo_sapiens|mus_musculus)$/ ) {
+    return (1, 'GENCODE/TSL attribs are only required for human and mouse');
+  }
+}
+
 sub tests {
   my ($self) = @_;
   my $helper = $self->dba->dbc->sql_helper;
 
-  my $desc_1 = 'APPRIS attributes exist';
-  my $sql_1  = q/
+  my $desc_1 = 'All genes have at least one transcript with a gencode_basic attribute';
+  my $sql_1a = q/
+    SELECT COUNT(distinct gene_id) FROM transcript
+    WHERE biotype NOT IN ('LRG_gene')
+  /;
+  my $sql_1b = q/
+    SELECT COUNT(distinct gene_id) FROM
+      transcript INNER JOIN
+      transcript_attrib USING (transcript_id) INNER JOIN
+      attrib_type USING (attrib_type_id) 
+    WHERE
+      biotype NOT IN ('LRG_gene') AND
+      attrib_type.code = 'gencode_basic'
+  /;
+
+  my $gene_count    = $helper->execute_single_result( -SQL => $sql_1a );
+  my $gencode_count = $helper->execute_single_result( -SQL => $sql_1b );
+  is($gencode_count, $gene_count, $desc_1);
+
+  my $desc_2 = 'TSL attributes exist';
+  my $sql_2  = q/
     SELECT COUNT(*) FROM
       transcript INNER JOIN
       transcript_attrib USING (transcript_id) INNER JOIN
       attrib_type USING (attrib_type_id)
-    WHERE code like 'appris%'
+    WHERE code like 'tsl%'
   /;
-  is_rows_nonzero($self->dba, $sql_1, $desc_1);
-
-  if ($self->species =~ /(homo_sapiens|mus_musculus)/) {
-    my $desc_2 = 'All genes have at least one transcript with a gencode_basic attribute';
-    my $sql_2a = q/
-      SELECT COUNT(distinct gene_id) FROM transcript
-      WHERE biotype NOT IN ('LRG_gene')
-    /;
-    my $sql_2b = q/
-      SELECT COUNT(distinct gene_id) FROM
-        transcript INNER JOIN
-        transcript_attrib USING (transcript_id) INNER JOIN
-        attrib_type USING (attrib_type_id) 
-      WHERE
-        biotype NOT IN ('LRG_gene') AND
-        attrib_type.code = 'gencode_basic'
-    /;
-
-    my $gene_count    = $helper->execute_single_result( -SQL => $sql_2a );
-    my $gencode_count = $helper->execute_single_result( -SQL => $sql_2b );
-    is($gencode_count, $gene_count, $desc_2);
-
-    my $desc_3 = 'TSL attributes exist';
-    my $sql_3  = q/
-      SELECT COUNT(*) FROM
-        transcript INNER JOIN
-        transcript_attrib USING (transcript_id) INNER JOIN
-        attrib_type USING (attrib_type_id)
-      WHERE code like 'tsl%'
-    /;
-    is_rows_nonzero($self->dba, $sql_3, $desc_3);
-  }
+  is_rows_nonzero($self->dba, $sql_2, $desc_2);
 }
 
 1;
