@@ -151,16 +151,6 @@
       "name" : "AssemblySeqregion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblySeqregion"
    },
-   "AttribValuesExist" : {
-      "datacheck_type" : "critical",
-      "description" : "Check for presence of TSL and GENCODE attributes, and CCDS xrefs",
-      "groups" : [
-         "core",
-         "geneset_support_level"
-      ],
-      "name" : "AttribValuesExist",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AttribValuesExist"
-   },
    "BlankEnums" : {
       "datacheck_type" : "critical",
       "description" : "Enum columns do not have empty string values",
@@ -2362,6 +2352,16 @@
       ],
       "name" : "TranscriptDisplayXrefSuffix",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptDisplayXrefSuffix"
+   },
+   "TranscriptSupport" : {
+      "datacheck_type" : "critical",
+      "description" : "Check for presence of TSL and GENCODE attributes, and CCDS xrefs",
+      "groups" : [
+         "core",
+         "geneset_support_level"
+      ],
+      "name" : "TranscriptSupport",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TranscriptSupport"
    },
    "TranscriptVariation" : {
       "datacheck_type" : "critical",

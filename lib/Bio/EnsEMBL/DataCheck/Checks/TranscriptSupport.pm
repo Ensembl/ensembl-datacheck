@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::AttribValuesExist;
+package Bio::EnsEMBL::DataCheck::Checks::TranscriptSupport;
 
 use warnings;
 use strict;
@@ -28,12 +28,12 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'AttribValuesExist',
+  NAME           => 'TranscriptSupport',
   DESCRIPTION    => 'Check for presence of TSL and GENCODE attributes, and CCDS xrefs',
   GROUPS         => ['core', 'geneset_support_level'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
-  TABLES         => ['attrib_type', 'transcript', 'transcript_attrib']
+  TABLES         => ['attrib_type', 'external_db', 'object_xref', 'transcript', 'transcript_attrib', 'xref']
 };
 
 sub skip_tests {
