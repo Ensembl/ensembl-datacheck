@@ -153,7 +153,7 @@
    },
    "AttribValuesExist" : {
       "datacheck_type" : "critical",
-      "description" : "Check that TSL and GENCODE attributes exist",
+      "description" : "Check for presence of TSL and GENCODE attributes, and CCDS xrefs",
       "groups" : [
          "core",
          "geneset_support_level"

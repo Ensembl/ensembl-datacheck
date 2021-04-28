@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'AttribValuesExist',
-  DESCRIPTION    => 'Check that TSL and GENCODE attributes exist',
+  DESCRIPTION    => 'Check for presence of TSL and GENCODE attributes, and CCDS xrefs',
   GROUPS         => ['core', 'geneset_support_level'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
@@ -40,7 +40,7 @@ sub skip_tests {
   my ($self) = @_;
 
   if ( $self->species !~ /^(homo_sapiens|mus_musculus)$/ ) {
-    return (1, 'GENCODE/TSL attribs are only required for human and mouse');
+    return (1, 'GENCODE/TSL/CCDS are only required for human and mouse');
   }
 }
 
@@ -76,6 +76,16 @@ sub tests {
     WHERE code like 'tsl%'
   /;
   is_rows_nonzero($self->dba, $sql_2, $desc_2);
+
+  my $desc_3 = 'CCDS xrefs exist';
+  my $sql_3  = q/
+    SELECT COUNT(*) FROM
+      object_xref INNER JOIN
+      xref USING (xref_id) INNER JOIN
+      external_db USING (external_db_id)
+    WHERE db_name = 'CCDS';
+  /;
+  is_rows_nonzero($self->dba, $sql_3, $desc_3);
 }
 
 1;
