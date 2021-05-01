@@ -183,8 +183,7 @@ sub repeat_analysis {
     else {
       @rep_list = qw("repeatmask_repeatmodeler" "repeatdetector");
     }
-    my $to_skip="";
-    $to_skip = join " ", map{'AND logic_name <>  '. $_} @rep_list;
+    my $to_skip = join("', '", @rep_list);
 
     my $sql = qq/
       SELECT logic_name FROM
