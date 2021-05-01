@@ -193,7 +193,7 @@ sub repeat_analysis {
         analysis USING (analysis_id)
       WHERE
         species_id = $species_id
-      $to_skip
+        AND logic_name NOT IN ('$to_skip')
       GROUP BY
         logic_name
       ORDER BY logic_name
