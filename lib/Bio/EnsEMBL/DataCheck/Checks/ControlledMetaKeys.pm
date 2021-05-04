@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ControlledMetaKeys',
   DESCRIPTION => 'Meta keys are consistent with production database',
-  GROUPS      => ['core', 'corelike', 'meta', 'funcgen', 'variation'],
+  GROUPS      => ['core', 'corelike', 'funcgen', 'meta', 'meta_sample', 'variation'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   TABLES      => ['meta']
 };

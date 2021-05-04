@@ -954,8 +954,9 @@
       "groups" : [
          "core",
          "corelike",
-         "meta",
          "funcgen",
+         "meta",
+         "meta_sample",
          "variation"
       ],
       "name" : "ControlledMetaKeys",
@@ -1154,7 +1155,8 @@
          "analysis_description",
          "core",
          "brc4_core",
-         "geneset"
+         "geneset",
+         "meta_sample"
       ],
       "name" : "DisplayableSampleGene",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSampleGene"
@@ -1704,7 +1706,8 @@
          "ancestral",
          "brc4_core",
          "core",
-         "meta"
+         "meta",
+         "meta_sample"
       ],
       "name" : "MetaKeyCardinality",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyCardinality"
@@ -1740,6 +1743,7 @@
          "brc4_core",
          "core",
          "meta",
+         "meta_sample",
          "variation"
       ],
       "name" : "MetaKeyFormat",
