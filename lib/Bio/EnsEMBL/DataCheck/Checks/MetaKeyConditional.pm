@@ -175,6 +175,16 @@ sub repeat_analysis {
     # in order to do a count, use SQL rather than API.
     my $helper = $self->dba->dbc->sql_helper;
     my $species_id = $self->dba->species_id;
+    my $mca = $self->dba->get_adaptor('MetaContainer');
+    my @rep_list = ();
+    if ($mca->get_division eq 'EnsemblPlants') {
+      @rep_list = qw("repeatmask_repeatmodeler");
+    }
+    else {
+      @rep_list = qw("repeatmask_repeatmodeler" "repeatdetector");
+    }
+    my $to_skip = join("', '", @rep_list);
+
     my $sql = qq/
       SELECT logic_name FROM
         coord_system INNER JOIN
@@ -183,10 +193,7 @@ sub repeat_analysis {
         analysis USING (analysis_id)
       WHERE
         species_id = $species_id
-      AND
-        logic_name <> "repeatmask_repeatmodeler"
-      AND
-        logic_name <> "repeatdetector"
+        AND logic_name NOT IN ('$to_skip')
       GROUP BY
         logic_name
       ORDER BY logic_name
@@ -197,7 +204,6 @@ sub repeat_analysis {
     skip 'No repeat features', 1 unless scalar(@logic_names);
 
     my $desc = "'repeat.analysis' meta_keys exist for appropriate repeat analyses";
-    my $mca = $self->dba->get_adaptor('MetaContainer');
     my @values = sort @{ $mca->list_value_by_key('repeat.analysis') };
     is_deeply(\@values, \@logic_names, $desc);
   }
