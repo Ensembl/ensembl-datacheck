@@ -75,7 +75,26 @@ sub tests {
   # Check that all the homologies correspond to a method_link_species_set that should have homology
   my $desc_2 = "All the homology rows with corresponding method_link_species_sets are expected";
   my $row_count_sql = "SELECT COUNT(*) FROM homology";
-  is_rows($dba, $row_count_sql, $expected_homology_count, $desc_2);
+  # Rapid release homologies only have ENSEMBL_HOMOLOGUES and may be incompatible with some API methods
+  # in the per-species compara database
+  if ( !defined $expected_homology_count and scalar(@method_links) == 1 ) {
+    my $method_link = $method_links[0];
+    my $method_link_id = $self->dba->get_MethodAdaptor->fetch_by_type($method_link)->dbID;
+    my $mlss_count_sql = qq/
+      SELECT COUNT(DISTINCT method_link_species_set_id)
+        FROM homology
+    /;
+    my $exp_count = $helper->execute_single_result(-SQL => $mlss_count_sql);
+    my $homology_count_sql = qq/
+      SELECT COUNT(method_link_species_set_id)
+        FROM method_link_species_set
+      WHERE method_link_id = $method_link_id
+    /;
+    is_rows($dba, $homology_count_sql, $exp_count, $desc_2);
+  }
+  else {
+    is_rows($dba, $row_count_sql, $expected_homology_count, $desc_2);
+  }
 }
 
 1;

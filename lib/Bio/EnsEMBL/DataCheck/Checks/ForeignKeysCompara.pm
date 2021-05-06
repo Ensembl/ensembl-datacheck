@@ -49,6 +49,10 @@ sub tests {
     if ($self->dba->dbc->dbname !~ /ensembl_compara|protein_trees|ncrna_trees/) {
       next if join(" ", @$relationship) =~ /homology_member.*[gene_member_id|seq_member_id]/;
       next if join(" ", @$relationship) =~ /peptide_align_feature.*[gene_member_id|seq_member_id]/;
+      # Because the rapid release per-species compara database does not hold the reference genomes
+      if ($self->dba->dbc->dbname =~ /_compara_/) {
+          next if join(" ", @$relationship) =~ /species_set.genome_db_id/;
+      }
     }
     fk($self->dba, @$relationship);
   }
