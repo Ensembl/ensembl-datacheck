@@ -32,6 +32,7 @@ use constant {
   DESCRIPTION    => 'Predicted transcripts have display labels',
   GROUPS         => ['annotation', 'core'],
   DATACHECK_TYPE => 'critical',
+  DB_TYPES       => ['core'],
   TABLES         => ['coord_system', 'prediction_transcript', 'seq_region']
 };
 
