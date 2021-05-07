@@ -32,6 +32,7 @@ use constant {
   DESCRIPTION    => 'Gene descriptions are correctly formatted',
   GROUPS         => ['core', 'xref', 'xref_mapping'],
   DATACHECK_TYPE => 'critical',
+  DB_TYPES       => ['core'],
   TABLES         => ['coord_system', 'gene', 'seq_region']
 };
 
