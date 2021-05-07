@@ -31,6 +31,7 @@ use constant {
   NAME           => 'DisplayXrefFormat',
   DESCRIPTION    => 'Gene names are correctly formatted',
   GROUPS         => ['core', 'xref', 'xref_mapping'],
+  DB_TYPES       => ['core'],
   TABLES         => ['coord_system', 'external_db', 'gene', 'seq_region', 'xref'],
 };
 
