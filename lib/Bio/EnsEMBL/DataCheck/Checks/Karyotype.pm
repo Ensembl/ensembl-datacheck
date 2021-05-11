@@ -29,12 +29,11 @@ use List::Util qw/min max/;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'Karyotype',
-  DESCRIPTION    => 'Karyotype data exists for human, mouse and rat',
-  GROUPS         => ['assembly'],
-  DATACHECK_TYPE => 'advisory',
-  DB_TYPES       => ['core'],
-  TABLES         => ['attrib_type', 'coord_system', 'karyotype', 'seq_region', 'seq_region_attrib']
+  NAME        => 'Karyotype',
+  DESCRIPTION => 'Karyotype data exists for human, mouse and rat',
+  GROUPS      => ['assembly', 'core'],
+  DB_TYPES    => ['core'],
+  TABLES      => ['attrib_type', 'coord_system', 'karyotype', 'seq_region', 'seq_region_attrib']
 };
 
 sub skip_tests {

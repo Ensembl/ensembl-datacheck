@@ -47,10 +47,10 @@ sub tests {
     my $curr_dna_dba = $self->get_dna_dba();
     my $old_core_dba = $self->get_old_dba(undef, 'core');
 
-    my $desc_curr_core = 'Current core database found';
+    my $desc_curr_core = 'Current core database found: '.$curr_dna_dba->dbc->dbname;
     my $curr_core_pass = ok(defined $curr_dna_dba, $desc_curr_core);
 
-    my $desc_old_core = 'Old core database found';
+    my $desc_old_core = 'Old core database found: '.$old_core_dba->dbc->dbname;
     my $old_core_pass = ok(defined $old_core_dba, $desc_old_core);
 
     if ($curr_core_pass && $old_core_pass) {

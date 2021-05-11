@@ -1543,10 +1543,11 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::InterProFeatures"
    },
    "Karyotype" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "Karyotype data exists for human, mouse and rat",
       "groups" : [
-         "assembly"
+         "assembly",
+         "core"
       ],
       "name" : "Karyotype",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Karyotype"
@@ -2598,9 +2599,10 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefPrefixes"
    },
    "XrefTypes" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "Xrefs are only attached to one feature type.",
       "groups" : [
+         "core",
          "xref",
          "xref_mapping"
       ],
