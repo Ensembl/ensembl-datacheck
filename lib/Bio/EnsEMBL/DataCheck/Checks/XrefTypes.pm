@@ -30,8 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'XrefTypes',
   DESCRIPTION    => 'Xrefs are only attached to one feature type.',
-  GROUPS         => ['xref', 'xref_mapping'],
-  DATACHECK_TYPE => 'advisory',
+  GROUPS         => ['core', 'xref', 'xref_mapping'],
   DB_TYPES       => ['core'],
   TABLES         => ['external_db', 'object_xref', 'xref'],
   PER_DB         => 1,
