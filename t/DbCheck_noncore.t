@@ -69,7 +69,7 @@ subtest 'Fetch DNA DBA from registry', sub {
 
   my $check = TestChecks::DbCheck_1->new(
     dba        => $dba,
-    server_uri => $server_uri,
+    server_uri => [$server_uri],
   );
 
   # The test databases are added to the registry via MultiTestDB; but
@@ -89,7 +89,7 @@ subtest 'Fetch DNA DBA from registry', sub {
   $server_uri .= $dba->dbc->dbname."?species=$species;group=variation";
   $check = TestChecks::DbCheck_1->new(
     dba        => $dba,
-    server_uri => $server_uri,
+    server_uri => [$server_uri],
   );
 };
 

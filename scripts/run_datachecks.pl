@@ -51,6 +51,9 @@ is needed so that they know _where_ to look.
 
 As an alternative to providing a registry file (see above), a URI can be
 given, e.g. mysql://a_user@some_host:port_number/
+If given in addition to a registry file, the server_uri takes precedence.
+Multiple uris can be given as separate -s[erver_uri] parameters, 
+or as a single comma-separated string.
 
 =item B<-ol[d_server_uri]> <old_server_uri>
 
@@ -58,6 +61,8 @@ For comparisons with an analogous database from a previous release it is
 not possible to load them via the registry_file.
 A URI must be specified with the location of the previous release's databases,
 e.g. mysql://a_user@some_host:port_number/[old_db_name|old_release_number]
+Multiple uris can be given as separate -ol[d_server_uri] parameters, 
+or as a single comma-separated string.
 
 =item B<-data_f[ile_path]> <data_file_path>
 
@@ -147,7 +152,7 @@ use Pod::Usage;
 my (
     $help,
     $host, $port, $user, $pass, $dbname, $dbtype,
-    $registry_file, $server_uri, $old_server_uri, $data_file_path, $config_file,
+    $registry_file, @server_uri, @old_server_uri, $data_file_path, $config_file,
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_file,
 );
@@ -161,8 +166,8 @@ GetOptions(
   "dbname=s",          \$dbname,
   "dbtype=s",          \$dbtype,
   "registry_file=s",   \$registry_file,
-  "server_uri=s",      \$server_uri,
-  "old_server_uri=s",  \$old_server_uri,
+  "server_uri=s",      \@server_uri,
+  "old_server_uri=s",  \@old_server_uri,
   "data_file_path=s",  \$data_file_path,
   "config_file=s",     \$config_file,
   "names|n:s",         \@names,
@@ -245,6 +250,8 @@ if (! defined $datacheck_dir && defined $index_file) {
 @patterns = map { split(/[,\s]+/, $_) } @patterns if scalar @patterns;
 @groups = map { split(/[,\s]+/, $_) } @groups if scalar @groups;
 @datacheck_types = map { split(/[,\s]+/, $_) } @datacheck_types if scalar @datacheck_types;
+@server_uri = map { split(/[,\s]+/, $_) } @server_uri if scalar @server_uri;
+@old_server_uri = map { split(/[,\s]+/, $_) } @old_server_uri if scalar @old_server_uri;
 
 my %manager_params;
 $manager_params{names}           = \@names           if scalar @names;
@@ -258,11 +265,11 @@ $manager_params{output_file}     = $output_file      if defined $output_file;
 $manager_params{config_file}     = $config_file      if defined $config_file;
 
 my %datacheck_params;
-$datacheck_params{dba}            = $dba            if defined $dba;
-$datacheck_params{registry_file}  = $registry_file  if defined $registry_file;
-$datacheck_params{server_uri}     = $server_uri     if defined $server_uri;
-$datacheck_params{old_server_uri} = $old_server_uri if defined $old_server_uri;
-$datacheck_params{data_file_path} = $data_file_path if defined $data_file_path;
+$datacheck_params{dba}            = $dba             if defined $dba;
+$datacheck_params{registry_file}  = $registry_file   if defined $registry_file;
+$datacheck_params{server_uri}     = \@server_uri     if scalar @server_uri;
+$datacheck_params{old_server_uri} = \@old_server_uri if scalar @old_server_uri;
+$datacheck_params{data_file_path} = $data_file_path  if defined $data_file_path;
 
 my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
 

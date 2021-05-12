@@ -127,8 +127,9 @@ has 'registry_file' => (
                comparisons with the dba. Not used if registry_file is given.
 =cut
 has 'server_uri' => (
-  is  => 'ro',
-  isa => 'Str | Undef',
+  is      => 'ro',
+  isa     => 'ArrayRef[Str] | Undef',
+  default => sub { [] }
 );
 
 =head2 registry
@@ -171,18 +172,18 @@ sub _registry_default {
     $registry->disconnect_all;
     $registry->clear;
     $registry->load_all($self->registry_file);
-  } elsif (defined $self->server_uri) {
-    # We need species and group if dbname is given, to make sure
-    # the registry manipulations we're about to do are valid.
-    my $uri = parse_uri($self->server_uri);
-    if ( $uri->db_params->{dbname} && $uri->db_params->{dbname} !~ /^(\d+)$/ ) {
-      unless ($uri->param_exists_ci('species') && $uri->param_exists_ci('group')) {
-        die "species and group parameters are required if the URI includes a database name";
+  } elsif (defined $self->server_uri && scalar(@{$self->server_uri}) ) {
+    foreach my $server_uri ( @{$self->server_uri} ) {
+      # We need species and group if dbname is given, to make sure
+      # the registry manipulations we're about to do are valid.
+      my $uri = parse_uri($server_uri);
+      if ( $uri->db_params->{dbname} && $uri->db_params->{dbname} !~ /^(\d+)$/ ) {
+        unless ($uri->param_exists_ci('species') && $uri->param_exists_ci('group')) {
+          die "species and group parameters are required if the URI includes a database name";
+        }
       }
+      $registry->load_registry_from_url($server_uri);
     }
-    $registry->disconnect_all;
-    $registry->clear;
-    $registry->load_registry_from_url($self->server_uri);
   } else {
     die "The '".$self->name."' datacheck needs data from another database, ".
         "for which a registry needs to be specified with 'registry_file' or 'server_uri'";
@@ -214,8 +215,9 @@ sub _registry_default {
                comparisons with the dba.
 =cut
 has 'old_server_uri' => (
-  is  => 'ro',
-  isa => 'Str | Undef',
+  is      => 'ro',
+  isa     => 'ArrayRef[Str] | Undef',
+  default => sub { [] }
 );
 
 =head2 data_file_path
@@ -316,9 +318,55 @@ sub get_dba {
   $species = $self->species    unless defined $species;
   $group   = $self->dba->group unless defined $group;
 
+  $self->load_registry();
+
+  # If we have a server_uri and registry, we want to overwrite anything
+  # loaded in the registry with the server_uri.
+  if (
+    defined $self->registry_file &&
+    defined $self->server_uri &&
+    scalar( @{$self->server_uri} )
+  ) {
+    SERVER_URI: foreach my $server_uri ( @{$self->server_uri} ) {
+      my $uri = parse_uri($server_uri);
+      my $dbname;
+      if ($uri->db_params->{dbname} && $uri->db_params->{dbname} !~ /^(\d+)$/ ) {
+        $dbname = $uri->db_params->{dbname};
+      } else {
+        my $mca = $self->dba->get_adaptor("MetaContainer");
+
+        my $db_version;
+        if ($uri->db_params->{dbname} && $uri->db_params->{dbname} =~ /^(\d+)$/ ) {
+          $db_version = $1;
+        } else {
+          $db_version = $mca->schema_version;
+        }
+
+        $dbname = $self->find_dbname($mca, $species, $group, $db_version);
+      }
+
+      if (! defined $dbname) {
+        next SERVER_URI;
+      }
+
+      $uri->db_params->{dbname} = $dbname;
+      $uri->{params}->{group} = [$group];
+      $uri->{params}->{species} = [$species];
+
+      my $dbh = $self->test_db_connection($uri, $dbname, undef, 0);
+      if (defined $dbh) {
+        $self->registry->remove_DBAdaptor($species, $group);
+        $self->registry->load_registry_from_url($uri->generate_uri);
+        last SERVER_URI;
+      }
+    }
+  }
+
   my $dba = $self->registry->get_DBAdaptor($species, $group);
 
   push @{$self->dba_list}, $dba if defined $dba;
+
+  $dba->dbc && $dba->dbc->disconnect_if_idle();
 
   return $dba;
 }
@@ -326,14 +374,67 @@ sub get_dba {
 sub get_dna_dba {
   my $self = shift;
 
-  $self->load_registry();
-  my $dna_dba = $self->registry->get_DBAdaptor($self->species, 'core');
+  my $dna_dba = $self->get_dba($self->species, 'core');
   if (defined $dna_dba) {
     $self->registry->add_DNAAdaptor($self->species, $self->dba->group, $self->species, 'core');
     push @{$self->dba_list}, $dna_dba;
   }
 
   return $dna_dba;
+}
+
+sub find_dbname {
+  my $self = shift;
+  my ($mca, $species, $group, $db_version) = @_;
+
+  my $dbname;
+  my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
+  die "No metadata database found in the registry" unless defined $meta_dba;
+
+  my ($sql, $params);
+  if ($group =~ /(funcgen|variation)/i) {
+    $sql = q/
+      SELECT DISTINCT gd.dbname FROM
+        genome_database gd INNER JOIN
+        genome g USING (genome_id) INNER JOIN
+        organism o USING (organism_id) INNER JOIN
+        data_release dr USING (data_release_id)
+      WHERE
+        gd.type = ? AND
+        o.name = ? AND
+        dr.ensembl_version = ?
+    /;
+    $params = [$group, $species, $db_version];
+  } else {
+    my $division = $mca->get_division;
+    $sql = q/
+      SELECT DISTINCT gd.dbname FROM
+        genome_database gd INNER JOIN
+        genome g USING (genome_id) INNER JOIN
+        organism o USING (organism_id) INNER JOIN
+        data_release dr USING (data_release_id) INNER JOIN
+        division d USING (division_id)
+      WHERE
+        gd.type = ? AND
+        o.name = ? AND
+        dr.ensembl_version = ? AND
+        d.name = ?
+    /;
+    $params = [$group, $species, $db_version, $division];
+  }
+
+  my $helper = $meta_dba->dbc->sql_helper;
+  my @dbnames = @{$helper->execute_simple(-SQL => $sql, -PARAMS => $params)};
+
+  if (scalar(@dbnames) == 1) {
+    $dbname = $dbnames[0];
+  } elsif (scalar(@dbnames) > 1) {
+    die "Multiple release $db_version $group databases for $species";
+  }
+
+  $meta_dba->dbc && $meta_dba->dbc->disconnect_if_idle();
+
+  return $dbname;
 }
 
 sub get_old_dba {
@@ -343,85 +444,94 @@ sub get_old_dba {
   $species = $self->species    unless defined $species;
   $group   = $self->dba->group unless defined $group;
 
-  if (!defined $self->old_server_uri) {
+  unless (defined $self->old_server_uri && scalar(@{$self->old_server_uri})) {
     die "Old server details must be set as 'old_server_uri' attribute";
   }
 
-  # At a minimum, old_server_uri will have server details. But it can
-  # also define a db_version or a dbname. So, we check for a dbname first;
-  # if we have one then we are more-or-less done; any parameters passed to
-  # this method are irrelevant and are ignored. If there is a db_version,
-  # use that, otherwise assume that it's the previous release.
-  my $uri = parse_uri($self->old_server_uri);
-  my %params = $uri->generate_dbsql_params();
-
   my $mca = $self->dba->get_adaptor("MetaContainer");
-
-  my $db_version;
-  if (exists $params{'-DBNAME'}) {
-    if ($params{'-DBNAME'} =~ /^(\d+)$/) {
-      $db_version = $1;
-      delete $params{'-DBNAME'};
-    }
-  } else {
-    $db_version = ($mca->schema_version) - 1;
-  }
-
-  my $dbh;
-  if (exists $params{'-DBNAME'}) {
-    my $message = 'Specified database does not exist';
-    $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
-  } else {
-    ($params{'-DBNAME'}, $dbh) = $self->find_old_dbname(
-      $self->dba->dbc->dbname,
-      $mca,
-      $species,
-      $group,
-      $db_version,
-      $uri
-    );
-  }
 
   # $old_dba can be undefined if there is no entry in the metadata db;
   # a datacheck could use the undefined-ness to skip tests in this case.
   my $old_dba;
-  if (defined $params{'-DBNAME'}) {
-    # We need to suffix '_old' to the species name to comply
-    # with uniqueness rules, and ensure we can distinguish between the
-    # two databases in the registry.
-    $params{'-SPECIES'} = $species.'_old';
-    $params{'-GROUP'}   = $group;
 
-    # Because we have added a suffix to the species name,
-    # the DBAdaptor code can't work out the correct species_id,
-    # so we need to work out the species_id and pass it explicitly.
-    my $sql = qq/
-      SELECT species_id FROM meta
-      WHERE
-        meta_key = 'species.production_name' AND
-        meta_value = '$species'
-    /;
-    my $vals = $dbh->selectcol_arrayref($sql);
-    my $species_id = $vals->[0];
-    $params{'-SPECIES_ID'} = $species_id;
+  # We could have multiple old_server_uris. This is to give us a bit
+  # of flexibility, so that if a db is not found in the first location,
+  # we look in the next.
+  foreach my $old_server_uri ( @{ $self->old_server_uri } ) {
+    # At a minimum, old_server_uri will have server details. But it can
+    # also define a db_version or a dbname. So, we check for a dbname first;
+    # if we have one then we are more-or-less done; any parameters passed to
+    # this method are irrelevant and are ignored. If there is a db_version,
+    # use that, otherwise assume that it's the previous release.
+    my $uri = parse_uri($old_server_uri);
+    my %params = $uri->generate_dbsql_params();
 
-    # We assume that if the new db is multispecies,
-    # the old one will be too.
-    if ($self->dba->is_multispecies) {
-      $params{'-MULTISPECIES_DB'} = 1;
-    }
-
-    if (lc $group eq 'compara') {
-      $old_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->new(%params);
-    } elsif (lc $group eq 'variation') {
-      $old_dba = Bio::EnsEMBL::Variation::DBSQL::DBAdaptor->new(%params);
-    } elsif (lc $group eq 'funcgen') {
-      $old_dba = Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor->new(%params);
+    my $db_version;
+    if (exists $params{'-DBNAME'}) {
+      if ($params{'-DBNAME'} =~ /^(\d+)$/) {
+        $db_version = $1;
+        delete $params{'-DBNAME'};
+      }
     } else {
-      $old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
+      $db_version = ($mca->schema_version) - 1;
     }
 
-    push @{$self->dba_list}, $old_dba;
+    my $dbh;
+    if (exists $params{'-DBNAME'}) {
+      my $message = 'Specified database does not exist';
+      $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+    } else {
+      ($params{'-DBNAME'}, $dbh) = $self->find_old_dbname(
+        $self->dba->dbc->dbname,
+        $mca,
+        $species,
+        $group,
+        $db_version,
+        $uri
+      );
+    }
+
+    if (defined $params{'-DBNAME'}) {
+      # We need to suffix '_old' to the species name to comply
+      # with uniqueness rules, and ensure we can distinguish between the
+      # two databases in the registry.
+      $params{'-SPECIES'} = $species.'_old';
+      $params{'-GROUP'}   = $group;
+
+      # Because we have added a suffix to the species name,
+      # the DBAdaptor code can't work out the correct species_id,
+      # so we need to work out the species_id and pass it explicitly.
+      my $sql = qq/
+        SELECT species_id FROM meta
+        WHERE
+          meta_key = 'species.production_name' AND
+          meta_value = '$species'
+      /;
+      my $vals = $dbh->selectcol_arrayref($sql);
+      my $species_id = $vals->[0];
+      $params{'-SPECIES_ID'} = $species_id;
+
+      # We assume that if the new db is multispecies,
+      # the old one will be too.
+      if ($self->dba->is_multispecies) {
+        $params{'-MULTISPECIES_DB'} = 1;
+      }
+
+      if (lc $group eq 'compara') {
+        $old_dba = Bio::EnsEMBL::Compara::DBSQL::DBAdaptor->new(%params);
+      } elsif (lc $group eq 'variation') {
+        $old_dba = Bio::EnsEMBL::Variation::DBSQL::DBAdaptor->new(%params);
+      } elsif (lc $group eq 'funcgen') {
+        $old_dba = Bio::EnsEMBL::Funcgen::DBSQL::DBAdaptor->new(%params);
+      } else {
+        $old_dba = Bio::EnsEMBL::DBSQL::DBAdaptor->new(%params);
+      }
+
+      push @{$self->dba_list}, $old_dba;
+
+      # Don't bother with other old_server_uri values if we have a dba.
+      last;
+    }
   }
 
   return $old_dba;
@@ -490,6 +600,8 @@ sub find_old_dbname {
     } elsif (scalar(@dbnames) > 1) {
       die "Multiple release $db_version $group databases for $species";
     }
+    
+    $meta_dba->dbc && $meta_dba->dbc->disconnect_if_idle();
   }
 
   return ($old_dbname, $dbh);
@@ -497,12 +609,14 @@ sub find_old_dbname {
 
 sub test_db_connection {
   my $self = shift;
-  my ($uri, $dbname, $message) = @_;
+  my ($uri, $dbname, $message, $fatal) = @_;
+
+  $fatal = 1 unless defined $fatal;
 
   my $dsn = "DBI:mysql:database=$dbname;host=".$uri->host.";port=".$uri->port;
   my $dbh = DBI->connect($dsn, $uri->user, $uri->pass, { PrintError => 0 });
 
-  if (! defined $dbh) {
+  if ($fatal && ! defined $dbh) {
     my $err = $DBI::errstr;
     die "$message: $dsn\n$err";
   }

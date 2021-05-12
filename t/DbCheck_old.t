@@ -55,8 +55,8 @@ my $test_db_dir = $FindBin::Bin;
 
       my $check = TestChecks::DbCheck_1->new(
         dba            => $dba,
-        server_uri     => $server_uri,
-        old_server_uri => $server_uri.$dba->dbc->dbname,
+        server_uri     => [$server_uri],
+        old_server_uri => [$server_uri.$dba->dbc->dbname],
       );
       my $old_dba = $check->get_old_dba();
       isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
@@ -64,7 +64,7 @@ my $test_db_dir = $FindBin::Bin;
 
       $check = TestChecks::DbCheck_1->new(
         dba        => $dba,
-        server_uri => $server_uri,
+        server_uri => [$server_uri],
       );
       throws_ok(
         sub { $check->get_old_dba },
@@ -73,8 +73,8 @@ my $test_db_dir = $FindBin::Bin;
 
       $check = TestChecks::DbCheck_1->new(
         dba            => $dba,
-        server_uri     => $server_uri,
-        old_server_uri => $server_uri.'rhubarb_and_custard',
+        server_uri     => [$server_uri],
+        old_server_uri => [$server_uri.'rhubarb_and_custard'],
       );
       throws_ok(
         sub { $check->get_old_dba },
@@ -83,8 +83,8 @@ my $test_db_dir = $FindBin::Bin;
 
       $check = TestChecks::DbCheck_1->new(
         dba            => $dba,
-        server_uri     => $server_uri,
-        old_server_uri => $server_uri,
+        server_uri     => [$server_uri],
+        old_server_uri => [$server_uri],
       );
       $check->load_registry();
       throws_ok(
@@ -94,8 +94,8 @@ my $test_db_dir = $FindBin::Bin;
 
       $check = TestChecks::DbCheck_1->new(
         dba            => $dba,
-        server_uri     => $server_uri,
-        old_server_uri => $server_uri.'95',
+        server_uri     => [$server_uri],
+        old_server_uri => [$server_uri.'95'],
       );
       $check->load_registry();
       $check->registry->add_DBAdaptor('multi', 'metadata', $metadata_dba);
@@ -125,8 +125,8 @@ my $test_db_dir = $FindBin::Bin;
 
     my $check = TestChecks::DbCheck_1->new(
       dba            => $dba,
-      server_uri     => $server_uri,
-      old_server_uri => $server_uri.$dba->dbc->dbname,
+      server_uri     => [$server_uri],
+      old_server_uri => [$server_uri.$dba->dbc->dbname],
     );
     my $old_dba = $check->get_old_dba();
     isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
@@ -134,8 +134,8 @@ my $test_db_dir = $FindBin::Bin;
 
     $check = TestChecks::DbCheck_1->new(
       dba            => $dba,
-      server_uri     => $server_uri,
-      old_server_uri => $server_uri.'95',
+      server_uri     => [$server_uri],
+      old_server_uri => [$server_uri.'95'],
     );
     $check->load_registry();
     $check->registry->add_DBAdaptor('multi', 'metadata', $metadata_dba);
@@ -165,8 +165,8 @@ my $test_db_dir = $FindBin::Bin;
 
     my $check = TestChecks::DbCheck_1->new(
       dba            => $dba,
-      server_uri     => $server_uri,
-      old_server_uri => $server_uri.$dba->dbc->dbname,
+      server_uri     => [$server_uri],
+      old_server_uri => [$server_uri.$dba->dbc->dbname],
     );
     my $old_dba = $check->get_old_dba();
     isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
@@ -174,8 +174,8 @@ my $test_db_dir = $FindBin::Bin;
 
     $check = TestChecks::DbCheck_1->new(
       dba            => $dba,
-      server_uri     => $server_uri,
-      old_server_uri => $server_uri.'95',
+      server_uri     => [$server_uri],
+      old_server_uri => [$server_uri.'95'],
     );
     my $mca = $dba->get_adaptor("MetaContainer");
     my $uri = parse_uri($server_uri.'95');

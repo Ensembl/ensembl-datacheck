@@ -98,14 +98,16 @@ subtest 'Config file', sub {
 
   my %params = (
     registry_file  => 'registry_file_from_param',
+    server_uri     => 'server_uri_from_param',
     old_server_uri => 'old_server_uri_from_param',
   );
 
   my %loaded = $manager->load_config(%params);
 
   is($loaded{data_file_path}, 'data_file_path_from_config', 'Parameter loaded from config file');
-  is($loaded{old_server_uri}, 'old_server_uri_from_param', 'Explicit parameter loaded');
   is($loaded{registry_file},  'registry_file_from_param', 'Explicit parameters overwrite config file');
+  is($loaded{server_uri},     'server_uri_from_param', 'Explicit parameter loaded');
+  is($loaded{old_server_uri}, 'old_server_uri_from_param', 'Explicit parameter loaded');
   is($manager->history_file,  'history_file_from_config', 'File parameter loaded from config file');
   is($manager->output_file,   'output_file_from_param', 'Explicit file parameter loaded');
 };
