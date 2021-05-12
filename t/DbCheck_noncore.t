@@ -278,7 +278,7 @@ subtest '(Fail to) fetch core-like db from server_uri', sub {
   my $server_uri = "$driver://$user:$pass\@$host:$port/";
 
   my $check = TestChecks::DbCheck_1->new(
-    dba           => $variation_dba,
+    dba           => $core_dba,
     registry_file => $registry_file->stringify,
     server_uri    => [$server_uri],
   );
@@ -287,8 +287,8 @@ subtest '(Fail to) fetch core-like db from server_uri', sub {
   # we can determine the name of the ancillary db.
   $check->load_registry();
   my $reg = $check->load_registry();
+  $reg->add_DBAdaptor($species, 'core', $core_dba);
   $reg->add_DBAdaptor('multi', 'metadata', $metadata_dba);
-  $reg->add_DBAdaptor($species, 'variation', $variation_dba);
 
   my $of_dba = $check->get_dba($species, 'otherfeatures');
 
