@@ -206,16 +206,56 @@ subtest 'Fetch DNA DBA from server_uri, with registry', sub {
   # We also need to add the metadata db in this case, so that
   # we can determine the name of the ancillary db.
   $check->load_registry();
+  $reg = $check->load_registry();
+  $reg->add_DBAdaptor($species, 'core', $core_dba);
+  $reg->add_DBAdaptor('multi', 'metadata', $metadata_dba);
+  $reg->add_DBAdaptor($species, 'variation', $variation_dba);
+
+  $dna_dba = $check->get_dna_dba();
+
+  isa_ok($dna_dba, $dba_type, 'Return value of "get_dna_dba", without dbname');
+  is($dna_dba->species, $species, 'Species name matches');
+  is($dna_dba->group,   'core',   'Group matches');
+};
+
+subtest 'Fetch variation DBA from server_uri, with registry', sub {
+  my %conf = %{$$testdb{conf}{'core'}};
+  my $driver = $conf{driver};
+  my $host   = $conf{host};
+  my $port   = $conf{port};
+  my $user   = $conf{user};
+  my $pass   = $conf{pass};
+
+  # Empty registry, to test if we use server_uri correctly.
+  my $registry_file = Path::Tiny->tempfile();
+  my $registry_text = qq/
+    use Bio::EnsEMBL::Registry;
+
+    1;
+  /;
+  $registry_file->spew($registry_text);
+
+  my $server_uri = "$driver://$user:$pass\@$host:$port/";
+
+  my $check = TestChecks::DbCheck_1->new(
+    dba           => $core_dba,
+    registry_file => $registry_file->stringify,
+    server_uri    => [$server_uri],
+  );
+
+  # We also need to add the metadata db in this case, so that
+  # we can determine the name of the ancillary db.
+  $check->load_registry();
   my $reg = $check->load_registry();
   $reg->add_DBAdaptor($species, 'core', $core_dba);
   $reg->add_DBAdaptor('multi', 'metadata', $metadata_dba);
   $reg->add_DBAdaptor($species, 'variation', $variation_dba);
 
-  my $dna_dba = $check->get_dna_dba();
+  my $var_dba = $check->get_dba($species, 'variation');
 
-  isa_ok($dna_dba, $dba_type, 'Return value of "get_dna_dba", without dbname');
-  is($dna_dba->species, $species, 'Species name matches');
-  is($dna_dba->group,   'core',   'Group matches');
+  isa_ok($var_dba, 'Bio::EnsEMBL::Variation::DBSQL::DBAdaptor', 'Return value of "get_dba"');
+  is($var_dba->species, $species, 'Species name matches');
+  is($var_dba->group,   'variation',   'Group matches');
 };
 
 subtest '(Fail to) fetch core-like db from server_uri', sub {
