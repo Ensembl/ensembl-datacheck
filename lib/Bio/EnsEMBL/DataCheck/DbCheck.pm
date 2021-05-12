@@ -173,6 +173,8 @@ sub _registry_default {
     $registry->clear;
     $registry->load_all($self->registry_file);
   } elsif (defined $self->server_uri && scalar(@{$self->server_uri}) ) {
+    my @uris = ();
+
     foreach my $server_uri ( @{$self->server_uri} ) {
       # We need species and group if dbname is given, to make sure
       # the registry manipulations we're about to do are valid.
@@ -182,7 +184,13 @@ sub _registry_default {
           die "species and group parameters are required if the URI includes a database name";
         }
       }
-      $registry->load_registry_from_url($server_uri);
+      push @uris, $server_uri;
+    }
+
+    $registry->disconnect_all;
+    $registry->clear;
+    foreach (@uris) {
+      $registry->load_registry_from_url($_);
     }
   } else {
     die "The '".$self->name."' datacheck needs data from another database, ".
@@ -365,8 +373,6 @@ sub get_dba {
   my $dba = $self->registry->get_DBAdaptor($species, $group);
 
   push @{$self->dba_list}, $dba if defined $dba;
-
-  $dba->dbc && $dba->dbc->disconnect_if_idle();
 
   return $dba;
 }
