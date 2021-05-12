@@ -218,4 +218,41 @@ subtest 'Fetch DNA DBA from server_uri, with registry', sub {
   is($dna_dba->group,   'core',   'Group matches');
 };
 
+subtest '(Fail to) fetch core-like db from server_uri', sub {
+  my %conf = %{$$testdb{conf}{'core'}};
+  my $driver = $conf{driver};
+  my $host   = $conf{host};
+  my $port   = $conf{port};
+  my $user   = $conf{user};
+  my $pass   = $conf{pass};
+
+  # Empty registry, to test if we use server_uri correctly.
+  my $registry_file = Path::Tiny->tempfile();
+  my $registry_text = qq/
+    use Bio::EnsEMBL::Registry;
+
+    1;
+  /;
+  $registry_file->spew($registry_text);
+
+  my $server_uri = "$driver://$user:$pass\@$host:$port/";
+
+  my $check = TestChecks::DbCheck_1->new(
+    dba           => $variation_dba,
+    registry_file => $registry_file->stringify,
+    server_uri    => [$server_uri],
+  );
+
+  # We also need to add the metadata db in this case, so that
+  # we can determine the name of the ancillary db.
+  $check->load_registry();
+  my $reg = $check->load_registry();
+  $reg->add_DBAdaptor('multi', 'metadata', $metadata_dba);
+  $reg->add_DBAdaptor($species, 'variation', $variation_dba);
+
+  my $of_dba = $check->get_dba($species, 'otherfeatures');
+
+  ok(!defined $of_dba, 'Return undef if ancillary db not found');
+};
+
 done_testing();
