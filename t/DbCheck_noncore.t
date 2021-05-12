@@ -19,6 +19,7 @@ use Bio::EnsEMBL::DataCheck::DbCheck;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
+use Path::Tiny;
 use Test::Exception;
 use Test::More;
 
@@ -58,6 +59,57 @@ foreach my $db_type (@db_types) {
 subtest 'Fetch DNA DBA from registry', sub {
   my $dba = $testdb->get_DBAdaptor('variation');
 
+  # We generally don't know what servers are available, in order to
+  # test registry functionality. But we do know about one server,
+  # the one with the $test_db, so extract that information.
+  my %conf = %{$$testdb{conf}{'core'}};
+  my $driver = $conf{driver};
+  my $host   = $conf{host};
+  my $port   = $conf{port};
+  my $user   = $conf{user};
+  my $pass   = $conf{pass};
+
+  my $registry_file = Path::Tiny->tempfile();
+  my $registry_text = qq/
+    use Bio::EnsEMBL::Registry;
+
+    {
+      Bio::EnsEMBL::Registry->load_registry_from_db(
+        -driver => '$driver',
+        -host   => '$host',
+        -port   =>  $port,
+        -user   => '$user',
+        -pass   => '$pass',
+      );
+    }
+
+    1;
+  /;
+  $registry_file->spew($registry_text);
+
+  my $check = TestChecks::DbCheck_1->new(
+    dba           => $dba,
+    registry_file => $registry_file->stringify,
+  );
+
+  # The test databases are added to the registry via MultiTestDB; but
+  # the datacheck code removes them as part of it's standard monkeying
+  # around, and their names are such that they are not picked up when
+  # the registry is subsequently loaded. So, we need to pre-load the
+  # registry, then add them in via another call to MultiTestDB. Phew.
+  $check->load_registry();
+  $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+  
+  my $dna_dba = $check->get_dna_dba();
+
+  isa_ok($dna_dba, $dba_type, 'Return value of "get_dna_dba"');
+  is($dna_dba->species, $species, 'Species name matches');
+  is($dna_dba->group,   'core',   'Group matches');
+};
+
+subtest 'Fetch DNA DBA from server_uri', sub {
+  my $dba = $testdb->get_DBAdaptor('variation');
+
   my %conf = %{$$testdb{conf}{'core'}};
   my $driver = $conf{driver};
   my $host   = $conf{host};
@@ -79,18 +131,54 @@ subtest 'Fetch DNA DBA from registry', sub {
   # registry, then add them in via another call to MultiTestDB. Phew.
   $check->load_registry();
   $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
-  
+
   my $dna_dba = $check->get_dna_dba();
 
   isa_ok($dna_dba, $dba_type, 'Return value of "get_dna_dba"');
   is($dna_dba->species, $species, 'Species name matches');
   is($dna_dba->group,   'core',   'Group matches');
+};
 
-  $server_uri .= $dba->dbc->dbname."?species=$species;group=variation";
-  $check = TestChecks::DbCheck_1->new(
-    dba        => $dba,
-    server_uri => [$server_uri],
+subtest 'Fetch DNA DBA from server_uri, with registry', sub {
+  my $dba = $testdb->get_DBAdaptor('variation');
+
+  my %conf = %{$$testdb{conf}{'core'}};
+  my $driver = $conf{driver};
+  my $host   = $conf{host};
+  my $port   = $conf{port};
+  my $user   = $conf{user};
+  my $pass   = $conf{pass};
+
+  # Empty registry, to test if we use server_uri correctly.
+  my $registry_file = Path::Tiny->tempfile();
+  my $registry_text = qq/
+    use Bio::EnsEMBL::Registry;
+
+    1;
+  /;
+  $registry_file->spew($registry_text);
+
+  my $server_uri = "$driver://$user:$pass\@$host:$port/";
+
+  my $check = TestChecks::DbCheck_1->new(
+    dba           => $dba,
+    registry_file => $registry_file->stringify,
+    server_uri    => [$server_uri],
   );
+
+  # The test databases are added to the registry via MultiTestDB; but
+  # the datacheck code removes them as part of it's standard monkeying
+  # around, and their names are such that they are not picked up when
+  # the registry is subsequently loaded. So, we need to pre-load the
+  # registry, then add them in via another call to MultiTestDB. Phew.
+  $check->load_registry();
+  $testdb = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+
+  my $dna_dba = $check->get_dna_dba();
+
+  isa_ok($dna_dba, $dba_type, 'Return value of "get_dna_dba"');
+  is($dna_dba->species, $species, 'Species name matches');
+  is($dna_dba->group,   'core',   'Group matches');
 };
 
 done_testing();
