@@ -1,4 +1,0 @@
-1	1	chromosome	BDGP6	1	default_version
-2	1	contig	BDGP6	3	default_version
-3	1	chunk	BDGP6	4	default_version,sequence_level
-4	1	scaffold	BDGP6	2	default_version
