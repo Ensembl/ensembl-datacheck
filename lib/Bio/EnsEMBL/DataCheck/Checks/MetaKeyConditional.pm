@@ -183,7 +183,7 @@ sub repeat_analysis {
     else {
       @rep_list = qw("repeatmask_repeatmodeler" "repeatdetector");
     }
-    my $to_skip = join("', '", @rep_list);
+    my $to_skip = join(", ", @rep_list);
 
     my $sql = qq/
       SELECT logic_name FROM
@@ -193,7 +193,7 @@ sub repeat_analysis {
         analysis USING (analysis_id)
       WHERE
         species_id = $species_id
-        AND logic_name NOT IN ('$to_skip')
+        AND logic_name NOT IN ($to_skip)
       GROUP BY
         logic_name
       ORDER BY logic_name
