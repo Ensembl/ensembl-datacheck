@@ -358,13 +358,12 @@ sub get_dba {
       }
 
       $uri->db_params->{dbname} = $dbname;
-      $uri->{params}->{group} = [$group];
-      $uri->{params}->{species} = [$species];
+      my $db_uri = $uri->generate_uri."?species=$species;group=$group";
 
       my $dbh = $self->test_db_connection($uri, $dbname, undef, 0);
       if (defined $dbh) {
         $self->registry->remove_DBAdaptor($species, $group);
-        $self->registry->load_registry_from_url($uri->generate_uri);
+        $self->registry->load_registry_from_url($db_uri);
         last SERVER_URI;
       }
     }
@@ -398,7 +397,8 @@ sub find_dbname {
   die "No metadata database found in the registry" unless defined $meta_dba;
 
   my ($sql, $params);
-  if ($group =~ /(funcgen|variation)/i) {
+  if ($group =~ /(funcgen|variation)/i ||
+      $mca->single_value_by_key('schema_type') =~ /(funcgen|variation)/i) {
     $sql = q/
       SELECT DISTINCT gd.dbname FROM
         genome_database gd INNER JOIN
