@@ -129,7 +129,6 @@ has 'registry_file' => (
 has 'server_uri' => (
   is      => 'ro',
   isa     => 'ArrayRef[Str] | Undef',
-  default => sub { [] }
 );
 
 =head2 registry
@@ -225,7 +224,6 @@ sub _registry_default {
 has 'old_server_uri' => (
   is      => 'ro',
   isa     => 'ArrayRef[Str] | Undef',
-  default => sub { [] }
 );
 
 =head2 data_file_path

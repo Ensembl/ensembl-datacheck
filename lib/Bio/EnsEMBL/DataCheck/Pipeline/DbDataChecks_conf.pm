@@ -59,8 +59,8 @@ sub default_options {
     datacheck_groups   => [],
     datacheck_types    => [],
     registry_file      => undef,
-    server_uri         => [],
-    old_server_uri     => [],
+    server_uri         => undef,
+    old_server_uri     => undef,
     data_file_path     => undef,
 
     failures_fatal => 0,

@@ -379,8 +379,8 @@ my %input_id = (
   registry_file => $registry_file,
   timestamp     => localtime->cdate,
 );
-$input_id{server_uri} = $server_uri if scalar $server_uri;
-$input_id{old_server_uri} = $old_server_uri if scalar $old_server_uri;
+$input_id{server_uri} = \@server_uri if scalar @server_uri;
+$input_id{old_server_uri} = \@old_server_uri if scalar @old_server_uri;
 $input_id{data_file_path} = $data_file_path if defined $data_file_path;
 $input_id{db_type} = $dbtype if defined $dbtype;
 $input_id{species} = \@species if scalar @species;
