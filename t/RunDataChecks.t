@@ -177,16 +177,16 @@ foreach my $species (@species) {
 
   subtest 'Parameter instantiation: DbCheck non-DBA parameters', sub {
     $obj->param('registry_file', '/path/to/registry');
-    $obj->param('server_uri', 'mysql_uri_1');
-    $obj->param('old_server_uri', 'mysql_uri_2');
+    $obj->param('server_uri', ['mysql_uri_1']);
+    $obj->param('old_server_uri', ['mysql_uri_2']);
     $obj->param('data_file_path', '/path/to/data_files');
 
     $obj->fetch_input();
     my $datacheck_params = $obj->param('datacheck_params');
 
     is($$datacheck_params{registry_file}, '/path/to/registry', 'Registry file is set correctly');
-    is($$datacheck_params{server_uri}, 'mysql_uri_1', 'Server URI is set correctly');
-    is($$datacheck_params{old_server_uri}, 'mysql_uri_2', 'Old server URI is set correctly');
+    is($$datacheck_params{server_uri}->[0], 'mysql_uri_1', 'Server URI is set correctly');
+    is($$datacheck_params{old_server_uri}->[0], 'mysql_uri_2', 'Old server URI is set correctly');
     is($$datacheck_params{data_file_path}, '/path/to/data_files', 'Data file path is set correctly');
 
     $obj->param('registry_file', undef);

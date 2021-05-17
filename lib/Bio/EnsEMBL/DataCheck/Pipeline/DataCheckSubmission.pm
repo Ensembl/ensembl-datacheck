@@ -103,6 +103,7 @@ sub write_output {
     datacheck_groups   => $self->param('datacheck_groups'),
     datacheck_types    => $self->param('datacheck_types'),
     registry_file      => $self->param('registry_file'),
+    server_uri         => $self->param('server_uri'),
     old_server_uri     => $self->param('old_server_uri'),
     data_file_path     => $self->param('data_file_path'),
 

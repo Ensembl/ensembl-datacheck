@@ -372,7 +372,7 @@ subtest 'Registry instantiation', sub {
 
   $check = TestChecks::DbCheck_1->new(
     dba        => $dba,
-    server_uri => $server_uri,
+    server_uri => [$server_uri],
   );
 
   # The registry object is a bit weird, the return value is a string,
@@ -383,7 +383,7 @@ subtest 'Registry instantiation', sub {
 
   $check = TestChecks::DbCheck_1->new(
     dba        => $dba,
-    server_uri => $server_uri.$dba->dbc->dbname,
+    server_uri => [$server_uri.$dba->dbc->dbname],
   );
 
   throws_ok(
@@ -392,13 +392,11 @@ subtest 'Registry instantiation', sub {
     'DbCheck->registry fails if uri has dbname but no species attrib');
 
   $server_uri .=
-	$dba->dbc->dbname.
-	'?species='.$dba->species.
-	';group='.$dba->group;
+    $dba->dbc->dbname.'?species='.$dba->species.';group='.$dba->group;
 
   $check = TestChecks::DbCheck_1->new(
     dba        => $dba,
-    server_uri => $server_uri,
+    server_uri => [$server_uri],
   );
 
   is($check->registry, 'Bio::EnsEMBL::Registry', 'registry attribute set via server_uri with dbname');
@@ -409,7 +407,7 @@ subtest 'Registry instantiation', sub {
   # and that it has precedence over server_uri.
   $check = TestChecks::DbCheck_1->new(
     dba           => $dba,
-    server_uri    => 'unconnectable rubbish',
+    server_uri    => ['unconnectable rubbish'],
     registry_file => $registry_file->stringify,
   );
 
@@ -430,7 +428,7 @@ subtest 'Fetch DBA from registry', sub {
 
   my $check = TestChecks::DbCheck_1->new(
     dba        => $dba,
-    server_uri => $server_uri,
+    server_uri => [$server_uri],
   );
 
   my $dba2 = $check->get_dba();

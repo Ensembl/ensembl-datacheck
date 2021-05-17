@@ -49,12 +49,22 @@ is required in order to locate those databases. If the databases being
 checked require connections to other databases, those also need to be
 in the registry (e.g. funcgen datachecks need access to core databases).
 
+=item B<-s[erver_uri]> <server_uri>
+
+In addition to a registry file (see above), a URI can be given,
+e.g. mysql://a_user@some_host:port_number/
+This either augments or overrides databases loaded by the registry file.
+Multiple uris can be given as separate -s[erver_uri] parameters, 
+or as a single comma-separated string.
+
 =item B<-old_server_uri> <old_server_uri>
 
 For comparisons with an analogous database from a previous release it is
 not possible to load them via the registry_file.
 A URI must be specified with the location of the previous release's databases,
 e.g. mysql://a_user@some_host:port_number/[old_db_name|old_release_number]
+Multiple uris can be given as separate -ol[d_server_uri] parameters, 
+or as a single comma-separated string.
 
 =item B<-data_f[ile_path]> <data_file_path>
 
@@ -224,7 +234,8 @@ use Time::Piece;
 my (
     $help,
     $host, $port, $user, $pass, $dbname, $drop_db,
-    $registry_file, $old_server_uri, $data_file_path, $config_file, $dbtype,
+    $registry_file, @server_uri, @old_server_uri, $data_file_path,
+    $config_file, $dbtype,
     @species, @taxons, @divisions, $run_all, @antispecies, @antitaxons, @dbnames,
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_dir, $json_passed,
@@ -243,7 +254,8 @@ GetOptions(
   "drop_pipeline_db",                \$drop_db,
 
   "registry_file=s",  \$registry_file,
-  "old_server_uri:s", \$old_server_uri,
+  "server_uri:s",     \@server_uri,
+  "old_server_uri:s", \@old_server_uri,
   "data_file_path:s", \$data_file_path,
   "config_file:s",    \$config_file,
   "dbtype|db_type:s", \$dbtype,
@@ -328,6 +340,8 @@ if (! defined $datacheck_dir && defined $index_file) {
 @patterns = map { split(/[,\s]+/, $_) } @patterns if scalar @patterns;
 @groups = map { split(/[,\s]+/, $_) } @groups if scalar @groups;
 @datacheck_types = map { split(/[,\s]+/, $_) } @datacheck_types if scalar @datacheck_types;
+@server_uri = map { split(/[,\s]+/, $_) } @server_uri if scalar @server_uri;
+@old_server_uri = map { split(/[,\s]+/, $_) } @old_server_uri if scalar @old_server_uri;
 
 # Only initialise the hive pipeline db if we have to.
 my $initialise = 0;
@@ -365,7 +379,8 @@ my %input_id = (
   registry_file => $registry_file,
   timestamp     => localtime->cdate,
 );
-$input_id{old_server_uri} = $old_server_uri if defined $old_server_uri;
+$input_id{server_uri} = \@server_uri if scalar @server_uri;
+$input_id{old_server_uri} = \@old_server_uri if scalar @old_server_uri;
 $input_id{data_file_path} = $data_file_path if defined $data_file_path;
 $input_id{db_type} = $dbtype if defined $dbtype;
 $input_id{species} = \@species if scalar @species;

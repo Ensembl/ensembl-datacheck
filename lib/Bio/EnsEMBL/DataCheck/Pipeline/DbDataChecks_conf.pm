@@ -59,6 +59,7 @@ sub default_options {
     datacheck_groups   => [],
     datacheck_types    => [],
     registry_file      => undef,
+    server_uri         => undef,
     old_server_uri     => undef,
     data_file_path     => undef,
 
@@ -169,6 +170,7 @@ sub pipeline_analyses {
                               datacheck_groups   => $self->o('datacheck_groups'),
                               datacheck_types    => $self->o('datacheck_types'),
                               registry_file      => $self->o('registry_file'),
+                              server_uri         => $self->o('server_uri'),
                               old_server_uri     => $self->o('old_server_uri'),
                               data_file_path     => $self->o('data_file_path'),
 
