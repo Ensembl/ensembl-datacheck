@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2020] EMBL-European Bioinformatics Institute
+Copyright [2018-2021] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -59,18 +59,18 @@ sub CheckCommonName {
   for my $genome (@{$gdba->fetch_all_by_division($division)}) {
         if($genome->strain() and $genome->reference() and $genome->reference() eq $strain_group){
         	my $mca = $self->registry->get_adaptor( $genome->name(), 'Core', 'MetaContainer' );
-                my $common_name = $mca->single_value_by_key('species.common_name');
         	my $dbname =  $genome->dbname();
+                my $common_name = $mca->single_value_by_key('species.common_name') ? $mca->single_value_by_key('species.common_name')  : "No meta_key species.common_name in $dbname";
                 push(@{$unique_common_name{$common_name}} , $dbname); 
        } 
   }    
 
-  my $desc='';
+  my $report='';
   for my $common_name (keys %unique_common_name){
-  	$desc.= join("\n$common_name: ", @{$unique_common_name{$common_name}});
+  	$report.= join("\n$common_name: ", @{$unique_common_name{$common_name}});
   }
-  $desc = " Meta key species.common_name is similar in all DBs for strain group $strain_group \n". $desc   ;
-  is(keys %unique_common_name ,  1 , $desc) ;
+  my $desc = " Meta key species.common_name is similar in all DBs for strain group $strain_group \n". $report;
+  is(keys %unique_common_name ,  1 , $desc) or diag('Meta key species.common name is  not similar in dbs : ' . $report);
 }
 
 1;
