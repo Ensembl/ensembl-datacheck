@@ -53,7 +53,7 @@ sub tests {
 
 sub CheckCommonName {
   my ($self, $division, $reference_species_common_name, $strain_group) = @_;
-  my $gdba = $self->registry->get_DBAdaptor("multi", "metadata")->get_GenomeInfoAdaptor();
+  my $gdba = $self->get_dba("multi", "metadata")->get_GenomeInfoAdaptor();
   my %unique_common_name;
   for my $genome (@{$gdba->fetch_all_by_division($division)}) {
         if($genome->strain() and $genome->reference() and $genome->reference() eq $strain_group){
