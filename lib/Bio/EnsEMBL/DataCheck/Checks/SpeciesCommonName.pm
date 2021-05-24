@@ -57,7 +57,13 @@ sub CheckCommonName {
   my %unique_common_name;
   for my $genome (@{$gdba->fetch_all_by_division($division)}) {
         if($genome->strain() and $genome->reference() and $genome->reference() eq $strain_group){
-        	my $mca = $self->registry->get_adaptor( $genome->name(), 'Core', 'MetaContainer' );
+        	my $strain_name = $genome->name;
+        	my $strain_dba = $self->get_dba($strain_name, 'core');
+        	my $desc_strain_dba = "Core database for $strain_name found";
+        	my $pass = ok(defined $strain_dba, $desc_strain_dba);
+        	next unless $pass;
+
+        	my $mca = $strain_dba->get_adaptor("MetaContainer");
         	my $dbname =  $genome->dbname();
                 my $common_name = $mca->single_value_by_key('species.common_name') ? $mca->single_value_by_key('species.common_name')  : "No meta_key species.common_name in $dbname";
                 push(@{$unique_common_name{$common_name}} , $dbname); 
