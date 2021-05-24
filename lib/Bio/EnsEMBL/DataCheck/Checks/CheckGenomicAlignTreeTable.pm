@@ -110,11 +110,11 @@ sub tests {
       FROM genomic_align_tree gat
         JOIN genomic_align ga USING (node_id)
         JOIN dnafrag df USING (dnafrag_id)
-      WHERE gat.right_index-gat.left_index!=1
-        AND df.coord_system_name!='ancestralsegment'
+      WHERE gat.right_index - gat.left_index != 1
+        AND df.coord_system_name != 'ancestralsegment'
     /;
 
-  my $desc_4 = "All internal nodes are ancestral sequences";
+  my $desc_4 = "All internal nodes link to ancestral sequences";
   is_rows_zero($dbc, $sql_4, $desc_4);
 
   my $sql_5 = qq/
@@ -122,14 +122,13 @@ sub tests {
       FROM genomic_align_tree gat
         JOIN genomic_align ga USING (node_id)
         JOIN dnafrag df USING (dnafrag_id)
-      WHERE gat.right_index-gat.left_index=1
-        AND df.coord_system_name='ancestralsegment';
+      WHERE gat.right_index - gat.left_index = 1
+        AND df.coord_system_name = 'ancestralsegment'
   /;
 
-  my $desc_5 = "All leaves are from extant species";
+  my $desc_5 = "All leaves are from current genome sequences";
   is_rows_zero($dbc, $sql_5, $desc_5);
 
 }
 
 1;
-
