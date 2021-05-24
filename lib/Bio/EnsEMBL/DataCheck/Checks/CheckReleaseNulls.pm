@@ -46,7 +46,7 @@ sub tests {
   
   foreach my $table (@tables) {
     
-    if ( $db_name =~ /master/i ) {
+    if ( $db_name =~ /master/i or $db_name =~ /references/i ) {
       # In the master database, last_release cannot be set in the future (incl. the current release)
       my $sql_1 = qq/
         SELECT COUNT(*) 
