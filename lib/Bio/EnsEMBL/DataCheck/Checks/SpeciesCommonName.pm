@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'SpeciesCommonName',
-  DESCRIPTION => 'Meta key species.common_name should be same for group of strains or breed',
+  DESCRIPTION => 'Meta key species.common_name should be same for species form a group of strains or breed',
   GROUPS      => ['core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta'],
@@ -37,13 +37,15 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $mca = $self->dba->get_adaptor("MetaContainer");
-  my $strain = $mca->single_value_by_key('species.strain');
   my $strain_group = $mca->single_value_by_key('species.strain_group'); 
-  my $reference_species_common_name = $mca->single_value_by_key('species.common_name');
+  my $species_common_name = $mca->single_value_by_key('species.common_name');
   my $division = $mca->single_value_by_key('species.division');
-  if ( $strain && $strain_group ) {
+  if ($species_common_name eq ''){
+	fail("Meta key species.common_name is empty/not set ");
+  }
+  elsif ( $strain_group ) {
         
-	$self->CheckCommonName($division, $reference_species_common_name, $strain_group);
+	$self->check_common_name($division, $species_common_name, $strain_group);
   }
   else{
 	skip('No Strains or Breeds for Species');
@@ -51,12 +53,15 @@ sub tests {
 
 }
 
-sub CheckCommonName {
-  my ($self, $division, $reference_species_common_name, $strain_group) = @_;
+sub check_common_name {
+  #This Function checking for common names across all the dbs for specific stain group in a division,
+  #Which deviating from the other Datachecks.
+
+  my ($self, $division, $species_common_name,  $strain_group) = @_;
   my $gdba = $self->get_dba("multi", "metadata")->get_GenomeInfoAdaptor();
   my %unique_common_name;
   for my $genome (@{$gdba->fetch_all_by_division($division)}) {
-        if($genome->strain() and $genome->reference() and $genome->reference() eq $strain_group){
+        if($genome->reference() and $genome->reference() eq $strain_group){
         	my $strain_name = $genome->name;
         	my $strain_dba = $self->get_dba($strain_name, 'core');
         	my $desc_strain_dba = "Core database for $strain_name found";
@@ -66,16 +71,13 @@ sub CheckCommonName {
         	my $mca = $strain_dba->get_adaptor("MetaContainer");
         	my $dbname =  $genome->dbname();
                 my $common_name = $mca->single_value_by_key('species.common_name') ? $mca->single_value_by_key('species.common_name')  : "No meta_key species.common_name in $dbname";
-                push(@{$unique_common_name{$common_name}} , $dbname); 
+                my $desc =  "Meta key species.common_name is similar in DB $dbname for strain group $strain_group";
+                is($species_common_name, $common_name, $desc)
        } 
   }    
 
-  my $report='';
-  for my $common_name (keys %unique_common_name){
-  	$report.= join("\n$common_name: ", @{$unique_common_name{$common_name}});
-  }
-  my $desc = " Meta key species.common_name is similar in all DBs for strain group $strain_group \n". $report;
-  is(keys %unique_common_name ,  1 , $desc) or diag('Meta key species.common name is  not similar in dbs : ' . $report);
 }
 
+
 1;
+
