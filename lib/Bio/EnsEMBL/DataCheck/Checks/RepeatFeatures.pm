@@ -64,7 +64,7 @@ sub tests {
       is_rows_nonzero($self->dba, $sql_1, $desc_1);
     }
 
-    my $desc_2 = 'Repeat features exist (repeatmask)';
+    my $desc_2 = 'Repeat features exist (repeatmask or repeatdetector)';
     my $sql_2  = qq/
       SELECT COUNT(*) FROM
         repeat_feature INNER JOIN
