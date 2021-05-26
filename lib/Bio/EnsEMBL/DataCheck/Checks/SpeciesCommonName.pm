@@ -69,7 +69,7 @@ sub check_common_name {
 
         	my $mca = $strain_dba->get_adaptor("MetaContainer");
         	my $dbname =  $genome->dbname();
-                my $common_name = $mca->single_value_by_key('species.common_name') ? $mca->single_value_by_key('species.common_name')  : "No meta_key species.common_name in $dbname";
+                my $common_name = $mca->single_value_by_key('species.common_name');
                 my $desc =  "Meta key species.common_name is the same in DB $dbname for strain group $strain_group";
                 is($species_common_name, $common_name, $desc)
        } 
