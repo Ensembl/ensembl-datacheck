@@ -28,7 +28,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'SpeciesCommonName',
-  DESCRIPTION => 'Meta key species.common_name should be same for species form a group of strains or breed',
+  DESCRIPTION => 'Meta key species.common_name should be same for species from a group of strains or breeds',
   GROUPS      => ['core', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta'],
