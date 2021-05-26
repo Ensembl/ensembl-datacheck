@@ -70,7 +70,8 @@ sub tests {
         repeat_feature INNER JOIN
         analysis USING (analysis_id)
       WHERE
-        logic_name LIKE 'repeatmask%'
+        logic_name LIKE 'repeatmask%' OR
+	logic_name LIKE 'repeatdetector%' 
     /;
     is_rows_nonzero($self->dba, $sql_2, $desc_2);
   }
