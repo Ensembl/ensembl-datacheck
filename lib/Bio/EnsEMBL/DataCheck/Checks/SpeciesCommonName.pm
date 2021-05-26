@@ -58,7 +58,7 @@ sub check_common_name {
 
   my ($self, $division, $species_common_name,  $strain_group) = @_;
   my $gdba = $self->get_dba("multi", "metadata")->get_GenomeInfoAdaptor();
-  my %unique_common_name;
+
   for my $genome (@{$gdba->fetch_all_by_division($division)}) {
         if($genome->reference() and $genome->reference() eq $strain_group){
         	my $strain_name = $genome->name;
