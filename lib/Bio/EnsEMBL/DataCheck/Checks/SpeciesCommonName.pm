@@ -43,8 +43,7 @@ sub tests {
   if ($species_common_name eq ''){
 	fail("Meta key species.common_name is empty/not set ");
   }
-  elsif ( $strain_group ) {
-        
+  elsif ( $strain_group ) {   
 	$self->check_common_name($division, $species_common_name, $strain_group);
   }
   else{
@@ -54,7 +53,7 @@ sub tests {
 }
 
 sub check_common_name {
-  #This Function checking for common names across all the dbs for specific stain group in a division,
+  #This Function checking for common names across all the dbs for specific strain group in a division,
   #Which deviating from the other Datachecks.
 
   my ($self, $division, $species_common_name,  $strain_group) = @_;
