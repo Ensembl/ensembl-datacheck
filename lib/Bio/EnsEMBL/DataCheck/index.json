@@ -2232,7 +2232,7 @@
       "namCommonName" : " ",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesCommonName"
    },
-   "speciesNameUnique" : {
+   "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
       "description" : "Species production_name and alias are unique across all databases in the registry",
       "groups" : [
