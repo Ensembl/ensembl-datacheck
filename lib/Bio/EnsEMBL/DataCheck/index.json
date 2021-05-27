@@ -2265,6 +2265,17 @@
       "name" : "SourceAdvisory",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SourceAdvisory"
    },
+   "SpeciesCommonName":{
+      "datacheck_type" : "critical",
+      "description" : "Meta key species.common_name should be same for species from a group of strains or breed",
+      "groups" : [
+         "core",
+         "meta"
+      ],
+      "name" : "SpeciesCommonName",
+      "namCommonName" : " ",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesCommonName"
+   },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",
       "description" : "Species production_name and alias are unique across all databases in the registry",
