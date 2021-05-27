@@ -64,13 +64,14 @@ sub tests {
       is_rows_nonzero($self->dba, $sql_1, $desc_1);
     }
 
-    my $desc_2 = 'Repeat features exist (repeatmask)';
+    my $desc_2 = 'Repeat features exist (repeatmask or repeatdetector)';
     my $sql_2  = qq/
       SELECT COUNT(*) FROM
         repeat_feature INNER JOIN
         analysis USING (analysis_id)
       WHERE
-        logic_name LIKE 'repeatmask%'
+        logic_name LIKE 'repeatmask%' OR
+	logic_name LIKE 'repeatdetector%' 
     /;
     is_rows_nonzero($self->dba, $sql_2, $desc_2);
   }
