@@ -34,48 +34,58 @@ use constant {
   TABLES      => ['meta'],
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+  my $strain_group = $mca->single_value_by_key('species.strain_group');
+
+  if ( ! defined $strain_group ) {
+    return (1, 'No strains or breeds.');
+  }
+}
+
 sub tests {
   my ($self) = @_;
+
   my $mca = $self->dba->get_adaptor("MetaContainer");
+
+  my $division = $mca->single_value_by_key('species.division');
   my $strain_group = $mca->single_value_by_key('species.strain_group'); 
   my $species_common_name = $mca->single_value_by_key('species.common_name');
-  my $division = $mca->single_value_by_key('species.division');
-  if ($species_common_name eq ''){
-	fail("Meta key species.common_name is empty/not set ");
-  }
-  elsif ( $strain_group ) {   
-	$self->check_common_name($division, $species_common_name, $strain_group);
-  }
-  else{
-	skip('No Strains or Breeds for Species');
-  }
 
+  my $desc = "Common name is defined";
+  my $pass = ok(defined $species_common_name, $desc);
+
+  if ($pass) {
+    $self->check_common_name($division, $species_common_name, $strain_group);
+  }
 }
 
 sub check_common_name {
-  #This Function checking for common names across all the dbs for specific strain group in a division,
-  #Which deviating from the other Datachecks.
+  # This function checks for common names across all the dbs for
+  # specific strain group in a division, which deviates from the
+  # standard datacheck methodology that operates on a single
+  # database at a time.
 
   my ($self, $division, $species_common_name,  $strain_group) = @_;
   my $gdba = $self->get_dba("multi", "metadata")->get_GenomeInfoAdaptor();
 
   for my $genome (@{$gdba->fetch_all_by_division($division)}) {
-        if($genome->reference() and $genome->reference() eq $strain_group){
-        	my $strain_name = $genome->name;
-        	my $strain_dba = $self->get_dba($strain_name, 'core');
-        	my $desc_strain_dba = "Core database for $strain_name found";
-        	my $pass = ok(defined $strain_dba, $desc_strain_dba);
-        	next unless $pass;
+    if ($genome->reference() and $genome->reference() eq $strain_group) {
+      my $strain_name = $genome->name;
+      my $strain_dba = $self->get_dba($strain_name, 'core');
+      my $desc_strain_dba = "Core database for $strain_name found";
+      my $pass = ok(defined $strain_dba, $desc_strain_dba);
+      next unless $pass;
 
-        	my $mca = $strain_dba->get_adaptor("MetaContainer");
-        	my $dbname =  $genome->dbname();
-                my $common_name = $mca->single_value_by_key('species.common_name');
-                my $desc =  "Meta key species.common_name is the same in DB $dbname for strain group $strain_group";
-                is($species_common_name, $common_name, $desc)
-       } 
+      my $mca = $strain_dba->get_adaptor("MetaContainer");
+      my $dbname = $genome->dbname();
+      my $common_name = $mca->single_value_by_key('species.common_name');
+      my $desc =  "Meta key species.common_name is the same in DB $dbname for strain group $strain_group";
+      is($species_common_name, $common_name, $desc)
+    }
   }    
-
 }
-
 
 1;
