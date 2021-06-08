@@ -177,11 +177,11 @@ sub repeat_analysis {
     my $species_id = $self->dba->species_id;
     my $mca = $self->dba->get_adaptor('MetaContainer');
     my @rep_list = ();
-    if ($mca->get_division eq 'EnsemblPlants') {
-      @rep_list = qw("repeatmask_repeatmodeler");
+    if ($mca->get_division eq 'EnsemblVertebrates') {
+      @rep_list = qw("repeatmask_repeatmodeler" "repeatdetector");
     }
     else {
-      @rep_list = qw("repeatmask_repeatmodeler" "repeatdetector");
+      @rep_list = qw("repeatmask_repeatmodeler");
     }
     my $to_skip = join(", ", @rep_list);
 
