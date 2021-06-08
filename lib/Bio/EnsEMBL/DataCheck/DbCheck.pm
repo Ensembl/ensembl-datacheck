@@ -326,12 +326,15 @@ sub get_dba {
 
   $self->load_registry();
 
-  # If we have a server_uri and registry, we want to overwrite anything
-  # loaded in the registry with the server_uri.
+  # If we have a server_uri and registry, we want to overwrite
+  # anything loaded in the registry with the server_uri,
+  # unless it's a metadata/production/taxonomy db, which we
+  # always want to come from a registry file.
   if (
     defined $self->registry_file &&
     defined $self->server_uri &&
-    scalar( @{$self->server_uri} )
+    scalar( @{$self->server_uri} ) &&
+    $group !~ /^(metadata|production|taxonomy)$/
   ) {
     SERVER_URI: foreach my $server_uri ( @{$self->server_uri} ) {
       my $uri = parse_uri($server_uri);
