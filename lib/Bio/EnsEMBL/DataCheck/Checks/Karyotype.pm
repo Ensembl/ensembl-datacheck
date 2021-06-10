@@ -57,14 +57,16 @@ sub tests {
 
   my $sa = $self->dba->get_adaptor('Slice');
 
-  my $cs_name = 'chromosome';
-
-  my $slices = $sa->fetch_all($cs_name, undef, undef, 1);
+  my $slices = $sa->fetch_all('toplevel', undef, undef, 1);
   foreach my $slice (@$slices) {
+    next unless $slice->karyotype_rank;
+
     my $sr_name = $slice->seq_region_name;
     next if $sr_name eq 'MT';
     
     my $bands = $slice->get_all_KaryotypeBands;
+
+    my $cs_name = $slice->coord_system_name;
 
     my $desc_1 = "$cs_name $sr_name has karyotype bands";
     ok(scalar(@$bands), $desc_1);
