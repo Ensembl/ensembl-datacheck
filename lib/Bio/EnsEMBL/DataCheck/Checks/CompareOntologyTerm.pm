@@ -31,7 +31,7 @@ use constant {
   NAME           => 'CompareOntologyTerm',
   DESCRIPTION    => 'Compare Term counts between current and previous ontology database',
   GROUPS         => ['ontologies'],
-  DATACHECK_TYPE => 'critical',
+  DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['ontology'],
   TABLES         => ['ontology', 'term']
 };
