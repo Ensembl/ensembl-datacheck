@@ -84,6 +84,30 @@ sub tests {
       my $sr_name = $_->seq_region_name;
       my $desc = "$cs_name $sr_name has 'karyotype_rank' attribute";
       ok($_->has_karyotype, $desc);
+      
+      my $desc2 = "$cs_name $sr_name should have only one 'karyotype_rank' attribute";
+      my $diag2 = "There is more than 1 'karyotype_rank' per seq_region_id";
+      my $srid = $_->get_seq_region_id;
+      my $sql = "
+        select seq_region_id
+        from
+          seq_region_attrib sra,
+          attrib_type at
+        where
+          at.attrib_type_id=sra.attrib_type_id and
+          at.code='karyotype_rank' and
+          sra.seq_region_id=$srid
+        group by
+          sra.seq_region_id
+        having count(seq_region_id) > 1;
+      ";
+
+      is_rows_zero(
+        $self->dba,
+        $sql,
+        $desc2,
+        $diag2
+      );
 
       if ($sr_name =~ /^(chrM|chrMT|MT|Mito|mitochondrion_genome)$/) {
         my $desc_mt = "$cs_name $sr_name has mitochondrial 'sequence_location' attribute";
