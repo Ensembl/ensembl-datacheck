@@ -2170,12 +2170,23 @@
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
    },
+   "SeqRegionNamesENA" : {
+      "datacheck_type" : "advisory",
+      "description" : "Seq_region contig names from ENA are appropriately formatted and attributed",
+      "groups" : [
+         "assembly",
+         "core"
+      ],
+      "name" : "SeqRegionNamesENA",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesENA"
+   },
    "SeqRegionNamesINSDC" : {
       "datacheck_type" : "advisory",
       "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "ena_gff3_format"
       ],
       "name" : "SeqRegionNamesINSDC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
