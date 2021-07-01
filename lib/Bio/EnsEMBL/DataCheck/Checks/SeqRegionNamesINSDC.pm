@@ -82,7 +82,7 @@ sub check_name_format {
       a.code = 'toplevel' AND
       sra.value = '1' AND
       sr.name NOT REGEXP '$format' AND
-      srs.synonym NOT REGEXP '$format' AND
+      (srs.synonym NOT REGEXP '$format' OR srs.synonym IS NULL) AND
       sr.name NOT LIKE 'LRG%' AND
       cs.species_id = $species_id
   /;
