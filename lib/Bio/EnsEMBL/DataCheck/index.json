@@ -2195,7 +2195,7 @@
       "groups" : [
          "assembly",
          "core",
-         "ena_gff3_format"
+         "ena_submission"
       ],
       "name" : "SeqRegionNamesINSDC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
