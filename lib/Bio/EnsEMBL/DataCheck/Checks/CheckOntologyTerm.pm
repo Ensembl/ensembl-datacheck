@@ -39,15 +39,13 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $desc = 'Critical terms are present in term table';
-  my @critical_terms = (
-      "'EFO:0003900'"
-  );
-  my $len = @critical_terms;
+  my @critical_terms = qw/EFO:0003900/;
 
-  my $sql = "SELECT COUNT(*) FROM term WHERE accession IN (".join(', ', @critical_terms).")";
-
-  is_rows($self->dba, $sql, $len, $desc);
+  foreach (@critical_terms) {
+    my $desc = "Critical term $_ is present in term table";
+    my $sql = "SELECT accession FROM term WHERE accession = '$_'";
+    is_rows($self->dba, $sql, 1, $desc);
+  }
 }
 
 1;
