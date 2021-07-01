@@ -724,12 +724,21 @@
    },
    "CompareOntologyTerm" : {
       "datacheck_type" : "advisory",
-      "description" : "Compare Term counts between current and previous ontology database",
+      "description" : "Compare namespace counts between current and previous ontology database",
       "groups" : [
          "ontologies"
       ],
       "name" : "CompareOntologyTerm",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTerm"
+   },
+   "CompareOntologyTotal" : {
+      "datacheck_type" : "critical",
+      "description" : "Compare total counts between current and previous ontology database",
+      "groups" : [
+         "ontologies"
+      ],
+      "name" : "CompareOntologyTotal",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTotal"
    },
    "ComparePhenotypeFeatures" : {
       "datacheck_type" : "advisory",
