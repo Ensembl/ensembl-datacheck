@@ -1113,6 +1113,15 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
+   "DisplayNameFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "For Rapid Release, the display name must be a specific format",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "DisplayNameFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayNameFormat"
+   },
    "DisplayXrefExists" : {
       "datacheck_type" : "advisory",
       "description" : "At least one gene name exists",
