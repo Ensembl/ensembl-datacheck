@@ -1122,6 +1122,15 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
+   "DisplayNameFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "For Rapid Release, the display name must be a specific format",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "DisplayNameFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayNameFormat"
+   },
    "DisplayXrefExists" : {
       "datacheck_type" : "advisory",
       "description" : "At least one gene name exists",
@@ -2179,12 +2188,23 @@
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
    },
+   "SeqRegionNamesENA" : {
+      "datacheck_type" : "advisory",
+      "description" : "Seq_region contig names from ENA are appropriately formatted and attributed",
+      "groups" : [
+         "assembly",
+         "core"
+      ],
+      "name" : "SeqRegionNamesENA",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesENA"
+   },
    "SeqRegionNamesINSDC" : {
       "datacheck_type" : "advisory",
       "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "ena_submission"
       ],
       "name" : "SeqRegionNamesINSDC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
