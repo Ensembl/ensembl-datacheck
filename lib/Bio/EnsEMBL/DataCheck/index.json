@@ -403,6 +403,16 @@
       "name" : "CheckHomologyMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
    },
+   "CheckIDRangeMLSS" : {
+      "datacheck_type" : "advisory",
+      "description" : "All relevant IDs are within the offset range for their MLSS ID",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments"
+      ],
+      "name" : "CheckIDRangeMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckIDRangeMLSS"
+   },
    "CheckJSONObjects" : {
       "datacheck_type" : "critical",
       "description" : "Check that all JSON objects in gene_tree_object_store are valid",
