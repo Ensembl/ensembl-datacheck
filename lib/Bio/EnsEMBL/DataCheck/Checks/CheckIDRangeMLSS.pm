@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw( is_compara_ehive_db );
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
