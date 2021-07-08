@@ -36,6 +36,15 @@ use constant {
   TABLES         => ['genomic_align', 'genomic_align_block', 'genomic_align_tree', 'constrained_element', 'conservation_score', 'dnafrag']
 };
 
+
+sub skip_tests {
+  my ($self) = @_;
+  if (is_compara_ehive_db($self->dba) != 1) {
+    return( 1, "This check is not intended for pipeline databases" );
+  }
+}
+
+
 sub tests {
   my ($self) = @_;
 
