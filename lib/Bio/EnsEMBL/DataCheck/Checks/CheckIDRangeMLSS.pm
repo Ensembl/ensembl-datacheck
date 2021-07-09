@@ -40,7 +40,7 @@ use constant {
 
 sub skip_tests {
   my ($self) = @_;
-  if (is_compara_ehive_db($self->dba) != 1) {
+  if (is_compara_ehive_db($self->dba) == 1) {
     return( 1, "This check is not intended for pipeline databases" );
   }
 }
