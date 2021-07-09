@@ -15,7 +15,15 @@
 use strict;
 use warnings;
 
-use Bio::EnsEMBL::DataCheck::Utils qw( repo_location foreign_keys sql_count array_diff hash_diff is_compara_ehive_db );
+use Bio::EnsEMBL::DataCheck::Utils qw(
+  repo_location
+  foreign_keys 
+  sql_count
+  array_diff
+  hash_diff
+  is_compara_ehive_db
+  same_metavalue
+);
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
@@ -116,6 +124,22 @@ subtest 'Compara e-hive check', sub {
   $dba->dbc->db_handle->do("CREATE TABLE job ( column1 int )");
   $ehive_check    = is_compara_ehive_db($dba);
   is($ehive_check, 1, 'Correct assignment - is an ehive db');
+};
+
+subtest 'Same metavalue check', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  $dba_current->dbc->db_handle->do("INSERT INTO TABLE meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value', '12345' )");
+  $dba_old->dbc->db_handle->do("INSERT INTO TABLE meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value', '12345' )");
+
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $old_mca = $old_dba->get_adaptor('MetaContainer');
+  
+  my $same_metavalue_check = same_metavalue($mca, $old_mca, 'assembly.default_value');
+  is($same_metavalue_check, 1, 'Correct comparison - both DBs have same value for the the meta key');
 };
 
 done_testing();
