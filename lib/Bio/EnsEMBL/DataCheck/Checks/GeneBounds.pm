@@ -73,7 +73,8 @@ sub bounds_check {
         t.seq_region_start = 0 OR
         t.seq_region_end > sr.length
       ) AND
-      cs.species_id = $species_id
+      cs.species_id = $species_id AND
+      at.code IS NULL
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
 }
