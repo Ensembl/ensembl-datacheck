@@ -59,28 +59,38 @@ sub tests {
   is_rows_zero($self->dba, $sql_1, $desc_1);
 
 
-  my $desc_2 = "genomic_align_block.genomic_align_block_id all within correct MLSS range";
+  my $desc_2 = "genomic_align.genomic_align_block_id all within correct MLSS range";
   my $sql_2 = q/
     SELECT genomic_align_block_id, method_link_species_set_id
-    FROM genomic_align_block 
+    FROM genomic_align
     WHERE genomic_align_block_id < (method_link_species_set_id * 10000000000) 
       OR genomic_align_block_id > ((method_link_species_set_id + 1) * 10000000000)
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
 
 
-  my $desc_3 = "genomic_align_block.group_id all within correct MLSS range";
+  my $desc_3 = "genomic_align_block.genomic_align_block_id all within correct MLSS range";
   my $sql_3 = q/
+    SELECT genomic_align_block_id, method_link_species_set_id
+    FROM genomic_align_block 
+    WHERE genomic_align_block_id < (method_link_species_set_id * 10000000000) 
+      OR genomic_align_block_id > ((method_link_species_set_id + 1) * 10000000000)
+  /;
+  is_rows_zero($self->dba, $sql_3, $desc_3);
+
+
+  my $desc_4 = "genomic_align_block.group_id all within correct MLSS range";
+  my $sql_4 = q/
     SELECT group_id, method_link_species_set_id
     FROM genomic_align_block 
     WHERE group_id < (method_link_species_set_id * 10000000000) 
       OR group_id > ((method_link_species_set_id + 1) * 10000000000)
   /;
-  is_rows_zero($self->dba, $sql_3, $desc_3);
+  is_rows_zero($self->dba, $sql_4, $desc_4);
 
 
-  my $desc_4 = "genomic_align_tree.node_id all within correct MLSS range";
-  my $sql_4 = q/
+  my $desc_5 = "genomic_align_tree.node_id all within correct MLSS range";
+  my $sql_5 = q/
     SELECT DISTINCT(t.node_id), g.method_link_species_set_id 
     FROM genomic_align_tree t 
     JOIN genomic_align g 
@@ -88,21 +98,21 @@ sub tests {
     WHERE t.node_id < (g.method_link_species_set_id * 10000000000) 
       OR t.node_id > ((g.method_link_species_set_id + 1) * 10000000000)
   /;
-  is_rows_zero($self->dba, $sql_4, $desc_4);
+  is_rows_zero($self->dba, $sql_5, $desc_5);
 
 
-  my $desc_5 = "constrained_element.constrained_element_id all within correct MLSS range";
-  my $sql_5 = q/
+  my $desc_6 = "constrained_element.constrained_element_id all within correct MLSS range";
+  my $sql_6 = q/
     SELECT constrained_element_id, method_link_species_set_id
     FROM constrained_element 
     WHERE constrained_element_id < (method_link_species_set_id * 10000000000) 
       OR constrained_element_id > ((method_link_species_set_id + 1) * 10000000000)
   /;
-  is_rows_zero($self->dba, $sql_5, $desc_5);
+  is_rows_zero($self->dba, $sql_6, $desc_6);
 
 
-  my $desc_6 = "dnafrag.dnafrag_id for ancestral frags all within correct MLSS range";
-  my $sql_6 = q/
+  my $desc_7 = "dnafrag.dnafrag_id for ancestral frags all within correct MLSS range";
+  my $sql_7 = q/
     SELECT d.dnafrag_id, g.method_link_species_set_id 
     FROM dnafrag d 
     JOIN genomic_align g 
@@ -113,11 +123,11 @@ sub tests {
         OR d.dnafrag_id > ((g.method_link_species_set_id + 1) * 10000000000)
       )
   /;
-  is_rows_zero($self->dba, $sql_6, $desc_6);
+  is_rows_zero($self->dba, $sql_7, $desc_7);
 
 
-  my $desc_7 = "conservation_score.genomic_align_block_id all within correct MLSS range";
-  my $sql_7 = q/
+  my $desc_8 = "conservation_score.genomic_align_block_id all within correct MLSS range";
+  my $sql_8 = q/
     SELECT cs.genomic_align_block_id, g.method_link_species_set_id
     FROM conservation_score cs 
     JOIN genomic_align_block g 
@@ -125,7 +135,7 @@ sub tests {
     WHERE g.genomic_align_block_id < (g.method_link_species_set_id * 10000000000) 
       OR g.genomic_align_block_id > ((g.method_link_species_set_id + 1) * 10000000000)
   /;
-  is_rows_zero($self->dba, $sql_7, $desc_7);
+  is_rows_zero($self->dba, $sql_8, $desc_8);
 }
 
 1;
