@@ -408,7 +408,8 @@
       "description" : "All relevant IDs are within the offset range for their MLSS ID",
       "groups" : [
          "compara",
-         "compara_pairwise_alignments"
+         "compara_pairwise_alignments",
+         "compara_genome_alignments"
       ],
       "name" : "CheckIDRangeMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckIDRangeMLSS"

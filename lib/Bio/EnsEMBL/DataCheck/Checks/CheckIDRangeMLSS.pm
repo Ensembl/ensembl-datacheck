@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckIDRangeMLSS',
   DESCRIPTION    => 'All relevant IDs are within the offset range for their MLSS ID',
-  GROUPS         => ['compara', 'compara_pairwise_alignments'],
+  GROUPS         => ['compara', 'compara_pairwise_alignments', 'compara_genome_alignments'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['compara'],
   TABLES         => ['genomic_align', 'genomic_align_block', 'genomic_align_tree', 'constrained_element', 'conservation_score', 'dnafrag']
@@ -129,4 +129,3 @@ sub tests {
 }
 
 1;
-
