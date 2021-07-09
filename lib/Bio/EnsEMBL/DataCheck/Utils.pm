@@ -331,6 +331,17 @@ sub is_compara_ehive_db {
   return $helper->execute_single_result(-SQL =>$sql);
 }
 
+=item B<same_metavalue>
+
+same_metavalue($mca, $old_mca, $meta_key);
+
+Takes two MetaContainer adaptors (C<$mca> and C<$old_mca>) and compares the two
+respective meta_value(s) for the given C<$meta_key>. Returns 1 if the values are
+the same, 0 otherwise.
+
+=back
+
+=cut
 sub same_metavalue {
   my ($mca, $old_mca, $meta_key) = @_;
 
@@ -340,12 +351,32 @@ sub same_metavalue {
   return ($cur_metavalue eq $old_metavalue); 
 }
 
+=item B<same_assembly>
+
+same_assembly($mca, $old_mca);
+
+Takes two MetaContainer adaptors (C<$mca> and C<$old_mca>) and returns 1 if the
+two databases have the same assembly, 0 otherwise.
+
+=back
+
+=cut
 sub same_assembly {
   my ($mca, $old_mca) = @_;
 
   return same_metavalue($mca, $old_mca, 'asembly.default_value');
 }
 
+=item B<same_geneset>
+
+same_geneset($mca, $old_mca);
+
+Takes two MetaContainer adaptors (C<$mca> and C<$old_mca>) and returns 1 if the
+two databases have the same geneset, 0 otherwise.
+
+=back
+
+=cut
 sub same_geneset {
   my ($mca, $old_mca) = @_;
 
