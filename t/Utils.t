@@ -23,6 +23,8 @@ use Bio::EnsEMBL::DataCheck::Utils qw(
   hash_diff
   is_compara_ehive_db
   same_metavalue
+  same_assembly
+  same_geneset
 );
 use Bio::EnsEMBL::Test::MultiTestDB;
 
@@ -158,4 +160,37 @@ subtest 'Same metavalue check - negative', sub {
   is($same_metavalue_check, '', 'Correct comparison - DBs have different values for the the meta key');
 };
 
+
+subtest 'Same assembly check', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default', 'ASM12345' )");
+  $dba_old->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default', 'ASM12345' )");
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_assembly_check = same_assembly($mca, $old_mca);
+  is($same_assembly_check, 1, 'Correct comparison - DBs have same assembly');
+};
+
+
+subtest 'Same geneset check', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'genebuild.last_geneset_update', '2020-03' )");
+  $dba_old->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'genebuild.last_geneset_update', '2020-03' )");
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_geneset_check = same_geneset($mca, $old_mca);
+  is($same_geneset_check, 1, 'Correct comparison - DBs have same geneset');
+};
 done_testing();
