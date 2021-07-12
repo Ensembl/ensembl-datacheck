@@ -148,13 +148,14 @@ subtest 'Same metavalue check - negative', sub {
   my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
   my $dba_old = $testdb_old->get_DBAdaptor('core');
 
-  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value_test', '12345' )");
+  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value_test2', '67890' )");
+  $dba_old->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value_test2', '0000' )");
 
   my $mca = $dba_current->get_adaptor('MetaContainer');
   my $old_mca = $dba_old->get_adaptor('MetaContainer');
   
-  my $same_metavalue_check = same_metavalue($mca, $old_mca, 'assembly.default_value_test');
-  is($same_metavalue_check, 0, 'Correct comparison - DBs have different values for the the meta key');
+  my $same_metavalue_check = same_metavalue($mca, $old_mca, 'assembly.default_value_test2');
+  is($same_metavalue_check, '', 'Correct comparison - DBs have different values for the the meta key');
 };
 
 done_testing();
