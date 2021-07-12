@@ -49,11 +49,11 @@ sub tests {
     my $old_mca = $old_dba->get_adaptor('MetaContainer');
 
     if (!same_assembly($mca, $old_mca)) {    
-      skip 'Current DB has new assembly', 1;
+      skip 'Current DB has different assembly', 1;
     }
     
     if (!same_geneset($mca, $old_mca)) {    
-      skip 'Current DB has new geneset', 1;
+      skip 'Current DB has different geneset', 1;
     }
 
     $self->go_xref_counts($old_dba);
