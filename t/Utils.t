@@ -164,11 +164,8 @@ subtest 'Same metavalue check - negative', sub {
 subtest 'Same assembly check', sub {
   my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
   my $dba_current = $testdb_current->get_DBAdaptor('core');
-  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
   my $dba_old = $testdb_old->get_DBAdaptor('core');
-
-  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default', 'ASM12345' )");
-  $dba_old->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default', 'ASM12345' )");
 
   my $mca = $dba_current->get_adaptor('MetaContainer');
   my $old_mca = $dba_old->get_adaptor('MetaContainer');
@@ -181,11 +178,8 @@ subtest 'Same assembly check', sub {
 subtest 'Same geneset check', sub {
   my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
   my $dba_current = $testdb_current->get_DBAdaptor('core');
-  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
   my $dba_old = $testdb_old->get_DBAdaptor('core');
-
-  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'genebuild.last_geneset_update', '2020-03' )");
-  $dba_old->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'genebuild.last_geneset_update', '2020-03' )");
 
   my $mca = $dba_current->get_adaptor('MetaContainer');
   my $old_mca = $dba_old->get_adaptor('MetaContainer');
