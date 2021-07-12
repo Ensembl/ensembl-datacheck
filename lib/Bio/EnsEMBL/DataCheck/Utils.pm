@@ -364,7 +364,7 @@ two databases have the same assembly, 0 otherwise.
 sub same_assembly {
   my ($mca, $old_mca) = @_;
 
-  return same_metavalue($mca, $old_mca, 'asembly.default_value');
+  return same_metavalue($mca, $old_mca, 'asembly.default');
 }
 
 =item B<same_geneset>
