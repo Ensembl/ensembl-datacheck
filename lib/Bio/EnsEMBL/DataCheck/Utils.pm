@@ -337,7 +337,7 @@ same_metavalue($mca, $old_mca, $meta_key);
 
 Takes two MetaContainer adaptors (C<$mca> and C<$old_mca>) and compares the two
 respective meta_value(s) for the given C<$meta_key>. Returns 1 if the values are
-the same, 0 otherwise.
+present and the same, 0 otherwise.
 
 =back
 
@@ -345,10 +345,13 @@ the same, 0 otherwise.
 sub same_metavalue {
   my ($mca, $old_mca, $meta_key) = @_;
 
-  my $cur_metavalue = $mca->single_value_by_key($meta_key);
-  my $old_metavalue = $old_mca->single_value_by_key($meta_key);
+  my $cur_value = $mca->single_value_by_key($meta_key);
+  my $old_value = $old_mca->single_value_by_key($meta_key);
 
-  return ($cur_metavalue eq $old_metavalue); 
+  if ((defined $cur_value && defined $old_value) && ($cur_value eq $old_value)) {
+    return 1;
+  }
+  return 0;
 }
 
 =item B<same_assembly>
@@ -364,7 +367,7 @@ two databases have the same assembly, 0 otherwise.
 sub same_assembly {
   my ($mca, $old_mca) = @_;
 
-  return same_metavalue($mca, $old_mca, 'asembly.default');
+  return same_metavalue($mca, $old_mca, 'assembly.default');
 }
 
 =item B<same_geneset>
