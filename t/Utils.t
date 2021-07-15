@@ -157,9 +157,21 @@ subtest 'Same metavalue check - negative', sub {
   my $old_mca = $dba_old->get_adaptor('MetaContainer');
   
   my $same_metavalue_check = same_metavalue($mca, $old_mca, 'assembly.default_value_test2');
-  is($same_metavalue_check, '', 'Correct comparison - DBs have different values for the the meta key');
+  is($same_metavalue_check, 0, 'Correct comparison - DBs have different values for the the meta key');
 };
 
+subtest 'Same metavalue check - no key', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_metavalue_check = same_metavalue($mca, $old_mca, 'nonexistent.key');
+  is($same_metavalue_check, 0, 'Correct comparison - Key does not exists');
+};
 
 subtest 'Same assembly check', sub {
   my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
@@ -174,7 +186,6 @@ subtest 'Same assembly check', sub {
   is($same_assembly_check, 1, 'Correct comparison - DBs have same assembly');
 };
 
-
 subtest 'Same geneset check', sub {
   my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
   my $dba_current = $testdb_current->get_DBAdaptor('core');
@@ -187,4 +198,5 @@ subtest 'Same geneset check', sub {
   my $same_geneset_check = same_geneset($mca, $old_mca);
   is($same_geneset_check, 1, 'Correct comparison - DBs have same geneset');
 };
+
 done_testing();
