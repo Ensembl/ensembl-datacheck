@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw(same_assembly same_geneset);
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -42,6 +43,17 @@ sub tests {
     my $old_dba = $self->get_old_dba();
 
     skip 'No old version of database', 1 unless defined $old_dba;
+    
+    my $mca = $self->dba->get_adaptor('MetaContainer');
+    my $old_mca = $old_dba->get_adaptor('MetaContainer');
+
+    if (!same_assembly($mca, $old_mca)) {    
+      skip 'Current DB has different assembly', 1;
+    }
+    
+    if (!same_geneset($mca, $old_mca)) {    
+      skip 'Current DB has different geneset', 1;
+    }
 
     $self->go_xref_counts($old_dba);
   }

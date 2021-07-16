@@ -31,7 +31,17 @@ use feature 'say';
 
 require Exporter;
 our @ISA       = qw( Exporter );
-our @EXPORT_OK = qw( repo_location foreign_keys sql_count array_diff hash_diff is_compara_ehive_db );
+our @EXPORT_OK = qw(
+  repo_location
+  foreign_keys
+  sql_count
+  array_diff
+  hash_diff
+  is_compara_ehive_db
+  same_metavalue
+  same_assembly
+  same_geneset
+);
 
 use File::Spec::Functions qw/catdir splitdir/;
 use Path::Tiny;
@@ -319,6 +329,61 @@ sub is_compara_ehive_db {
   /;
 
   return $helper->execute_single_result(-SQL =>$sql);
+}
+
+=item B<same_metavalue>
+
+same_metavalue($mca, $old_mca, $meta_key);
+
+Takes two MetaContainer adaptors (C<$mca> and C<$old_mca>) and compares the two
+respective meta_value(s) for the given C<$meta_key>. Returns 1 if the values are
+present and the same, 0 otherwise.
+
+=back
+
+=cut
+sub same_metavalue {
+  my ($mca, $old_mca, $meta_key) = @_;
+
+  my $cur_value = $mca->single_value_by_key($meta_key);
+  my $old_value = $old_mca->single_value_by_key($meta_key);
+
+  if ((defined $cur_value && defined $old_value) && ($cur_value eq $old_value)) {
+    return 1;
+  }
+  return 0;
+}
+
+=item B<same_assembly>
+
+same_assembly($mca, $old_mca);
+
+Takes two MetaContainer adaptors (C<$mca> and C<$old_mca>) and returns 1 if the
+two databases have the same assembly, 0 otherwise.
+
+=back
+
+=cut
+sub same_assembly {
+  my ($mca, $old_mca) = @_;
+
+  return same_metavalue($mca, $old_mca, 'assembly.default');
+}
+
+=item B<same_geneset>
+
+same_geneset($mca, $old_mca);
+
+Takes two MetaContainer adaptors (C<$mca> and C<$old_mca>) and returns 1 if the
+two databases have the same geneset, 0 otherwise.
+
+=back
+
+=cut
+sub same_geneset {
+  my ($mca, $old_mca) = @_;
+
+  return same_metavalue($mca, $old_mca, 'genebuild.last_geneset_update');
 }
 
 1;
