@@ -71,7 +71,7 @@ sub tests {
         species_id = $species_id AND
         attrib_type_id = $attrib_type_id
     /;
-    row_totals($self->dba, undef, $sql_2a, $sql_2b, 1, $desc_2);
+    row_totals($self->dba, undef, $sql_2a, $sql_2b, undef, $desc_2);
   }
 }
 
