@@ -28,11 +28,12 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'CheckNonMinimisedGenAlnTrees',
-  DESCRIPTION => 'Check that all genomic align trees are binary, with the exception of unrooted EPO-extended trees which may have 3 sequences',
-  GROUPS      => ['compara', 'compara_genome_alignments'],
-  DB_TYPES    => ['compara'],
-  TABLES      => ['genomic_align_tree', 'method_link_species_set']
+  NAME           => 'CheckNonMinimisedGATs',
+  DESCRIPTION    => 'Check that all genomic align trees are binary, with the exception of unrooted EPO-extended trees which may have 3 sequences',
+  GROUPS         => ['compara', 'compara_genome_alignments'],
+  DATACHECK_TYPE => 'critical',
+  DB_TYPES       => ['compara'],
+  TABLES         => ['genomic_align_tree', 'method_link_species_set']
 };
 
 sub tests {
