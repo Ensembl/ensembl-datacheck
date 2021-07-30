@@ -46,8 +46,8 @@ sub tests {
         t1.root_id,
         COUNT(t1.parent_id) AS parents,
         SUM(t1.children = 3) AS threeleaf,
-        SUM(t1.children > 2) AS non_bin,
-        CASE t2.node_id WHEN NULL THEN 0 ELSE 1 END AS epo_ext
+        SUM(t1.children != 2) AS non_bin,
+        CASE WHEN t2.node_id IS NULL THEN 0 ELSE 1 END AS epo_ext
       FROM (
         SELECT root_id, parent_id, COUNT(node_id) AS children 
         FROM genomic_align_tree 
