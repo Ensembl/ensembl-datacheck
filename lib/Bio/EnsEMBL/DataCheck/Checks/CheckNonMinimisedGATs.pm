@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckNonMinimisedGenAlnTrees;
+package Bio::EnsEMBL::DataCheck::Checks::CheckNonMinimisedGATs;
 
 use warnings;
 use strict;
@@ -77,4 +77,3 @@ sub tests {
 }
 
 1;
-
