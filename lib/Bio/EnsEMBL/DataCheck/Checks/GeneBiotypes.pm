@@ -101,6 +101,8 @@ sub biotype_groups {
 
   my $ga = $self->dba->get_adaptor("Gene");
   my $genes = $ga->fetch_all();
+  $self->dba->dbc && $self->dba->dbc->disconnect_if_idle();
+
   while (my $gene = shift @$genes) {
     my $gene_group = $groups{$gene->biotype};
 
