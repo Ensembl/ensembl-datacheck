@@ -494,7 +494,7 @@
          "compara_genome_alignments"
       ],
       "name" : "CheckNonMinimisedGATs",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckNonMinimisedGenAlnTrees"
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckNonMinimisedGATs"
    },
    "CheckOntologyTerm" : {
       "datacheck_type" : "critical",

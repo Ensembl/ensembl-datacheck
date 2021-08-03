@@ -39,7 +39,7 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $desc_1 = "All genomic_align_tree trees are correct";
+  my $desc_1 = "All genomic_align_tree trees are binary (or ternary if EPO-extended and 4-node tree)";
   my $sql_1 = q/
     SELECT * 
     FROM ( 
