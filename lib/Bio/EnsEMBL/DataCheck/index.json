@@ -486,6 +486,16 @@
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
    },
+   "CheckNonMinimisedGATs" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that all genomic align trees are binary, with the exception of unrooted EPO-extended trees which may have 3 sequences",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "CheckNonMinimisedGATs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckNonMinimisedGATs"
+   },
    "CheckOntologyTerm" : {
       "datacheck_type" : "critical",
       "description" : "Check presence of critical terms",
