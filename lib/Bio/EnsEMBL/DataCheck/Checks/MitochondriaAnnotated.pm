@@ -72,7 +72,7 @@ sub tests {
     my $slice = $sa->fetch_by_region('toplevel', $name);
     if (defined $slice) {
       my $desc_mt = "$name has mitochondrial 'sequence_location' attribute";
-      my %seq_locs = map { $_->value => 1 } @{$_->get_all_Attributes('sequence_location')};
+      my %seq_locs = map { $_->value => 1 } @{$slice->get_all_Attributes('sequence_location')};
       ok(exists $seq_locs{'mitochondrial_chromosome'}, $desc_mt);
     }
   }
