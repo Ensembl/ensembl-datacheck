@@ -282,6 +282,9 @@ after 'run' => sub {
 
   foreach my $dba (@{ $self->dba_list }) {
     $dba->dbc && $dba->dbc->disconnect_if_idle();
+    if ($dba->species =~ m/_old$/) {
+      $self->registry->remove_DBAdaptor($dba->species, $dba->group);
+    }
   }
 };
 
