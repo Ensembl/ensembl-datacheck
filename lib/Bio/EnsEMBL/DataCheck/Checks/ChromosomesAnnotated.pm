@@ -59,12 +59,6 @@ sub tests {
       my $sr_name = $_->seq_region_name;
       my $desc = "$cs_name $sr_name has 'karyotype_rank' attribute";
       ok($_->has_karyotype, $desc);
-
-      if ($sr_name =~ /^(chrM|chrMT|MT|Mito|mitochondrion_genome)$/) {
-        my $desc_mt = "$cs_name $sr_name has mitochondrial 'sequence_location' attribute";
-        my %seq_locs = map { $_->value => 1 } @{$_->get_all_Attributes('sequence_location')};
-        ok(exists $seq_locs{'mitochondrial_chromosome'}, $desc_mt);
-      }
     }
   }
 

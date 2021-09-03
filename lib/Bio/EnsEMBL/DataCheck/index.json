@@ -1798,6 +1798,17 @@
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
    },
+   "MitochondriaAnnotated" : {
+      "datacheck_type" : "critical",
+      "description" : "Mitochondrial seq_regions have appropriate attribute",
+      "groups" : [
+         "assembly",
+         "core",
+         "brc4_core"
+      ],
+      "name" : "MitochondriaAnnotated",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MitochondriaAnnotated"
+   },
    "MultipleGenomicAlignBlockIds" : {
       "datacheck_type" : "critical",
       "description" : "Check that every genomic_align_block_id has more than one genomic_align_id",
