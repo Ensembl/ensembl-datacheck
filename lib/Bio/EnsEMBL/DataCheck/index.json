@@ -826,6 +826,8 @@
       "description" : "Compare database schema to definition in SQL file",
       "groups" : [
          "compara",
+         "compara_homology_annotation",
+         "compara_references",
          "core",
          "brc4_core",
          "corelike",
@@ -1080,7 +1082,9 @@
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
+         "compara_homology_annotation",
          "compara_master",
+         "compara_references",
          "compara_syntenies",
          "core",
          "corelike",
@@ -1834,6 +1838,7 @@
       "description" : "Database schema matches expected MySQL storage engine",
       "groups" : [
          "compara",
+         "compara_homology_annotation",
          "core",
          "brc4_core",
          "corelike",
@@ -2159,6 +2164,7 @@
          "ancestral",
          "brc4_core",
          "compara",
+         "compara_homology_annotation",
          "core",
          "corelike",
          "funcgen",
@@ -2596,6 +2602,8 @@
       "description" : "Fields do not contain carriage returns (\"\\r\")",
       "groups" : [
          "compara",
+         "compara_homology_annotation",
+         "compara_references",
          "core",
          "corelike",
          "funcgen",
