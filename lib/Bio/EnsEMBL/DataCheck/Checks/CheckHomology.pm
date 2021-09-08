@@ -44,16 +44,22 @@ sub tests {
   is_one_to_many($dbc, "homology_member", "homology_id", $desc_1);
   ### Hoping for a better idea than this query (below)
   my $hideous_sql = q/
-    SELECT hm1.gene_member_id gene_member_id1, hm2.gene_member_id gene_member_id2, COUNT(*) num, 
-      GROUP_CONCAT(h1.description order by h1.description) descs 
-        FROM homology h1 
-          CROSS JOIN homology_member hm1 
-            USING (homology_id)
-          CROSS JOIN homology_member hm2 
-            USING (homology_id)
-    WHERE hm1.gene_member_id < hm2.gene_member_id
-      GROUP BY hm1.gene_member_id, hm2.gene_member_id 
-        HAVING COUNT(*) > 1
+    SELECT
+      hm1.gene_member_id gene_member_id1,
+      hm2.gene_member_id gene_member_id2,
+      COUNT(*) num,
+      GROUP_CONCAT(h1.description
+          ORDER BY h1.description) descs
+    FROM
+      homology h1
+          CROSS JOIN
+      homology_member hm1 USING (homology_id)
+          CROSS JOIN
+      homology_member hm2 USING (homology_id)
+    WHERE
+      hm1.gene_member_id < hm2.gene_member_id
+    GROUP BY h1.gene_tree_root_id, hm1.gene_member_id, hm2.gene_member_id
+    HAVING COUNT(*) > 1
   /;
 
   my $desc_2 = "There is no redundancy in homology";

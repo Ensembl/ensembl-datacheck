@@ -15,7 +15,17 @@
 use strict;
 use warnings;
 
-use Bio::EnsEMBL::DataCheck::Utils qw( repo_location foreign_keys sql_count array_diff hash_diff is_compara_ehive_db );
+use Bio::EnsEMBL::DataCheck::Utils qw(
+  repo_location
+  foreign_keys 
+  sql_count
+  array_diff
+  hash_diff
+  is_compara_ehive_db
+  same_metavalue
+  same_assembly
+  same_geneset
+);
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use FindBin; FindBin::again();
@@ -116,6 +126,77 @@ subtest 'Compara e-hive check', sub {
   $dba->dbc->db_handle->do("CREATE TABLE job ( column1 int )");
   $ehive_check    = is_compara_ehive_db($dba);
   is($ehive_check, 1, 'Correct assignment - is an ehive db');
+};
+
+subtest 'Same metavalue check', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value_test', '12345' )");
+  $dba_old->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value_test', '12345' )");
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_metavalue_check = same_metavalue($mca, $old_mca, 'assembly.default_value_test');
+  is($same_metavalue_check, 1, 'Correct comparison - both DBs have same value for the the meta key');
+};
+
+subtest 'Same metavalue check - negative', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  $dba_current->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value_test2', '67890' )");
+  $dba_old->dbc->db_handle->do("INSERT INTO meta ( meta_key, meta_value ) VALUES ( 'assembly.default_value_test2', '0000' )");
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_metavalue_check = same_metavalue($mca, $old_mca, 'assembly.default_value_test2');
+  is($same_metavalue_check, 0, 'Correct comparison - DBs have different values for the the meta key');
+};
+
+subtest 'Same metavalue check - no key', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('drosophila_melanogaster', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_metavalue_check = same_metavalue($mca, $old_mca, 'nonexistent.key');
+  is($same_metavalue_check, 0, 'Correct comparison - Key does not exists');
+};
+
+subtest 'Same assembly check', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_assembly_check = same_assembly($mca, $old_mca);
+  is($same_assembly_check, 1, 'Correct comparison - DBs have same assembly');
+};
+
+subtest 'Same geneset check', sub {
+  my $testdb_current = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_current = $testdb_current->get_DBAdaptor('core');
+  my $testdb_old = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens', $test_db_dir);
+  my $dba_old = $testdb_old->get_DBAdaptor('core');
+
+  my $mca = $dba_current->get_adaptor('MetaContainer');
+  my $old_mca = $dba_old->get_adaptor('MetaContainer');
+  
+  my $same_geneset_check = same_geneset($mca, $old_mca);
+  is($same_geneset_check, 1, 'Correct comparison - DBs have same geneset');
 };
 
 done_testing();
