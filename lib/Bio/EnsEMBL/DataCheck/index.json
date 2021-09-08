@@ -2220,6 +2220,26 @@
       "name" : "SeqRegionNamesINSDC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
    },
+   "SeqRegionNamesINSDCAdvisory" : {
+      "datacheck_type" : "advisory",
+      "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
+      "groups" : [
+         "assembly",
+         "core"
+      ],
+      "name" : "SeqRegionNamesINSDCAdvisory",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDCAdvisory"
+   },
+   "SeqRegionNamesINSDCCritical" : {
+      "datacheck_type" : "critical",
+      "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
+      "groups" : [
+         "ena_submission",
+         "rapid_release"
+      ],
+      "name" : "SeqRegionNamesINSDCCritical",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDCCritical"
+   },
    "SeqRegionRank" : {
       "datacheck_type" : "critical",
       "description" : "Chromosomes have rank 1",
