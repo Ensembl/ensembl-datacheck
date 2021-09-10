@@ -2213,16 +2213,25 @@
       "name" : "SeqRegionNamesENA",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesENA"
    },
-   "SeqRegionNamesINSDC" : {
+   "SeqRegionNamesINSDCAdvisory" : {
       "datacheck_type" : "advisory",
       "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
       "groups" : [
          "assembly",
-         "core",
-         "ena_submission"
+         "core"
       ],
-      "name" : "SeqRegionNamesINSDC",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
+      "name" : "SeqRegionNamesINSDCAdvisory",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDCAdvisory"
+   },
+   "SeqRegionNamesINSDCCritical" : {
+      "datacheck_type" : "critical",
+      "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
+      "groups" : [
+         "ena_submission",
+         "rapid_release"
+      ],
+      "name" : "SeqRegionNamesINSDCCritical",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDCCritical"
    },
    "SeqRegionRank" : {
       "datacheck_type" : "critical",
