@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTerm;
+package Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTotal;
 
 use warnings;
 use strict;
@@ -28,10 +28,10 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CompareOntologyTerm',
-  DESCRIPTION    => 'Compare namespace counts between current and previous ontology database',
+  NAME           => 'CompareOntologyTotal',
+  DESCRIPTION    => 'Compare total counts between current and previous ontology database',
   GROUPS         => ['ontologies'],
-  DATACHECK_TYPE => 'advisory',
+  DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['ontology'],
   TABLES         => ['ontology', 'term']
 };
@@ -44,13 +44,13 @@ sub tests {
   # for that here.
   my $old_dba = $self->get_old_dba();
 
-  my $desc = 'Term counts by NAME:namespace have not decreased in '.
+  my $desc = 'Ontology term totals have not decreased in '.
              $self->dba->dbc->dbname.' compared to '.$old_dba->dbc->dbname;
   my $sql  = q/
-    SELECT CONCAT(ontology.name, ':', ontology.namespace), COUNT(*)
-    FROM term
-    INNER JOIN ontology ON term.ontology_id=ontology.ontology_id
-    GROUP BY ontology.ontology_id
+    SELECT ontology.name, COUNT(*) FROM
+      term INNER JOIN
+      ontology USING (ontology_id)
+    GROUP BY ontology.name
   /;
   row_subtotals($self->dba, $old_dba, $sql, undef, 1.00, $desc);
 }

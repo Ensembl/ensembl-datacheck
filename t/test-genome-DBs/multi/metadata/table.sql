@@ -104,6 +104,7 @@ CREATE TABLE `genome` (
   `has_genome_alignments` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `has_synteny` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `has_other_alignments` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `website_packed` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`genome_id`),
   UNIQUE KEY `release_genome` (`data_release_id`,`genome_id`),
   KEY `genome_ibfk_1` (`assembly_id`),

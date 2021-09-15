@@ -16,37 +16,35 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckOntologyTerm;
+package Bio::EnsEMBL::DataCheck::Checks::DisplayNameFormat;
 
 use warnings;
 use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CheckOntologyTerm',
-  DESCRIPTION    => 'Check presence of critical terms',
-  GROUPS         => ['ontologies'],
-  DATACHECK_TYPE => 'critical',
-  DB_TYPES       => ['ontology'],
-  TABLES         => ['term'],
+  NAME        => 'DisplayNameFormat',
+  DESCRIPTION => 'For Rapid Release, the display name must be a specific format',
+  GROUPS      => ['rapid_release'],
+  DB_TYPES    => ['core'],
+  TABLES      => ['meta']
 };
 
 sub tests {
   my ($self) = @_;
 
-  my @critical_terms = qw/EFO:0003900/;
+  my $mca = $self->dba->get_adaptor("MetaContainer");
 
-  foreach (@critical_terms) {
-    my $desc = "Critical term $_ is present in term table";
-    my $sql = "SELECT accession FROM term WHERE accession = '$_'";
-    is_rows($self->dba, $sql, 1, $desc);
-  }
+  # Check that the format of the display name conforms to expectations.
+  my $format = '[A-Za-z0-9 ]+ \([A-Za-z0-9 ]+\) \- GCA_\d+\.\d+';
+
+  my $desc = "Display name has correct format";
+  my $display_name = $mca->single_value_by_key('species.display_name');
+  like($display_name, qr/^$format$/, $desc);
 }
 
 1;
-

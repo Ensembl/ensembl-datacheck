@@ -197,7 +197,7 @@ sub taxonomy_tables {
   my ($self, $helper, $tables) = @_;
   
   my $desc_1 = "Taxonomy database found";
-  my $taxonomy_dba = ($self->registry->alias_exists('multi')) ? $self->get_dba('multi', 'taxonomy') : $self->get_dba('ncbi_taxonomy', 'taxonomy');
+  my $taxonomy_dba = $self->get_dba('multi', 'taxonomy') ? $self->get_dba('multi', 'taxonomy') : $self->get_dba('ncbi_taxonomy', 'taxonomy');
 
   if (ok(defined $taxonomy_dba, $desc_1)) {
     my $taxonomy_helper = $taxonomy_dba->dbc->sql_helper;

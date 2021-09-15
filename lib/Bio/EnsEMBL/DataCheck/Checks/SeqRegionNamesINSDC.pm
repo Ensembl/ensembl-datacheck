@@ -30,45 +30,46 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'SeqRegionNamesINSDC',
   DESCRIPTION    => 'Seq_region names from INSDC are appropriately formatted and attributed',
-  GROUPS         => ['assembly', 'core'],
+  GROUPS         => ['assembly', 'core', 'ena_submission'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'external_db', 'seq_region', 'seq_region_attrib', 'seq_region_synonym']
 };
 
-sub skip_tests {
-  my ($self) = @_;
-  
-  my $gca = $self->dba->get_adaptor("GenomeContainer");
-
-  if (!defined $gca->get_accession) {
-    return (1, 'Not an INSDC assembly.');
-  }
-}
-
 sub tests {
   my ($self) = @_;
 
-  my $species_id = $self->dba->species_id;
+  if ($self->check_insdc_assembly) {
+    # For an INSDC assembly, we expect INSDC accessions to be synonyms
+    # for top-level sequences; if not, the names might be the accessions,
+    # which is a hard to check rigorously, but a reasonable assumption
+    # is that if it looks like an accession, it probably is. 
 
-  my $format = '^[A-Z]+_?[0-9]+\.[0-9\.]+$';
+    my $species_id = $self->dba->species_id;
+    my $format = '^[A-Z]+_?[0-9]+\.[0-9\.]+$';
+    $self->check_name_format($format, $species_id);
+  }
+}
 
-  $self->check_name_format('clone', $format, $species_id);
-  $self->check_name_format('contig', $format, $species_id);
-  $self->check_name_format('scaffold', $format, $species_id);
-  $self->check_name_format('supercontig', $format, $species_id);
+sub check_insdc_assembly {
+  my ($self) = @_;
 
-  $self->check_ena_attribute('contig', $format, $species_id);
+  my $desc = 'INSDC assembly exists';
+  my $gca = $self->dba->get_adaptor("GenomeContainer");
+
+  return ok(defined $gca->get_accession, $desc);
 }
 
 sub check_name_format {
-  my ($self, $cs_name, $format, $species_id) = @_;
+  my ($self, $format, $species_id) = @_;
 
-  my $desc = "$cs_name seq_region names (or INSDC synonyms) match the expected format";
+  my $desc = "seq_region names (or INSDC synonyms) match the expected format";
   my $diag = 'Unmatched seq_region name';
   my $sql  = qq/
     SELECT sr.name, srs.synonym, cs.name, cs.version FROM
       seq_region sr INNER JOIN
+      seq_region_attrib sra USING (seq_region_id) INNER JOIN
+      attrib_type a USING (attrib_type_id) INNER JOIN
       coord_system cs USING (coord_system_id) LEFT OUTER JOIN
       (
         SELECT seq_region_id, synonym FROM
@@ -78,36 +79,10 @@ sub check_name_format {
           db_name = 'INSDC'
       ) srs ON sr.seq_region_id = srs.seq_region_id
     WHERE
-      cs.name = '$cs_name' AND
+      a.code = 'toplevel' AND
+      sra.value = '1' AND
       sr.name NOT REGEXP '$format' AND
-      srs.synonym NOT REGEXP '$format' AND
-      sr.name NOT LIKE 'LRG%' AND
-      cs.species_id = $species_id
-  /;
-  is_rows_zero($self->dba, $sql, $desc, $diag);
-}
-
-sub check_ena_attribute {
-  my ($self, $cs_name, $format, $species_id) = @_;
-
-  my $desc = "All $cs_name seq_regions have an 'ENA' attribute";
-  my $diag = 'No ENA attribute for seq_region';
-  my $sql  = qq/
-    SELECT sr.name, sra.value, cs.name, cs.version FROM
-      seq_region sr INNER JOIN
-      coord_system cs USING (coord_system_id) LEFT OUTER JOIN
-      (
-        SELECT seq_region_id, value FROM
-          seq_region_attrib INNER JOIN
-          attrib_type USING (attrib_type_id)
-        WHERE
-          code = 'external_db' AND
-          value = 'ENA'
-      ) sra ON sr.seq_region_id = sra.seq_region_id
-    WHERE
-      sra.value IS NULL AND
-      cs.name = '$cs_name' AND
-      sr.name REGEXP '$format' AND
+      (srs.synonym NOT REGEXP '$format' OR srs.synonym IS NULL) AND
       sr.name NOT LIKE 'LRG%' AND
       cs.species_id = $species_id
   /;

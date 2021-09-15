@@ -403,6 +403,17 @@
       "name" : "CheckHomologyMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
    },
+   "CheckIDRangeMLSS" : {
+      "datacheck_type" : "advisory",
+      "description" : "All relevant IDs are within the offset range for their MLSS ID",
+      "groups" : [
+         "compara",
+         "compara_pairwise_alignments",
+         "compara_genome_alignments"
+      ],
+      "name" : "CheckIDRangeMLSS",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckIDRangeMLSS"
+   },
    "CheckJSONObjects" : {
       "datacheck_type" : "critical",
       "description" : "Check that all JSON objects in gene_tree_object_store are valid",
@@ -474,6 +485,16 @@
       ],
       "name" : "CheckMultipleAlignCoverage",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckMultipleAlignCoverage"
+   },
+   "CheckNonMinimisedGATs" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that all genomic align trees are binary, with the exception of unrooted EPO-extended trees which may have 3 sequences",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "CheckNonMinimisedGATs",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckNonMinimisedGATs"
    },
    "CheckOntologyTerm" : {
       "datacheck_type" : "critical",
@@ -723,13 +744,22 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareMetaKeys"
    },
    "CompareOntologyTerm" : {
-      "datacheck_type" : "critical",
-      "description" : "Compare Term counts between current and previous ontology database",
+      "datacheck_type" : "advisory",
+      "description" : "Compare namespace counts between current and previous ontology database",
       "groups" : [
          "ontologies"
       ],
       "name" : "CompareOntologyTerm",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTerm"
+   },
+   "CompareOntologyTotal" : {
+      "datacheck_type" : "critical",
+      "description" : "Compare total counts between current and previous ontology database",
+      "groups" : [
+         "ontologies"
+      ],
+      "name" : "CompareOntologyTotal",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareOntologyTotal"
    },
    "ComparePhenotypeFeatures" : {
       "datacheck_type" : "advisory",
@@ -1112,6 +1142,15 @@
       ],
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
+   },
+   "DisplayNameFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "For Rapid Release, the display name must be a specific format",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "DisplayNameFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayNameFormat"
    },
    "DisplayXrefExists" : {
       "datacheck_type" : "advisory",
@@ -1780,6 +1819,17 @@
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
    },
+   "MitochondriaAnnotated" : {
+      "datacheck_type" : "critical",
+      "description" : "Mitochondrial seq_regions have appropriate attribute",
+      "groups" : [
+         "assembly",
+         "core",
+         "brc4_core"
+      ],
+      "name" : "MitochondriaAnnotated",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MitochondriaAnnotated"
+   },
    "MultipleGenomicAlignBlockIds" : {
       "datacheck_type" : "critical",
       "description" : "Check that every genomic_align_block_id has more than one genomic_align_id",
@@ -2170,12 +2220,23 @@
       "name" : "SeqRegionNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNames"
    },
+   "SeqRegionNamesENA" : {
+      "datacheck_type" : "advisory",
+      "description" : "Seq_region contig names from ENA are appropriately formatted and attributed",
+      "groups" : [
+         "assembly",
+         "core"
+      ],
+      "name" : "SeqRegionNamesENA",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesENA"
+   },
    "SeqRegionNamesINSDC" : {
       "datacheck_type" : "advisory",
       "description" : "Seq_region names from INSDC are appropriately formatted and attributed",
       "groups" : [
          "assembly",
-         "core"
+         "core",
+         "ena_submission"
       ],
       "name" : "SeqRegionNamesINSDC",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC"
@@ -2266,7 +2327,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SourceAdvisory"
    },
    "SpeciesCommonName" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Meta key species.common_name should be same for species from a group of strains or breeds",
       "groups" : [
          "core",
