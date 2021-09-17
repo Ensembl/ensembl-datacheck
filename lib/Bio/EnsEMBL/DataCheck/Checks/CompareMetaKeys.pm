@@ -229,7 +229,6 @@ sub geneset_summary {
       coord_system cs USING (coord_system_id)
     WHERE
       cs.name <> 'lrg' AND
-      sr.name NOT LIKE 'LRG_%' AND
       cs.species_id = ?
     GROUP BY g.biotype
   /;
@@ -287,7 +286,6 @@ sub geneset_details {
       translation p USING (transcript_id)
     WHERE
       cs.name <> 'lrg' AND
-      sr.name NOT LIKE 'LRG_%' AND
       cs.species_id = ?
     ORDER BY
       gene_stable_id, 
