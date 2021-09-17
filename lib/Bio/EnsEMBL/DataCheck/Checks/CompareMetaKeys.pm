@@ -155,6 +155,7 @@ sub assembly_summary {
     WHERE
       cs.attrib REGEXP 'default_version' AND
       cs.name <> 'lrg' AND
+      sr.name NOT LIKE 'LRG_%' AND
       cs.species_id = ?
     GROUP BY cs.name
   /;
@@ -202,6 +203,7 @@ sub assembly_details {
     WHERE
       cs.attrib REGEXP 'default_version' AND
       cs.name <> 'lrg' AND
+      sr.name NOT LIKE 'LRG_%' AND
       cs.species_id = ?
   /;
 
