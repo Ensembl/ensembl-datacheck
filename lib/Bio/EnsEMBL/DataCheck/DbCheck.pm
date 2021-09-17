@@ -417,6 +417,11 @@ sub find_dbname {
     $params = [$group, $species, $db_version];
   } else {
     my $division = $mca->get_division;
+    # Handle compara case, where division is stored differently:
+    unless (defined $division) {
+      $division = $mca->db->get_division;
+      $division = 'Ensembl'.ucfirst($division);
+    }
     $sql = q/
       SELECT DISTINCT gd.dbname FROM
         genome_database gd INNER JOIN
