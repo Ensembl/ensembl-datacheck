@@ -2327,11 +2327,10 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SourceAdvisory"
    },
    "SpeciesCommonName" : {
-      "datacheck_type" : "advisory",
+      "datacheck_type" : "critical",
       "description" : "Meta key species.common_name should be same for species from a group of strains or breeds",
       "groups" : [
-         "core",
-         "meta"
+         "core_sync"
       ],
       "name" : "SpeciesCommonName",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesCommonName"
