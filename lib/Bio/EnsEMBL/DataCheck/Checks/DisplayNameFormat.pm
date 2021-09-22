@@ -29,14 +29,33 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'DisplayNameFormat',
   DESCRIPTION => 'For Rapid Release, the display name must be a specific format',
-  GROUPS      => ['rapid_release'],
+  GROUPS      => ['core', 'rapid_release'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta']
 };
 
-sub tests {
+
+sub skip_tests {
   my ($self) = @_;
 
+  my $skip_for_mainsite = 1;
+  if(defined $self->server_uri){
+    foreach my $server_uri (@{$self->server_uri}){
+      if($server_uri =~ /sta-5/){
+	$skip_for_mainsite = 0;	      
+      }							
+    }
+  }
+
+  if($skip_for_mainsite){
+    return (1, 'DisplayNameFormat for main site');	  
+  }
+
+}
+
+
+sub tests {
+  my ($self) = @_;
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   # Check that the format of the display name conforms to expectations.
