@@ -17,7 +17,7 @@ limitations under the License.
 Bio::EnsEMBL::DataCheck::Pipeline::AdvisoryDataCheckSummary
 
 =head1 DESCRIPTION
-Store summary of datacheck results, and optionally send it via email.
+Collective DC reports send it via email.
 
 =cut
 
