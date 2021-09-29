@@ -48,24 +48,31 @@ sub tests {
   my ($self) = @_;
   my $helper = $self->dba->dbc->sql_helper;
 
-  my $desc_1 = 'All genes have at least one transcript with a gencode_basic attribute';
+  my $desc_1 = 'All genes have at least one transcript with a %s attribute';
   my $sql_1a = q/
     SELECT COUNT(distinct gene_id) FROM transcript
     WHERE biotype NOT IN ('LRG_gene')
   /;
   my $sql_1b = q/
-    SELECT COUNT(distinct gene_id) FROM
+    SELECT COUNT(distinct gene_id), attrib_type.code FROM
       transcript INNER JOIN
       transcript_attrib USING (transcript_id) INNER JOIN
-      attrib_type USING (attrib_type_id) 
+      attrib_type USING (attrib_type_id)
     WHERE
       biotype NOT IN ('LRG_gene') AND
-      attrib_type.code = 'gencode_basic'
+      attrib_type.code in ('gencode_basic', 'is_canonical')
+    GROUP BY attrib_type.code;
   /;
 
   my $gene_count    = $helper->execute_single_result( -SQL => $sql_1a );
-  my $gencode_count = $helper->execute_single_result( -SQL => $sql_1b );
-  is($gencode_count, $gene_count, $desc_1);
+  my @attribs_count = @{$helper->execute_simple( -SQL => $sql_1b )};
+  my $detail_desc;
+  foreach my $attrib_count (@attribs_count) {
+    my ($count, $code) = @$attrib_count;
+    $detail_desc = sprintf($desc_1, $code);
+    is($count, $gene_count, $detail_desc);
+  }
+
 
   my $desc_2 = 'TSL attributes exist';
   my $sql_2  = q/
