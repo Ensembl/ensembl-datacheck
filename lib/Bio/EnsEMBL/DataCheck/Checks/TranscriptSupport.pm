@@ -65,9 +65,9 @@ sub tests {
   /;
 
   my $gene_count    = $helper->execute_single_result( -SQL => $sql_1a );
-  my @attribs_count = @{$helper->execute_simple( -SQL => $sql_1b )};
+  my $attribs_count = $helper->execute( -SQL => $sql_1b );
   my $detail_desc;
-  foreach my $attrib_count (@attribs_count) {
+  foreach my $attrib_count (@$attribs_count) {
     my ($count, $code) = @$attrib_count;
     $detail_desc = sprintf($desc_1, $code);
     is($count, $gene_count, $detail_desc);
