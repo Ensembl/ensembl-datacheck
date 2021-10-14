@@ -92,7 +92,7 @@ sub tests {
   foreach my $attrib_count (@$attribs_count) {
     my ($count, $code) = @$attrib_count;
     $detail_desc = sprintf($desc_1, $code);
-    ($count, $gene_count, $detail_desc);
+    is($count, $gene_count, $detail_desc);
   }
 
 
