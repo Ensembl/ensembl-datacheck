@@ -54,23 +54,45 @@ sub tests {
     WHERE biotype NOT IN ('LRG_gene')
   /;
   my $sql_1b = q/
-    SELECT COUNT(distinct gene_id), attrib_type.code FROM
-      transcript INNER JOIN
-      transcript_attrib USING (transcript_id) INNER JOIN
-      attrib_type USING (attrib_type_id)
-    WHERE
-      biotype NOT IN ('LRG_gene') AND
-      attrib_type.code in ('gencode_basic', 'is_canonical')
-    GROUP BY attrib_type.code;
+      SELECT COUNT(distinct gene_id), attrib_type.code
+      FROM attrib_type
+        LEFT JOIN transcript_attrib ta USING (attrib_type_id)
+        LEFT JOIN transcript t on t.transcript_id = ta.transcript_id AND biotype NOT IN ('LRG_gene')
+      WHERE
+        attrib_type.code in ('gencode_basic', 'is_canonical')
+      GROUP BY attrib_type.code;
   /;
 
+  my $desc_1c = "Transcript attrib all match gene canonical_transcript_id";
+  my $sql_1c = q/
+  SELECT ta.transcript_id, 'is_canonical not present in gene' as error
+    FROM transcript_attrib ta
+      INNER JOIN attrib_type USING (attrib_type_id)
+    WHERE
+      attrib_type.code = 'is_canonical'
+      AND NOT EXISTS (SELECT *
+                      FROM gene g
+                      WHERE g.canonical_transcript_id = ta.transcript_id)
+    UNION
+    SELECT g.canonical_transcript_id as transcript_id, 'canonical_transcript with no attribute' as error
+    FROM gene g
+    WHERE NOT EXISTS (SELECT *
+                      FROM transcript_attrib ta
+                      INNER JOIN attrib_type USING (attrib_type_id)
+                      WHERE g.canonical_transcript_id = ta.transcript_id
+                      AND attrib_type.code = 'is_canonical');
+  /;
   my $gene_count    = $helper->execute_single_result( -SQL => $sql_1a );
   my $attribs_count = $helper->execute( -SQL => $sql_1b );
+  my $desc_1b = "is_canonical, genecode_basic exists in transcript_attrib set";
   my $detail_desc;
+  # Expect exactly two lines returned even if zero lines, one per attrib.code
+  cmp_ok(scalar @$attribs_count, '=', 2, $desc_1b);
+  is_rows_zero($self->dba, $sql_1c, $desc_1c);
   foreach my $attrib_count (@$attribs_count) {
     my ($count, $code) = @$attrib_count;
     $detail_desc = sprintf($desc_1, $code);
-    is($count, $gene_count, $detail_desc);
+    ($count, $gene_count, $detail_desc);
   }
 
 
@@ -93,6 +115,7 @@ sub tests {
     WHERE db_name = 'CCDS';
   /;
   is_rows_nonzero($self->dba, $sql_3, $desc_3);
+
 }
 
 1;
