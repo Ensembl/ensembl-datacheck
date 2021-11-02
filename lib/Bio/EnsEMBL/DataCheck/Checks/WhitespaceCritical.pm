@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'WhitespaceCritical',
   DESCRIPTION => 'Fields do not contain carriage returns ("\r")',
-  GROUPS      => ['compara', 'compara_homology_annotation', 'compara_references', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['compara', 'compara_blastocyst', 'compara_homology_annotation', 'compara_references', 'core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   PER_DB      => 1
 };
