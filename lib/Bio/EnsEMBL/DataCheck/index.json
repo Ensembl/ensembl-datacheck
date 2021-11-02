@@ -158,6 +158,7 @@
          "ancestral",
          "brc4_core",
          "compara",
+         "compara_blastocyst",
          "compara_gene_trees",
          "compara_master",
          "compara_syntenies",
@@ -179,6 +180,7 @@
          "ancestral",
          "brc4_core",
          "compara",
+         "compara_blastocyst",
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
@@ -276,7 +278,8 @@
          "compara_master",
          "compara_syntenies",
          "compara_references",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "CheckDuplicatedTaxaNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckDuplicatedTaxaNames"
@@ -387,7 +390,8 @@
       "groups" : [
          "compara",
          "compara_gene_trees",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "CheckHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
@@ -398,7 +402,8 @@
       "groups" : [
          "compara",
          "compara_gene_trees",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "CheckHomologyMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
@@ -537,7 +542,8 @@
          "compara",
          "compara_gene_trees",
          "compara_references",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "CheckSequenceTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
@@ -565,7 +571,8 @@
          "compara_master",
          "compara_syntenies",
          "compara_references",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "CheckSpeciesSetTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesSetTable"
@@ -648,7 +655,8 @@
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "CigarCheck",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
@@ -1068,6 +1076,7 @@
          "ancestral",
          "brc4_core",
          "compara",
+         "compara_blastocyst",
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_homology_annotation",
@@ -1337,7 +1346,8 @@
          "compara_master",
          "compara_syntenies",
          "compara_references",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "ForeignKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ForeignKeysCompara"
@@ -1875,7 +1885,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_syntenies",
-         "compara_homology_annotation"
+         "compara_homology_annotation",
+         "compara_blastocyst"
       ],
       "name" : "NoDataOnGenomeComponents",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NoDataOnGenomeComponents"
@@ -2630,6 +2641,7 @@
       "description" : "Fields do not contain carriage returns (\"\\r\")",
       "groups" : [
          "compara",
+         "compara_blastocyst",
          "compara_homology_annotation",
          "compara_references",
          "core",
