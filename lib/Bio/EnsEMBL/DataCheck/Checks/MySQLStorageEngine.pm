@@ -38,7 +38,7 @@ use constant {
 sub tests {
   my ($self) = @_;
   my $database_name = $self->dba->dbc->dbname;
-  my $engine = 'MyISAM';
+  my $engine = ($database_name =~ /_compara_/ and $database_name !~ /ensembl/) ? 'InnoDB' : 'MyISAM';
   my $diag = "Non-$engine table";
   my $desc = "All tables are using MySQL $engine storage engine";
   my $sql = qq/ SELECT TABLE_NAME FROM 
