@@ -30,8 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DuplicateComparaMemberXref',
   DESCRIPTION    => 'Check that the compara member_xref table contains only unique rows',
-  GROUPS         => ['compara'],
-  DATACHECK_TYPE => 'critical',
+  GROUPS         => ['compara_annot_highlight'],
   DB_TYPES       => ['compara'],
   TABLES         => ['member_xref']
 };

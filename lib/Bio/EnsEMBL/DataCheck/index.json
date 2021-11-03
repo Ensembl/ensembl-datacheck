@@ -1204,7 +1204,7 @@
       "datacheck_type" : "critical",
       "description" : "Check that the compara member_xref table contains only unique rows",
       "groups" : [
-         "compara"
+         "compara_annot_highlight"
       ],
       "name" : "DuplicateComparaMemberXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateComparaMemberXref"
