@@ -1200,6 +1200,15 @@
       "name" : "DisplayableSampleGene",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSampleGene"
    },
+   "DuplicateComparaMemberXref" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the compara member_xref table contains only unique rows",
+      "groups" : [
+         "compara_annot_highlight"
+      ],
+      "name" : "DuplicateComparaMemberXref",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateComparaMemberXref"
+   },
    "DuplicateReadNames" : {
       "datacheck_type" : "critical",
       "description" : "Duplicate read names",
