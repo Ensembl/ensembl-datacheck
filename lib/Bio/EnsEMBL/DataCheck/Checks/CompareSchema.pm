@@ -181,6 +181,7 @@ sub normalise_table_def {
 
   # Remove keys from table definition since they have been extracted.
   $table =~ s/^((?:PRIMARY |UNIQUE |FOREIGN )*KEY\s.*)\n//gm;
+  $table =~ s/^((?:CONSTRAINT |UNIQUE |KEY ).*)\n//gm;
 
   my ($table_name) = $table =~ /CREATE TABLE (\S+)/m;
 
