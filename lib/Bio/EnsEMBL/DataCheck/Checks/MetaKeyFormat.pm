@@ -50,7 +50,7 @@ sub tests {
     'genebuild.id'                   => '\d+',
     'genebuild.initial_release_date' => '\d{4}-\d{2}',
     'genebuild.last_geneset_update'  => '\d{4}-\d{2}',
-    'genebuild.method'               => '(full_genebuild|projection_build|import|mixed_strategy_build|external_annotation_import|maker_genebuild|curated|import_build)',
+    'genebuild.method'               => '(full_genebuild|projection_build|import|mixed_strategy_build|external_annotation_import|maker_genebuild|curated|import_build|anno|braker|standard)',
     'genebuild.start_date'           => '\d{4}\-\d{2}\-\S+',
     'patch'                          => '[^\n]+',
     'sample.location_param'          => '[\w\.\-]+:\d+\-\d+',
