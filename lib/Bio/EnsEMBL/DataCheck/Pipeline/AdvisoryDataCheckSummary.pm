@@ -21,7 +21,7 @@ Collective DC reports send it via email.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Pipeline::AdvisoryDataCheckSummary;
+package Bio::EnsEMBL::DataCheck::Pipeline::DataCheckMailSummary;
 
 use strict;
 use warnings;
