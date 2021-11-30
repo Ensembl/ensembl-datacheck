@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =head1 NAME
-Bio::EnsEMBL::DataCheck::Pipeline::AdvisoryDataCheckSummary
+Bio::EnsEMBL::DataCheck::Pipeline::DataCheckMailSummary
 
 =head1 DESCRIPTION
 Collective DC reports send it via email.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Pipeline::AdvisoryDataCheckSummary;
+package Bio::EnsEMBL::DataCheck::Pipeline::DataCheckMailSummary;
 
 use strict;
 use warnings;
