@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CompareSchema',
   DESCRIPTION => 'Compare database schema to definition in SQL file',
-  GROUPS      => ['compara', 'core', 'brc4_core', 'corelike', 'funcgen', 'schema', 'variation'],
+  GROUPS      => ['compara', 'compara_homology_annotation', 'compara_references', 'core', 'brc4_core', 'corelike', 'funcgen', 'schema', 'variation'],
   DB_TYPES    => ['cdna', 'compara', 'core', 'funcgen', 'otherfeatures', 'production', 'rnaseq', 'variation'],
   PER_DB      => 1
 };
@@ -181,6 +181,7 @@ sub normalise_table_def {
 
   # Remove keys from table definition since they have been extracted.
   $table =~ s/^((?:PRIMARY |UNIQUE |FOREIGN )*KEY\s.*)\n//gm;
+  $table =~ s/^((?:CONSTRAINT |UNIQUE |KEY ).*)\n//gm;
 
   my ($table_name) = $table =~ /CREATE TABLE (\S+)/m;
 

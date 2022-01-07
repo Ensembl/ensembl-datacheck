@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDC;
+package Bio::EnsEMBL::DataCheck::Checks::SeqRegionNamesINSDCAdvisory;
 
 use warnings;
 use strict;
@@ -28,9 +28,9 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'SeqRegionNamesINSDC',
+  NAME           => 'SeqRegionNamesINSDCAdvisory',
   DESCRIPTION    => 'Seq_region names from INSDC are appropriately formatted and attributed',
-  GROUPS         => ['assembly', 'core', 'ena_submission'],
+  GROUPS         => ['assembly', 'core'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'external_db', 'seq_region', 'seq_region_attrib', 'seq_region_synonym']
