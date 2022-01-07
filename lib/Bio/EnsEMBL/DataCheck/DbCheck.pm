@@ -403,20 +403,29 @@ sub find_dbname {
   my ($sql, $params);
   if ($group =~ /(funcgen|variation)/i ||
       $mca->single_value_by_key('schema_type') =~ /(funcgen|variation)/i) {
+      
+    my $division = $mca->single_value_by_key('species.division');  
     $sql = q/
       SELECT DISTINCT gd.dbname FROM
         genome_database gd INNER JOIN
         genome g USING (genome_id) INNER JOIN
         organism o USING (organism_id) INNER JOIN
-        data_release dr USING (data_release_id)
+        data_release dr USING (data_release_id) INNER JOIN
+        division d USING (division_id)
       WHERE
         gd.type = ? AND
         o.name = ? AND
-        dr.ensembl_version = ?
+        dr.ensembl_version = ? AND
+        d.name = ?
     /;
-    $params = [$group, $species, $db_version];
+    $params = [$group, $species, $db_version, $division];
   } else {
     my $division = $mca->get_division;
+    # Handle compara case, where division is stored differently:
+    unless (defined $division) {
+      $division = $mca->db->get_division;
+      $division = 'Ensembl'.ucfirst($division);
+    }
     $sql = q/
       SELECT DISTINCT gd.dbname FROM
         genome_database gd INNER JOIN

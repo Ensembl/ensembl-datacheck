@@ -29,31 +29,36 @@ use DbCheck_1;
 my $test_db_dir = $FindBin::Bin;
 my $dba_type    = 'Bio::EnsEMBL::DBSQL::DBAdaptor';
 
-my $species  = 'homo_sapiens';
-my @db_types = ('funcgen', 'variation');
-my $testdb   = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+my $species = 'homo_sapiens';
+my $testdb  = Bio::EnsEMBL::Test::MultiTestDB->new($species, $test_db_dir);
+my $multi   = Bio::EnsEMBL::Test::MultiTestDB->new('multi', $test_db_dir, 1);
 
 my $module = 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 # Need a test metadata db to resolve the required core database name.
 # (Do it like this to prevent loading the  compara test db,
 # which is also 'multi'.)
-my $multi = Bio::EnsEMBL::Test::MultiTestDB->new('multi', $test_db_dir, 1);
 $multi->load_database('metadata');
 $multi->store_config();
 $multi->create_adaptors();
 my $metadata_dba = $multi->get_DBAdaptor('metadata');
+
+$multi->load_database('compara');
+$multi->store_config();
+$multi->create_adaptors();
+my $compara_dba = $multi->get_DBAdaptor('compara');
 
 my $core_dba = $testdb->get_DBAdaptor('core');
 my $funcgen_dba = $testdb->get_DBAdaptor('funcgen');
 my $variation_dba = $testdb->get_DBAdaptor('variation');
 
 my %dbas = (
+  compara   => $compara_dba,
   funcgen   => $funcgen_dba,
   variation => $variation_dba
 );
 
-foreach my $db_type (@db_types) {
+foreach my $db_type (keys %dbas) {
   my $dba = $dbas{$db_type};
 
   subtest "DbCheck with $db_type database", sub {
@@ -155,7 +160,7 @@ subtest 'Fetch DNA DBA from server_uri', sub {
   is($dna_dba->group,   'core',   'Group matches');
 };
 
-subtest 'Fetch DNA DBA from server_uri, with registry', sub {
+subtest 'Fetch DNA DBA from server_uri, with registry (variation)', sub {
   my %conf = %{$$testdb{conf}{'core'}};
   my $driver = $conf{driver};
   my $host   = $conf{host};
@@ -216,6 +221,69 @@ subtest 'Fetch DNA DBA from server_uri, with registry', sub {
   isa_ok($dna_dba, $dba_type, 'Return value of "get_dna_dba", without dbname');
   is($dna_dba->species, $species, 'Species name matches');
   is($dna_dba->group,   'core',   'Group matches');
+};
+
+subtest 'Fetch DNA DBA from server_uri, with registry (compara)', sub {
+  my %conf = %{$$testdb{conf}{'core'}};
+  my $driver = $conf{driver};
+  my $host   = $conf{host};
+  my $port   = $conf{port};
+  my $user   = $conf{user};
+  my $pass   = $conf{pass};
+
+  # Empty registry, to test if we use server_uri correctly.
+  my $registry_file = Path::Tiny->tempfile();
+  my $registry_text = qq/
+    use Bio::EnsEMBL::Registry;
+
+    1;
+  /;
+  $registry_file->spew($registry_text);
+
+  my $server_uri = "$driver://$user:$pass\@$host:$port/";
+  my $core_dbname = $core_dba->dbc->dbname;
+
+  my $check = TestChecks::DbCheck_1->new(
+    dba           => $compara_dba,
+    registry_file => $registry_file->stringify,
+    server_uri    => [$server_uri.$core_dbname],
+  );
+
+  # The test databases are added to the registry via MultiTestDB; but
+  # the datacheck code removes them as part of it's standard monkeying
+  # around, and their names are such that they are not picked up when
+  # the registry is subsequently loaded. So, we need to pre-load the
+  # registry, then add them back. Phew.
+  $check->load_registry();
+  my $reg = $check->load_registry();
+  $reg->add_DBAdaptor($species, 'core', $core_dba);
+  $reg->add_DBAdaptor('multi', 'compara', $compara_dba);
+
+  my $genome_dba = $check->get_dba($species, 'core');
+
+  isa_ok($genome_dba, $dba_type, 'Return value of "get_dba", with dbname');
+  is($genome_dba->species, $species, 'Species name matches');
+  is($genome_dba->group,   'core',   'Group matches');
+
+  $check = TestChecks::DbCheck_1->new(
+    dba           => $compara_dba,
+    registry_file => $registry_file->stringify,
+    server_uri    => [$server_uri],
+  );
+
+  # We also need to add the metadata db in this case, so that
+  # we can determine the name of the ancillary db.
+  $check->load_registry();
+  $reg = $check->load_registry();
+  $reg->add_DBAdaptor($species, 'core', $core_dba);
+  $reg->add_DBAdaptor('multi', 'metadata', $metadata_dba);
+  $reg->add_DBAdaptor('multi', 'compara', $compara_dba);
+
+  $genome_dba = $check->get_dba($species, 'core');
+
+  isa_ok($genome_dba, $dba_type, 'Return value of "get_dba", without dbname');
+  is($genome_dba->species, $species, 'Species name matches');
+  is($genome_dba->group,   'core',   'Group matches');
 };
 
 subtest 'Fetch variation DBA from server_uri, with registry', sub {

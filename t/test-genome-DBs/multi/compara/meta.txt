@@ -1,4 +1,5 @@
-2	1	schema_type	compara
+2	\N	schema_type	compara
+3	\N	division	vertebrates
 155	\N	schema_version	106
 5	\N	patch	patch_70_71_a.sql|other_member_sequence_keys
 6	\N	patch	patch_70_71_b.sql|member_xref
