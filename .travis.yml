@@ -22,9 +22,9 @@ before_install:
   - export PATH=$PATH:$PWD/ensembl-git-tools/bin
   - export ENSEMBL_BRANCH=master
   - export SECONDARY_BRANCH=main
-    - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH"
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH"
   - if [[ $TRAVIS_BRANCH =~ ^release\/[0-9]+$ ]]; then export ENSEMBL_BRANCH=$TRAVIS_BRANCH; export SECONDARY_BRANCH=$TRAVIS_BRANCH; fi
-    - echo "ENSEMBL_BRANCH=$ENSEMBL_BRANCH"
+  - echo "ENSEMBL_BRANCH=$ENSEMBL_BRANCH"
   - echo "SECONDARY_BRANCH=$SECONDARY_BRANCH"
   - git-ensembl --clone --branch $ENSEMBL_BRANCH --secondary_branch $SECONDARY_BRANCH --depth 1 ensembl-test
   - git-ensembl --clone --branch $ENSEMBL_BRANCH --secondary_branch $SECONDARY_BRANCH --depth 1 ensembl
