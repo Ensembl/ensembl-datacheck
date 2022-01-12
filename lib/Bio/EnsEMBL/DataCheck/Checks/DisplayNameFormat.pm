@@ -40,7 +40,7 @@ sub tests {
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   # Check that the format of the display name conforms to expectations.
-  my $format = '[A-Za-z0-9\ ]+ \([A-Za-z0-9\(\)\/\-\_ ]+\) \- GCA_\d+\.\d+';
+  my $format = '[A-Za-z0-9\ ]+ \([A-Za-z0-9\(\)\/\-\_, ]+\) \- GCA_\d+\.\d+';
 
   my $desc = "Display name has correct format";
   my $display_name = $mca->single_value_by_key('species.display_name');
