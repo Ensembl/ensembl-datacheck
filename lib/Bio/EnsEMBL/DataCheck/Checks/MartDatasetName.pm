@@ -20,6 +20,7 @@ package Bio::EnsEMBL::DataCheck::Checks::MartDatasetName;
 
 use warnings;
 use strict;
+use JSON qw(decode_json);
 
 use Moose;
 use Test::More;
@@ -50,7 +51,7 @@ sub skip_tests {
   my $production_name = $mca->get_production_name;
   my $schema_version = $mca->get_schema_version;
 
-  if ($division eq 'EnsemblVertebrates') {
+  if ($division =~ '/EnsemblVertebrates|EnsemblMetazoa|EnsemblPlants/') {
     my $mart_species = mart_species($division, $schema_version);
     if (!grep( /$production_name/, @$mart_species) ){
       return (1, 'No mart for this species');
@@ -122,42 +123,39 @@ sub mart_species {
   $division =~ s/Ensembl//;
   $division = lc($division);
 
-  my $url_base = 'https://raw.githubusercontent.com/Ensembl/ensembl-biomart';
-  my $url_file = "scripts/include_${division}.ini";
+  my $url_base = 'https://raw.githubusercontent.com/Ensembl/ensembl-compara';
+  my $url_file = "conf/${division}/allowed_species.json";
 
   my $branch_url = "${url_base}/release/$schema_version/$url_file";
-  my $master_url = "${url_base}/master/$url_file";
+  my $main_url = "${url_base}/main/$url_file";
+  my $mart_species = parse_config_file($branch_url, $main_url);
 
-  my $mart_species = parse_ini_file($branch_url, $master_url);
-
-	return $mart_species;
+  return $mart_species;
 }
 
-sub parse_ini_file {
-  my ($branch_url, $master_url) = @_;
+sub parse_config_file {
+  my ($branch_url, $main_url) = @_;
 
   my $ua  = LWP::UserAgent->new();
 
   my $req = HTTP::Request->new( GET => $branch_url );
   my $res = $ua->request($req);
 
-  my $ini;
+  my $json;
   if ( $res->is_success ) {
-    $ini = $res->content;
+    $json = $res->content;
   } else {
-    $req = HTTP::Request->new( GET => $master_url );
+    $req = HTTP::Request->new( GET => $main_url );
     $res = $ua->request($req);
 
     if ( $res->is_success ) {
-      $ini = $res->content;
+      $json = $res->content;
     } else {
-      die( "Could not retrieve $branch_url or $master_url: " . $res->status_line );
+      die( "Could not retrieve $branch_url or $main_url: " . $res->status_line );
     }
   }
 
-  my @array = split(/\n/,"$ini");
-
-  return \@array;
+  return decode_json($json);
 }
 
 sub generate_dataset_name_from_db_name {
