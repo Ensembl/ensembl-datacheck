@@ -87,7 +87,7 @@ sub tests {
   my $desc_1b = "is_canonical, genecode_basic exists in transcript_attrib set";
   my $detail_desc;
   # Expect exactly two lines returned even if zero lines, one per attrib.code
-  cmp_ok(scalar @$attribs_count, '=', 2, $desc_1b);
+  cmp_ok(scalar @$attribs_count, '==', 2, $desc_1b);
   is_rows_zero($self->dba, $sql_1c, $desc_1c);
   foreach my $attrib_count (@$attribs_count) {
     my ($count, $code) = @$attrib_count;
