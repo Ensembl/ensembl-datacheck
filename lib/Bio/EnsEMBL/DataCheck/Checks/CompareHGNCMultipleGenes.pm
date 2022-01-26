@@ -48,7 +48,7 @@ sub tests {
     $old_multi_hgnc_percentage = $self->multiple_hgnc_percentage($old_dba);
   }
 
-  my $multi_hgnc_diff = $cur_hgnc_percentage - $old_multi_hgnc_percentage;
+  my $multi_hgnc_diff = $cur_multi_hgnc_percentage - $old_multi_hgnc_percentage;
 
   my $desc = "HGNC symbols assigned to multiple genes have not increased more than 5%";
   cmp_ok($multi_hgnc_diff, "<=", 5, $desc);
