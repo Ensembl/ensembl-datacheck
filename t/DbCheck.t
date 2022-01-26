@@ -95,8 +95,7 @@ subtest 'Minimal DbCheck with passing tests', sub {
   my $started = $dbcheck->_started;
   sleep(2);
 
-  my $mca = $dba->get_adaptor("MetaContainer");
-  my $division = ( $mca->get_division ) ? $mca->get_division :'multi';
+  my $division = 'EnsemblMetazoa';
 
   like($dbcheck->output, qr/# Subtest: .*$division$/m, 'Division name in subtest header');
   like($dbcheck->output, qr/# Subtest\: $name/m, 'tests ran as subtests');
