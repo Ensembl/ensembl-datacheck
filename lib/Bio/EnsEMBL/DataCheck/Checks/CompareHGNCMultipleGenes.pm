@@ -54,9 +54,8 @@ sub tests {
   cmp_ok($multi_hgnc_diff, "<=", 5, $desc);
 }
 
-
 sub multiple_hgnc_percentage {
-  my ($db_adaptor) = @_;
+  my ($self, $db_adaptor) = @_;
 
   my $dbea = $db_adaptor->get_adaptor('DBEntry');
   my $ga = $db_adaptor->get_adaptor('Gene');
