@@ -46,7 +46,7 @@ sub run {
 sub set_email_parameters {
   my $self = shift;
   
-  my $subject = "FAILED: Adivisory Datacheck Report For Pipeline ". $self->param('pipeline_name');
+  my $subject = "FAILED: Advisory Datachecks Report For Pipeline ". $self->param('pipeline_name');
   $self->param('subject', $subject);
   my $text = "All datachecks have completed.\n";
   my $output_dir = $self->param('output_dir');
