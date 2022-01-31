@@ -28,9 +28,9 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CheckRecords',
+  NAME           => 'CheckAlphaFoldFormat',
   DESCRIPTION    => 'Check records for alphafold import',
-  GROUPS         => ['ontologies'],
+  GROUPS         => ['protein_feature'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
   TABLES         => ['protein_feature'],
@@ -39,16 +39,25 @@ use constant {
 sub tests {
   my ($self) = @_;
 
-  my $desc_1 = 'count of protein feature table greater than 0';
+  my $desc_1 = "Protein feature with Alpha fold annotation";
   my $sql_1  = q/
     select count(*) from protein_feature pf, analysis a where a.analysis_id = pf.analysis_id and a.logic_name = 'alphafold_import'
   /;
   is_rows_nonzero($self->dba, $sql_1, $desc_1);
 
 
-  my $desc = "check format";
-  my $sql = "SELECT hit_name FROM protein_feature WHERE hit_name like 'AF-%-F1._'";
-  is_rows($self->dba, $sql, 1, $desc);
+  my $desc_2 = "All Alpha fold records with specific format";
+  my $sql_2  = q/
+    select count(*) from protein_feature pf, analysis a where a.analysis_id = pf.analysis_id and a.logic_name = 'alphafold_import' and pf.hit_name like 'AF-%-F1._'
+  /;
+  is_rows($self->dba, $sql_2, 1, $desc_2);
+
+  my $des = "compare count of alpha fold records with all alpha fold records of specific format"
+  my $dbc = $self->dba->dbc;
+  my $sqlexec = $dbc->sql_helper;
+  my $total_count = $sqlexec->execute_single_result( -SQL => $sql_1 );
+  my $format_count = $sqlexec->execute_single_result( -SQL => $sql_2 );
+  cmp_od($total_count, '=', $format_count, $des);
 }
 
 1;
