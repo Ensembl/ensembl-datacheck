@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckOntologyTerm;
+package Bio::EnsEMBL::DataCheck::Checks::CheckAlphafoldEntries;
 
 use warnings;
 use strict;
