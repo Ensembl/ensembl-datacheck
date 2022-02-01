@@ -48,7 +48,7 @@ sub tests {
 
   my $desc_2 = "All Alpha fold records with specific format";
   my $sql_2  = q/
-    select count(*) from protein_feature pf, analysis a where a.analysis_id = pf.analysis_id and a.logic_name = 'alphafold_import' and pf.hit_name like 'AF-%-F1._'
+    select count(*) from protein_feature pf, analysis a where a.analysis_id = pf.analysis_id and a.logic_name = 'alphafold_import' and pf.hit_name  REGEXP 'AF\-[A-Za-z0-9]+\-F[0-9]+\.[A-Z]'
   /;
   is_rows($self->dba, $sql_2, 1, $desc_2);
 
@@ -57,7 +57,7 @@ sub tests {
   my $sqlexec = $dbc->sql_helper;
   my $total_count = $sqlexec->execute_single_result( -SQL => $sql_1 );
   my $format_count = $sqlexec->execute_single_result( -SQL => $sql_2 );
-  cmp_od($total_count, '=', $format_count, $des);
+  cmp_ok($total_count, '==', $format_count, $des);
 }
 
 1;
