@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	106
+2	\N	schema_version	107
 3	\N	patch	patch_73_74_a.sql|schema_version
 4	\N	patch	patch_73_74_b.sql|remove_dnac
 5	\N	patch	patch_73_74_c.sql|remove_unconventional_transcript_association
@@ -192,3 +192,5 @@
 5891	\N	patch	patch_103_104_a.sql|schema_version
 5892	\N	patch	patch_104_105_a.sql|schema_version
 5893	\N	patch	patch_105_106_a.sql|schema_version
+5894	\N	patch	patch_106_107_a.sql|schema_version
+5895	\N	patch	patch_106_107_b.sql|Added index for seq_region_mapping
