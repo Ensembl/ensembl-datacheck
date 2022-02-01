@@ -52,8 +52,9 @@ sub tests {
   /;
   is_rows($self->dba, $sql_2, 1, $desc_2);
 
-  my $des = "compare count of alpha fold records with all alpha fold records of specific format"
+  my $des = "All alpha fold analysis records share the right format"
   my $sqlexec = $self->dba->dbc->sql_helper;
+
   my $total_count = $sqlexec->execute_single_result( -SQL => $sql_1 );
   my $format_count = $sqlexec->execute_single_result( -SQL => $sql_2 );
   cmp_ok($total_count, '==', $format_count, $des);
