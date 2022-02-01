@@ -33,7 +33,7 @@ use constant {
   GROUPS         => ['protein_feature'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
-  TABLES         => ['protein_feature'],
+  TABLES         => ['protein_feature', 'analysis'],
 };
 
 sub tests {
