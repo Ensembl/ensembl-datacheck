@@ -218,6 +218,15 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
+   "CheckAlphafoldEntries" : {
+      "datacheck_type" : "critical",
+      "description" : "Each row should match the specified format",
+      "groups" : [
+        "protein_feature"
+      ],
+      "name" : "CheckAlphaFoldFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckAlphafoldEntries"
+   },
    "CheckCAFETable" : {
       "datacheck_type" : "critical",
       "description" : "Each row should show a one-to-many relationship",
