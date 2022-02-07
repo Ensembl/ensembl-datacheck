@@ -224,7 +224,7 @@
       "groups" : [
         "protein_feature"
       ],
-      "name" : "CheckAlphaFoldFormat",
+      "name" : "CheckAlphafoldEntries",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckAlphafoldEntries"
    },
    "CheckCAFETable" : {
