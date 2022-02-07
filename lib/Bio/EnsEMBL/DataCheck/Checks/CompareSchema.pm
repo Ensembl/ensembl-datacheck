@@ -151,6 +151,9 @@ sub normalise_table_def {
   $table =~ s/[^\)]+\Z//gm;
   $table =~ s/,\s*\)\Z/\n\)/m;
 
+  # Simplify alternative nomenclature for binary columns
+  $table =~ s/CHARACTER SET LATIN1 COLLATE LATIN1_BIN/BINARY/gm;
+
   # Key order can be variable, so extract into an ordered list.
   my @keys = $table =~ /^((?:PRIMARY |UNIQUE )*KEY.*),*/gm;
   foreach (@keys) {
