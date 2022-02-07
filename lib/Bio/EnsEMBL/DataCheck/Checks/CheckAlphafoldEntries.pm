@@ -23,17 +23,14 @@ use strict;
 
 use Moose;
 use Test::More;
-use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CheckAlphaFoldFormat',
-  DESCRIPTION    => 'Check records for alphafold import',
+  NAME           => 'CheckAlphafoldEntries',
+  DESCRIPTION    => 'check alphafold format',
   GROUPS         => ['protein_feature'],
-  DATACHECK_TYPE => 'critical',
-  DB_TYPES       => ['core'],
-  TABLES         => ['protein_feature', 'analysis'],
+  DATACHECK_TYPE => 'critical'
 };
 
 sub tests {
@@ -59,5 +56,4 @@ sub tests {
   my $format_count = $sqlexec->execute_single_result( -SQL => $sql_2 );
   cmp_ok($total_count, '==', $format_count, $des);
 }
-
 1;
