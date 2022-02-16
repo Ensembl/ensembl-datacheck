@@ -47,16 +47,15 @@ sub tests {
   /;
   is_rows_nonzero($self->dba, $sql_1, $desc_1);
 
-
   my $desc_2 = "All Alpha fold records with specific format";
   my $sql_2  = q/
     select count(*)
     from protein_feature pf, analysis a
     where a.analysis_id = pf.analysis_id
     and a.logic_name = 'alphafold_import'
-    and pf.hit_name NOT REGEXP 'AF\-[A-Za-z0-9]+\-F[0-9]+\.[A-Z]'
+    and pf.hit_name REGEXP 'AF\-[A-Za-z0-9]+\-F[0-9]+\.[A-Z]'
   /;
-  is_rows_zero($self->dba, $sql_2, $desc_2);
+  is_rows_nonzero($self->dba, $sql_2, $desc_2);
 
   my $des = "All alpha fold analysis records share the right format";
   my $sqlexec = $self->dba->dbc->sql_helper;
