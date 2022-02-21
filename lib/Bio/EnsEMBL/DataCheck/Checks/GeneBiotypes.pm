@@ -99,42 +99,39 @@ sub biotype_groups {
     $self->get_dna_dba();
   }
 
-  my $ga = $self->dba->get_adaptor("Gene");
-  my $genes = $ga->fetch_all();
-  $self->dba->dbc && $self->dba->dbc->disconnect_if_idle();
+  my $sa = $self->dba->get_adaptor("Slice");
+  foreach my $slice (@{$sa->fetch_all('toplevel')}) {
+    foreach my $gene (@{$slice->get_all_Genes}) {
+      my $gene_group = $groups{$gene->biotype};
 
-  while (my $gene = shift @$genes) {
-    my $gene_group = $groups{$gene->biotype};
+      # Can't do anything sensible if a group isn't defined
+      next if $gene_group eq 'undefined';
 
-    # Can't do anything sensible if a group isn't defined
-    next if $gene_group eq 'undefined';
+      my $transcripts         = $gene->get_all_Transcripts;
+      my %transcript_biotypes = map { $_->biotype => 1 } @$transcripts;
+      my %transcript_groups   = map { $groups{$_->biotype} => 1 } @$transcripts;
+      # We don't need any further transcript-related information,
+      # so flush to prevent excessive memory use.
+      $gene->flush_Transcripts();
 
-    my @transcripts         = @{ $gene->get_all_Transcripts };
-    my %transcript_biotypes = map { $_->biotype => 1 } @transcripts;
-    my %transcript_groups   = map { $groups{$_->biotype} => 1 } @transcripts;
-    # We don't need any further transcript-related information,
-    # so flush to prevent excessive memory use.
-    $gene->flush_Transcripts();
+      # Test 1: genes have at least one transcript with a matching biotype group
+      if (!exists $transcript_groups{$gene_group}) {
+        push @group_mismatch, $gene->stable_id;
+      }
 
-    # Test 1: genes have at least one transcript with a matching biotype group
-    if (!exists $transcript_groups{$gene_group}) {
-      push @group_mismatch, $gene->stable_id;
-    }
-
-    # Test 2: "pseudogene" genes do not have coding transcripts
-    if ($gene_group eq 'pseudogene') {
-      foreach (keys %transcript_groups) {
-        if ($_ eq 'coding') {
+      # Test 2: "pseudogene" genes do not have coding transcripts
+      if ($gene_group eq 'pseudogene') {
+        if (exists $transcript_groups{coding}) {
           push @pseudogene_mismatch, $gene->stable_id;
           last;
         }
       }
-    }
 
-    # Test 3: "polymorphic_pseudogene" genes have at least one polymorphic_pseudogene transcript
-    if ($gene->biotype eq 'polymorphic_pseudogene') {
-      if (!exists $transcript_biotypes{'polymorphic_pseudogene'}) {
-        push @polymorphic_mismatch, $gene->stable_id;
+      # Test 3: "polymorphic_pseudogene" genes have at least one polymorphic_pseudogene transcript
+      if ($gene->biotype eq 'polymorphic_pseudogene') {
+        if (!exists $transcript_biotypes{'polymorphic_pseudogene'}) {
+          push @polymorphic_mismatch, $gene->stable_id;
+        }
       }
     }
   }
