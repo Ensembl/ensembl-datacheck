@@ -156,7 +156,6 @@ sub write_output {
     output_file        => $self->param('output_file'),
   };
 
-  $self->dataflow_output_id($summary, 1);
 
   foreach my $datacheck ( @{$self->param('datachecks')} ) {
     # It's not possible to pass the dba parameter to another module;
@@ -180,6 +179,8 @@ sub write_output {
       $self->dataflow_output_id($output, 4);
     }
   }
+
+  $self->dataflow_output_id($summary, 1);
 }
 
 sub datacheck_params {
