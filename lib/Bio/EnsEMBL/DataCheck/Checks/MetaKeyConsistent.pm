@@ -99,6 +99,7 @@ sub consistent_meta_keys {
     WHERE
       meta_key LIKE 'species.%' AND
       meta_key <> 'species.biomart_dataset' AND
+      meta_key <> 'species.stable_id_prefix' AND
       species_id = $species_id
     ORDER BY
       meta_key_value_pair
