@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckHomologyMLSS',
   DESCRIPTION    => 'The expected number of homologys MLSSs are present',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_homology_annotation', 'compara_blastocyst'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_homology_annotation', 'compara_blastocyst', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link_species_set', 'homology']

@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckSpeciesTrees',
   DESCRIPTION    => 'The expected number of species trees have been merged',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link_species_set', 'species_set', 'species_tree_root']

@@ -164,6 +164,7 @@
          "compara_syntenies",
          "compara_references",
          "compara_homology_annotation",
+         "compara_gene_tree_pipelines",
          "core",
          "corelike",
          "funcgen",
@@ -187,6 +188,7 @@
          "compara_syntenies",
          "compara_references",
          "compara_homology_annotation",
+         "compara_gene_tree_pipelines",
          "core",
          "corelike",
          "funcgen",
@@ -223,7 +225,8 @@
       "description" : "Each row should show a one-to-many relationship",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckCAFETable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckCAFETable"
@@ -233,7 +236,8 @@
       "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckComparaStableIDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
@@ -289,7 +293,8 @@
       "description" : "Check that none of the gene tree leaves have children",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckEmptyLeavesTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees"
@@ -309,7 +314,8 @@
       "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckFlatProteinTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
@@ -329,7 +335,8 @@
       "description" : "ncRNA and protein trees must have gene Gain/Loss trees",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckGeneGainLossData",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
@@ -339,7 +346,8 @@
       "description" : "The expected number of gene_tree_root MLSSs are present",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckGeneTreeRootMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneTreeRootMLSS"
@@ -391,7 +399,8 @@
          "compara",
          "compara_gene_trees",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
@@ -403,7 +412,8 @@
          "compara",
          "compara_gene_trees",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckHomologyMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
@@ -424,7 +434,8 @@
       "description" : "Check that all JSON objects in gene_tree_object_store are valid",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckJSONObjects",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckJSONObjects"
@@ -515,7 +526,8 @@
       "description" : "Check that some wga_coverage and goc_score thresholds have been populated",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckOrthologyQCThresholds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckOrthologyQCThresholds"
@@ -564,7 +576,8 @@
          "compara_gene_trees",
          "compara_references",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckSequenceTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
@@ -603,7 +616,8 @@
       "description" : "Check some entries in species_tree_node_attr are > 0",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckSpeciesTreeNodeAttr",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr"
@@ -614,7 +628,8 @@
       "groups" : [
          "compara",
          "compara_gene_trees",
-         "compara_genome_alignments"
+         "compara_genome_alignments",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckSpeciesTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTrees"
@@ -677,7 +692,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CigarCheck",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
@@ -1581,7 +1597,8 @@
       "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "HighConfidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
@@ -1639,7 +1656,8 @@
       "description" : "Homologies have appropriate tags",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "MLSSTagHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagHomology"
@@ -1689,7 +1707,8 @@
       "description" : "Threshold values for ds exist, if appropriate",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "MLSSTagThresholdDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagThresholdDs"
@@ -1719,7 +1738,8 @@
       "description" : "Checks that the gene_member counts are appropriately populated",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "MemberProductionCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
@@ -1916,7 +1936,8 @@
          "compara_genome_alignments",
          "compara_syntenies",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "NoDataOnGenomeComponents",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NoDataOnGenomeComponents"
@@ -2499,7 +2520,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "UniqueKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UniqueKeysCompara"
