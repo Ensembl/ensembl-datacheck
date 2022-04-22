@@ -220,6 +220,15 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
+   "CheckAlphafoldEntries" : {
+      "datacheck_type" : "critical",
+      "description" : "check alphafold format",
+      "groups" : [
+         "protein_feature"
+      ],
+      "name" : "CheckAlphafoldEntries",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckAlphafoldEntries"
+   },
    "CheckCAFETable" : {
       "datacheck_type" : "critical",
       "description" : "Each row should show a one-to-many relationship",
@@ -744,6 +753,17 @@
       ],
       "name" : "CompareGenotypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGenotypes"
+   },
+   "CompareHGNCMultipleGenes" : {
+      "datacheck_type" : "advisory",
+      "description" : "HGNC-derived gene names assigned to multiple genes have not increased more than 5%",
+      "groups" : [
+         "compare_core",
+         "xref",
+         "xref_name_projection"
+      ],
+      "name" : "CompareHGNCMultipleGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareHGNCMultipleGenes"
    },
    "CompareMSANames" : {
       "datacheck_type" : "advisory",
@@ -1560,17 +1580,6 @@
       ],
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
-   },
-   "HGNCMultipleGenes" : {
-      "datacheck_type" : "advisory",
-      "description" : "HGNC-derived gene names are not given to multiple genes",
-      "groups" : [
-         "core",
-         "xref",
-         "xref_name_projection"
-      ],
-      "name" : "HGNCMultipleGenes",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCMultipleGenes"
    },
    "HGNCNumeric" : {
       "datacheck_type" : "critical",
@@ -2399,6 +2408,15 @@
       ],
       "name" : "SpeciesNameUnique",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
+   },
+   "SpeciesStrainGroup" : {
+      "datacheck_type" : "critical",
+      "description" : "Disallow Species Strain Group Meta Key",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "SpeciesStrainGroup",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesStrainGroup"
    },
    "SpeciesTaxonomy" : {
       "datacheck_type" : "critical",

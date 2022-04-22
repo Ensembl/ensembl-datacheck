@@ -672,7 +672,7 @@ sub run_datacheck {
       my $db_type = $dba->group;
       my $db_name = $dba->dbc->dbname;
 
-      subtest "$species, $db_type, $db_name" => sub {
+      subtest "$species, $db_type, $db_name, multi" => sub {
         SKIP: {
           my ($skip, $skip_reason) = $self->skip_tests(@_);
 
@@ -698,8 +698,11 @@ sub run_datacheck {
     }
     my $db_type = $self->dba->group;
     my $db_name = $self->dba->dbc->dbname;
+    my $mca = $self->dba->get_adaptor("MetaContainer");
+    my $division = ( $mca->single_value_by_key('species.division') ) ? $mca->single_value_by_key('species.division') :'multi';
 
-    subtest "$label, $db_type, $db_name" => sub {
+
+    subtest "$label, $db_type, $db_name, $division" => sub {
       SKIP: {
         my ($skip, $skip_reason) = $self->skip_tests(@_);
 

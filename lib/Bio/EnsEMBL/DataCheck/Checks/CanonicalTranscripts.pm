@@ -109,7 +109,7 @@ sub tests {
       coord_system cs USING (coord_system_id)
 	WHERE
       g.biotype = 'protein_coding' AND
-	  t.biotype NOT IN ('protein_coding', 'nonsense_mediated_decay') AND
+	  t.biotype NOT IN ('protein_coding', 'nonsense_mediated_decay', 'protein_coding_LoF') AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_5, $desc_5);
