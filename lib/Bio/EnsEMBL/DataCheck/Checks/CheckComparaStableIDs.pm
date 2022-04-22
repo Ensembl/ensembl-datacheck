@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckComparaStableIDs',
   DESCRIPTION    => 'gene trees in gene_tree_root and family all have stable_ids generated',
-  GROUPS         => ['compara', 'compara_gene_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['family', 'gene_tree_root']

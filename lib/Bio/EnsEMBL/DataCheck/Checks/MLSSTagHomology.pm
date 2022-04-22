@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MLSSTagHomology',
   DESCRIPTION => 'Homologies have appropriate tags',
-  GROUPS      => ['compara', 'compara_gene_trees'],
+  GROUPS      => ['compara', 'compara_gene_trees', 'compara_gene_tree_pipelines'],
   DB_TYPES    => ['compara'],
   TABLES      => ['method_link', 'method_link_species_set', 'method_link_species_set_tag']
 };

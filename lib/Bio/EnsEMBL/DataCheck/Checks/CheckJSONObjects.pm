@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckJSONObjects',
   DESCRIPTION    => 'Check that all JSON objects in gene_tree_object_store are valid',
-  GROUPS         => ['compara', 'compara_gene_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['gene_tree_object_store']

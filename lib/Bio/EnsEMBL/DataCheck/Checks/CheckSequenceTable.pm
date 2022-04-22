@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckSequenceTable',
   DESCRIPTION    => 'Check for sequence length and availability',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_references', 'compara_homology_annotation', 'compara_blastocyst'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_references', 'compara_homology_annotation', 'compara_blastocyst', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['sequence']

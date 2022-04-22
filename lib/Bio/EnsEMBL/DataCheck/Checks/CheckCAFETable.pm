@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckCAFETable',
   DESCRIPTION    => 'Each row should show a one-to-many relationship',
-  GROUPS         => ['compara', 'compara_gene_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['cafe_species_gene']
