@@ -97,6 +97,15 @@
       "name" : "AnalysisFormat",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisFormat"
    },
+   "AnalysisWebDataFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks if entries in the web_data column of the analysis_description table have the correct format",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "AnalysisWebDataFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisWebDataFormat"
+   },
    "Archive" : {
       "datacheck_type" : "critical",
       "description" : "Gene archive table is up to date",
@@ -813,6 +822,69 @@
       ],
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
+   },
+   "ComparePreviousVersionGenomicProbeFeaturesByArray" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features from genomic mappings for each array that is not organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionGenomicProbeFeaturesByArray",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionGenomicProbeFeaturesByArray"
+   },
+   "ComparePreviousVersionGenomicProbeFeaturesByArrayWithProbeSets" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features from genomic mappings for each array that is organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionGenomicProbeFeaturesByArrayWithProbeSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionGenomicProbeFeaturesByArrayWithProbeSets"
+   },
+   "ComparePreviousVersionProbeFeatures" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes between database versions",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionProbeFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionProbeFeatures"
+   },
+   "ComparePreviousVersionProbeFeaturesByArray" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features for each array.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionProbeFeaturesByArray",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionProbeFeaturesByArray"
+   },
+   "ComparePreviousVersionProbes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of Probes between database versions",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionProbes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionProbes"
+   },
+   "ComparePreviousVersionTranscriptProbeFeaturesByArray" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features from transcript mappings for each array that is not organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionTranscriptProbeFeaturesByArray",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionTranscriptProbeFeaturesByArray"
+   },
+   "ComparePreviousVersionTranscriptProbeFeaturesByArrayWithProbeSets" : {
+      "datacheck_type" : "advisory",
+      "description" : "hecks for loss of probes features from transcript mappings for each array that is organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionTranscriptProbeFeaturesByArrayWithProbeSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionTranscriptProbeFeaturesByArrayWithProbeSets"
    },
    "CompareProjectedGOXrefs" : {
       "datacheck_type" : "advisory",
@@ -2144,6 +2216,15 @@
       ],
       "name" : "ReadFileNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFileNames"
+   },
+   "ReadFilePathEncrypted" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks if paths stored in the file column of the read_file table are encrypted",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "ReadFilePathEncrypted",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFilePathEncrypted"
    },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
