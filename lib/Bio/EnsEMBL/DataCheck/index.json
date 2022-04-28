@@ -2419,6 +2419,15 @@
       "name" : "StableIdDisplayXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StableIdDisplayXref"
    },
+   "StrainType" : {
+      "datacheck_type" : "critical",
+      "description" : "The strain type must be from an approved list",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "StrainType",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StrainType"
+   },
    "StructuralVariationFeature" : {
       "datacheck_type" : "critical",
       "description" : "StructuralVariationFeature table data is present and correct",
