@@ -2414,7 +2414,7 @@
       "datacheck_type" : "critical",
       "description" : "The strain type must be from an approved list",
       "groups" : [
-         "rapi_release"
+         "rapid_release"
       ],
       "name" : "StrainType",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StrainType"
