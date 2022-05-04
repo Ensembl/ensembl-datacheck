@@ -198,7 +198,9 @@ sub pipeline_analyses {
     {
       -logic_name        => 'DbFactory',
       -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
-      -shout_db_not_found_in_registry => 1,
+      -parameters        => {
+                               shout_db_not_found_in_registry => 1,
+                            },   
       -analysis_capacity => 10,
       -max_retry_count   => 0,
       -flow_into         => {
