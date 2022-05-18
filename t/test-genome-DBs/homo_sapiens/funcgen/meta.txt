@@ -1,5 +1,5 @@
 1	1	schema_type	funcgen
-2	\N	schema_version	107
+2	\N	schema_version	108
 3	\N	patch	patch_87_88_a.sql|schema_version
 4	\N	patch	patch_87_88_b.sql|seq_region_name_255
 5	\N	patch	patch_87_88_c.sql|sample_regulatory_feature_id field for regulatory build
@@ -140,3 +140,4 @@
 140	\N	patch	patch_104_105_b.sql|New indices
 141	\N	patch	patch_105_106_a.sql|schema_version
 142	\N	patch	patch_106_107_a.sql|schema_version
+143	\N	patch	patch_107_108_a.sql|schema_version
