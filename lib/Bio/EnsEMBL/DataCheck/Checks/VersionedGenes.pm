@@ -47,8 +47,8 @@ sub tests {
   # full_genebuild, projection_build, mixed_strategy_build, maker_genebuild
   my $version_expected = 0;
   foreach my $method (@$methods) {
-    if ($method =~ /build|anno|braker|standard/) {
-      $version_expected = 1;
+    if ($method =~ /build/ or $method eq 'anno' or $method eq 'braker' or $method eq 'standard') {
+        $version_expected = 1;
     }
   }
 
