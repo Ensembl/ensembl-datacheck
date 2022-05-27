@@ -1,5 +1,5 @@
 1	\N	schema_type	variation
-2	\N	schema_version	108
+2	\N	schema_version	106
 3	1	species.production_name	homo_sapiens
 4	\N	patch	patch_94_95_a.sql|schema version
 5	\N	patch	patch_94_95_b.sql|create table to store allele synonyms
@@ -28,8 +28,3 @@
 45	\N	patch	patch_104_105_a.sql|schema version
 46	\N	patch	patch_104_105_b.sql|Increase publication title size
 47	\N	patch	patch_105_106_a.sql|schema version
-48	\N	patch	patch_106_107_a.sql|schema version
-49	\N	patch	patch_106_107_b.sql|consequences update
-50	\N	patch	patch_106_107_c.sql|remove regulatory and TFBS consequences from consequence_types in transcript_variation
-51	\N	patch	patch_107_108_a.sql|schema version
-52	\N	patch	patch_107_108_b.sql|fix SAS population description
