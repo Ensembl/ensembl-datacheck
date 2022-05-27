@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'UniqueKeysCompara',
   DESCRIPTION => 'Unique key relationships are not violated',
-  GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies'],
+  GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'compara_gene_tree_pipelines'],
   DB_TYPES    => ['compara'],
   PER_DB      => 1
 };

@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'MemberProductionCounts',
   DESCRIPTION    => 'Checks that the gene_member counts are appropriately populated',
-  GROUPS         => ['compara', 'compara_gene_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['CAFE_gene_family', 'family', 'gene_member', 'gene_member_hom_stats', 'gene_tree_root', 'genome_db']

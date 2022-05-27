@@ -1,5 +1,5 @@
 =head1 LICENSE
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -76,6 +76,7 @@ sub default_options {
     tap_to_json     => 1,
     json_passed     => 0,
     json_by_species => 1,
+    shout_db_not_found_in_registry => 1,
   };
 }
 
@@ -198,6 +199,9 @@ sub pipeline_analyses {
     {
       -logic_name        => 'DbFactory',
       -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
+      -parameters        => {
+                               shout_db_not_found_in_registry => $self->o('shout_db_not_found_in_registry'),
+                            },   
       -analysis_capacity => 10,
       -max_retry_count   => 0,
       -flow_into         => {

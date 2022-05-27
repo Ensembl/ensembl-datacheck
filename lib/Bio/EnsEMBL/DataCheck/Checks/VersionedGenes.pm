@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@ sub tests {
   # full_genebuild, projection_build, mixed_strategy_build, maker_genebuild
   my $version_expected = 0;
   foreach my $method (@$methods) {
-    if ($method =~ /build/ or $method eq 'anno' or $method eq 'braker' or $method eq 'standard') {	  
-      $version_expected = 1;
+     if ($method =~ /build/ or $method eq 'anno' or $method eq 'braker' or $method eq 'standard') {
+        $version_expected = 1;
     }
   }
 

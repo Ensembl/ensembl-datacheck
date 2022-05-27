@@ -1,4 +1,4 @@
-# Copyright [2018-2021] EMBL-European Bioinformatics Institute
+# Copyright [2018-2022] EMBL-European Bioinformatics Institute
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -95,6 +95,9 @@ subtest 'Minimal DbCheck with passing tests', sub {
   my $started = $dbcheck->_started;
   sleep(2);
 
+  my $division = 'EnsemblMetazoa';
+
+  like($dbcheck->output, qr/# Subtest: .*$division$/m, 'Division name in subtest header');
   like($dbcheck->output, qr/# Subtest\: $name/m, 'tests ran as subtests');
   like($dbcheck->output, qr/^\s+1\.\.2/m,         '2 subtests ran successfully');
   like($dbcheck->output, qr/^\s+ok 1 - $name/m,  'test ran successfully');
@@ -524,5 +527,8 @@ subtest 'DbCheck with collection database, fatal error', sub {
   is($result, 1, 'fatal error causes datacheck failure');
   like($dbcheck->output, qr/Datacheck ran without errors/m, 'fatal error datacheck failure message');
 };
+
+
+
 
 done_testing();

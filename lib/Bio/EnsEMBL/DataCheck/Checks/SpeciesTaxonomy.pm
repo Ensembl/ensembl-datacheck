@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ sub tests {
   my $sp_taxon_id = $mca->single_value_by_key('species.species_taxonomy_id');
   my $sci_name    = $mca->single_value_by_key('species.scientific_name');
   my $strain      = $mca->single_value_by_key('species.strain');
+  my $division    = $mca->single_value_by_key('species.division');
 
   # In collection dbs, sometimes a strain or the accession is added to the
   # scientific name, to disambiguate in the case of multiple strains
@@ -111,9 +112,15 @@ sub tests {
       if (defined $sp_taxon_id) {
         my $desc_4 = "Species Taxonomy ID ($sp_taxon_id) is valid";
         my $desc_5 = "Species Taxonomy ID ($sp_taxon_id) is at 'species' level";
+        my $desc_6 = "Species Taxonomy ID ($sp_taxon_id) is at 'species|subspecies' level";
         my $sp_node = $tna->fetch_by_taxon_id($sp_taxon_id);
         ok(defined $sp_node, $desc_4);
-        is($sp_node->rank, 'species', $desc_5);
+        if ($division eq "EnsemblPlants") {
+          # Allow subspecies entries for plants only #ENSPROD-7682
+          like($sp_node->rank, qr/species|subspecies/, $desc_6);
+        } else {
+          is($sp_node->rank, 'species', $desc_5);
+        }
       }
     }
   }

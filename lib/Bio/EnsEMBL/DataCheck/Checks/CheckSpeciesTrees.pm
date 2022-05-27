@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckSpeciesTrees',
   DESCRIPTION    => 'The expected number of species trees have been merged',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['method_link_species_set', 'species_set', 'species_tree_root']

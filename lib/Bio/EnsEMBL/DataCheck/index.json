@@ -97,6 +97,15 @@
       "name" : "AnalysisFormat",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisFormat"
    },
+   "AnalysisWebDataFormat" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks if entries in the web_data column of the analysis_description table have the correct format",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "AnalysisWebDataFormat",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisWebDataFormat"
+   },
    "Archive" : {
       "datacheck_type" : "critical",
       "description" : "Gene archive table is up to date",
@@ -164,6 +173,7 @@
          "compara_syntenies",
          "compara_references",
          "compara_homology_annotation",
+         "compara_gene_tree_pipelines",
          "core",
          "corelike",
          "funcgen",
@@ -187,6 +197,7 @@
          "compara_syntenies",
          "compara_references",
          "compara_homology_annotation",
+         "compara_gene_tree_pipelines",
          "core",
          "corelike",
          "funcgen",
@@ -218,12 +229,22 @@
       "name" : "CanonicalTranscripts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalTranscripts"
    },
+   "CheckAlphafoldEntries" : {
+      "datacheck_type" : "critical",
+      "description" : "check alphafold format",
+      "groups" : [
+         "protein_feature"
+      ],
+      "name" : "CheckAlphafoldEntries",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckAlphafoldEntries"
+   },
    "CheckCAFETable" : {
       "datacheck_type" : "critical",
       "description" : "Each row should show a one-to-many relationship",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckCAFETable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckCAFETable"
@@ -233,7 +254,8 @@
       "description" : "gene trees in gene_tree_root and family all have stable_ids generated",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckComparaStableIDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckComparaStableIDs"
@@ -289,7 +311,8 @@
       "description" : "Check that none of the gene tree leaves have children",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckEmptyLeavesTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees"
@@ -309,7 +332,8 @@
       "description" : "Check protein tree integrity ensuring number of leaves with parent node at root < 3",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckFlatProteinTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckFlatProteinTrees"
@@ -329,7 +353,8 @@
       "description" : "ncRNA and protein trees must have gene Gain/Loss trees",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckGeneGainLossData",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneGainLossData"
@@ -339,7 +364,8 @@
       "description" : "The expected number of gene_tree_root MLSSs are present",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckGeneTreeRootMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckGeneTreeRootMLSS"
@@ -391,7 +417,8 @@
          "compara",
          "compara_gene_trees",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomology"
@@ -403,7 +430,8 @@
          "compara",
          "compara_gene_trees",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckHomologyMLSS",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckHomologyMLSS"
@@ -424,7 +452,8 @@
       "description" : "Check that all JSON objects in gene_tree_object_store are valid",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckJSONObjects",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckJSONObjects"
@@ -515,7 +544,8 @@
       "description" : "Check that some wga_coverage and goc_score thresholds have been populated",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckOrthologyQCThresholds",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckOrthologyQCThresholds"
@@ -564,7 +594,8 @@
          "compara_gene_trees",
          "compara_references",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckSequenceTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSequenceTable"
@@ -603,7 +634,8 @@
       "description" : "Check some entries in species_tree_node_attr are > 0",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckSpeciesTreeNodeAttr",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTreeNodeAttr"
@@ -614,7 +646,8 @@
       "groups" : [
          "compara",
          "compara_gene_trees",
-         "compara_genome_alignments"
+         "compara_genome_alignments",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CheckSpeciesTrees",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckSpeciesTrees"
@@ -677,7 +710,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "CigarCheck",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CigarCheck"
@@ -729,6 +763,17 @@
       "name" : "CompareGenotypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGenotypes"
    },
+   "CompareHGNCMultipleGenes" : {
+      "datacheck_type" : "advisory",
+      "description" : "HGNC-derived gene names assigned to multiple genes have not increased more than 5%",
+      "groups" : [
+         "compare_core",
+         "xref",
+         "xref_name_projection"
+      ],
+      "name" : "CompareHGNCMultipleGenes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareHGNCMultipleGenes"
+   },
    "CompareMSANames" : {
       "datacheck_type" : "advisory",
       "description" : "The species_sets from the previous database are still present",
@@ -777,6 +822,69 @@
       ],
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
+   },
+   "ComparePreviousVersionGenomicProbeFeaturesByArray" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features from genomic mappings for each array that is not organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionGenomicProbeFeaturesByArray",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionGenomicProbeFeaturesByArray"
+   },
+   "ComparePreviousVersionGenomicProbeFeaturesByArrayWithProbeSets" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features from genomic mappings for each array that is organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionGenomicProbeFeaturesByArrayWithProbeSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionGenomicProbeFeaturesByArrayWithProbeSets"
+   },
+   "ComparePreviousVersionProbeFeatures" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes between database versions",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionProbeFeatures",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionProbeFeatures"
+   },
+   "ComparePreviousVersionProbeFeaturesByArray" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features for each array.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionProbeFeaturesByArray",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionProbeFeaturesByArray"
+   },
+   "ComparePreviousVersionProbes" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of Probes between database versions",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionProbes",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionProbes"
+   },
+   "ComparePreviousVersionTranscriptProbeFeaturesByArray" : {
+      "datacheck_type" : "advisory",
+      "description" : "Checks for loss of probes features from transcript mappings for each array that is not organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionTranscriptProbeFeaturesByArray",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionTranscriptProbeFeaturesByArray"
+   },
+   "ComparePreviousVersionTranscriptProbeFeaturesByArrayWithProbeSets" : {
+      "datacheck_type" : "advisory",
+      "description" : "hecks for loss of probes features from transcript mappings for each array that is organised into probe sets.",
+      "groups" : [
+         "probe_mapping"
+      ],
+      "name" : "ComparePreviousVersionTranscriptProbeFeaturesByArrayWithProbeSets",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePreviousVersionTranscriptProbeFeaturesByArrayWithProbeSets"
    },
    "CompareProjectedGOXrefs" : {
       "datacheck_type" : "advisory",
@@ -1545,17 +1653,6 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
-   "HGNCMultipleGenes" : {
-      "datacheck_type" : "advisory",
-      "description" : "HGNC-derived gene names are not given to multiple genes",
-      "groups" : [
-         "core",
-         "xref",
-         "xref_name_projection"
-      ],
-      "name" : "HGNCMultipleGenes",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCMultipleGenes"
-   },
    "HGNCNumeric" : {
       "datacheck_type" : "critical",
       "description" : "HGNC xrefs do not have the accession as the display_label",
@@ -1581,7 +1678,8 @@
       "description" : "Checks that the HighConfidenceOrthologs pipeline has been run",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "HighConfidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
@@ -1639,7 +1737,8 @@
       "description" : "Homologies have appropriate tags",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "MLSSTagHomology",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagHomology"
@@ -1689,7 +1788,8 @@
       "description" : "Threshold values for ds exist, if appropriate",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "MLSSTagThresholdDs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MLSSTagThresholdDs"
@@ -1719,7 +1819,8 @@
       "description" : "Checks that the gene_member counts are appropriately populated",
       "groups" : [
          "compara",
-         "compara_gene_trees"
+         "compara_gene_trees",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "MemberProductionCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
@@ -1916,7 +2017,8 @@
          "compara_genome_alignments",
          "compara_syntenies",
          "compara_homology_annotation",
-         "compara_blastocyst"
+         "compara_blastocyst",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "NoDataOnGenomeComponents",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NoDataOnGenomeComponents"
@@ -2114,6 +2216,15 @@
       ],
       "name" : "ReadFileNames",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFileNames"
+   },
+   "ReadFilePathEncrypted" : {
+      "datacheck_type" : "critical",
+      "description" : "Checks if paths stored in the file column of the read_file table are encrypted",
+      "groups" : [
+         "funcgen"
+      ],
+      "name" : "ReadFilePathEncrypted",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFilePathEncrypted"
    },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
@@ -2517,7 +2628,8 @@
          "compara_gene_trees",
          "compara_genome_alignments",
          "compara_master",
-         "compara_syntenies"
+         "compara_syntenies",
+         "compara_gene_tree_pipelines"
       ],
       "name" : "UniqueKeysCompara",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::UniqueKeysCompara"

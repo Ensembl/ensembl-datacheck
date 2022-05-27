@@ -1,5 +1,5 @@
 =head1 LICENSE
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ sub run {
 sub set_email_parameters {
   my $self = shift;
   
-  my $subject = "FAILED: Adivisory Datacheck Report For Pipeline ". $self->param('pipeline_name');
+  my $subject = "FAILED: Advisory Datachecks Report For Pipeline ". $self->param('pipeline_name');
   $self->param('subject', $subject);
   my $text = "All datachecks have completed.\n";
   my $output_dir = $self->param('output_dir');

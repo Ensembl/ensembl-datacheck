@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CigarCheck',
   DESCRIPTION    => 'The cigar_line must not have negative numbers or zeros in it',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_homology_annotation', 'compara_blastocyst'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_homology_annotation', 'compara_blastocyst', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['family_member', 'gene_align_member', 'genomic_align', 'homology_member', 'peptide_align_feature'],

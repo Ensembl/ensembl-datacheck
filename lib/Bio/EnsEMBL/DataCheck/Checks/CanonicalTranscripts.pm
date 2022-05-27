@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2021] EMBL-European Bioinformatics Institute
+Copyright [2018-2022] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ sub tests {
       coord_system cs USING (coord_system_id)
 	WHERE
       g.biotype = 'protein_coding' AND
-	  t.biotype NOT IN ('protein_coding', 'nonsense_mediated_decay') AND
+	  t.biotype NOT IN ('protein_coding', 'nonsense_mediated_decay', 'protein_coding_LoF') AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_5, $desc_5);
