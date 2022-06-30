@@ -43,7 +43,7 @@ sub tests {
 
         my $helper = $self->dba->dbc->sql_helper;
         my $mca = $self->dba->get_adaptor('MetaContainer');
-        my $assembly_default = $mca->get_assembly_default;
+        my $assembly_default = $mca->single_value_by_key('assembly.default');
         my $production_name = $mca->get_production_name;
         my $schema_version = $mca->get_schema_version;
         my $file = File::Spec->catfile($ENV{'APPRIS_FILE_PATH'},
