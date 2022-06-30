@@ -240,7 +240,7 @@ my (
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_dir, $json_passed,
     $parallelize_datachecks,
-    $tag, $email, $report_per_db, $report_all,
+    $tag, $email, $report_per_db, $report_all, $es_host, $es_port, $es_index,
 );
 
 GetOptions(
@@ -283,6 +283,11 @@ GetOptions(
   "email:s",       \$email,
   "report_per_db", \$report_per_db,
   "report_all",    \$report_all,
+  "es_host:s",     \$es_host,
+  "es_port:s",     \$es_port,
+  "es_index:s",    \$es_index,  
+  "store_to_es:i", \(my $store_to_es = 0),   
+
 );
 
 pod2usage(1) if $help;
@@ -405,6 +410,10 @@ $input_id{tag} = $tag if defined $tag;
 $input_id{email} = $email if defined $email;
 $input_id{report_per_db} = $report_per_db if defined $report_per_db;
 $input_id{report_all} = $report_all if defined $report_all;
+$input_id{es_host} = $es_host if defined $es_host;
+$input_id{es_port} = $es_port if defined $es_port;
+$input_id{es_index} = $es_index if defined $es_index;
+$input_id{store_to_es} = $store_to_es;
 
 my $input_id = Dumper(\%input_id);
 

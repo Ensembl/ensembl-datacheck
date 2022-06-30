@@ -77,6 +77,11 @@ sub default_options {
     json_passed     => 0,
     json_by_species => 1,
     shout_db_not_found_in_registry => 1,
+    store_to_es     => 0,
+    es_host         => 'es.production.ensembl.org',
+    es_port         => '80',
+    es_index        => 'datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    es_log_dir     => '/hps/scratch/flicek/ensembl/'.$self->o('ENV', 'USER').'/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
   };
 }
 
@@ -132,6 +137,7 @@ sub pipeline_create_commands {
 
   return [
     @{$self->SUPER::pipeline_create_commands},
+    'mkdir -p '.$self->o('es_log_dir'),
     $self->db_cmd($submission_table_sql),
     $self->db_cmd($results_table_sql),
     $self->db_cmd($result_table_sql),
@@ -334,9 +340,16 @@ sub pipeline_analyses {
       -max_retry_count   => 0,
       -parameters        => {
                               tap => '#output_dir#',
+			      store_to_es => $self->o('store_to_es'),
+
                             },
       -rc_name           => 'default',
-      -flow_into         => ['DataCheckSummary'],
+      -flow_into       => WHEN('#store_to_es#' =>
+                            ['DataCheckSummary', 'StoreToES'],
+                          ELSE
+                            ['DataCheckSummary']
+                          ),
+
     },
 
     {
@@ -347,6 +360,21 @@ sub pipeline_analyses {
       -rc_name           => 'default',
       -flow_into         => ['?table_name=result'],
     },
+    {
+      -logic_name        => 'StoreToES',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::StoreResultToES',
+      -analysis_capacity => 1,
+      -max_retry_count   => 3,
+      -parameters        => {
+                              es_host     => '#es_host#',
+			      es_port     => '#es_port#',
+			      es_index    => '#es_index#',
+			      es_log_file => '#es_log_dir#',
+                            },
+      -rc_name           => 'default',
+    },
+
+
   ];
 }
 
