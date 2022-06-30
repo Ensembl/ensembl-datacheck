@@ -8,6 +8,15 @@
       "name" : "APPRISAttribValuesExist",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::APPRISAttribValuesExist"
    },
+   "APPRISCompareSource" : {
+      "datacheck_type" : "critical",
+      "description" : "APPRIS load match input data in files",
+      "groups" : [
+         "geneset_support_level"
+      ],
+      "name" : "APPRISCompareSource",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::APPRISCompareSource"
+   },
    "APPRISCoverage" : {
       "datacheck_type" : "advisory",
       "description" : "APPRIS covers 95% of protein-coding gene on each chromosome",
