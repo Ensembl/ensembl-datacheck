@@ -30,7 +30,7 @@ use JSON;
 use Path::Tiny;
 use Search::Elasticsearch;
 use Bio::EnsEMBL::Utils::Exception qw/throw/;
-
+use Bio::EnsEMBL::Registry;
 use base ('Bio::EnsEMBL::Hive::Process');
 
 sub run {
@@ -43,7 +43,21 @@ sub run {
   my $job_id        = $self->param('submission_job_id'); 
   my $json_filename = $self->param('json_output_file');
   
+  my $reg = 'Bio::EnsEMBL::Registry';
+  if ($self->param_is_defined('registry_file')) {
+      $reg->load_all($self->param('registry_file'));
+  }
+
+
   my $input_details = $self->get_input_details();
+  my $dbname        = $self->param('dbname')->[0];
+  my ($dba) = @{ Bio::EnsEMBL::Registry->get_all_DBAdaptors_by_dbname($dbname) };
+  if (! defined $dba){
+        throw "Database $dbname not found in registry.";
+  }
+  my $mca = $dba->get_adaptor('MetaContainer');
+  my $division = $mca->single_value_by_key('species.division');
+ 
 
   my $es_client   = Search::Elasticsearch->new(
     trace_to => ['File', $es_log],
@@ -67,7 +81,8 @@ sub run {
       index   => $es_index,
       type    => 'report',
       body    => {
-         job_id  => $job_id,    
+         job_id  => $job_id,
+         division => $division,	 
          file    => $json_filename,
          content => $data,
 	 input_details => $input_details,
