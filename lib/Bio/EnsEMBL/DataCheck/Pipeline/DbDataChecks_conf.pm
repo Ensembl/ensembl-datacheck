@@ -366,10 +366,11 @@ sub pipeline_analyses {
       -analysis_capacity => 1,
       -max_retry_count   => 3,
       -parameters        => {
-                              es_host     => '#es_host#',
-			      es_port     => '#es_port#',
-			      es_index    => '#es_index#',
-			      es_log_file => '#es_log_dir#',
+	      			es_host     => $self->o('es_host'),
+              		        es_port     => $self->o('es_port'),
+                                es_index    => $self->o('es_index'),
+	      	                es_log_file => $self->o('es_log_dir').'/'.$self->o('pipeline_name').'err',
+
                             },
       -rc_name           => 'default',
     },

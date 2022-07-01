@@ -33,7 +33,6 @@ use Bio::EnsEMBL::Utils::Exception qw/throw/;
 
 use base ('Bio::EnsEMBL::Hive::Process');
 
-
 sub run {
   my $self = shift;
 
@@ -43,7 +42,8 @@ sub run {
   my $es_log        = $self->param_required('es_log_file');
   my $job_id        = $self->param('submission_job_id'); 
   my $json_filename = $self->param('json_output_file');
-
+  
+  my $input_details = $self->get_input_details();
 
   my $es_client   = Search::Elasticsearch->new(
     trace_to => ['File', $es_log],
@@ -63,21 +63,44 @@ sub run {
   my $json = JSON->new;
   my $data = $json->decode($json_text);
   eval {
-    $e->index(
+    $es_client->index(
       index   => $es_index,
       type    => 'report',
       body    => {
          job_id  => $job_id,    
          file    => $json_filename,
          content => $data,
+	 input_details => $input_details,
       }
     );
-  }
+  };
   if($@){
     throw "$@";
   }
 
 }
+
+
+sub get_input_details {
+  
+    my $self = shift;
+
+    return {
+	  'config_file'      => $self->param('config_file'),
+	  'datacheck_groups' => $self->param('datacheck_groups'),
+	  'datacheck_names'  => $self->param('datacheck_names'),
+	  'datacheck_types'  => $self->param('datacheck_types'),
+	  'db_type'          => $self->param('db_type'),
+          'dbname'	     => $self->param('dbname'),
+	  'registry_file'    => $self->param('registry_file'),
+	  'server_uri'       => $self->param('server_uri'),
+	  'server_url'       => $self->param('server_url'),
+	  'tag'              => $self->param('tag'),
+	  'target_url'       => $self->param('target_url'),
+	  'timestamp'        => $self->param('timestamp'),
+    }
+}
+
 
 
 1;
