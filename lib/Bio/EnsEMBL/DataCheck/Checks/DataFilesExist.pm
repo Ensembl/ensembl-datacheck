@@ -175,8 +175,14 @@ sub species_assembly_path {
   if (defined $core_dba) {
     my $meta = $core_dba->get_MetaContainer;
     my $assembly_default = $meta->single_value_by_key('assembly.default');
-
-    return catdir($data_file_path, $species, $assembly_default);
+    my $division = $meta->single_value_by_key('species.division');
+    if (defined $division) {
+      $division =~ s/^Ensembl//;
+      $division = lc($division);
+    } else {
+      $division = "";
+    }
+    return catdir($data_file_path, $division, $species, $assembly_default);
   }
 }
 
