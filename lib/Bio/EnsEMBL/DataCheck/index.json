@@ -2699,6 +2699,15 @@
       "name" : "Variation",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Variation"
    },
+   "VariationAncestralAllele" : {
+	  "datacheck_type" : "advisory",
+	  "description" : "Ancestral alleles for COSMIC and ClinVar variant sources are present",
+      "groups" : [
+         "variation_import"
+      ],
+      "name" : "VariationAncestralAllele",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationAncestralAllele"
+   },
    "VariationClasses" : {
       "datacheck_type" : "advisory",
       "description" : "Variation number of classes is correct",
