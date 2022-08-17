@@ -79,5 +79,6 @@ sub checkClassAttrib {
   cmp_rows($self->dba, $sql, '>', 1, $desc); 
 
 }
+
 1;
 
