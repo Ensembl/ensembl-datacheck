@@ -24,6 +24,7 @@ use strict;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::DataCheck::Test::DataCheck;
+use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -54,7 +55,16 @@ sub tests {
     cmp_rows($self->dba, $sql_hgmd, '>', 1, 'Number of variation classes is correct for source HGMD');
   } 
 
-  $self->checkClassAttrib('dbSNP', 'Number of variation classes is correct for source dbSNP');
+  my $eva_sql = qq(
+    SELECT COUNT(source_id)
+    FROM source
+    WHERE source.name='EVA';
+    );
+  my $count = sql_count($self->dba, $eva_sql);
+ 
+  $self->checkClassAttrib('EVA', 'Number of variation classes is correct for source EVA') if ($count == 1);
+
+  $self->checkClassAttrib('dbSNP', 'Number of variation classes is correct for source dbSNP') if (!$count);
 
 }
 
@@ -70,6 +80,8 @@ sub checkClassAttrib {
   cmp_rows($self->dba, $sql, '>', 1, $desc); 
 
 }
+
+
 
 1;
 
