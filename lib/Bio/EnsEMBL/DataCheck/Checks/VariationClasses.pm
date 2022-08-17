@@ -62,7 +62,7 @@ sub tests {
     );
   my $count = sql_count($self->dba, $eva_sql);
   $self->checkClassAttrib('EVA', 'Number of variation classes is correct for source EVA') if ($count == 1);
-  
+
   $self->checkClassAttrib('dbSNP', 'Number of variation classes is correct for source dbSNP') if (!$count);
 
 }
@@ -79,8 +79,5 @@ sub checkClassAttrib {
   cmp_rows($self->dba, $sql, '>', 1, $desc); 
 
 }
-
-
-
 1;
 
