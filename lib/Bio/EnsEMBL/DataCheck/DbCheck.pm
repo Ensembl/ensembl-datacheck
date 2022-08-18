@@ -207,7 +207,7 @@ sub _registry_default {
       $registry->remove_DBAdaptor($species, $self->dba->group);
     }
   }
-
+  print("loading registry from : $dba_url\n");
   $registry->load_registry_from_url($dba_url);
   $self->dba($registry->get_DBAdaptor($species, $self->dba->group));
 
@@ -459,20 +459,20 @@ sub find_dbname {
 sub get_old_dba {
   my $self = shift;
   my ($species, $group) = @_;
-
+  print("group no : $group is exist\n");
   $species = $self->species    unless defined $species;
   $group   = $self->dba->group unless defined $group;
 
   unless (defined $self->old_server_uri && scalar(@{$self->old_server_uri})) {
     die "Old server details must be set as 'old_server_uri' attribute";
   }
-
+  print($self->old_server_uri."\n"); 
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   # $old_dba can be undefined if there is no entry in the metadata db;
   # a datacheck could use the undefined-ness to skip tests in this case.
   my $old_dba;
-
+  my $error_msg ;
   # We could have multiple old_server_uris. This is to give us a bit
   # of flexibility, so that if a db is not found in the first location,
   # we look in the next.
@@ -498,7 +498,7 @@ sub get_old_dba {
     my $dbh;
     if (exists $params{'-DBNAME'}) {
       my $message = 'Specified database does not exist';
-      $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message);
+      $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message,0);
     } else {
       ($params{'-DBNAME'}, $dbh) = $self->find_old_dbname(
         $self->dba->dbc->dbname,
@@ -506,10 +506,14 @@ sub get_old_dba {
         $species,
         $group,
         $db_version,
-        $uri
+        $uri,
+	0
       );
     }
-
+    if(! defined $dbh){
+        $error_msg="Unable to find $params{'-DBNAME'} in provided old_server_uri : $old_server_uri";
+	next;
+    }	    
     if (defined $params{'-DBNAME'}) {
       # We need to suffix '_old' to the species name to comply
       # with uniqueness rules, and ensure we can distinguish between the
@@ -551,14 +555,18 @@ sub get_old_dba {
       # Don't bother with other old_server_uri values if we have a dba.
       last;
     }
+
   }
 
+  if( !defined $old_dba ){
+	  die $error_msg;
+  }	  
   return $old_dba;
 }
 
 sub find_old_dbname {
   my $self = shift;
-  my ($dbname, $mca, $species, $group, $db_version, $uri) = @_;
+  my ($dbname, $mca, $species, $group, $db_version, $uri, $fatal) = @_;
 
   my ($old_dbname, $dbh);
   if ($group =~ /(compara|ontology)/i) {
@@ -569,7 +577,7 @@ sub find_old_dbname {
     $old_dbname =~ s/_${eg_current}_/_${eg_version}_/; # EG version
 
     my $message = 'Previous version of database does not exist';
-    $dbh = $self->test_db_connection($uri, $old_dbname, $message);
+    $dbh = $self->test_db_connection($uri, $old_dbname, $message, $fatal);
   } else {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
     die "No metadata database found in the registry" unless defined $meta_dba;
@@ -615,7 +623,7 @@ sub find_old_dbname {
     if (scalar(@dbnames) == 1) {
       $old_dbname = $dbnames[0];
       my $message = 'Database in metadata database does not exist';
-      $dbh = $self->test_db_connection($uri, $old_dbname, $message);
+      $dbh = $self->test_db_connection($uri, $old_dbname, $message, $fatal);
     } elsif (scalar(@dbnames) > 1) {
       die "Multiple release $db_version $group databases for $species";
     }
@@ -626,12 +634,12 @@ sub find_old_dbname {
   return ($old_dbname, $dbh);
 }
 
+
 sub test_db_connection {
   my $self = shift;
   my ($uri, $dbname, $message, $fatal) = @_;
 
   $fatal = 1 unless defined $fatal;
-
   my $dsn = "DBI:mysql:database=$dbname;host=".$uri->host.";port=".$uri->port;
   my $dbh = DBI->connect($dsn, $uri->user, $uri->pass, { PrintError => 0 });
 
