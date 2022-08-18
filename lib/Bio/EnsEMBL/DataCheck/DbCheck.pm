@@ -207,7 +207,6 @@ sub _registry_default {
       $registry->remove_DBAdaptor($species, $self->dba->group);
     }
   }
-  print("loading registry from : $dba_url\n");
   $registry->load_registry_from_url($dba_url);
   $self->dba($registry->get_DBAdaptor($species, $self->dba->group));
 
@@ -459,14 +458,12 @@ sub find_dbname {
 sub get_old_dba {
   my $self = shift;
   my ($species, $group) = @_;
-  print("group no : $group is exist\n");
   $species = $self->species    unless defined $species;
   $group   = $self->dba->group unless defined $group;
 
   unless (defined $self->old_server_uri && scalar(@{$self->old_server_uri})) {
     die "Old server details must be set as 'old_server_uri' attribute";
   }
-  print($self->old_server_uri."\n"); 
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
   # $old_dba can be undefined if there is no entry in the metadata db;
