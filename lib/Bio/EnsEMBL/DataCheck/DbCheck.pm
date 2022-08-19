@@ -508,7 +508,6 @@ sub get_old_dba {
       );
     }
     if(! defined $dbh){
-	    #$error_msg="Unable to find $params{'-DBNAME'} in provided old_server_uri : $old_server_uri";
 	next;
     }	    
     if (defined $params{'-DBNAME'}) {
