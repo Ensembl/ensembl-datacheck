@@ -495,9 +495,9 @@ sub get_old_dba {
     my $dbh;
     if (exists $params{'-DBNAME'}) {
       my $message = 'Specified database does not exist';
-      $dbh = $self->test_db_connection($uri, $params{'-DBNAME'}, $message,0);
+      ($dbh, $error_msg) = $self->test_db_connection($uri, $params{'-DBNAME'}, $message,0);
     } else {
-      ($params{'-DBNAME'}, $dbh) = $self->find_old_dbname(
+      ($params{'-DBNAME'}, $dbh, $error_msg) = $self->find_old_dbname(
         $self->dba->dbc->dbname,
         $mca,
         $species,
@@ -508,7 +508,7 @@ sub get_old_dba {
       );
     }
     if(! defined $dbh){
-        $error_msg="Unable to find $params{'-DBNAME'} in provided old_server_uri : $old_server_uri";
+	    #$error_msg="Unable to find $params{'-DBNAME'} in provided old_server_uri : $old_server_uri";
 	next;
     }	    
     if (defined $params{'-DBNAME'}) {
@@ -565,7 +565,7 @@ sub find_old_dbname {
   my $self = shift;
   my ($dbname, $mca, $species, $group, $db_version, $uri, $fatal) = @_;
 
-  my ($old_dbname, $dbh);
+  my ($old_dbname, $dbh, $error_msg);
   if ($group =~ /(compara|ontology)/i) {
     my $current = $mca->schema_version;
     $old_dbname = $dbname;
@@ -574,7 +574,7 @@ sub find_old_dbname {
     $old_dbname =~ s/_${eg_current}_/_${eg_version}_/; # EG version
 
     my $message = 'Previous version of database does not exist';
-    $dbh = $self->test_db_connection($uri, $old_dbname, $message, $fatal);
+    ($dbh, $error_msg) = $self->test_db_connection($uri, $old_dbname, $message, $fatal);
   } else {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
     die "No metadata database found in the registry" unless defined $meta_dba;
@@ -620,7 +620,7 @@ sub find_old_dbname {
     if (scalar(@dbnames) == 1) {
       $old_dbname = $dbnames[0];
       my $message = 'Database in metadata database does not exist';
-      $dbh = $self->test_db_connection($uri, $old_dbname, $message, $fatal);
+      ($dbh, $error_msg) = $self->test_db_connection($uri, $old_dbname, $message, $fatal);
     } elsif (scalar(@dbnames) > 1) {
       die "Multiple release $db_version $group databases for $species";
     }
@@ -628,7 +628,7 @@ sub find_old_dbname {
     $meta_dba->dbc && $meta_dba->dbc->disconnect_if_idle();
   }
 
-  return ($old_dbname, $dbh);
+  return ($old_dbname, $dbh, $error_msg);
 }
 
 
@@ -644,6 +644,10 @@ sub test_db_connection {
     my $err = $DBI::errstr;
     die "$message: $dsn\n$err";
   }
+
+  if(!$fatal){
+    return ($dbh, "$message: $dsn")
+  }	  
 
   return $dbh;
 }
