@@ -576,6 +576,7 @@ sub find_old_dbname {
     ($dbh, $error_msg) = $self->test_db_connection($uri, $old_dbname, $message, $fatal);
   } else {
     my $meta_dba = $self->registry->get_DBAdaptor("multi", "metadata");
+
     die "No metadata database found in the registry" unless defined $meta_dba;
 
     my ($sql, $params);
