@@ -469,7 +469,7 @@ sub get_old_dba {
   # $old_dba can be undefined if there is no entry in the metadata db;
   # a datacheck could use the undefined-ness to skip tests in this case.
   my $old_dba;
-  my $error_msg ;
+  my $error_msg = '' ;
   # We could have multiple old_server_uris. This is to give us a bit
   # of flexibility, so that if a db is not found in the first location,
   # we look in the next.
@@ -554,7 +554,8 @@ sub get_old_dba {
 
   }
 
-  if( !defined $old_dba ){
+
+  if( !defined $old_dba && $error_msg){
 	  die $error_msg;
   }	  
   return $old_dba;
