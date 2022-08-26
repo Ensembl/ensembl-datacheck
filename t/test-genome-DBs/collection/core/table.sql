@@ -290,7 +290,7 @@ CREATE TABLE `external_db` (
   `description` text,
   PRIMARY KEY (`external_db_id`),
   UNIQUE KEY `db_name_idx` (`db_name`,`db_release`)
-) ENGINE=MyISAM AUTO_INCREMENT=50856 DEFAULT CHARSET=latin1 CHECKSUM=1;
+) ENGINE=MyISAM AUTO_INCREMENT=50857 DEFAULT CHARSET=latin1 CHECKSUM=1;
 
 CREATE TABLE `external_synonym` (
   `xref_id` int(10) unsigned NOT NULL,
@@ -490,7 +490,7 @@ CREATE TABLE `meta` (
   PRIMARY KEY (`meta_id`),
   UNIQUE KEY `species_key_value_idx` (`species_id`,`meta_key`,`meta_value`),
   KEY `species_value_idx` (`species_id`,`meta_value`)
-) ENGINE=MyISAM AUTO_INCREMENT=569 DEFAULT CHARSET=latin1 CHECKSUM=1;
+) ENGINE=MyISAM AUTO_INCREMENT=571 DEFAULT CHARSET=latin1 CHECKSUM=1;
 
 CREATE TABLE `meta_coord` (
   `table_name` varchar(40) NOT NULL,

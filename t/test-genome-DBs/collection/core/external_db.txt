@@ -438,3 +438,4 @@ The main requirement behind this entry, is to be able to link TAIR GO annotation
 50854	Schisto_previous_id	\N	KNOWNXREF	5	Related identifier from previous versions of S. mansoni annotation	MISC	\N	\N	\N
 50853	Gasser_lab	\N	KNOWNXREF	5	Gene names assigned by Gasser Lab	MISC	\N	\N	\N
 50855	wormbase_cds	\N	KNOWNXREF	5	WormBase CDS	MISC	\N	\N	\N
+50856	GeneCards	\N	XREF	50	GeneCards	MISC	\N	\N	\N
