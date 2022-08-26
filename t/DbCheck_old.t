@@ -84,17 +84,6 @@ my $test_db_dir = $FindBin::Bin;
       $check = TestChecks::DbCheck_1->new(
         dba            => $dba,
         server_uri     => [$server_uri],
-        old_server_uri => [$server_uri],
-      );
-      $check->load_registry();
-      throws_ok(
-        sub { $check->get_old_dba },
-        qr/No metadata database found in the registry/,
-        'Fail if metadata database does not exist');
-
-      $check = TestChecks::DbCheck_1->new(
-        dba            => $dba,
-        server_uri     => [$server_uri],
         old_server_uri => [$server_uri.'95'],
       );
       $check->load_registry();

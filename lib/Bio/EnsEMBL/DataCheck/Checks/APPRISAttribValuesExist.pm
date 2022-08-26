@@ -38,7 +38,6 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $helper = $self->dba->dbc->sql_helper;
 
   my $desc_1 = 'APPRIS attributes exist';
   my $sql_1  = q/
