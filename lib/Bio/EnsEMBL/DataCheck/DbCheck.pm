@@ -363,7 +363,7 @@ sub get_dba {
       $uri->db_params->{dbname} = $dbname;
       my $db_uri = $uri->generate_uri."?species=$species;group=$group";
 
-      my $dbh = $self->test_db_connection($uri, $dbname, undef, 0);
+      my ($dbh, $error_msg) = $self->test_db_connection($uri, $dbname, undef, 0);
       if (defined $dbh) {
         $self->registry->remove_DBAdaptor($species, $group);
         $self->registry->load_registry_from_url($db_uri);
