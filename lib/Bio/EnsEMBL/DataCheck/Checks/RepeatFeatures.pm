@@ -49,6 +49,11 @@ sub tests {
       skip "Repeat features not mandatory for viruses", 1;
     }
 
+    if($mc->single_value_by_key('genebuild.method') eq 'projection_build') {
+      skip "Repeat features not mandatory for projection builds", 1;
+    }
+
+    
     # Don't need to worry about species_id, because we don't do this
     # query for collection dbs...
     my @logic_names = ('dust', 'trf');
