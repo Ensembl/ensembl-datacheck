@@ -136,9 +136,18 @@ sub biotype_groups {
     }
   }
 
-  my $desc_1 = 'genes have at least one transcript with a matching biotype group';
-  is(scalar(@group_mismatch), 0, $desc_1);
-
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  if($mca->single_value_by_key('genebuild.method') eq 'projection_build'){
+      if (scalar(@group_mismatch) > 100){
+	  my $desc_proj = 'genes have at least one transcript with a matching biotype group';
+	  is(scalar(@group_mismatch), 100, $desc_proj);
+      }
+  }
+  else {
+      my $desc_1 = 'genes have at least one transcript with a matching biotype group';
+      is(scalar(@group_mismatch), 0, $desc_1);
+  }
+  
   my $desc_2 = '"pseudogene" genes do not have coding transcripts';
   is(scalar(@pseudogene_mismatch), 0, $desc_2);
 
