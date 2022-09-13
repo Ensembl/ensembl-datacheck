@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CheckComparaStableIDs',
   DESCRIPTION    => 'gene trees in gene_tree_root and family all have stable_ids generated',
-  GROUPS         => ['compara', 'compara_gene_trees'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['family', 'gene_tree_root']
@@ -55,7 +55,29 @@ sub tests {
         AND stable_id IS NULL
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
-  
+
+  my %prefixes = (
+    "vertebrates" => "ENSGT",
+    "plants"      => "EPIGT",
+    "pan"         => "EGGT0",
+    "metazoa"     => "EMGT0",
+    "protists"    => "EPrGT",
+    "fungi"       => "EFGT0"
+  );
+
+  my $division = $self->dba->get_division();
+  my $prefix = $prefixes{$division};
+
+  my $desc_3 = "There is a single consistent stable_id prefix for all gene trees";
+  my $sql_3 = qq/
+    SELECT * FROM gene_tree_root
+      WHERE member_type = 'protein'
+        AND tree_type = 'tree'
+        AND clusterset_id =  "default"
+        AND LEFT(stable_id, 5) != "$prefix"
+  /;
+  is_rows_zero($self->dba, $sql_3, $desc_3);
+
 }
 
 1;

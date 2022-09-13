@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CheckEmptyLeavesTrees;
+package Bio::EnsEMBL::DataCheck::Checks::ReadFilePathEncrypted;
 
 use warnings;
 use strict;
@@ -28,30 +28,28 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CheckEmptyLeavesTrees',
-  DESCRIPTION    => 'Check that none of the gene tree leaves have children',
-  GROUPS         => ['compara', 'compara_gene_trees', 'compara_gene_tree_pipelines'],
+  NAME           => 'ReadFilePathEncrypted',
+  DESCRIPTION    => 'Checks if paths stored in the file column of the read_file table are encrypted',
+  GROUPS         => ['funcgen'],
   DATACHECK_TYPE => 'critical',
-  DB_TYPES       => ['compara'],
-  TABLES         => ['gene_tree_node']
+  DB_TYPES       => ['funcgen'],
+  TABLES         => ['read_file']
 };
 
 sub tests {
   my ($self) = @_;
-  my $dbc = $self->dba->dbc;
-  
-  my $sql = q/
-    SELECT DISTINCT g1.root_id 
-      FROM gene_tree_node g1 
-        LEFT JOIN gene_tree_node g2 
-          ON (g1.node_id=g2.parent_id) 
-    WHERE g2.node_id IS NULL 
-      AND (g1.right_index-g1.left_index) > 1
-  /;
-  
-  
-  my $desc = "None of the gene trees have leaves with children";
-  is_rows_zero($dbc, $sql, $desc);
+  SKIP: {
+  my $funcgen_dba = $self->get_dba(undef, 'funcgen');
+  skip 'No funcgen database', 1 unless defined $funcgen_dba;
+
+  my $desc = "Check if file column in read_file table is encrypted";
+  my $test_name = "ReadFile path encrypted";
+
+  my $sql = "select count(*) from read_file where file like '/%fastq%'";
+
+  is_rows_zero($funcgen_dba, $sql, $test_name, $desc);
+
+  }
 }
 
 1;
