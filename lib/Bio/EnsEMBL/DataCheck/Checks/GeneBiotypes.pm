@@ -139,7 +139,7 @@ sub biotype_groups {
   my $mca = $self->dba->get_adaptor('MetaContainer');
   if($mca->single_value_by_key('genebuild.method') eq 'projection_build'){
       if (scalar(@group_mismatch) > 100){
-	  my $desc_proj = 'genes have at least one transcript with a matching biotype group';
+	  my $desc_proj = 'found no more that 100 genes with mismatched transcript biotype groups';
 	  is(scalar(@group_mismatch), 100, $desc_proj);
       }
   }
