@@ -151,8 +151,17 @@ sub biotype_groups {
   my $desc_2 = '"pseudogene" genes do not have coding transcripts';
   is(scalar(@pseudogene_mismatch), 0, $desc_2);
 
-  my $desc_3 = '"polymorphic_pseudogene" genes have at least one polymorphic_pseudogene transcript';
-  is(scalar(@polymorphic_mismatch), 0, $desc_3);
+
+
+  if($mca->single_value_by_key('genebuild.method') eq 'projection_build'){
+	  if (scalar(@polymorphic_mismatch) > 5){
+		  my $desc_proj = 'found no more that 5 genes with polymorphic_pseudogene transcript ';
+		  is(scalar(@polymorphic_mismatch), 5, $desc_proj);
+	 }
+ }
+ else{ 
+    my $desc_3 = '"polymorphic_pseudogene" genes have at least one polymorphic_pseudogene transcript';
+    is(scalar(@polymorphic_mismatch), 0, $desc_3);
 }
 
 1;
