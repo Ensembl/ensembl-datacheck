@@ -142,17 +142,24 @@ sub biotype_groups {
 	  my $desc_proj = 'found no more that 100 genes with mismatched transcript biotype groups';
 	  is(scalar(@group_mismatch), 100, $desc_proj);
       }
-  }
-  else {
-      my $desc_1 = 'genes have at least one transcript with a matching biotype group';
-      is(scalar(@group_mismatch), 0, $desc_1);
-  }
+  
+      else {
+        my $desc_1 = 'genes have at least one transcript with a matching biotype group';
+        is(scalar(@group_mismatch), 0, $desc_1);
+      }
+     if (scalar(@polymorphic_mismatch) > 5){
+        my $desc_proj = 'found no more that 5 polymorphic_pseudogene with mismatched transcript biotype groups';
+        is(scalar(@polymorphic_mismatch), 5, $desc_proj);
+         }
+ 
+     else{
+        my $desc_3 = '"polymorphic_pseudogene" genes have at least one polymorphic_pseudogene transcript';
+        is(scalar(@polymorphic_mismatch), 0, $desc_3);
+     }
+     }
   
   my $desc_2 = '"pseudogene" genes do not have coding transcripts';
   is(scalar(@pseudogene_mismatch), 0, $desc_2);
 
-  my $desc_3 = '"polymorphic_pseudogene" genes have at least one polymorphic_pseudogene transcript';
-  is(scalar(@polymorphic_mismatch), 0, $desc_3);
 }
-
 1;
