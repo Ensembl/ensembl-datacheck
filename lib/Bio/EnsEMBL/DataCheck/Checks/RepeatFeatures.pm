@@ -49,7 +49,7 @@ sub tests {
       skip "Repeat features not mandatory for viruses", 1;
     }
 
-    if($mc->single_value_by_key('genebuild.method') eq 'projection_build') {
+    if($mca->single_value_by_key('genebuild.method') eq 'projection_build') {
       skip "Repeat features not mandatory for projection builds", 1;
     }
 
