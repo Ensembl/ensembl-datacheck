@@ -112,13 +112,15 @@ sub get_tables_to_check {
   # Remove structural variation for species without SV
   my @species_with_SV = qw/
       bos_taurus 
-      canis_familiaris
+      canis_lupus_familiaris
+      canis_lupus_familiarisboxer
       danio_rerio
       equus_caballus
       homo_sapiens
       macaca_mulatta
       mus_musculus
       ovis_aries
+      ovis_aries_rambouillet
       sus_scrofa
   /;
   
@@ -147,6 +149,7 @@ sub get_tables_to_check {
   my @species_with_citations = qw/
      bos_taurus
      canis_lupus_familiaris
+     canis_lupus_familiarisboxer
      capra_hircus
      danio_rerio
      equus_caballus
@@ -154,6 +157,7 @@ sub get_tables_to_check {
      homo_sapiens
      mus_musculus
      ovis_aries
+     ovis_aries_rambouillet
      rattus_norvegicus
      sus_scrofa
   /;
