@@ -48,16 +48,17 @@ sub tests {
     my $num_previous_probefeatures_array = get_counts($previous_dba);
     my $current_normalized = normalize($num_current_probefeatures_array, $current_probeset_size);
     my $previous_normalized = normalize($num_previous_probefeatures_array, $previous_probeset_size);
-    my $min_proportion = 0.1;
+    my $min_proportion = 10.0;
     foreach my $array_name (keys %$current_normalized){
       if (exists $$previous_normalized{$array_name}){
         my $difference = abs($$current_normalized{$array_name} - $$previous_normalized{$array_name});
         my $average = ($$current_normalized{$array_name} + $$previous_normalized{$array_name})/2;
-        my $difference_percentage = $difference / $average;
+        my $difference_percentage = ($difference / $average) * 100;
         my $test_description = "Database ".$self->dba->dbc->dbname.", array ".$array_name." has ".
-            $$current_normalized{$array_name}." (normalized) probe features, and database ".
-            $previous_dba->dbc->dbname.", array ".$array_name." has ".$$previous_normalized{$array_name}.
-            " (normalized) probe features. The difference is ".$difference_percentage;
+	sprintf("%.2f", $$current_normalized{$array_name})." (normalized) probe features, and database ".
+            $previous_dba->dbc->dbname.", array ".$array_name." has ".sprintf("%.2f", $$previous_normalized{$array_name}).
+            " (normalized) probe features. The difference is ".sprintf("%.2f", $difference_percentage). 
+	    "\%.\nTest will fail if the difference is >".sprintf("%.2f", $min_proportion)."\%.";
 
         ok($difference_percentage <= $min_proportion, $test_description);
       }

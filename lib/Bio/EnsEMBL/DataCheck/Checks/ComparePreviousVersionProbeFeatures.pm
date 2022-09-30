@@ -43,7 +43,7 @@ sub tests {
 
     skip 'No previous version of database', 1 unless defined $previous_dba;
 
-    my $min_proportion = 0.1;
+    my $min_proportion = 10.0;
 
     my $helper  = $self->dba->dbc->sql_helper;
     my $previous_helper  = $previous_dba->dbc->sql_helper;
@@ -60,10 +60,11 @@ sub tests {
 
     my $difference = abs($probe_features_count - $previous_probe_features_count);
     my $average = ($probe_features_count + $previous_probe_features_count)/2;
-    my $difference_percentage = $difference / $average;
+    my $difference_percentage = ($difference / $average) * 100;
     my $test_description = "Database ".$self->dba->dbc->dbname." has ".$probe_features_count.
         " probe features and database ".$previous_dba->dbc->dbname." has ".$previous_probe_features_count.
-        ". The difference is ".$difference_percentage;
+        ". The difference is ".sprintf("%.2f",$difference_percentage).
+	"\%.\nTest will fail if the difference is >".sprintf("%.2f", $min_proportion)."\%.";
 
     ok($difference_percentage <= $min_proportion, $test_description);
 
