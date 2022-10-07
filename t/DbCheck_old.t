@@ -102,6 +102,35 @@ my $test_db_dir = $FindBin::Bin;
     }
   }
 
+  subtest "Fetch old DBA for given multiple old_server_uri ", sub {
+       my $db_type='variation';	  
+       my $dba      = $testdb->get_DBAdaptor($db_type);
+       my $dba_type = $dba_types{$db_type};
+ 
+       my $server_uri = get_server_uri($testdb, $db_type);
+ 
+       my $check = TestChecks::DbCheck_1->new(
+         dba            => $dba,
+         server_uri     => [$server_uri],
+         old_server_uri => [$server_uri.'95'],
+       );
+       $check->load_registry();
+       $check->registry->add_DBAdaptor('multi', 'metadata', $metadata_dba);
+       throws_ok(
+         sub { $check->get_old_dba },
+         qr/Database in metadata database does not exist/,
+         'Fail if database from metadata database does not exist (1/2)');
+ 
+       $check = TestChecks::DbCheck_1->new(
+         dba            => $dba,
+         server_uri     => [$server_uri],
+         old_server_uri => [$server_uri.'95', $server_uri.'96', $server_uri.$dba->dbc->dbname],
+       );
+       my $old_dba = $check->get_old_dba();
+       isa_ok($old_dba, $dba_type, 'Return value of "get_old_dba"');
+       is($old_dba->species, "${species}_old", 'Species has "_old" suffix');
+  };    
+
 
   subtest "Fetch old DBA - collection", sub {
     my $species  = 'collection';
