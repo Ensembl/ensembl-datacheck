@@ -11,7 +11,7 @@
 496	<a href="https://www.ncbi.nlm.nih.gov/Structure/cdd/cdd.shtml">Conserved Domain Database</a> models.	CDD	1	\N
 497	Protein families from <a href="http://www.pantherdb.org/">PANTHER</a>.	PANTHER	1	\N
 498	<a href="http://www.cathdb.info/">CATH/Gene3D</a> families.	Gene3D	1	\N
-499	Protein domains and motifs in the <a rel="external" href="http://pfam.xfam.org">Pfam</a> database.	Pfam	1	\N
+499	Protein domains and motifs in the <a rel="external" href="https://www.ebi.ac.uk/interpro">Pfam</a> database.	Pfam	1	\N
 500	Protein domains and motifs in the <a rel="external" href="http://supfam.org/SUPERFAMILY">SUPERFAMILY</a> database.	Superfamily	1	\N
 501	Protein domains and motifs in the <a rel="external" href="http://smart.embl-heidelberg.de">SMART</a> database.	SMART	1	\N
 502	Protein domains and motifs from the <a rel="external" href="http://prosite.expasy.org">PROSITE</a> profiles database.	PROSITE profiles	1	\N

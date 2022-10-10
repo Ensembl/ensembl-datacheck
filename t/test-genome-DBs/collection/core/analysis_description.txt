@@ -8,7 +8,7 @@
 414	<a href="https://www.ncbi.nlm.nih.gov/Structure/cdd/cdd.shtml">Conserved Domain Database</a> models.	CDD	1	\N
 415	Protein families from <a href="http://www.pantherdb.org/">PANTHER</a>.	PANTHER	1	\N
 416	<a href="http://www.cathdb.info/">CATH/Gene3D</a> families.	Gene3D	1	\N
-417	Protein domains and motifs in the <a rel="external" href="http://pfam.xfam.org">Pfam</a> database.	Pfam	1	\N
+417	Protein domains and motifs in the <a rel="external" href="https://www.ebi.ac.uk/interpro">Pfam</a> database.	Pfam	1	\N
 418	Protein domains and motifs in the <a rel="external" href="http://supfam.org/SUPERFAMILY">SUPERFAMILY</a> database.	Superfamily	1	\N
 419	Protein domains and motifs from the <a rel="external" href="http://prosite.expasy.org">PROSITE</a> profiles database.	PROSITE profiles	1	\N
 420	InterPro2GO file is generated manually by the InterPro team at the EBI.	InterPro2GO mapping	1	\N
