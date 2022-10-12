@@ -58,7 +58,7 @@ sub tests {
 
   my %prefixes = (
     "vertebrates" => "ENSGT",
-    "plants"      => "EPIGT",
+    "plants"      => "EPlGT",
     "pan"         => "EGGT0",
     "metazoa"     => "EMGT0",
     "protists"    => "EPrGT",
