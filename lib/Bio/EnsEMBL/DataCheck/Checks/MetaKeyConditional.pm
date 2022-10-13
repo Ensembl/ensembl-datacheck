@@ -271,7 +271,7 @@ sub annotation_source{
      }
      
      my $desc = "'species.annotation_source' meta_key exists";
-     my $annotation_source = $mca->single_value_by_key('species.annotation_source');
+     my $annotation_source = lc($mca->single_value_by_key('species.annotation_source'));
      ok($annotation_source, $desc);
      
      my $sources = 'braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc';
