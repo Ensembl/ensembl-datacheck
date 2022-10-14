@@ -36,7 +36,7 @@ sub tests{
   
  SKIP: {
      my $method = $mca->single_value_by_key('genebuild.method');
-     if($method ne 'braker' && $method ne 'import') {
+     if($method ne 'braker' && $method ne 'import' && $method ne 'external_annotation_import''') {
          skip "Annotation source key not needed for Ensembl builds", 1;
      }
 
