@@ -47,7 +47,6 @@ sub tests {
     $self->projected_transcripts();
     $self->repeat_analysis();
     $self->strain_type();
-    $self->annotation_source();
   } elsif ($self->dba->group eq 'variation') {
     $self->has_polyphen();
     $self->has_sift();
@@ -257,32 +256,6 @@ sub has_sift {
     my $values = $mca->list_value_by_key('sift_version');
     ok(scalar @$values, $desc);
   }
-}
-
-sub annotation_source{
-  my ($self) = @_;
-
-  my $mca = $self->dba->get_adaptor('MetaContainer');
-
- SKIP: {
-     my $method = $mca->single_value_by_key('genebuild.method');
-     if($method ne 'braker' && $method ne 'import') {
-	 skip "Annotation source key not needed for Ensembl builds", 1;
-     }
-     
-     my $desc = "'species.annotation_source' meta_key exists";
-     my $annotation_source = lc($mca->single_value_by_key('species.annotation_source'));
-     ok($annotation_source, $desc);
-     
-     my $sources = 'braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc';
-     my $source_desc = "Source is allowed";
-     
-     skip 'species.annotation_source meta key does not exist', 1 unless defined $annotation_source;
-
-     like($annotation_source, qr/^$sources$/, $source_desc);
-  }
-
-  
 }
 
 1;
