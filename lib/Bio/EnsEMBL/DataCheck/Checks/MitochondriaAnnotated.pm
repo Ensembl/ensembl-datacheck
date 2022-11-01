@@ -74,6 +74,17 @@ sub tests {
       my $desc_mt = "$name has mitochondrial 'sequence_location' attribute";
       my %seq_locs = map { $_->value => 1 } @{$slice->get_all_Attributes('sequence_location')};
       ok(exists $seq_locs{'mitochondrial_chromosome'}, $desc_mt);
+      # If we have chromosomes, i.e, multiple seq_region with the karyotype_rank attribute set,
+      # the mitochrondria must have a karyotype_rank attribute.
+      # It shouldn't have the attribute in any other case
+      my $chromosomes = $sa->fetch_all_karyotype;
+      my $karyotype_rank = $slice->karyotype_rank;
+      if (@$chromosomes > 1) {
+        ok($karyotype_rank, 'Mitochondria has karyotype_rank attribute set with chromosome presents');
+      }
+      else {
+        ok(!$karyotype_rank, 'Mitochondria has no karyotype_rank attribute with no chromosomes');
+      }
     }
   }
 }
