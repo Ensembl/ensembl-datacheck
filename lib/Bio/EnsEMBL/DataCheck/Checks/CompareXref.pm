@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareXref',
   DESCRIPTION    => 'Compare xref counts between two databases, categorised by external_db',
-  GROUPS         => ['compare_core', 'xref', 'xref_mapping'],
+  GROUPS         => ['compare_core', 'xref', 'xref_gene_symbol_transformer', 'xref_mapping'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core']
 };

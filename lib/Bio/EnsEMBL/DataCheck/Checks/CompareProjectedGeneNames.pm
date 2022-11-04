@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'CompareProjectedGeneNames',
   DESCRIPTION    => 'Compare Projected Gene Name counts between two databases',
-  GROUPS         => ['compare_core', 'xref', 'xref_name_projection'],
+  GROUPS         => ['compare_core', 'xref', 'xref_gene_symbol_transformer', 'xref_name_projection'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['core'],
   TABLES         => ['xref','gene','object_xref','seq_region','coord_system']

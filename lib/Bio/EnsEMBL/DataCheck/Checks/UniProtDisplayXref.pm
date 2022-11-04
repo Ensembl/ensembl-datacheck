@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'UniProtDisplayXref',
   DESCRIPTION    => 'Gene display xrefs are only attached to UniProtKB Gene Names (Uniprot_gn)',
-  GROUPS         => ['core', 'xref', 'xref_mapping'],
+  GROUPS         => ['core', 'xref', 'xref_gene_symbol_transformer', 'xref_mapping'],
   DB_TYPES       => ['core'],
   TABLES         => ['gene', 'xref', 'external_db','seq_region','coord_system'],
 };
