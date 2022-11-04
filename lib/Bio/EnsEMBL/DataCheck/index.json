@@ -1678,8 +1678,8 @@
       "description" : "HGNC xrefs do not have the accession as the display_label",
       "groups" : [
          "core",
-         "xref"
-         "xref_gene_symbol_transformer",
+         "xref",
+         "xref_gene_symbol_transformer"
       ],
       "name" : "HGNCNumeric",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCNumeric"
@@ -1689,8 +1689,8 @@
       "description" : "HGNC xrefs are attached to the appropriate object",
       "groups" : [
          "core",
-         "xref"
-         "xref_gene_symbol_transformer",
+         "xref",
+         "xref_gene_symbol_transformer"
       ],
       "name" : "HGNCTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCTypes"
