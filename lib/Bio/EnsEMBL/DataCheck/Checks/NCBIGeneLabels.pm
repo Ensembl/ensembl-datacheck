@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'NCBIGeneLabels',
   DESCRIPTION    => 'NCBI genes have display xrefs',
-  GROUPS         => ['corelike', 'xref'],
+  GROUPS         => ['corelike', 'xref', 'xref_gene_symbol_transformer'],
   DB_TYPES       => ['otherfeatures'],
   TABLES         => ['external_db', 'gene', 'object_xref', 'transcript', 'xref'],
 };

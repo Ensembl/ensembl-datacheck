@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'DisplayXrefExists',
   DESCRIPTION    => 'At least one gene name exists',
-  GROUPS         => ['core', 'xref', 'xref_name_projection'],
+  GROUPS         => ['core', 'xref', 'xref_gene_symbol_transformer', 'xref_name_projection'],
   DATACHECK_TYPE => 'advisory',
   TABLES         => ['coord_system', 'gene', 'seq_region', 'transcript', 'xref'],
 };
