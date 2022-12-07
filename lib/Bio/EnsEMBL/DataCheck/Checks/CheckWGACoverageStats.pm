@@ -21,6 +21,7 @@ package Bio::EnsEMBL::DataCheck::Checks::CheckWGACoverageStats;
 use warnings;
 use strict;
 
+use List::Util qw/sum/;
 use Moose;
 use Test::More;
 use Bio::EnsEMBL::Utils::SqlHelper;
@@ -52,6 +53,14 @@ sub tests {
 
   my $prev_results = $prev_helper->execute_into_hash( -SQL => $sql );
   my $curr_results = $curr_helper->execute_into_hash( -SQL => $sql );
+
+  my $prev_has_wga_scores = sum values %$prev_results ? 1 : 0;
+  my $curr_has_wga_scores = sum values %$curr_results ? 1 : 0;
+
+  if ($prev_has_wga_scores) {
+    my $desc = "There are still wga_coverage stats";
+    is( $curr_has_wga_scores, $prev_has_wga_scores, $desc );
+  }
 
   foreach my $type ( keys %$prev_results ) {
     my $desc = "There are the same number of wga_coverage populated rows between releases for $type";
