@@ -21,6 +21,7 @@ package Bio::EnsEMBL::DataCheck::Checks::CheckGOCScoreStats;
 use warnings;
 use strict;
 
+use List::Util qw/sum/;
 use Moose;
 use Test::More;
 
@@ -51,6 +52,11 @@ sub tests {
 
   my $prev_results = $prev_helper->execute_into_hash( -SQL => $sql );
   my $curr_results = $curr_helper->execute_into_hash( -SQL => $sql );
+
+  my $prev_has_goc_scores = sum values %$prev_results ? 1 : 0;
+  my $curr_has_goc_scores = sum values %$curr_results ? 1 : 0;
+  my $desc_2 = "goc_score stats have not disappeared";
+  cmp_ok( $curr_has_goc_scores, ">=", $prev_has_goc_scores, $desc_2 );
 
   foreach my $type ( keys %$prev_results ) {
     my $desc = "There are the same number of goc_score populated rows between releases for $type";
