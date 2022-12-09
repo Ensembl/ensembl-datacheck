@@ -56,11 +56,8 @@ sub tests {
 
   my $prev_has_wga_scores = sum values %$prev_results ? 1 : 0;
   my $curr_has_wga_scores = sum values %$curr_results ? 1 : 0;
-
-  if ($prev_has_wga_scores) {
-    my $desc = "There are still wga_coverage stats";
-    is( $curr_has_wga_scores, $prev_has_wga_scores, $desc );
-  }
+  my $desc_2 = "wga_coverage stats have not disappeared";
+  cmp_ok( $curr_has_wga_scores, ">=", $prev_has_wga_scores, $desc_2 );
 
   foreach my $type ( keys %$prev_results ) {
     my $desc = "There are the same number of wga_coverage populated rows between releases for $type";
