@@ -37,12 +37,19 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $desc = 'prediction_matrix is NOT NULL or empty';
-  my $sql  = qq/
+
+  my $desc1 = 'protein_function_predictions has one or more rows';
+  my $sql1  = qq/
+    SELECT COUNT(*) FROM protein_function_predictions
+  /;
+  is_rows_nonzero($self->dba, $sql1, $desc1);
+
+  my $desc2 = 'prediction_matrix is NOT NULL or empty';
+  my $sql2  = qq/
     SELECT COUNT(*) FROM protein_function_predictions
     WHERE prediction_matrix IS NULL OR prediction_matrix = ''
   /;
-  is_rows_zero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql2, $desc2);
 
 }
 
