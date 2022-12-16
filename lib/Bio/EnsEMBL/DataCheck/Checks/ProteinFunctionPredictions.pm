@@ -51,6 +51,43 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql2, $desc2);
 
+  sub has_predictor_data {
+    my ($type, $table, $sql) = @_;
+    
+    # Check if data type is found in 'meta' table
+    my $var_dba = $self->get_dba(undef, 'variation');
+    skip 'No variation database', 1 unless defined $var_dba;
+    my ($type_in_meta) = $var_dba->selectall_arrayref(
+      sprintf('SELECT COUNT(*) > 0 FROM meta WHERE meta_key LIKE "%s%%";', $type);
+
+    my $sql = qq/
+      SELECT COUNT(*)
+      FROM %s pfp JOIN attrib a
+      ON (a.attrib_id = pfp.analysis_attrib_id)
+      WHERE a.value LIKE "%s%%";
+    /;
+    $sql = sprintf($sql, $table, $type);
+
+    my $desc, $diag;
+    if ($type_in_meta) {
+      # If found in meta, data for that data type should be available
+      $desc = sprintf("'%s' has data in meta and %s", $type, $table);
+      is_rows_nonzero($self->dba, $sql, $desc);
+    } else {
+      # If not found in meta, no data should be available for that data type
+      $desc = sprintf("'%s' has no data in meta and %s", $type, $table);
+      $diag = sprintf(
+        "Entry containing '%s' is missing from meta table, but data found for '%s' in %s",
+        $type, $type, $table);
+      is_rows_zero($self->dba, $sql, $desc, $diag);
+    }
+  }
+  has_predictor_data("sift",     "protein_function_predictions");
+  has_predictor_data("sift",     "protein_function_predictions_attrib");
+  has_predictor_data("cadd",     "protein_function_predictions");
+  has_predictor_data("dbnsfp",   "protein_function_predictions");
+  has_predictor_data("polyphen", "protein_function_predictions");
+
 }
 
 1;
