@@ -79,7 +79,7 @@ sub tests {
       # It shouldn't have the attribute in any other case
       my $chromosomes = $sa->fetch_all_karyotype;
       my $karyotype_rank = $slice->karyotype_rank;
-      if (@$chromosomes > 1) {
+      if (@$chromosomes > 0) {
         ok($karyotype_rank, 'Mitochondria has karyotype_rank attribute set with chromosome presents');
       }
       else {
