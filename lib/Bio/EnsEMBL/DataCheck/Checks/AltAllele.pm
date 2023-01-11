@@ -23,7 +23,6 @@ use strict;
 
 use Moose;
 use Test::More;
-use Data::Dumper;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
