@@ -56,28 +56,35 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
 
-  my %prefixes = (
-    "vertebrates" => "ENSGT",
-    "plants"      => "EPIGT",
-    "pan"         => "EGGT0",
-    "metazoa"     => "EMGT0",
-    "protists"    => "EPrGT",
-    "fungi"       => "EFGT0"
-  );
-
-  my $division = $self->dba->get_division();
-  my $prefix = $prefixes{$division};
-
-  my $desc_3 = "There is a single consistent stable_id prefix for all gene trees";
+  my $desc_3 = "All gene-tree stable_ids follow the standard format";
   my $sql_3 = qq/
-    SELECT * FROM gene_tree_root
+    SELECT stable_id FROM gene_tree_root
       WHERE member_type = 'protein'
         AND tree_type = 'tree'
         AND clusterset_id =  "default"
-        AND LEFT(stable_id, 5) != "$prefix"
+        AND stable_id IS NOT NULL
   /;
-  is_rows_zero($self->dba, $sql_3, $desc_3);
 
+  my $stable_ids = $self->dba->dbc->db_handle->selectcol_arrayref($sql_3);
+
+  my %stable_id_prefixes;
+  my $num_non_standard_stable_ids = 0;
+  foreach my $stable_id (@{$stable_ids}) {
+    if ($stable_id =~ /^([A-Za-z]+)GT[0-9]{14}$/) {
+      $stable_id_prefixes{$1} = 1;
+    } else {
+      $num_non_standard_stable_ids += 1;
+    }
+  }
+  is($num_non_standard_stable_ids, 0, $desc_3);
+
+  my $num_stable_id_prefixes = scalar(keys %stable_id_prefixes);
+  SKIP: {
+    skip "No standard-format stable_ids found in default gene trees" unless $num_stable_id_prefixes > 0;
+
+    my $desc_4 = "There is a single consistent prefix for all standard-format gene tree stable_ids";
+    is($num_stable_id_prefixes, 1, $desc_4);
+  }
 }
 
 1;
