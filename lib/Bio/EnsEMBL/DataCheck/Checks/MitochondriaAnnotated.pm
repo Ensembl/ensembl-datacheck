@@ -40,7 +40,7 @@ sub skip_tests {
 
   my $sa = $self->dba->get_adaptor('Slice');
 
-  my %mt_names = map { lc($_) => 1 } ('chrM', 'chrMT', 'MT', 'Mito', 'mitochondrion_genome');
+  my %mt_names = map { lc($_) => 1 } ('chrMT', 'MT', 'Mito', 'mitochondrion_genome');
         
   my $mt = 0;
   foreach my $mt_name (keys %mt_names) {
