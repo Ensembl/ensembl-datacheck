@@ -798,7 +798,6 @@
       "description" : "Ensure that appropriate meta_keys are updated when the assembly or geneset changes",
       "groups" : [
          "assembly",
-         "brc4_core",
          "core",
          "geneset",
          "meta"
@@ -2719,8 +2718,8 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Variation"
    },
    "VariationAncestralAllele" : {
-	  "datacheck_type" : "advisory",
-	  "description" : "Ancestral alleles for COSMIC and ClinVar variant sources are present",
+      "datacheck_type" : "advisory",
+      "description" : "Ancestral alleles for COSMIC and ClinVar variant sources are present",
       "groups" : [
          "variation_import"
       ],
