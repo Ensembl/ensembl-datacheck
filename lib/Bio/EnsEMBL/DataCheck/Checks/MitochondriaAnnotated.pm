@@ -35,12 +35,14 @@ use constant {
   TABLES         => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };
 
+my @known_mt_names = ('chrMT', 'MT', 'Mito', 'mitochondrion_genome');
+
 sub skip_tests {
   my ($self) = @_;
 
   my $sa = $self->dba->get_adaptor('Slice');
 
-  my %mt_names = map { lc($_) => 1 } ('chrMT', 'MT', 'Mito', 'mitochondrion_genome');
+  my %mt_names = map { lc($_) => 1 } @known_mt_names;
         
   my $mt = 0;
   foreach my $mt_name (keys %mt_names) {
@@ -67,8 +69,7 @@ sub tests {
 
   my $sa = $self->dba->get_adaptor('Slice');
 
-  my @names = ('chrM', 'chrMT', 'MT', 'Mito', 'mitochondrion_genome');
-  foreach my $name (@names) {
+  foreach my $name (@known_mt_names) {
     my $slice = $sa->fetch_by_region('toplevel', $name);
     if (defined $slice) {
       my $desc_mt = "$name has mitochondrial 'sequence_location' attribute";
