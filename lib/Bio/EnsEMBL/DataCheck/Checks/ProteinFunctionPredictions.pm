@@ -37,12 +37,54 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-  my $desc = 'prediction_matrix is NOT NULL or empty';
-  my $sql  = qq/
+
+  my $desc1 = 'protein_function_predictions has one or more rows';
+  my $sql1  = qq/
+    SELECT COUNT(*) FROM protein_function_predictions
+  /;
+  is_rows_nonzero($self->dba, $sql1, $desc1);
+
+  my $desc2 = 'prediction_matrix is NOT NULL or empty';
+  my $sql2  = qq/
     SELECT COUNT(*) FROM protein_function_predictions
     WHERE prediction_matrix IS NULL OR prediction_matrix = ''
   /;
-  is_rows_zero($self->dba, $sql, $desc);
+  is_rows_zero($self->dba, $sql2, $desc2);
+
+  sub has_predictor_data {
+    my ($self, $type, $table) = @_;
+
+    # Check if data type is found in 'meta' table
+    my $type_in_meta = $self->dba->dbc->db_handle->selectrow_array(
+      sprintf('SELECT COUNT(*) > 0 FROM meta WHERE meta_key LIKE "%s%%";', $type));
+
+    my $sql = qq/
+     SELECT COUNT(*)
+     FROM %s pfp JOIN attrib a
+     ON (a.attrib_id = pfp.analysis_attrib_id)
+     WHERE a.value LIKE "%s%%";
+    /;
+    $sql = sprintf($sql, $table, $type);
+
+    my ($desc, $diag);
+    if ($type_in_meta) {
+      # If found in meta, data for that data type should be available
+      $desc = sprintf("%s has data in meta and %s", $type, $table);
+      is_rows_nonzero($self->dba, $sql, $desc);
+    } else {
+      # If not found in meta, no data should be available for that data type
+      $desc = sprintf("%s doesn't have data in meta and %s", $type, $table);
+      $diag = sprintf(
+        "Entry containing '%s' is missing from meta table, but data found for %s in %s",
+        $type, $type, $table);
+      is_rows_zero($self->dba, $sql, $desc, $diag);
+    }
+  }
+  $self->has_predictor_data("sift",     "protein_function_predictions");
+  $self->has_predictor_data("sift",     "protein_function_predictions_attrib");
+  $self->has_predictor_data("cadd",     "protein_function_predictions");
+  $self->has_predictor_data("dbnsfp",   "protein_function_predictions");
+  $self->has_predictor_data("polyphen", "protein_function_predictions");
 
 }
 

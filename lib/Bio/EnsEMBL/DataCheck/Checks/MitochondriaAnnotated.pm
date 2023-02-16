@@ -35,12 +35,14 @@ use constant {
   TABLES         => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };
 
+my @known_mt_names = ('chrMT', 'MT', 'Mito', 'mitochondrion_genome');
+
 sub skip_tests {
   my ($self) = @_;
 
   my $sa = $self->dba->get_adaptor('Slice');
 
-  my %mt_names = map { lc($_) => 1 } ('chrM', 'chrMT', 'MT', 'Mito', 'mitochondrion_genome');
+  my %mt_names = map { lc($_) => 1 } @known_mt_names;
         
   my $mt = 0;
   foreach my $mt_name (keys %mt_names) {
@@ -67,13 +69,23 @@ sub tests {
 
   my $sa = $self->dba->get_adaptor('Slice');
 
-  my @names = ('chrM', 'chrMT', 'MT', 'Mito', 'mitochondrion_genome');
-  foreach my $name (@names) {
+  foreach my $name (@known_mt_names) {
     my $slice = $sa->fetch_by_region('toplevel', $name);
     if (defined $slice) {
       my $desc_mt = "$name has mitochondrial 'sequence_location' attribute";
       my %seq_locs = map { $_->value => 1 } @{$slice->get_all_Attributes('sequence_location')};
       ok(exists $seq_locs{'mitochondrial_chromosome'}, $desc_mt);
+      # If we have chromosomes, i.e, multiple seq_region with the karyotype_rank attribute set,
+      # the mitochrondria must have a karyotype_rank attribute.
+      # It shouldn't have the attribute in any other case
+      my $chromosomes = $sa->fetch_all_karyotype;
+      my $karyotype_rank = $slice->karyotype_rank;
+      if (@$chromosomes > 0) {
+        ok($karyotype_rank, 'Mitochondria has karyotype_rank attribute set with chromosome presents');
+      }
+      else {
+        ok(!$karyotype_rank, 'Mitochondria has no karyotype_rank attribute with no chromosomes');
+      }
     }
   }
 }

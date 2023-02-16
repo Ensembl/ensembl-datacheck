@@ -41,10 +41,13 @@ sub tests {
 
   my @multiple_chromosomes = ();
 
-  foreach my $aag (@$aags) {
+  AAG: foreach my $aag (@$aags) {
     my $genes = $aag->get_all_Genes();
     my %chrs;
     foreach (@$genes) {
+      # skip aag if gene member has a "IS_PAR" relationship
+      my $type_flag = $aag->attribs($_->dbID);
+      next AAG if (exists $type_flag->{IS_PAR});
       if ($_->slice->is_reference) {
         $chrs{$_->slice->seq_region_name}++;
       } else {

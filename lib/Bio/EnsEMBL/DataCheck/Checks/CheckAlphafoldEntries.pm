@@ -53,7 +53,7 @@ sub tests {
     from protein_feature pf, analysis a
     where a.analysis_id = pf.analysis_id
     and a.logic_name = 'alphafold_import'
-    and pf.hit_name REGEXP 'AF\-[A-Za-z0-9]+\-F[0-9]+\.[A-Z]'
+    and pf.hit_name REGEXP 'AF\-[A-Za-z0-9]+\-F[0-9]+'
   /;
   is_rows_nonzero($self->dba, $sql_2, $desc_2);
 

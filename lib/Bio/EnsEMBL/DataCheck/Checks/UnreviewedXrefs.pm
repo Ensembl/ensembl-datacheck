@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'UnreviewedXrefs',
   DESCRIPTION    => 'Uniprot xrefs do not have Unreviewed as their primary DB accession',
-  GROUPS         => ['core', 'xref', 'xref_mapping'],
+  GROUPS         => ['core', 'xref', 'xref_gene_symbol_transformer', 'xref_mapping'],
   DB_TYPES       => ['core'],
   TABLES         => ['xref','external_db'],
   PER_DB         => 1

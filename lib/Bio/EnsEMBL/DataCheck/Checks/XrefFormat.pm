@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'XrefFormat',
   DESCRIPTION    => 'Xref accessions, labels, and descriptions are validly formatted',
-  GROUPS         => ['core', 'xref', 'xref_mapping'],
+  GROUPS         => ['core', 'xref', 'xref_gene_symbol_transformer', 'xref_mapping'],
   DB_TYPES       => ['core'],
   TABLES         => ['identity_xref', 'xref'],
   PER_DB         => 1,
