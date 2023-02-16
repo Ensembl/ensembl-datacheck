@@ -14,6 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+=head1 DESCRIPTION
+
+ Checks if there is an analysis named alphafold_import with at least one
+ associated protein_feature.
+ Checks if all features have a hit_name like AF-\w+-F\d+ (matching e.g.
+ AF-A0A2I1PIX0-F1).
+ Will only run once per multispecies (collection) DB, since an Alphafold
+ analysis is not per species, but per schema.
+
 =cut
 
 package Bio::EnsEMBL::DataCheck::Checks::CheckAlphafoldEntries;
@@ -32,7 +41,8 @@ use constant {
   NAME           => 'CheckAlphafoldEntries',
   DESCRIPTION    => 'check alphafold format',
   GROUPS         => ['protein_feature'],
-  DATACHECK_TYPE => 'critical'
+  DATACHECK_TYPE => 'critical',
+  PER_DB => 1,
 };
 
 sub tests {
