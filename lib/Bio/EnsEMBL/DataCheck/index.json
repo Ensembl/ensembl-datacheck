@@ -758,7 +758,6 @@
       "groups" : [
          "compare_core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_go_projection"
       ],
       "name" : "CompareGOXref",
@@ -902,7 +901,6 @@
       "groups" : [
          "compare_core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_go_projection"
       ],
       "name" : "CompareProjectedGOXrefs",
@@ -914,7 +912,6 @@
       "groups" : [
          "compare_core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_name_projection"
       ],
       "name" : "CompareProjectedGeneNames",
@@ -926,7 +923,6 @@
       "groups" : [
          "compare_core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_name_projection"
       ],
       "name" : "CompareProjectedSynonyms",
@@ -1009,7 +1005,6 @@
       "groups" : [
          "compare_core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "CompareSynonym",
@@ -1075,7 +1070,6 @@
       "groups" : [
          "compare_core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "CompareXref",
@@ -1294,7 +1288,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_name_projection"
       ],
       "name" : "DisplayXrefExists",
@@ -1306,7 +1299,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "DisplayXrefFormat",
@@ -1374,7 +1366,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "DuplicateXref",
@@ -1553,7 +1544,6 @@
       "description" : "All GO xrefs have an evidence",
       "groups" : [
          "xref",
-         "xref_gene_symbol_transformer",
          "core"
       ],
       "name" : "GOXrefEvidence",
@@ -1600,7 +1590,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "GeneDescriptions",
@@ -1638,6 +1627,15 @@
       ],
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
+   },
+   "GeneSymbols" : {
+      "datacheck_type" : "critical",
+      "description" : "For Genebuild annotations, the Gene Symbol Classifier muct be run before handover",
+      "groups" : [
+         "core"
+      ],
+      "name" : "GeneSymbols",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneSymbols"
    },
    "GeneTreeHighlighting" : {
       "datacheck_type" : "critical",
@@ -1678,8 +1676,7 @@
       "description" : "HGNC xrefs do not have the accession as the display_label",
       "groups" : [
          "core",
-         "xref",
-         "xref_gene_symbol_transformer"
+         "xref"
       ],
       "name" : "HGNCNumeric",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCNumeric"
@@ -1689,8 +1686,7 @@
       "description" : "HGNC xrefs are attached to the appropriate object",
       "groups" : [
          "core",
-         "xref",
-         "xref_gene_symbol_transformer"
+         "xref"
       ],
       "name" : "HGNCTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HGNCTypes"
@@ -2025,8 +2021,7 @@
       "description" : "NCBI genes have display xrefs",
       "groups" : [
          "corelike",
-         "xref",
-         "xref_gene_symbol_transformer"
+         "xref"
       ],
       "name" : "NCBIGeneLabels",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::NCBIGeneLabels"
@@ -2052,8 +2047,7 @@
       "groups" : [
          "brc4_core",
          "core",
-         "xref",
-         "xref_gene_symbol_transformer"
+         "xref"
       ],
       "name" : "ObjectXrefNull",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ObjectXrefNull"
@@ -2540,7 +2534,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "StableIdDisplayXref",
@@ -2610,7 +2603,6 @@
       "description" : "Transcripts do not have a display xref with a -20* suffix. These are created by the non-vert Xref pipeline unless a flag is enabled: http://www.ebi.ac.uk/seqdb/confluence/display/EnsGen/Xref+mapping#Xrefmapping-CustomisingXrefMapping(DisplayXrefs)",
       "groups" : [
          "xref",
-         "xref_gene_symbol_transformer",
          "core"
       ],
       "name" : "TranscriptDisplayXrefSuffix",
@@ -2641,7 +2633,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "UniProtDisplayXref",
@@ -2679,7 +2670,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "UnreviewedXrefs",
@@ -2855,7 +2845,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "XrefFormat",
@@ -2867,7 +2856,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "XrefPrefixes",
@@ -2879,7 +2867,6 @@
       "groups" : [
          "core",
          "xref",
-         "xref_gene_symbol_transformer",
          "xref_mapping"
       ],
       "name" : "XrefTypes",
