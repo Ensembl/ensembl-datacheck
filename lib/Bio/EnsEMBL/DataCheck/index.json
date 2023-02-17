@@ -1639,6 +1639,15 @@
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
    },
+   "GeneSymbols" : {
+      "datacheck_type" : "critical",
+      "description" : "For Genebuild annotations, the Gene Symbol Classifier muct be run before handover",
+      "groups" : [
+         "core"
+      ],
+      "name" : "GeneSymbols",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneSymbols"
+   },
    "GeneTreeHighlighting" : {
       "datacheck_type" : "critical",
       "description" : "GO and InterPro xrefs are loaded for highlighting annotated genes",
