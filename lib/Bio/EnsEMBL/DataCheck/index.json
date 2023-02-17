@@ -1641,7 +1641,7 @@
    },
    "GeneSymbols" : {
       "datacheck_type" : "critical",
-      "description" : "For Genebuild annotations, the Gene Symbol Classifier muct be run before handover",
+      "description" : "Gene Symbols need to be assigned for all Ensembl annotations, via the Gene Symbol Transformer classification",
       "groups" : [
          "rapid_release"
       ],

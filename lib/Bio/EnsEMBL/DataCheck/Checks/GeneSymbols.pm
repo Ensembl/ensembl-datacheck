@@ -24,7 +24,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME           => 'GeneSymbols',
-  DESCRIPTION    => 'Gene Symbols need to be assigned for all Ensembl annotations, via the Gene Symbol Transformer classifiation',
+  DESCRIPTION    => 'Gene Symbols need to be assigned for all Ensembl annotations, via the Gene Symbol Transformer classification',
   GROUPS         => ['rapid_release'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
