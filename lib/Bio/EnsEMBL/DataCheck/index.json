@@ -1643,7 +1643,7 @@
       "datacheck_type" : "critical",
       "description" : "For Genebuild annotations, the Gene Symbol Classifier muct be run before handover",
       "groups" : [
-         "core"
+         "rapid_release"
       ],
       "name" : "GeneSymbols",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneSymbols"
