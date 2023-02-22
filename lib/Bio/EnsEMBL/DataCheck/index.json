@@ -1639,6 +1639,15 @@
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
    },
+   "GeneSymbols" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene Symbols need to be assigned for all Ensembl annotations, via the Gene Symbol Transformer classification",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "GeneSymbols",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneSymbols"
+   },
    "GeneTreeHighlighting" : {
       "datacheck_type" : "critical",
       "description" : "GO and InterPro xrefs are loaded for highlighting annotated genes",
