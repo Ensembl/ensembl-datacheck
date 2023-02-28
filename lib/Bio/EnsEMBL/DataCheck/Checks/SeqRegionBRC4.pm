@@ -41,6 +41,7 @@ sub tests {
   my $species_id = $self->dba->species_id;
 
   $self->check_top_level_seq_attrib_name($species_id, 'BRC4_seq_region_name');
+  $self->check_top_level_seq_attrib_name($species_id, 'EBI_seq_region_name');
 
   # Check for INSDC accession (not systematic in case out assembly is not in sync with INSDC)
   #$self->check_seq_synonym($species_id, 'INSDC');
@@ -69,6 +70,9 @@ sub tests {
   my $coord_id = $coord->dbID;
   $self->check_seq_attrib_name_coord($species_id, $coord_id, 'coord_system_tag');
   $self->check_seq_attrib_name_coord($species_id, $coord_id, 'toplevel');
+
+  # Check BRC4 and EBI expected names
+  $self->check_brc4_name($species_id, $coord_id);
 }
 
 sub check_top_level_seq_attrib_name {
@@ -157,6 +161,33 @@ sub check_seq_synonym {
       ) srs ON sr.seq_region_id = srs.seq_region_id
     WHERE
       srs.db_name IS NULL AND
+      cs.species_id = $species_id
+  /;
+  is_rows_zero($self->dba, $sql, $desc, $diag);
+}
+
+sub check_brc4_name {
+  my ($self, $species_id, $coord_id) = @_;
+
+  my $min_name_length = 4;
+  my $desc = "BRC4 name is not short";
+  my $diag = "BRC4 name is shorter than $min_name_length for seq_region";
+  my $attrib_code = 'BRC4_seq_region_name';
+  my $sql  = qq/
+    SELECT sr.name, sra.value
+    FROM seq_region sr
+      INNER JOIN coord_system cs USING (coord_system_id)
+      LEFT OUTER JOIN
+      (
+        SELECT seq_region_id, value FROM
+          seq_region_attrib INNER JOIN
+          attrib_type USING (attrib_type_id)
+        WHERE
+          code = '$attrib_code'
+      ) sra ON sr.seq_region_id = sra.seq_region_id
+    WHERE
+      length(sra.value) < $min_name_length AND
+      cs.coord_system_id = '$coord_id' AND
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
