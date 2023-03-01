@@ -166,7 +166,6 @@ sub check_chosen_name {
   my ($self) = @_;
 
   my $min_name_length = 4;
-  my @brc_order = ('GenBank', 'RefSeq', 'INSDC');
   my $sa = $self->dba->get_adaptor("slice");
 
   my @wrong_short_brc;
