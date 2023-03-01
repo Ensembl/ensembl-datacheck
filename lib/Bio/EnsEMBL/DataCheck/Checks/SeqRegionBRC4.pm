@@ -72,7 +72,7 @@ sub tests {
   $self->check_seq_attrib_name_coord($species_id, $coord_id, 'toplevel');
 
   # Check BRC4 and EBI expected names
-  $self->check_brc4_name($species_id, $coord_id);
+  $self->check_chosen_name();
 }
 
 sub check_top_level_seq_attrib_name {
@@ -166,31 +166,47 @@ sub check_seq_synonym {
   is_rows_zero($self->dba, $sql, $desc, $diag);
 }
 
-sub check_brc4_name {
-  my ($self, $species_id, $coord_id) = @_;
+sub check_chosen_name {
+  my ($self) = @_;
 
   my $min_name_length = 4;
-  my $desc = "BRC4 name is not short";
-  my $diag = "BRC4 name is shorter than $min_name_length for seq_region";
-  my $attrib_code = 'BRC4_seq_region_name';
-  my $sql  = qq/
-    SELECT sr.name, sra.value
-    FROM seq_region sr
-      INNER JOIN coord_system cs USING (coord_system_id)
-      LEFT OUTER JOIN
-      (
-        SELECT seq_region_id, value FROM
-          seq_region_attrib INNER JOIN
-          attrib_type USING (attrib_type_id)
-        WHERE
-          code = '$attrib_code'
-      ) sra ON sr.seq_region_id = sra.seq_region_id
-    WHERE
-      length(sra.value) < $min_name_length AND
-      cs.coord_system_id = '$coord_id' AND
-      cs.species_id = $species_id
-  /;
-  is_rows_zero($self->dba, $sql, $desc, $diag);
+  my @brc_order = ('GenBank', 'RefSeq', 'INSDC');
+  my $sa = $self->dba->get_adaptor("slice");
+
+  my @wrong_short_brc;
+  my @wrong_ebi;
+  for my $seqr (@{$sa->fetch_all('toplevel')}) {
+    my $brc_name = $self->get_attribute($seqr, 'BRC4_seq_region_name');
+    my $ebi_name = $self->get_attribute($seqr, 'EBI_seq_region_name');
+
+    if ($brc_name and length($brc_name) < $min_name_length) {
+      push @wrong_short_brc, $brc_name;
+    }
+    if ($ebi_name and $seqr->seq_region_name ne $ebi_name) {
+      push @wrong_ebi, $ebi_name;
+    }
+  }
+
+  my $example1 = "";
+  $example1 = " (wrong example: '$wrong_short_brc[0]')" if @wrong_short_brc;
+  my $desc_1 = "BRC name can't be short$example1";
+  is(scalar(@wrong_short_brc), 0, $desc_1);
+
+  my $ebi_example = "";
+  $ebi_example = " (wrong example: '$wrong_ebi[0]')" if @wrong_ebi;
+  my $desc_2 = "EBI name is defined and the same as the seq_region$ebi_example";
+  is(scalar(@wrong_ebi), 0, $desc_2);
+}
+
+sub get_attribute {
+  my ($self, $slice, $attrib_name) = @_;
+
+  my @atts = @{$slice->get_all_Attributes($attrib_name)};
+  if (@atts == 1) {
+    return $atts[0]->value();
+  } else {
+    return;
+  }
 }
 
 1;
