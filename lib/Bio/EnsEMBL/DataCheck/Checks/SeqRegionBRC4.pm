@@ -172,12 +172,14 @@ sub check_chosen_name {
   my @wrong_short_brc;
   my @wrong_ebi;
   for my $seqr (@{$sa->fetch_all('toplevel')}) {
-    my $brc_name = $self->get_attribute($seqr, 'BRC4_seq_region_name');
-    my $ebi_name = $self->get_attribute($seqr, 'EBI_seq_region_name');
+    my $brc_name = $self->_get_single_attribute_value($seqr, 'BRC4_seq_region_name');
+    my $ebi_name = $self->_get_single_attribute_value($seqr, 'EBI_seq_region_name');
 
+    # Minimum length for the BRC4 name
     if ($brc_name and length($brc_name) < $min_name_length) {
       push @wrong_short_brc, $brc_name;
     }
+    # EBI name should be the same as the sequence 'name'
     if ($ebi_name and $seqr->seq_region_name ne $ebi_name) {
       push @wrong_ebi, $ebi_name;
     }
@@ -194,7 +196,7 @@ sub check_chosen_name {
   is(scalar(@wrong_ebi), 0, $desc_2);
 }
 
-sub get_attribute {
+sub _get_single_attribute_value {
   my ($self, $slice, $attrib_name) = @_;
 
   my @atts = @{$slice->get_all_Attributes($attrib_name)};
