@@ -41,10 +41,6 @@ sub tests {
   my $species_id = $self->dba->species_id;
 
   $self->check_top_level_seq_attrib_name($species_id, 'BRC4_seq_region_name');
-  $self->check_top_level_seq_attrib_name($species_id, 'EBI_seq_region_name');
-
-  # Check for INSDC accession (not systematic in case out assembly is not in sync with INSDC)
-  #$self->check_seq_synonym($species_id, 'INSDC');
 
   # Check if there is one coord_system named primary_assembly
   my $csa = $self->dba->get_adaptor("coordsystem");
