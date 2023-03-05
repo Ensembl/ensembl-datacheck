@@ -70,7 +70,6 @@ sub tests {
   foreach my $table (keys %attrib_mapping){
    $attrib_sql = $attrib_sql{$table};
    if( $table eq "toplevel"){
-     print("hiii \n $attrib_sql \n");	   
      $feature_count  = $helper->execute_single_result(
                        -SQL => $attrib_sql, 
 	               -PARAMS => [$species_id, $table]
