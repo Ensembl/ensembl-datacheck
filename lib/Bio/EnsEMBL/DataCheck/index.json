@@ -1388,16 +1388,6 @@
       "name" : "EmptyVariationTables",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EmptyVariationTables"
    },
-   "EpigenomeHasSegmentationFile" : {
-      "datacheck_type" : "critical",
-      "description" : "All epigenomes in the current regulatory build have a segmentation file",
-      "groups" : [
-         "funcgen",
-         "regulatory_build"
-      ],
-      "name" : "EpigenomeHasSegmentationFile",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
-   },
    "ExonBounds" : {
       "datacheck_type" : "critical",
       "description" : "Exon regions are non-overlapping, and are consistent with their transcripts",
@@ -2228,17 +2218,6 @@
       ],
       "name" : "RNASeqDNAAlignFeatureAnalyses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
-   },
-   "ReadFileNames" : {
-      "datacheck_type" : "critical",
-      "description" : "Checks that read file names are valid.",
-      "groups" : [
-         "funcgen",
-         "regulatory_build",
-         "funcgen_registration"
-      ],
-      "name" : "ReadFileNames",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFileNames"
    },
    "ReadFilePathEncrypted" : {
       "datacheck_type" : "critical",
