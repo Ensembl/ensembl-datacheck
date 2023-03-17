@@ -43,7 +43,7 @@ sub tests {
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my @method_links = qw(ENSEMBL_ORTHOLOGUES ENSEMBL_PARALOGUES ENSEMBL_HOMOEOLOGUES ENSEMBL_PROJECTIONS);
-  if ($dba->dbc->dbname !~ /ensembl_compara|protein_trees|ncrna_trees/) {
+  if ($dba->dbc->dbname !~ /ensembl_compara|protein_trees|ncrna_trees|reindexed_trees/) {
     @method_links = qw(ENSEMBL_HOMOLOGUES);
   }
 
