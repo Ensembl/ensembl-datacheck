@@ -2174,7 +2174,7 @@
    },
    "ProteinFunctionPredictions" : {
       "datacheck_type" : "critical",
-      "description" : "prediction_matrix is not NULL or empty",
+      "description" : "Protein function predictions are present and correct",
       "groups" : [
          "variation"
       ],
