@@ -29,11 +29,22 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
   NAME        => 'ProteinFunctionPredictions',
-  DESCRIPTION => 'prediction_matrix is not NULL or empty',
+  DESCRIPTION => 'Protein function predictions are present and correct',
   GROUPS      => ['variation'],
   DB_TYPES    => ['variation'],
   TABLES      => ['protein_function_predictions']
 };
+
+sub skip_tests {
+  my ($self) = @_;
+
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  my $vcf = $mca->list_value_by_key('variation_source.vcf')->[0] || 0;
+
+  if ($vcf) {
+    return( 1, "Protein function predictions are not expected for species whose variation source is VCF." );
+  }
+}
 
 sub tests {
   my ($self) = @_;
