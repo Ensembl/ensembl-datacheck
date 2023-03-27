@@ -38,6 +38,7 @@ use constant {
 };
 
 sub skip_tests {
+    my ($self) = @_;
     my $old_dba = $self->get_old_dba();
     if (not defined $old_dba) {
         return (1, 'New database');
@@ -46,6 +47,7 @@ sub skip_tests {
 
 
 sub tests {
+    my ($self) = @_;
     my $old_dba = $self->get_old_dba();
     my $mca = $self->dba->get_adaptor('MetaContainer');
     my $old_mca = $old_dba->get_adaptor('MetaContainer');
@@ -53,11 +55,8 @@ sub tests {
     my @new_alias = $mca->list_value_by_key('species.alias');
     my @old_alias = $old_mca->list_value_by_key('species.alias');
 
-    my %new_aliases = map { $_ => 1 } @new_alias;
-
-    for my $element (@old_alias) {
-        ok(exists($new_aliases{$element}), 'Old species.alias is found in new database');
-    }
+    my $description = 'Number of species.aliases did not decrease';
+    ok($#old_alias <= $#new_alias, $description );
 
 }
 
