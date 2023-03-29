@@ -994,6 +994,15 @@
       "name" : "CompareSource",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSource"
    },
+   "CompareSpeciesAlias" : {
+      "datacheck_type" : "advisory",
+      "description" : "Comparison of aliases between releases",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "CompareSpeciesAlias",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSpeciesAlias"
+   },
    "CompareStableIdsMapping" : {
       "datacheck_type" : "critical",
       "description" : "Stable IDs have been mapped between old and new databases",
