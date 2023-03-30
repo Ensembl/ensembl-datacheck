@@ -2791,7 +2791,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSetAttrib"
    },
    "VariationSetStructure" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Variation set only has one super set attached to it",
       "groups" : [
          "variation_import"
