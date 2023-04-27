@@ -51,7 +51,7 @@ sub skip_tests {
   my $production_name = $mca->get_production_name;
   my $schema_version = $mca->get_schema_version;
 
-  if ($division =~ '/EnsemblVertebrates|EnsemblMetazoa|EnsemblPlants/') {
+  if ($division =~ '/EnsemblVertebrates/') {
     my $mart_species = mart_species($division, $schema_version);
     if (!grep( /$production_name/, @$mart_species) ){
       return (1, 'No mart for this species');
@@ -124,7 +124,7 @@ sub mart_species {
   $division = lc($division);
 
   my $url_base = 'https://raw.githubusercontent.com/Ensembl/ensembl-compara';
-  my $url_file = "conf/${division}/allowed_species.json";
+  my $url_file = "conf/${division}/biomart_species.json";
 
   my $branch_url = "${url_base}/release/$schema_version/$url_file";
   my $main_url = "${url_base}/main/$url_file";
