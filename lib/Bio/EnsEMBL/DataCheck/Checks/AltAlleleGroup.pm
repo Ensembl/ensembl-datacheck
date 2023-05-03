@@ -41,10 +41,13 @@ sub tests {
 
   my @multiple_reference = ();
 
-  foreach my $aag (@$aags) {
+  AAG: foreach my $aag (@$aags) {
     my $genes = $aag->get_all_Genes();
     my $reference = 0;
     foreach (@$genes) {
+      # skip aag if gene member has a "IS_PAR" relationship
+      my $type_flag = $aag->attribs($_->dbID);
+      next AAG if (exists $type_flag->{IS_PAR});
       $reference += $_->slice->is_reference;
     }
     push @multiple_reference, $aag->dbID if $reference > 1;
