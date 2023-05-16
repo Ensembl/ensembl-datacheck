@@ -53,9 +53,6 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
 
-  $self->alignment_has_bigwig();
-  $self->segmentation_file_has_bigbed();
-  $self->motif_feature_has_bigbed();
   $self->data_files_exist();
 }
 

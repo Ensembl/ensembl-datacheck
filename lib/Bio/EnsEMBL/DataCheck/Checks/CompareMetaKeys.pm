@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CompareMetaKeys',
   DESCRIPTION => 'Ensure that appropriate meta_keys are updated when the assembly or geneset changes',
-  GROUPS      => ['assembly', 'brc4_core', 'core', 'geneset', 'meta'],
+  GROUPS      => ['assembly', 'core', 'geneset', 'meta'],
   DB_TYPES    => ['core'],
   TABLES      => ['assembly', 'attrib_type', 'biotype', 'coord_system', 'exon', 'exon_transcript', 'gene', 'meta', 'seq_region', 'seq_region_attrib', 'transcript', 'translation']
 };
