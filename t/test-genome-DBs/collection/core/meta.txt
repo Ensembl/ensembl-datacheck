@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	110
+2	\N	schema_version	111
 3	\N	patch	patch_88_89_a.sql|schema_version
 4	1	schema.load_started	2017-05-08 19:14:41
 5	1	schema.load_started	2017-05-08 19:14:45
@@ -199,3 +199,4 @@
 571	\N	patch	patch_109_110_a.sql|schema_version
 572	\N	patch	patch_109_110_b.sql|Add IS_PAR relationship to link X- and Y-PAR genes
 573	\N	patch	patch_109_110_c.sql|Allow gene id to belong to multiple alt allele groups
+574	\N	patch	patch_110_111_a.sql|schema_version
