@@ -42,9 +42,6 @@ sub tests {
 
   $self->check_top_level_seq_attrib_name($species_id, 'BRC4_seq_region_name');
 
-  # Check for INSDC accession (not systematic in case out assembly is not in sync with INSDC)
-  #$self->check_seq_synonym($species_id, 'INSDC');
-
   # Check if there is one coord_system named primary_assembly
   my $csa = $self->dba->get_adaptor("coordsystem");
   my @coords = grep { $_->name eq 'primary_assembly' } @{ $csa->fetch_all() };
@@ -69,6 +66,9 @@ sub tests {
   my $coord_id = $coord->dbID;
   $self->check_seq_attrib_name_coord($species_id, $coord_id, 'coord_system_tag');
   $self->check_seq_attrib_name_coord($species_id, $coord_id, 'toplevel');
+
+  # Check BRC4 and EBI expected names
+  $self->check_chosen_name();
 }
 
 sub check_top_level_seq_attrib_name {
@@ -160,6 +160,50 @@ sub check_seq_synonym {
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
+}
+
+sub check_chosen_name {
+  my ($self) = @_;
+
+  my $min_name_length = 4;
+  my $sa = $self->dba->get_adaptor("slice");
+
+  my @wrong_short_brc;
+  my @wrong_ebi;
+  for my $seqr (@{$sa->fetch_all('toplevel')}) {
+    my $brc_name = $self->_get_single_attribute_value($seqr, 'BRC4_seq_region_name');
+    my $ebi_name = $self->_get_single_attribute_value($seqr, 'EBI_seq_region_name');
+
+    # Minimum length for the BRC4 name
+    if ($brc_name and length($brc_name) < $min_name_length) {
+      push @wrong_short_brc, $brc_name;
+    }
+    # EBI name should be the same as the sequence 'name'
+    if ($ebi_name and $seqr->seq_region_name ne $ebi_name) {
+      push @wrong_ebi, $ebi_name;
+    }
+  }
+
+  my $example1 = "";
+  $example1 = " (wrong example: '$wrong_short_brc[0]')" if @wrong_short_brc;
+  my $desc_1 = "BRC name can't be short$example1";
+  is(scalar(@wrong_short_brc), 0, $desc_1);
+
+  my $ebi_example = "";
+  $ebi_example = " (wrong example: '$wrong_ebi[0]')" if @wrong_ebi;
+  my $desc_2 = "EBI name is defined and the same as the seq_region$ebi_example";
+  is(scalar(@wrong_ebi), 0, $desc_2);
+}
+
+sub _get_single_attribute_value {
+  my ($self, $slice, $attrib_name) = @_;
+
+  my @atts = @{$slice->get_all_Attributes($attrib_name)};
+  if (@atts == 1) {
+    return $atts[0]->value();
+  } else {
+    return;
+  }
 }
 
 1;

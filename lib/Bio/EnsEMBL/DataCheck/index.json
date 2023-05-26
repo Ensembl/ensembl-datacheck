@@ -798,7 +798,6 @@
       "description" : "Ensure that appropriate meta_keys are updated when the assembly or geneset changes",
       "groups" : [
          "assembly",
-         "brc4_core",
          "core",
          "geneset",
          "meta"
@@ -1406,16 +1405,6 @@
       ],
       "name" : "EmptyVariationTables",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EmptyVariationTables"
-   },
-   "EpigenomeHasSegmentationFile" : {
-      "datacheck_type" : "critical",
-      "description" : "All epigenomes in the current regulatory build have a segmentation file",
-      "groups" : [
-         "funcgen",
-         "regulatory_build"
-      ],
-      "name" : "EpigenomeHasSegmentationFile",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::EpigenomeHasSegmentationFile"
    },
    "ExonBounds" : {
       "datacheck_type" : "critical",
@@ -2212,7 +2201,7 @@
    },
    "ProteinFunctionPredictions" : {
       "datacheck_type" : "critical",
-      "description" : "prediction_matrix is not NULL or empty",
+      "description" : "Protein function predictions are present and correct",
       "groups" : [
          "variation"
       ],
@@ -2256,17 +2245,6 @@
       ],
       "name" : "RNASeqDNAAlignFeatureAnalyses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
-   },
-   "ReadFileNames" : {
-      "datacheck_type" : "critical",
-      "description" : "Checks that read file names are valid.",
-      "groups" : [
-         "funcgen",
-         "regulatory_build",
-         "funcgen_registration"
-      ],
-      "name" : "ReadFileNames",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFileNames"
    },
    "ReadFilePathEncrypted" : {
       "datacheck_type" : "critical",
@@ -2470,6 +2448,15 @@
       ],
       "name" : "SeqRegionTopLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionTopLevel"
+   },
+   "SequenceChecksum" : {
+      "datacheck_type" : "critical",
+      "description" : "Check All checksum attribute are assigned to all genomic features",
+      "groups" : [
+         "sequence_checksum"
+      ],
+      "name" : "SequenceChecksum",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceChecksum"
    },
    "SequenceLevel" : {
       "datacheck_type" : "critical",
@@ -2746,8 +2733,8 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::Variation"
    },
    "VariationAncestralAllele" : {
-	  "datacheck_type" : "advisory",
-	  "description" : "Ancestral alleles for COSMIC and ClinVar variant sources are present",
+      "datacheck_type" : "advisory",
+      "description" : "Ancestral alleles for COSMIC and ClinVar variant sources are present",
       "groups" : [
          "variation_import"
       ],
