@@ -76,7 +76,7 @@ sub tests {
                      );
    }else{
 	   
-     $attrib_sql = ($table eq "transcript") ? $attrib_sql{$table}." WHERE  cs.species_id=?" : $attrib_sql{$table}." WHERE  cs.species_id=? and t.biotype='protein_coding'"; 	   
+     $attrib_sql = $attrib_sql{$table}." WHERE  cs.species_id=?";	   
      $feature_count = $helper->execute_single_result(
                        -SQL => $attrib_sql,
                        -PARAMS => [$species_id]
