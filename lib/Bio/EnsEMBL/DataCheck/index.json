@@ -832,15 +832,6 @@
       "name" : "ComparePhenotypeFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ComparePhenotypeFeatures"
    },
-   "CompareVariationRows" : {
-      "datacheck_type" : "advisory",
-      "description" : "Compare number of rows between two variation databases",
-      "groups" : [
-         "compare_variation"
-      ],
-      "name" : "CompareVariationRows",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationRows"
-   },
    "ComparePreviousVersionGenomicProbeFeaturesByArray" : {
       "datacheck_type" : "advisory",
       "description" : "Checks for loss of probes features from genomic mappings for each array that is not organised into probe sets.",
@@ -1058,6 +1049,15 @@
       ],
       "name" : "CompareVariationFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationFeatures"
+   },
+   "CompareVariationRows" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare number of rows between two variation databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationRows",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationRows"
    },
    "CompareVariationSets" : {
       "datacheck_type" : "advisory",
