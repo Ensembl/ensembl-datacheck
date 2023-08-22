@@ -1863,6 +1863,15 @@
       "name" : "MemberProductionCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
    },
+   "MemberXrefAccessTime" : {
+      "datacheck_type" : "critical",
+      "description" : "Compara member xref data can be accessed in a timely manner",
+      "groups" : [
+         "compara_annot_highlight"
+      ],
+      "name" : "MemberXrefAccessTime",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberXrefAccessTime"
+   },
    "MetaCoord" : {
       "datacheck_type" : "critical",
       "description" : "The meta_coord table is correctly populated",
