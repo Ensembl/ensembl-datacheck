@@ -69,12 +69,6 @@ sub tests {
     WHERE collection = ?
   /;
 
-  #my $constraint = "tree_type = 'tree' AND ref_root_id IS NULL";
-  #my $sqlCollections = qq/
-  #  SELECT DISTINCT clusterset_id 
-  #    FROM gene_tree_root 
-  #  WHERE $constraint
-  # /;
   my $clusterset_query = q/
     SELECT DISTINCT clusterset_id, species_set_id
       FROM gene_tree_root
@@ -85,7 +79,6 @@ sub tests {
   
   my %clusterset_to_ss_id = map { $_->{'clusterset_id'} => $_->{'species_set_id'} } @{$helper->execute(-SQL => $clusterset_query, -USE_HASHREFS => 1)};
   my $collections = [keys %clusterset_to_ss_id];
-  #my $collections = $helper->execute_simple( -SQL => $sqlCollections );
 
   my $sqlFamilies = q/
     SELECT COUNT(*) 
@@ -100,8 +93,6 @@ sub tests {
            USING(genome_db_id) 
      WHERE species_set_id = ? AND genome_component IS NOT NULL;
   /; 
-  # Assumes that the polyploid genomes are found in all the collections
-  # my $polyploid_count = $helper->execute_single_result( -SQL => $sqlPolyploids );
 
   my $sqlGeneTrees = qq/
     SELECT COUNT(*) 
