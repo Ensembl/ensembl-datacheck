@@ -66,8 +66,7 @@ sub tests {
     LIMIT 1;
   /;
 
-  my $external_db_names = $helper->execute_simple(-SQL => $external_db_query);
-  my $external_db_name = $external_db_names->[0];  # only one external db is needed
+  my $external_db_name = $helper->execute_single_result(-SQL => $external_db_query);
 
 
   my $avg_tree_size_query = q/
