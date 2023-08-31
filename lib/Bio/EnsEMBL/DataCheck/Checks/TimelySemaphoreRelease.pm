@@ -23,7 +23,6 @@ use strict;
 
 use Moose;
 use Test::More;
-use Data::Dumper;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
@@ -38,7 +37,6 @@ use constant {
 
 sub tests {
     my ($self) = @_;
-    # A typical test may use the sql_helper:
  
     my $sql = q{
         SELECT
