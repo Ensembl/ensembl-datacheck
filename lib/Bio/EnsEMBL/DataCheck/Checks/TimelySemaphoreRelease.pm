@@ -75,8 +75,6 @@ sub tests {
 
     my $test_name = "Semaphores were released in a timely manner.";
     is(scalar @$array, 0 , $test_name);
-
-    return 1;
 }
 
 1;
