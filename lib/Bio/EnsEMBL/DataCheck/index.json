@@ -227,6 +227,16 @@
       "name" : "BlankSets",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankSets"
    },
+   "CactusMetadataConsistency" : {
+      "datacheck_type" : "critical",
+      "description" : "Each Cactus alignment has consistent metadata",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "CactusMetadataConsistency",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CactusMetadataConsistency"
+   },
    "CanonicalTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Canonical transcripts and translation are correctly configured",
@@ -1688,16 +1698,6 @@
       ],
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
-   },
-   "CactusMetadataConsistency" : {
-      "datacheck_type" : "critical",
-      "description" : "Each Cactus alignment has consistent metadata",
-      "groups" : [
-         "compara",
-         "compara_genome_alignments"
-      ],
-      "name" : "CactusMetadataConsistency",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CactusMetadataConsistency"
    },
    "HGNCNumeric" : {
       "datacheck_type" : "critical",
