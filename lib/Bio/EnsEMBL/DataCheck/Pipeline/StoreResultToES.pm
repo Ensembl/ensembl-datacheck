@@ -26,7 +26,6 @@ use strict;
 use warnings;
 use feature 'say';
 
-use JSON;
 use Path::Tiny;
 use Search::Elasticsearch;
 use Bio::EnsEMBL::Utils::Exception qw/throw/;
@@ -63,7 +62,7 @@ sub run {
     }
     my $es_client = Search::Elasticsearch->new(
         trace_to => [ 'File', $es_log ],
-        nodes    => [ $es_url, ],
+        nodes    => [ 'http://localhost:9200/', ],
         cxn_pool => 'Static',
     );
 
@@ -73,8 +72,6 @@ sub run {
         <$json_fh>
     };
 
-    my $json = JSON->new;
-    my $data = $json->decode($json_text);
     eval {
         $es_client->index(
             index => $es_index,
@@ -83,7 +80,7 @@ sub run {
                 job_id        => $job_id,
                 division      => $division,
                 file          => $json_filename,
-                content       => $data,
+                content       => $json_text,
                 input_details => $input_details,
             }
         );
