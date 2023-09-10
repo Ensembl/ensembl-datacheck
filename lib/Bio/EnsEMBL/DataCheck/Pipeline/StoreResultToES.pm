@@ -62,7 +62,7 @@ sub run {
     }
     my $es_client = Search::Elasticsearch->new(
         trace_to => [ 'File', $es_log ],
-        nodes    => [ 'http://localhost:9200/', ],
+        nodes    => [ $es_url, ],
         cxn_pool => 'Static',
     );
 
