@@ -51,7 +51,7 @@ sub skip_tests {
   my $production_name = $mca->get_production_name;
   my $schema_version = $mca->get_schema_version;
 
-  if ($division =~ '/EnsemblVertebrates/') {
+  if ($division =~ /^(EnsemblVertebrates|EnsemblMetazoa)$/) {
     my $mart_species = mart_species($division, $schema_version);
     if (!grep( /$production_name/, @$mart_species) ){
       return (1, 'No mart for this species');
