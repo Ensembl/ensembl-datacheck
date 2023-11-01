@@ -69,7 +69,6 @@ sub identical_meta_keys {
 
   my $sql = qq/
     SELECT
-      meta_id,
       CONCAT(meta_key, ': ', meta_value) AS meta_key_value_pair
     FROM
       meta
