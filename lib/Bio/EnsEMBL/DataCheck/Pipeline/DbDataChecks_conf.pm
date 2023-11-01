@@ -82,6 +82,8 @@ sub default_options {
         es_port                        => undef,
         es_index                       => 'datacheck_results',
         es_log_dir                     => '/hps/scratch/flicek/ensembl/' . $self->o('ENV', 'USER') . '/datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
+        production_queue  => 'production',
+        datamover_queue   => 'datamover',
     };
 }
 
