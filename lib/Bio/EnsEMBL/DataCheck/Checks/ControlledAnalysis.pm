@@ -85,8 +85,6 @@ sub tests {
     FROM
       analysis_description ad LEFT OUTER JOIN
       web_data wd USING (web_data_id)
-    WHERE 
-      ad.is_current = 1
   /;
   my $prod_dba      = $self->get_dba('multi', 'production');
   my $prod_helper   = $prod_dba->dbc->sql_helper;
