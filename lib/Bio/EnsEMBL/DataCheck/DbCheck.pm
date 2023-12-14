@@ -164,6 +164,7 @@ sub _registry_default {
   $uri->add_param('species_id', $self->dba->species_id);
 
   my $dba_url = $uri->generate_uri;
+  $registry->load_registry_from_url($dba_url);
 
   $self->dba->dbc->disconnect_if_idle();
 
@@ -171,7 +172,10 @@ sub _registry_default {
     $registry->disconnect_all;
     $registry->clear;
     $registry->load_all($self->registry_file);
-  } elsif (defined $self->server_uri && scalar(@{$self->server_uri}) ) {
+
+  }
+  elsif (defined $self->server_uri && scalar(@{$self->server_uri}) )
+  {
     my @uris = ();
 
     foreach my $server_uri ( @{$self->server_uri} ) {
@@ -207,7 +211,6 @@ sub _registry_default {
       $registry->remove_DBAdaptor($species, $self->dba->group);
     }
   }
-  $registry->load_registry_from_url($dba_url);
   $self->dba($registry->get_DBAdaptor($species, $self->dba->group));
 
   # Just in case the production_name is repeated as an alias.
