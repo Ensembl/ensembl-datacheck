@@ -32,11 +32,13 @@ use constant {
   DESCRIPTION => 'Meta values are correctly formatted and linked',
   GROUPS      => ['ancestral', 'brc4_core', 'core', 'meta', 'meta_sample', 'variation'],
   DB_TYPES    => ['core', 'variation'],
-  TABLES      => ['meta']
+  TABLES      => ['meta'],
+
 };
 
 sub tests {
-  my ($self) = @_;
+  my ($self, $target_site) = @_;
+  $target_site //= 'main';
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
 
@@ -63,9 +65,40 @@ sub tests {
     'web_accession_source'           => '(NCBI|ENA|DDBJ)',
   );
 
+    my %new_formats = (
+    'annotation.provider_url'        => '(https?:\/\/.+|www.*\.ensembl\.org)',
+    'assembly.provider_url'          => '(https?:\/\/.+|www.*\.ensembl\.org)',
+    'assembly.accession'             => 'GCA_\d+\.\d+',
+    'assembly.date'                  => '\d{4}-\d{2}',
+    'assembly.default'               => '[\w\.\-]+',
+    'genebuild.id'                   => '\d+',
+    'genebuild.initial_release_date' => '\d{4}-\d{2}',
+    'genebuild.last_geneset_update'  => '\d{4}-\d{2}',
+    'genebuild.method'               => '(full_genebuild|projection_build|import|mixed_strategy_build|external_annotation_import|maker_genebuild|curated|import_build|anno|braker|standard|prokka)',
+    'genebuild.start_date'           => '\d{4}\-\d{2}\-\S+',
+    'patch'                          => '[^\n]+',
+    'sample.location_param'          => '[\w\.\-]+:\d+\-\d+',
+    'sample.location_text'           => '[\w\.\-]+:\d+\-\d+',
+    'species.division'               => 'Ensembl(Bacteria|Fungi|Metazoa|Plants|Protists|Vertebrates|Viruses)',
+    'species.production_name'        => '_?[a-z0-9]+_[a-z0-9_]+',
+    'species.url'                    => '[A-Z_][a-z0-9]+_[A-Za-z0-9_.]+',
+    'species.db_name'                => '_?[a-z0-9]+_[a-z0-9_]+',
+    'web_accession_type'             => '(GenBank Assembly ID|EMBL\-Bank|WGS Master)',
+    'web_accession_source'           => '(NCBI|ENA|DDBJ)',
+  );
+
+
   my %anti_formats = (
     'genebuild.version' => '\d+',
   );
+
+  my %new_anti_formats = (
+  );
+
+  if($target_site != 'main'){
+    %anti_formats = %new_anti_formats;
+    %formats = %new_formats;
+  }
 
   foreach my $meta_key (sort keys %formats) {
     my $desc   = "Value for $meta_key has correct format";

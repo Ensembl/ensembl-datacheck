@@ -36,7 +36,8 @@ use constant {
 };
 
 sub tests {
-  my ($self) = @_;
+  my ($self, $target_site) = @_;
+  $target_site //= 'main';
 
   if ($self->dba->group eq 'core') {
     # assembly.ucsc_alias is a candidate for a conditional check,

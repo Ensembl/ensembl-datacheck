@@ -35,8 +35,8 @@ use constant {
 };
 
 sub tests {
-  my ($self) = @_;
-
+  my ($self, $target_site) = @_;
+  $target_site //= 'main';
   # There aren't keys which _must_ have multiple values; zero, one, or more
   # values are typically allowed, so we can only check for data that must be
   # single-valued.
@@ -70,9 +70,53 @@ sub tests {
     species.url
     strain.type
   /;
+  my @single_valued_new = qw/
+    schema_type
+    schema_version
+    assembly.accession
+    assembly.default
+    genebuild.start_date
+    genebuild.initial_release_date
+    genebuild.last_geneset_update
+    genebuild.version
+    sample.gene_param
+    sample.gene_text
+    sample.location_param
+    sample.location_text
+    sample.search_text
+    sample.transcript_param
+    sample.transcript_text
+    sample.variation_param
+    sample.variation_text
+    species.db_name
+    species.display_name
+    species.division
+    species.production_name
+    species.scientific_name
+    species.species_name
+    species.strain_group
+    species.taxonomy_id
+    species.url
+    strain.type
+    assembly.name
+    species.biosample_id
+    species.common_name
+    species.species_taxonomy_id
+    species.strain
+    strain.type
+    assembly.is_reference
+    assembly.tol_id
+    assembly.tolid
+    assembly.ucsc_alias
+    assembly.provider
+    assembly.url_name
+  /;
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
-
+  my @used_single_valued = @single_valued;
+  if ($target_site != 'main'){
+    @used_single_valued = @single_valued_new;
+  }
   foreach my $meta_key (@single_valued) {
     SKIP: {
       my $values = $mca->list_value_by_key($meta_key);
