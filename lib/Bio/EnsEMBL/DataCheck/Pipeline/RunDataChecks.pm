@@ -262,11 +262,13 @@ sub set_datacheck_params {
   my $server_uri     = $self->param('server_uri');
   my $old_server_uri = $self->param('old_server_uri');
   my $data_file_path = $self->param('data_file_path');
+  my $target_site    = $self->param('target_site');
 
   $$params{registry_file}  = $registry_file  if defined $registry_file;
   $$params{server_uri}     = $server_uri     if defined $server_uri;
   $$params{old_server_uri} = $old_server_uri if defined $old_server_uri;
   $$params{data_file_path} = $data_file_path if defined $data_file_path;
+  $$params{target_site}    = (defined $target_site) ? $target_site: 'main';
 }
 
 1;

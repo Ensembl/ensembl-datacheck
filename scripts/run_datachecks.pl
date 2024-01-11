@@ -126,6 +126,11 @@ with what is already there.
 Path to a file to store full output in TAP format.
 If the file already exists, it will be overwritten.
 
+=item B<-ta[rget_site]> <main/new>
+
+Filter mandatory metkeys based on targetsite  
+
+
 =item B<-h[elp]>
 
 Print usage information.
@@ -154,7 +159,7 @@ my (
     $host, $port, $user, $pass, $dbname, $dbtype,
     $registry_file, @server_uri, @old_server_uri, $data_file_path, $config_file,
     @names, @patterns, @groups, @datacheck_types,
-    $datacheck_dir, $index_file, $history_file, $output_file,
+    $datacheck_dir, $index_file, $history_file, $output_file,, $target_site
 );
 
 GetOptions(
@@ -178,6 +183,7 @@ GetOptions(
   "index_file:s",      \$index_file,
   "history_file:s",    \$history_file,
   "output_file:s",     \$output_file,
+  "target_site:s",     \$target_site,
 );
 
 pod2usage(1) if $help;
@@ -244,6 +250,9 @@ if (! defined $datacheck_dir && defined $index_file) {
   die "datacheck_dir is mandatory if index_file is specified";
 }
 
+if (! defined $target_site){
+  $target_site = 'main';
+}
 # If datacheck parameters have been specified as comma-separated strings,
 # convert them into arrays.
 @names = map { split(/[,\s]+/, $_) } @names if scalar @names;
@@ -270,6 +279,7 @@ $datacheck_params{registry_file}  = $registry_file   if defined $registry_file;
 $datacheck_params{server_uri}     = \@server_uri     if scalar @server_uri;
 $datacheck_params{old_server_uri} = \@old_server_uri if scalar @old_server_uri;
 $datacheck_params{data_file_path} = $data_file_path  if defined $data_file_path;
+$datacheck_params{target_site}    = $target_site     if defined $target_site;
 
 my $manager = Bio::EnsEMBL::DataCheck::Manager->new(%manager_params);
 

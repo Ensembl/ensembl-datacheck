@@ -207,6 +207,10 @@ If B<-report_per_db> is set, by default the pipeline will only send
 reports if any datachecks fail. This parameter enables reports for
 databases that pass all datachecks.
 
+=item B<-ta[rget_site]> <main/new>
+
+Filter mandatory metkeys based on targetsite  
+
 =item B<-h[elp]>
 
 Print usage information.
@@ -240,7 +244,7 @@ my (
     @names, @patterns, @groups, @datacheck_types,
     $datacheck_dir, $index_file, $history_file, $output_dir, $json_passed,
     $parallelize_datachecks,
-    $tag, $email, $report_per_db, $report_all, $es_host, $es_port, $es_index,
+    $tag, $email, $report_per_db, $report_all, $es_host, $es_port, $es_index, $target_site
 );
 
 GetOptions(
@@ -286,7 +290,8 @@ GetOptions(
   "es_host:s",     \$es_host,
   "es_port:s",     \$es_port,
   "es_index:s",    \$es_index,  
-  "store_to_es:i", \(my $store_to_es = 0),   
+  "store_to_es:i", \(my $store_to_es = 0),
+  "target_site:s", \$target_site   
 
 );
 
@@ -328,6 +333,10 @@ if (defined $datacheck_dir && ! defined $index_file) {
 }
 if (! defined $datacheck_dir && defined $index_file) {
   die "datacheck_dir is mandatory if index_file is specified";
+}
+
+if (! defined $target_site) { 
+   $target_site = 'main'; 
 }
 
 # If species parameters have been specified as comma-separated strings,
@@ -414,6 +423,7 @@ $input_id{es_host} = $es_host if defined $es_host;
 $input_id{es_port} = $es_port if defined $es_port;
 $input_id{es_index} = $es_index if defined $es_index;
 $input_id{store_to_es} = $store_to_es;
+$input_id{target_site} = $target_site;
 
 my $input_id = Dumper(\%input_id);
 
@@ -421,7 +431,7 @@ my $seed_cmd =
   "seed_pipeline.pl ".
   " -url $url".
   " -logic_name DataCheckSubmission".
-  " -input_id \"$input_id\"";
+  " -input_id \"$input_id\"";  
 
 my $seed_return = system($seed_cmd);
 
