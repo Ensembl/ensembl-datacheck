@@ -36,22 +36,27 @@ use constant {
 
 sub tests {
   my ($self) = @_;
-
   my $species_id = $self->dba->species_id;
   my $group = $self->dba->group;
-
   my $sql = qq/
     SELECT meta_key, COUNT(*) FROM meta
     WHERE species_id = $species_id OR species_id IS NULL
     GROUP BY meta_key
   /;
+
   my $helper = $self->dba->dbc->sql_helper;
   my %meta_keys = %{ $helper->execute_into_hash(-SQL => $sql) };
+
+  #check target site is main / new and select mandatory metakeys 
+  my $filter_metakeys = '';
+  if (defined $self->target_site){
+    $filter_metakeys = " AND target_site like '\%new\%' ";
+  }
 
   my $prod_sql = qq/
     SELECT name, is_optional
     FROM meta_key
-    WHERE FIND_IN_SET('$group', db_type) AND is_current = 1
+    WHERE FIND_IN_SET('$group', db_type) AND is_current = 1 $filter_metakeys
   /;
   my $prod_dba    = $self->get_dba('multi', 'production');
   my $prod_helper = $prod_dba->dbc->sql_helper;
