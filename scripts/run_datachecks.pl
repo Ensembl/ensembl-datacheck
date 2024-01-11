@@ -128,7 +128,7 @@ If the file already exists, it will be overwritten.
 
 =item B<-ta[rget_site]> <main/new>
 
-Filter mandatory metkeys based on targetsite  
+Filter mandatory metkeys based on targetsite
 
 
 =item B<-h[elp]>
