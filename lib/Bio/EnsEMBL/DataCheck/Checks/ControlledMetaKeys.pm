@@ -50,7 +50,7 @@ sub tests {
   #check target site is main / new and select mandatory metakeys 
   my $filter_metakeys = '';
   if (defined $self->target_site){
-    $filter_metakeys = " AND target_site like '\%new\%' ";
+    $filter_metakeys = " AND target_site like '\%".$self->target_site."\%' ";
   }
 
   my $prod_sql = qq/
