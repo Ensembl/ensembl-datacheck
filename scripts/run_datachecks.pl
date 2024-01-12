@@ -159,7 +159,7 @@ my (
     $host, $port, $user, $pass, $dbname, $dbtype,
     $registry_file, @server_uri, @old_server_uri, $data_file_path, $config_file,
     @names, @patterns, @groups, @datacheck_types,
-    $datacheck_dir, $index_file, $history_file, $output_file,, $target_site
+    $datacheck_dir, $index_file, $history_file, $output_file, $target_site
 );
 
 GetOptions(
