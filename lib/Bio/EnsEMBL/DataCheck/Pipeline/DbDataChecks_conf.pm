@@ -210,21 +210,21 @@ sub pipeline_analyses {
       -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
       -parameters        => {
                                shout_db_not_found_in_registry => $self->o('shout_db_not_found_in_registry'),
-                            },   
+                            },
       -analysis_capacity => 10,
       -max_retry_count   => 0,
       -flow_into         => {
                               '2->A' =>
-                                WHEN('#parallelize_datachecks#' => 
+                                WHEN('#parallelize_datachecks#' =>
                                   ['DataCheckFactory'],
-                                ELSE 
+                                ELSE
                                   ['RunDataChecks']
                                 ),
                               'A->1' =>
                                 WHEN('scalar @{#all_dbs#}' =>
                                   ['DataCheckResults']
                                 ),
-                                  
+
                             },
       -rc_name           => 'default',
     },
@@ -242,7 +242,7 @@ sub pipeline_analyses {
     },
 
     {
-      -logic_name        => 'RunDataChecks_High_mem',  
+      -logic_name        => 'RunDataChecks_High_mem',
       -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
       -analysis_capacity => 10,
       -max_retry_count   => 0,
@@ -272,7 +272,7 @@ sub pipeline_analyses {
       -rc_name           => '2GB',
       -flow_into         => {
                               '1' => ['?accu_name=results&accu_address=[]'],
-                             '-1' => ['DataCheckFan_High_mem'] 
+                             '-1' => ['DataCheckFan_High_mem']
                             },
     },
 
