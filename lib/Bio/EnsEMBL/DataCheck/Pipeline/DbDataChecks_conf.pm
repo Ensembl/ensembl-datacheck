@@ -78,9 +78,9 @@ sub default_options {
         json_by_species                => 1,
         shout_db_not_found_in_registry => 1,
         store_to_es                    => 0,
-        es_host                        => 'es.production.ensembl.org',
+        es_host                        => 'es.ensembl-production.ebi.ac.uk',
         es_port                        => undef,
-        es_index                       => 'datacheck_results',
+        es_index                       => 'datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
         es_log_dir                     => '/hps/scratch/flicek/ensembl/' . $self->o('ENV', 'USER') . '/datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
     };
 }
