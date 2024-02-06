@@ -32,57 +32,57 @@ use Bio::EnsEMBL::Hive::PipeConfig::HiveGeneric_conf;
 use Bio::EnsEMBL::Hive::Version 2.5;
 
 sub default_options {
-    my ($self) = @_;
-    return {
-        %{$self->SUPER::default_options},
+  my ($self) = @_;
+  return {
+    %{$self->SUPER::default_options},
 
-        pipeline_name                  => 'db_datachecks',
+    pipeline_name => 'db_datachecks',
 
-        species                        => [],
-        taxons                         => [],
-        division                       => [],
-        run_all                        => 0,
-        antispecies                    => [],
-        antitaxons                     => [],
-        meta_filters                   => {},
-        dbname                         => [],
-        db_type                        => 'core',
+    species      => [],
+    taxons       => [],
+    division     => [],
+    run_all      => 0,
+    antispecies  => [],
+    antitaxons   => [],
+    meta_filters => {},
+    dbname       => [],
+    db_type      => 'core',
 
-        datacheck_dir                  => undef,
-        index_file                     => undef,
-        history_file                   => undef,
-        output_dir                     => undef,
-        config_file                    => undef,
-        overwrite_files                => 1,
-        datacheck_names                => [],
-        datacheck_patterns             => [],
-        datacheck_groups               => [],
-        datacheck_types                => [],
-        registry_file                  => undef,
-        server_uri                     => undef,
-        old_server_uri                 => undef,
-        data_file_path                 => undef,
+    datacheck_dir      => undef,
+    index_file         => undef,
+    history_file       => undef,
+    output_dir         => undef,
+    config_file        => undef,
+    overwrite_files    => 1,
+    datacheck_names    => [],
+    datacheck_patterns => [],
+    datacheck_groups   => [],
+    datacheck_types    => [],
+    registry_file      => undef,
+    server_uri         => undef,
+    old_server_uri     => undef,
+    data_file_path     => undef,
 
-        failures_fatal                 => 0,
+    failures_fatal => 0,
 
-        parallelize_datachecks         => 0,
+    parallelize_datachecks => 0,
 
-        tag                            => undef,
-        timestamp                      => undef,
-        email                          => undef,
-        report_per_db                  => 0,
-        report_all                     => 0,
+    tag           => undef,
+    timestamp     => undef,
+    email         => undef,
+    report_per_db => 0,
+    report_all    => 0,
 
-        tap_to_json                    => 1,
-        json_passed                    => 0,
-        json_by_species                => 1,
-        shout_db_not_found_in_registry => 1,
-        store_to_es                    => 0,
-        es_host                        => 'es.ensembl-production.ebi.ac.uk',
-        es_port                        => undef,
-        es_index                       => 'datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
-        es_log_dir                     => '/hps/scratch/flicek/ensembl/' . $self->o('ENV', 'USER') . '/datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
-    };
+    tap_to_json     => 1,
+    json_passed     => 0,
+    json_by_species => 1,
+    shout_db_not_found_in_registry => 1,
+    store_to_es     => 0,
+    es_host         => 'es.ensembl-production.ebi.ac.uk',
+    es_port         => undef,
+    es_index        => 'datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    es_log_dir     => '/hps/scratch/flicek/ensembl/'.$self->o('ENV', 'USER').'/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+  };
 }
 
 # Implicit parameter propagation throughout the pipeline.
