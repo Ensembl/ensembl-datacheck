@@ -73,16 +73,17 @@ sub default_options {
     report_per_db => 0,
     report_all    => 0,
 
-        tap_to_json                    => 1,
-        json_passed                    => 0,
-        json_by_species                => 1,
-        shout_db_not_found_in_registry => 1,
-        store_to_es                    => 0,
-        es_host                        => 'es.ensembl-production.ebi.ac.uk',
-        es_port                        => undef,
-        es_index                       => 'datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
-        es_log_dir                     => '/hps/scratch/flicek/ensembl/' . $self->o('ENV', 'USER') . '/datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
-    };
+    tap_to_json     => 1,
+    json_passed     => 0,
+    json_by_species => 1,
+    shout_db_not_found_in_registry => 1,
+    store_to_es     => 0,
+    es_host         => 'es.ensembl-production.ebi.ac.uk',
+    es_port         => undef,
+    es_index        => 'datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    es_log_dir     => '/hps/scratch/flicek/ensembl/'.$self->o('ENV', 'USER').'/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    target_site    => 'main',
+  };
 }
 
 # Implicit parameter propagation throughout the pipeline.
@@ -194,6 +195,8 @@ sub pipeline_analyses {
                               tap_to_json     => $self->o('tap_to_json'),
                               json_passed     => $self->o('json_passed'),
                               json_by_species => $self->o('json_by_species'),
+
+                              target_site     => $self->o('target_site'),
                             },
       -rc_name           => 'default',
       -flow_into         => {
