@@ -122,7 +122,7 @@ sub write_output {
     json_by_species => $self->param('json_by_species'),
 
     submission_job_id => $self->input_job->dbID,
-    target_site       => $self->o('target_site'),
+    target_site       => $self->param('target_site'),
   };
   $self->dataflow_output_id($params, 1);
 
