@@ -82,6 +82,7 @@ sub default_options {
     es_port         => undef,
     es_index        => 'datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
     es_log_dir     => '/hps/scratch/flicek/ensembl/'.$self->o('ENV', 'USER').'/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    target_site    => 'main',
   };
 }
 
@@ -194,6 +195,8 @@ sub pipeline_analyses {
                               tap_to_json     => $self->o('tap_to_json'),
                               json_passed     => $self->o('json_passed'),
                               json_by_species => $self->o('json_by_species'),
+
+                              target_site     => $self->o('target_site'),
                             },
       -rc_name           => 'default',
       -flow_into         => {
