@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -69,7 +69,6 @@ sub identical_meta_keys {
 
   my $sql = qq/
     SELECT
-      meta_id,
       CONCAT(meta_key, ': ', meta_value) AS meta_key_value_pair
     FROM
       meta

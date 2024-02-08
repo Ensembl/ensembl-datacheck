@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ sub tests {
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
   my @method_links = qw(ENSEMBL_ORTHOLOGUES ENSEMBL_PARALOGUES ENSEMBL_HOMOEOLOGUES ENSEMBL_PROJECTIONS);
-  if ($dba->dbc->dbname !~ /ensembl_compara|protein_trees|ncrna_trees/) {
+  if ($dba->dbc->dbname !~ /ensembl_compara|protein_trees|ncrna_trees|reindexed_trees/) {
     @method_links = qw(ENSEMBL_HOMOLOGUES);
   }
 

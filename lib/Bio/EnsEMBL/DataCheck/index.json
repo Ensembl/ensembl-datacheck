@@ -227,6 +227,16 @@
       "name" : "BlankSets",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::BlankSets"
    },
+   "CactusMetadataConsistency" : {
+      "datacheck_type" : "critical",
+      "description" : "Each Cactus alignment has consistent metadata",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+      ],
+      "name" : "CactusMetadataConsistency",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CactusMetadataConsistency"
+   },
    "CanonicalTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Canonical transcripts and translation are correctly configured",
@@ -984,6 +994,15 @@
       "name" : "CompareSource",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSource"
    },
+   "CompareSpeciesAlias" : {
+      "datacheck_type" : "advisory",
+      "description" : "Comparison of aliases between releases",
+      "groups" : [
+         "core_handover"
+      ],
+      "name" : "CompareSpeciesAlias",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareSpeciesAlias"
+   },
    "CompareStableIdsMapping" : {
       "datacheck_type" : "critical",
       "description" : "Stable IDs have been mapped between old and new databases",
@@ -1040,6 +1059,15 @@
       ],
       "name" : "CompareVariationFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationFeatures"
+   },
+   "CompareVariationRows" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare number of rows between two variation databases",
+      "groups" : [
+         "compare_variation"
+      ],
+      "name" : "CompareVariationRows",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareVariationRows"
    },
    "CompareVariationSets" : {
       "datacheck_type" : "advisory",
@@ -1628,6 +1656,15 @@
       "name" : "GeneStrands",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneStrands"
    },
+   "GeneSymbols" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene Symbols need to be assigned for all Ensembl annotations, via the Gene Symbol Transformer classification",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "GeneSymbols",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GeneSymbols"
+   },
    "GeneTreeHighlighting" : {
       "datacheck_type" : "critical",
       "description" : "GO and InterPro xrefs are loaded for highlighting annotated genes",
@@ -1835,6 +1872,15 @@
       ],
       "name" : "MemberProductionCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
+   },
+   "MemberXrefAccessTime" : {
+      "datacheck_type" : "critical",
+      "description" : "Compara member xref data can be accessed in a timely manner",
+      "groups" : [
+         "compara_annot_highlight"
+      ],
+      "name" : "MemberXrefAccessTime",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberXrefAccessTime"
    },
    "MetaCoord" : {
       "datacheck_type" : "critical",
@@ -2580,6 +2626,15 @@
       "name" : "TagCoverageStats",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TagCoverageStats"
    },
+   "TimelySemaphoreRelease" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that every semaphored job was started only after all of its fan jobs had completed.",
+      "groups" : [
+         "compara_gene_tree_pipelines"
+      ],
+      "name" : "TimelySemaphoreRelease",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::TimelySemaphoreRelease"
+   },
    "TranscriptBounds" : {
       "datacheck_type" : "critical",
       "description" : "Gene and transcript bounds are consistent",
@@ -2769,7 +2824,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VariationSetAttrib"
    },
    "VariationSetStructure" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "Variation set only has one super set attached to it",
       "groups" : [
          "variation_import"

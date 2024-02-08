@@ -1,5 +1,5 @@
 =head1 LICENSE
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -88,18 +88,18 @@ sub default_options {
 
 # Implicit parameter propagation throughout the pipeline.
 sub hive_meta_table {
-  my ($self) = @_;
-  
-  return {
-    %{$self->SUPER::hive_meta_table},
-    'hive_use_param_stack' => 1,
-  };
+    my ($self) = @_;
+
+    return {
+        %{$self->SUPER::hive_meta_table},
+        'hive_use_param_stack' => 1,
+    };
 }
 
 sub pipeline_create_commands {
-  my ($self) = @_;
+    my ($self) = @_;
 
-  my $submission_table_sql = q/
+    my $submission_table_sql = q/
     CREATE TABLE datacheck_submission (
       submission_job_id INT PRIMARY KEY,
       history_file VARCHAR(255) NULL,
@@ -110,7 +110,7 @@ sub pipeline_create_commands {
     );
   /;
 
-  my $results_table_sql = q/
+    my $results_table_sql = q/
     CREATE TABLE datacheck_results (
       submission_job_id INT,
       dbname VARCHAR(255) NOT NULL,
@@ -121,30 +121,30 @@ sub pipeline_create_commands {
     );
   /;
 
-  my $result_table_sql = q/
+    my $result_table_sql = q/
     CREATE TABLE result (
       job_id INT PRIMARY KEY,
       output TEXT
     );
   /;
 
-  my $drop_input_id_index = q/
+    my $drop_input_id_index = q/
     ALTER TABLE job DROP KEY input_id_stacks_analysis;
   /;
 
-  my $extend_input_id = q/
+    my $extend_input_id = q/
     ALTER TABLE job MODIFY input_id TEXT;
   /;
 
-  return [
-    @{$self->SUPER::pipeline_create_commands},
-    'mkdir -p '.$self->o('es_log_dir'),
-    $self->db_cmd($submission_table_sql),
-    $self->db_cmd($results_table_sql),
-    $self->db_cmd($result_table_sql),
-    $self->db_cmd($drop_input_id_index),
-    $self->db_cmd($extend_input_id),
-  ];
+    return [
+        @{$self->SUPER::pipeline_create_commands},
+        'mkdir -p ' . $self->o('es_log_dir'),
+        $self->db_cmd($submission_table_sql),
+        $self->db_cmd($results_table_sql),
+        $self->db_cmd($result_table_sql),
+        $self->db_cmd($drop_input_id_index),
+        $self->db_cmd($extend_input_id),
+    ];
 }
 
 sub pipeline_analyses {
@@ -383,15 +383,15 @@ sub pipeline_analyses {
 }
 
 sub resource_classes {
-  my ($self) = @_;
+    my ($self) = @_;
 
-  return {
-    'default' => {LSF => '-q production -M 500 -R "rusage[mem=500]"'},
-    '2GB'     => {LSF => '-q production -M 2000 -R "rusage[mem=2000]"'},
-    '4GB'     => {LSF => '-q production -M 4000 -R "rusage[mem=4000]"'},
-    '8GB'     => {LSF => '-q production -M 8000 -R "rusage[mem=8000]"'},
-    '16GB'    => {LSF => '-q production -M 16000 -R "rusage[mem=16000]"'},
-  }
+    return {
+        'default' => { LSF => '-q production -M 500 -R "rusage[mem=500]"' },
+        '2GB'     => { LSF => '-q production -M 2000 -R "rusage[mem=2000]"' },
+        '4GB'     => { LSF => '-q production -M 4000 -R "rusage[mem=4000]"' },
+        '8GB'     => { LSF => '-q production -M 8000 -R "rusage[mem=8000]"' },
+        '16GB'    => { LSF => '-q production -M 16000 -R "rusage[mem=16000]"' },
+    }
 }
 
 1;

@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ sub skip_tests {
   my ($self) = @_;
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
 
-  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN POLYPLOID);
+  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN POLYPLOID TRANSLATED_BLAT_NET);
   my @mlsss;
   foreach my $method (@method_links) {
     my $mlss = $mlss_adap->fetch_all_by_method_link_type($method);
@@ -59,7 +59,7 @@ sub tests {
   my ($self) = @_;
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
-  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN POLYPLOID);
+  my @method_links = qw(LASTZ_NET LASTZ_PATCH EPO EPO_EXTENDED PECAN POLYPLOID TRANSLATED_BLAT_NET);
 
   my $expected_align_count;
   my @tables    = qw(genomic_align genomic_align_block);

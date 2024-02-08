@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -85,8 +85,6 @@ sub tests {
     FROM
       analysis_description ad LEFT OUTER JOIN
       web_data wd USING (web_data_id)
-    WHERE 
-      ad.is_current = 1
   /;
   my $prod_dba      = $self->get_dba('multi', 'production');
   my $prod_helper   = $prod_dba->dbc->sql_helper;

@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -69,14 +69,16 @@ sub tests {
     WHERE collection = ?
   /;
 
-  my $constraint = "tree_type = 'tree' AND ref_root_id IS NULL";
-  my $sqlCollections = qq/
-     SELECT DISTINCT clusterset_id 
-       FROM gene_tree_root 
-     WHERE $constraint
-   /;
-
-  my $collections = $helper->execute_simple( -SQL => $sqlCollections );
+  my $clusterset_query = q/
+    SELECT DISTINCT clusterset_id, species_set_id
+      FROM gene_tree_root
+        JOIN method_link_species_set USING(method_link_species_set_id)
+    WHERE tree_type = 'tree'
+      AND ref_root_id IS NULL;
+  /;
+  
+  my %clusterset_to_ss_id = map { $_->{'clusterset_id'} => $_->{'species_set_id'} } @{$helper->execute(-SQL => $clusterset_query, -USE_HASHREFS => 1)};
+  my $collections = [keys %clusterset_to_ss_id];
 
   my $sqlFamilies = q/
     SELECT COUNT(*) 
@@ -85,11 +87,12 @@ sub tests {
   my $family_count = $helper->execute_single_result( -SQL => $sqlFamilies );
 
   my $sqlPolyploids = q/
-    SELECT COUNT(*) 
-      FROM genome_db 
-    WHERE genome_component IS NOT NULL
-  /; # Assumes that the polyploid genomes are found in all the collections
-  my $polyploid_count = $helper->execute_single_result( -SQL => $sqlPolyploids );
+     SELECT COUNT(*)
+       FROM genome_db 
+         JOIN species_set 
+           USING(genome_db_id) 
+     WHERE species_set_id = ? AND genome_component IS NOT NULL;
+  /; 
 
   my $sqlGeneTrees = qq/
     SELECT COUNT(*) 
@@ -113,7 +116,7 @@ sub tests {
 
     my $genetree_count = $helper->execute_single_result( -SQL => $sqlGeneTrees,  PARAMS => [$collection] );
     my $cafetrees_count = $helper->execute_single_result( -SQL => $sqlCAFETrees, PARAMS => [$collection] );
-    
+    my $polyploid_count = $helper->execute_single_result( -SQL => $sqlPolyploids, PARAMS => [$clusterset_to_ss_id{$collection}] ); 
     my @counts = ($family_count, $genetree_count, $cafetrees_count, $genetree_count, $genetree_count, $polyploid_count);
 
     #Test for families commented out for duration of compara production freeze, this may return in the future

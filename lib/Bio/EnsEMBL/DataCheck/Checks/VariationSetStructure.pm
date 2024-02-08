@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -28,11 +28,12 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'VariationSetStructure',
-  DESCRIPTION => 'Variation set only has one super set attached to it',
-  GROUPS      => ['variation_import'],
-  DB_TYPES    => ['variation'],
-  TABLES      => ['variation_set_structure']
+  NAME           => 'VariationSetStructure',
+  DESCRIPTION    => 'Variation set only has one super set attached to it',
+  GROUPS         => ['variation_import'],
+  DB_TYPES       => ['variation'],
+  TABLES         => ['variation_set_structure'],
+  DATACHECK_TYPE => 'advisory'
 };
 
 sub tests {

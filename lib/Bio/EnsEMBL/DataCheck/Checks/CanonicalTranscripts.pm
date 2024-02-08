@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -66,7 +66,6 @@ sub tests {
   /;
   is_rows_zero($self->dba, $sql_2, $desc_2);
 
-  my $desc_3 = 'Canonical transcripts with translations belong to protein-coding genes';
   my $sql_3  = qq/
     SELECT g.stable_id FROM
       gene g INNER JOIN
@@ -81,7 +80,15 @@ sub tests {
       b.biotype_group <> 'coding' AND
       cs.species_id = $species_id
   /;
-  is_rows_zero($self->dba, $sql_3, $desc_3);
+  my $mca = $self->dba->get_adaptor('MetaContainer');
+  if($mca->single_value_by_key('genebuild.method') eq 'projection_build'){
+        skip "Canonical transcript checks are  not mandatory for projection builds", 1;
+	}
+	else{
+		 my $desc_3 = 'Canonical transcripts with translations belong to protein-coding genes';
+		 is_rows_zero($self->dba, $sql_3, $desc_3);
+	 }
+ 
 
   my $desc_4 = 'Canonical transcripts with translations are protein-coding';
   my $sql_4  = qq/

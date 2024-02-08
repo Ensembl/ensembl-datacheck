@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ sub tests {
     select count(*)
     from protein_feature pf, analysis a
     where a.analysis_id = pf.analysis_id
-        and a.logic_name = 'alphafold_import'
+        and a.logic_name = 'alphafold'
   /;
   is_rows_nonzero($self->dba, $sql_1, $desc_1);
 
@@ -62,7 +62,7 @@ sub tests {
     select count(*)
     from protein_feature pf, analysis a
     where a.analysis_id = pf.analysis_id
-    and a.logic_name = 'alphafold_import'
+    and a.logic_name = 'alphafold'
     and pf.hit_name REGEXP 'AF\-[A-Za-z0-9]+\-F[0-9]+'
   /;
   is_rows_nonzero($self->dba, $sql_2, $desc_2);

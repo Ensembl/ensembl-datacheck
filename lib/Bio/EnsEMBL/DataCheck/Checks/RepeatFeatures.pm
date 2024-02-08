@@ -1,6 +1,6 @@
 =head1 LICENSE
 
-Copyright [2018-2022] EMBL-European Bioinformatics Institute
+Copyright [2018-2024] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -49,6 +49,11 @@ sub tests {
       skip "Repeat features not mandatory for viruses", 1;
     }
 
+    if($mca->single_value_by_key('genebuild.method') eq 'projection_build') {
+      skip "Repeat features not mandatory for projection builds", 1;
+    }
+
+    
     # Don't need to worry about species_id, because we don't do this
     # query for collection dbs...
     my @logic_names = ('dust', 'trf');
