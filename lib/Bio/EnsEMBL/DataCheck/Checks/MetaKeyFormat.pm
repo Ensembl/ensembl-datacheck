@@ -44,7 +44,8 @@ sub tests {
   my %formats = (
     'annotation.provider_url'        => '(https?:\/\/.+|www.*\.ensembl\.org)',
     'assembly.provider_url'          => '(https?:\/\/.+|www.*\.ensembl\.org)',
-    'assembly.accession'             => 'GCA_\d+\.\d+',
+    'assembly.accession'             => 'GC[AF]_\d+\.\d+',
+    'assembly.alt_accession'         => 'GCA_\d+\.\d+',
     'assembly.date'                  => '\d{4}-\d{2}',
     'assembly.default'               => '[\w\.\-]+',
     'genebuild.id'                   => '\d+',
