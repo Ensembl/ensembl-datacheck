@@ -41,8 +41,8 @@ sub skip_tests {
 
   my $mca = $self->dba->get_adaptor('MetaContainer');
   my $division = $mca->get_division;
-  if ($division eq 'EnsemblVertebrates') {
-    return (1, 'Vertebrate Transcript display xrefs are allowed to have a -20* suffix');
+  if ($division =~ '/EnsemblVertebrates|EnsemblPlants/') {
+    return (1, 'Vertebrates/Plants Transcripts display xrefs are allowed to have a -20* suffix');
   }
 }
 
