@@ -82,6 +82,7 @@ sub default_options {
     es_port         => undef,
     es_index        => 'datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
     es_log_dir     => '/hps/scratch/flicek/ensembl/'.$self->o('ENV', 'USER').'/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    target_site    => 'main',
   };
 }
 
@@ -147,236 +148,238 @@ sub pipeline_create_commands {
 }
 
 sub pipeline_analyses {
-    my $self = shift @_;
+  my $self = shift @_;
 
-    return [
-        {
-            -logic_name        => 'DataCheckSubmission',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSubmission',
-            -analysis_capacity => 1,
-            -max_retry_count   => 1,
-            -parameters        => {
-                species                => $self->o('species'),
-                taxons                 => $self->o('taxons'),
-                division               => $self->o('division'),
-                run_all                => $self->o('run_all'),
-                antispecies            => $self->o('antispecies'),
-                antitaxons             => $self->o('antitaxons'),
-                meta_filters           => $self->o('meta_filters'),
-                dbname                 => $self->o('dbname'),
-                db_type                => $self->o('db_type'),
+  return [
+    {
+      -logic_name        => 'DataCheckSubmission',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSubmission',
+      -analysis_capacity => 1,
+      -max_retry_count   => 1,
+      -parameters        => {
+                              species      => $self->o('species'),
+                              taxons       => $self->o('taxons'),
+                              division     => $self->o('division'),
+                              run_all      => $self->o('run_all'),
+                              antispecies  => $self->o('antispecies'),
+                              antitaxons   => $self->o('antitaxons'),
+                              meta_filters => $self->o('meta_filters'),
+                              dbname       => $self->o('dbname'),
+                              db_type      => $self->o('db_type'),
 
-                datacheck_dir          => $self->o('datacheck_dir'),
-                index_file             => $self->o('index_file'),
-                history_file           => $self->o('history_file'),
-                output_dir             => $self->o('output_dir'),
-                config_file            => $self->o('config_file'),
-                overwrite_files        => $self->o('overwrite_files'),
-                datacheck_names        => $self->o('datacheck_names'),
-                datacheck_patterns     => $self->o('datacheck_patterns'),
-                datacheck_groups       => $self->o('datacheck_groups'),
-                datacheck_types        => $self->o('datacheck_types'),
-                registry_file          => $self->o('registry_file'),
-                server_uri             => $self->o('server_uri'),
-                old_server_uri         => $self->o('old_server_uri'),
-                data_file_path         => $self->o('data_file_path'),
+                              datacheck_dir      => $self->o('datacheck_dir'),
+                              index_file         => $self->o('index_file'),
+                              history_file       => $self->o('history_file'),
+                              output_dir         => $self->o('output_dir'),
+                              config_file        => $self->o('config_file'),
+                              overwrite_files    => $self->o('overwrite_files'),
+                              datacheck_names    => $self->o('datacheck_names'),
+                              datacheck_patterns => $self->o('datacheck_patterns'),
+                              datacheck_groups   => $self->o('datacheck_groups'),
+                              datacheck_types    => $self->o('datacheck_types'),
+                              registry_file      => $self->o('registry_file'),
+                              server_uri         => $self->o('server_uri'),
+                              old_server_uri     => $self->o('old_server_uri'),
+                              data_file_path     => $self->o('data_file_path'),
 
-                failures_fatal         => $self->o('failures_fatal'),
+                              failures_fatal     => $self->o('failures_fatal'),
 
-                parallelize_datachecks => $self->o('parallelize_datachecks'),
+                              parallelize_datachecks => $self->o('parallelize_datachecks'),
 
-                tag                    => $self->o('tag'),
-                timestamp              => $self->o('timestamp'),
-                email                  => $self->o('email'),
-                report_per_db          => $self->o('report_per_db'),
-                report_all             => $self->o('report_all'),
+                              tag           => $self->o('tag'),
+                              timestamp     => $self->o('timestamp'),
+                              email         => $self->o('email'),
+                              report_per_db => $self->o('report_per_db'),
+                              report_all    => $self->o('report_all'),
 
-                tap_to_json            => $self->o('tap_to_json'),
-                json_passed            => $self->o('json_passed'),
-                json_by_species        => $self->o('json_by_species'),
-            },
-            -rc_name           => 'default',
-            -flow_into         => {
-                '1' => [ 'DbFactory' ],
-                '3' => [ '?table_name=datacheck_submission' ],
-            },
-        },
+                              tap_to_json     => $self->o('tap_to_json'),
+                              json_passed     => $self->o('json_passed'),
+                              json_by_species => $self->o('json_by_species'),
 
-        {
-            -logic_name        => 'DbFactory',
-            -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
-            -parameters        => {
-                shout_db_not_found_in_registry => $self->o('shout_db_not_found_in_registry'),
-            },
-            -analysis_capacity => 10,
-            -max_retry_count   => 0,
-            -flow_into         => {
-                '2->A' =>
-                    WHEN('#parallelize_datachecks#' =>
-                        [ 'DataCheckFactory' ],
-                        ELSE
-                            [ 'RunDataChecks' ]
-                    ),
-                'A->1' =>
-                    WHEN('scalar @{#all_dbs#}' =>
-                        [ 'DataCheckResults' ]
-                    ),
+                              target_site     => $self->o('target_site'),
+                            },
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '1' => ['DbFactory'],
+                              '3' => ['?table_name=datacheck_submission'],
+                            },
+    },
 
-            },
-            -rc_name           => 'default',
-        },
+    {
+      -logic_name        => 'DbFactory',
+      -module            => 'Bio::EnsEMBL::Production::Pipeline::Common::DbFactory',
+      -parameters        => {
+                               shout_db_not_found_in_registry => $self->o('shout_db_not_found_in_registry'),
+                            },   
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -flow_into         => {
+                              '2->A' =>
+                                WHEN('#parallelize_datachecks#' => 
+                                  ['DataCheckFactory'],
+                                ELSE 
+                                  ['RunDataChecks']
+                                ),
+                              'A->1' =>
+                                WHEN('scalar @{#all_dbs#}' =>
+                                  ['DataCheckResults']
+                                ),
+                                  
+                            },
+      -rc_name           => 'default',
+    },
 
-        {
-            -logic_name        => 'RunDataChecks',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
-            -analysis_capacity => 10,
-            -max_retry_count   => 0,
-            -rc_name           => '2GB',
-            -flow_into         => {
-                '1'  => [ 'StoreResults' ],
-                '-1' => [ 'RunDataChecks_High_mem' ]
-            },
-        },
+    {
+      -logic_name        => 'RunDataChecks',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -rc_name           => '2GB',
+      -flow_into         => {
+                              '1' => ['StoreResults'],
+                             '-1' => ['RunDataChecks_High_mem']
+                            },
+    },
 
-        {
-            -logic_name        => 'RunDataChecks_High_mem',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
-            -analysis_capacity => 10,
-            -max_retry_count   => 0,
-            -rc_name           => '8GB',
-            -flow_into         => {
-                '1' => [ 'StoreResults' ],
-            },
-        },
+    {
+      -logic_name        => 'RunDataChecks_High_mem',  
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::RunDataChecks',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -rc_name           => '8GB',
+      -flow_into         => {
+                              '1' => ['StoreResults'],
+                            },
+    },
 
-        {
-            -logic_name        => 'DataCheckFactory',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFactory',
-            -analysis_capacity => 10,
-            -max_retry_count   => 0,
-            -rc_name           => 'default',
-            -flow_into         => {
-                '2->A' => [ 'DataCheckFan' ],
-                'A->1' => [ 'DataCheckFunnel' ],
-            },
-        },
+    {
+      -logic_name        => 'DataCheckFactory',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFactory',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '2->A' => ['DataCheckFan'],
+                              'A->1' => ['DataCheckFunnel'],
+                            },
+    },
 
-        {
-            -logic_name        => 'DataCheckFan',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
-            -analysis_capacity => 100,
-            -max_retry_count   => 0,
-            -rc_name           => '2GB',
-            -flow_into         => {
-                '1'  => [ '?accu_name=results&accu_address=[]' ],
-                '-1' => [ 'DataCheckFan_High_mem' ]
-            },
-        },
+    {
+      -logic_name        => 'DataCheckFan',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
+      -analysis_capacity => 100,
+      -max_retry_count   => 0,
+      -rc_name           => '2GB',
+      -flow_into         => {
+                              '1' => ['?accu_name=results&accu_address=[]'],
+                             '-1' => ['DataCheckFan_High_mem'] 
+                            },
+    },
 
-        {
-            -logic_name        => 'DataCheckFan_High_mem',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
-            -analysis_capacity => 100,
-            -max_retry_count   => 0,
-            -rc_name           => '8GB',
-            -flow_into         => {
-                '1' => [ '?accu_name=results&accu_address=[]' ],
-            },
-        },
+    {
+      -logic_name        => 'DataCheckFan_High_mem',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFan',
+      -analysis_capacity => 100,
+      -max_retry_count   => 0,
+      -rc_name           => '8GB',
+      -flow_into         => {
+                              '1' => ['?accu_name=results&accu_address=[]'],
+                            },
+    },
 
-        {
-            -logic_name        => 'DataCheckFunnel',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFunnel',
-            -analysis_capacity => 1,
-            -batch_size        => 100,
-            -max_retry_count   => 0,
-            -rc_name           => '2GB',
-            -flow_into         => {
-                '1' => [ 'StoreResults' ],
-            },
-        },
+    {
+      -logic_name        => 'DataCheckFunnel',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckFunnel',
+      -analysis_capacity => 1,
+      -batch_size        => 100,
+      -max_retry_count   => 0,
+      -rc_name           => '2GB',
+      -flow_into         => {
+                              '1' => ['StoreResults'],
+                            },
+    },
 
-        {
-            -logic_name        => 'StoreResults',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::StoreResults',
-            -analysis_capacity => 10,
-            -max_retry_count   => 1,
-            -rc_name           => 'default',
-            -flow_into         => {
-                '3' => [ '?table_name=datacheck_results' ],
-                '4' => [ 'EmailReport' ],
-            },
-        },
+    {
+      -logic_name        => 'StoreResults',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::StoreResults',
+      -analysis_capacity => 10,
+      -max_retry_count   => 1,
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '3' => ['?table_name=datacheck_results'],
+                              '4' => ['EmailReport'],
+                            },
+    },
 
-        {
-            -logic_name        => 'EmailReport',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::EmailReport',
-            -analysis_capacity => 10,
-            -batch_size        => 100,
-            -max_retry_count   => 0,
-            -rc_name           => 'default',
-        },
+    {
+      -logic_name        => 'EmailReport',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::EmailReport',
+      -analysis_capacity => 10,
+      -batch_size        => 100,
+      -max_retry_count   => 0,
+      -rc_name           => 'default',
+    },
 
-        {
-            -logic_name      => 'DataCheckResults',
-            -module          => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
-            -max_retry_count => 0,
-            -parameters      => {},
-            -rc_name         => 'default',
-            -flow_into       => {
-                '1' =>
-                    WHEN('#output_dir# && #tap_to_json#' =>
-                        [ 'ConvertTapToJson' ],
-                        ELSE
-                            [ 'DataCheckSummary' ],
-                    ),
-            },
-        },
+    {
+      -logic_name        => 'DataCheckResults',
+      -module            => 'Bio::EnsEMBL::Hive::RunnableDB::Dummy',
+      -max_retry_count   => 0,
+      -parameters        => {},
+      -rc_name           => 'default',
+      -flow_into         => {
+                              '1' =>
+                                WHEN('#output_dir# && #tap_to_json#' =>
+                                  ['ConvertTapToJson'],
+                                ELSE
+                                  ['DataCheckSummary'],
+                                ),
+                            },
+    },
 
-        {
-            -logic_name        => 'ConvertTapToJson',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::ConvertTapToJson',
-            -analysis_capacity => 10,
-            -max_retry_count   => 0,
-            -parameters        => {
-                tap         => '#output_dir#',
-                store_to_es => $self->o('store_to_es'),
+    {
+      -logic_name        => 'ConvertTapToJson',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::ConvertTapToJson',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -parameters        => {
+                              tap => '#output_dir#',
+			      store_to_es => $self->o('store_to_es'),
 
-            },
-            -rc_name           => 'default',
-            -flow_into         => WHEN('#store_to_es#' =>
-                [ 'DataCheckSummary', 'StoreToES' ],
-                ELSE
-                    [ 'DataCheckSummary' ]
-            ),
+                            },
+      -rc_name           => 'default',
+      -flow_into       => WHEN('#store_to_es#' =>
+                            ['DataCheckSummary', 'StoreToES'],
+                          ELSE
+                            ['DataCheckSummary']
+                          ),
 
-        },
+    },
 
-        {
-            -logic_name        => 'DataCheckSummary',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSummary',
-            -analysis_capacity => 10,
-            -max_retry_count   => 0,
-            -rc_name           => 'default',
-            -flow_into         => [ '?table_name=result' ],
-        },
-        {
-            -logic_name        => 'StoreToES',
-            -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::StoreResultToES',
-            -analysis_capacity => 1,
-            -max_retry_count   => 3,
-            -parameters        => {
-                es_host     => $self->o('es_host'),
-                es_port     => $self->o('es_port'),
-                es_index    => $self->o('es_index'),
-                es_log_file => $self->o('es_log_dir') . '/' . $self->o('pipeline_name') . 'err',
+    {
+      -logic_name        => 'DataCheckSummary',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::DataCheckSummary',
+      -analysis_capacity => 10,
+      -max_retry_count   => 0,
+      -rc_name           => 'default',
+      -flow_into         => ['?table_name=result'],
+    },
+    {
+      -logic_name        => 'StoreToES',
+      -module            => 'Bio::EnsEMBL::DataCheck::Pipeline::StoreResultToES',
+      -analysis_capacity => 1,
+      -max_retry_count   => 3,
+      -parameters        => {
+	      			es_host     => $self->o('es_host'),
+              		        es_port     => $self->o('es_port'),
+                                es_index    => $self->o('es_index'),
+	      	                es_log_file => $self->o('es_log_dir').'/'.$self->o('pipeline_name').'err',
 
-            },
-            -rc_name           => 'default',
-        },
+                            },
+      -rc_name           => 'default',
+    },
 
 
-    ];
+  ];
 }
 
 sub resource_classes {
