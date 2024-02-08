@@ -49,7 +49,7 @@ sub tests {
   # scientific name, to disambiguate in the case of multiple strains
   # or assemblies of the same species. Since the taxonomy database does
   # not always have that information, remove it before comparing.
-  $sci_name =~ s/ \(GCA_\d+\)//;
+  $sci_name =~ s/ \(GC[AF]_\d+\)//;
   $sci_name =~ s/ (str\.|strain) .*//;
 
   my $desc_1 = 'Species-related meta data exists';
