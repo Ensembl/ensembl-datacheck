@@ -32,7 +32,7 @@ use constant {
   DESCRIPTION => 'Canonical transcripts and translation are correctly configured',
   GROUPS      => ['core', 'brc4_core', 'geneset'],
   DB_TYPES    => ['core'],
-  TABLES      => ['coord_system', 'exon', 'exon_transcript', 'gene', 'seq_region', 'transcript', 'translation']
+  TABLES      => ['attrib_type', 'coord_system', 'exon', 'exon_transcript', 'gene', 'seq_region', 'transcript', 'transcript_attrib', 'translation']
 };
 
 sub tests {
@@ -120,6 +120,59 @@ sub tests {
       cs.species_id = $species_id
   /;
   is_rows_zero($self->dba, $sql_5, $desc_5);
+
+
+  my $helper = $self->dba->dbc->sql_helper;
+
+  my $desc_6a = "is_canonical exists in attrib_type set";
+  my $sql_6a = q/
+    SELECT COUNT(*) FROM attrib_type
+    WHERE code = 'is_canonical'
+  /;
+
+  my $desc_6b = 'All genes have at least one transcript with an is_canonical attribute';
+  my $sql_6b = q/
+    SELECT COUNT(distinct gene_id) FROM transcript
+    WHERE biotype NOT IN ('LRG_gene')
+  /;
+  my $sql_6c = q/
+      SELECT COUNT(distinct gene_id)
+      FROM attrib_type
+        LEFT JOIN transcript_attrib ta USING (attrib_type_id)
+        LEFT JOIN transcript t on t.transcript_id = ta.transcript_id AND biotype NOT IN ('LRG_gene')
+      WHERE
+        attrib_type.code = 'is_canonical';
+  /;
+
+  my $desc_6d = "All is_canonical transcript attrib values match gene canonical_transcript_id";
+  my $sql_6d = q/
+  SELECT ta.transcript_id, 'is_canonical not present in gene' as error
+    FROM transcript_attrib ta
+      INNER JOIN attrib_type USING (attrib_type_id)
+    WHERE
+      attrib_type.code = 'is_canonical'
+      AND NOT EXISTS (SELECT *
+                      FROM gene g
+                      WHERE g.canonical_transcript_id = ta.transcript_id)
+    UNION
+    SELECT g.canonical_transcript_id as transcript_id, 'canonical_transcript with no attribute' as error
+    FROM gene g
+    WHERE NOT EXISTS (SELECT *
+                      FROM transcript_attrib ta
+                      INNER JOIN attrib_type USING (attrib_type_id)
+                      WHERE g.canonical_transcript_id = ta.transcript_id
+                      AND attrib_type.code = 'is_canonical');
+  /;
+
+  my $attrib_type_count = $helper->execute_single_result( -SQL => $sql_6a );
+  is($attrib_type_count, 1, $desc_6a);
+
+  my $gene_count = $helper->execute_single_result( -SQL => $sql_6b );
+  my $attrib_count = $helper->execute_single_result( -SQL => $sql_6c );
+  is($attrib_count, $gene_count, $desc_6b);
+
+  is_rows_zero($self->dba, $sql_6d, $desc_6d);
+
 }
 
 1;
