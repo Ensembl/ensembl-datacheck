@@ -237,6 +237,17 @@
       "name" : "CactusMetadataConsistency",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CactusMetadataConsistency"
    },
+   "CanonicalMemberCore" : {
+      "datacheck_type" : "critical",
+      "description" : "Canonical members in compara database match canonical sequences in the core database",
+      "groups" : [
+         "compara",
+         "compara_gene_trees",
+         "core_sync"
+      ],
+      "name" : "CanonicalMemberCore",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CanonicalMemberCore"
+   },
    "CanonicalTranscripts" : {
       "datacheck_type" : "critical",
       "description" : "Canonical transcripts and translation are correctly configured",
