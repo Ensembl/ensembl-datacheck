@@ -2254,15 +2254,6 @@
       "name" : "RNASeqDNAAlignFeatureAnalyses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
    },
-   "ReadFilePathEncrypted" : {
-      "datacheck_type" : "critical",
-      "description" : "Checks if paths stored in the file column of the read_file table are encrypted",
-      "groups" : [
-         "funcgen"
-      ],
-      "name" : "ReadFilePathEncrypted",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFilePathEncrypted"
-   },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
       "description" : "All regulatory features have a valid activity value in at least one epigenome",
