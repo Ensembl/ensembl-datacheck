@@ -48,17 +48,6 @@
       "name" : "AlignmentCoordinates",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentCoordinates"
    },
-   "AlignmentReadFileOrphans" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that all read files are used in an alignment",
-      "groups" : [
-         "funcgen",
-         "regulatory_build",
-         "funcgen_alignments"
-      ],
-      "name" : "AlignmentReadFileOrphans",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentReadFileOrphans"
-   },
    "AltAllele" : {
       "datacheck_type" : "critical",
       "description" : "Alt allele group members map back to the same chromosome",
