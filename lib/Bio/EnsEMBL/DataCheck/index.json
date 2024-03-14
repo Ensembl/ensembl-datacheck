@@ -1374,17 +1374,6 @@
       "name" : "DuplicateComparaMemberXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateComparaMemberXref"
    },
-   "DuplicateReadNames" : {
-      "datacheck_type" : "critical",
-      "description" : "Duplicate read names",
-      "groups" : [
-         "funcgen",
-         "regulatory_build",
-         "funcgen_registration"
-      ],
-      "name" : "DuplicateReadNames",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames"
-   },
    "DuplicateTranscriptNames" : {
       "datacheck_type" : "advisory",
       "description" : "Protein coding Transcript Names are unique",
