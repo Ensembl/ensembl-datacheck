@@ -54,11 +54,11 @@ sub tests {
 
   my $coord = $coords[0];
 
-  my $desc_2 = "Primary assenbly is default";
+  my $desc_2 = "Primary assembly is default";
   my $diag_2 = 'Primary assembly is not default';
   is($coord->is_default, 1, $desc_2);
 
-  my $desc_3 = "Primary assenbly is sequence level";
+  my $desc_3 = "Primary assembly is sequence level";
   my $diag_3 = 'Primary assembly is not sequence level';
   is($coord->is_sequence_level, 1, $desc_3);
 
