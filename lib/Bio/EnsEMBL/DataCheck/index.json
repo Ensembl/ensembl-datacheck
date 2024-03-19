@@ -48,17 +48,6 @@
       "name" : "AlignmentCoordinates",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentCoordinates"
    },
-   "AlignmentReadFileOrphans" : {
-      "datacheck_type" : "critical",
-      "description" : "Check that all read files are used in an alignment",
-      "groups" : [
-         "funcgen",
-         "regulatory_build",
-         "funcgen_alignments"
-      ],
-      "name" : "AlignmentReadFileOrphans",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AlignmentReadFileOrphans"
-   },
    "AltAllele" : {
       "datacheck_type" : "critical",
       "description" : "Alt allele group members map back to the same chromosome",
@@ -1385,17 +1374,6 @@
       "name" : "DuplicateComparaMemberXref",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateComparaMemberXref"
    },
-   "DuplicateReadNames" : {
-      "datacheck_type" : "critical",
-      "description" : "Duplicate read names",
-      "groups" : [
-         "funcgen",
-         "regulatory_build",
-         "funcgen_registration"
-      ],
-      "name" : "DuplicateReadNames",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DuplicateReadNames"
-   },
    "DuplicateTranscriptNames" : {
       "datacheck_type" : "advisory",
       "description" : "Protein coding Transcript Names are unique",
@@ -2275,15 +2253,6 @@
       ],
       "name" : "RNASeqDNAAlignFeatureAnalyses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
-   },
-   "ReadFilePathEncrypted" : {
-      "datacheck_type" : "critical",
-      "description" : "Checks if paths stored in the file column of the read_file table are encrypted",
-      "groups" : [
-         "funcgen"
-      ],
-      "name" : "ReadFilePathEncrypted",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ReadFilePathEncrypted"
    },
    "RegulatoryFeatureIsActive" : {
       "datacheck_type" : "critical",
