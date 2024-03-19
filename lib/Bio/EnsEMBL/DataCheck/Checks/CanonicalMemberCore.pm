@@ -44,7 +44,7 @@ sub skip_tests {
   my $member_count_sql = q/SELECT COUNT(*) FROM gene_member/;
   my $member_count = $dbc->sql_helper->execute_single_result( -SQL => $member_count_sql );
   if ( $member_count == 0 ) {
-    return( 1, sprintf("There are no coding gene members in %s", $dbc->dbname) );
+    return( 1, sprintf("There are no gene members in %s", $dbc->dbname) );
   }
 }
 
@@ -68,14 +68,40 @@ sub tests {
       sm.seq_member_id = gm.canonical_member_id
     WHERE
       gm.genome_db_id = ?
-    AND
-      biotype_group = 'coding'
   /;
 
   # This query may fetch some surplus gene-canonical pairs that have not been loaded among
   # the set of Compara gene members for the given genome, but for this test the aim is to
   # ensure we fetch a core gene-canonical pair for each relevant gene member, if available.
   my $core_sql = q/
+    SELECT
+      g.stable_id AS gene_stable_id,
+      g.version AS gene_version,
+      t.stable_id AS seq_stable_id,
+      t.version AS seq_version
+    FROM
+      coord_system cs
+    JOIN
+      seq_region sr
+    USING
+      (coord_system_id)
+    JOIN
+      gene g
+    USING
+       (seq_region_id)
+    JOIN
+      transcript t
+    ON
+      transcript_id = canonical_transcript_id
+    WHERE
+      cs.species_id = ?
+    AND
+      canonical_translation_id IS NULL
+    AND
+      g.is_current = 1
+
+    UNION
+
     SELECT
       g.stable_id AS gene_stable_id,
       g.version AS gene_version,
@@ -131,7 +157,7 @@ sub tests {
     my $species_id = $core_dba->species_id;
     my $core_results = $core_dba->dbc->sql_helper->execute(
       -SQL => $core_sql,
-      -PARAMS => [$species_id],
+      -PARAMS => [$species_id, $species_id],
       -USE_HASHREFS => 1,
     );
     my %core_canonicals = map { $_->{'gene_stable_id'} => $_ } @$core_results;
@@ -198,19 +224,19 @@ sub tests {
     my $json = JSON->new();
     $json->space_after(1);
 
-    my $desc_3 = "For all coding genes in $gdb_name, there is a corresponding gene in the core database";
+    my $desc_3 = "For all genes in $gdb_name, there is a corresponding gene in the core database";
     is(scalar(@unknown_gene_stable_ids), 0, $desc_3)
       || diag explain [sort @unknown_gene_stable_ids];
 
-    my $desc_4 = "All coding genes in $gdb_name have stable ID versions consistent with the core database";
+    my $desc_4 = "All genes in $gdb_name have stable ID versions consistent with the core database";
     is(scalar(@mismatching_gene_versions), 0, $desc_4)
       || diag explain [map { $json->utf8->encode($_) } sort { $a->[0] cmp $b->[0] } @mismatching_gene_versions];
 
-    my $desc_5 = "All coding genes in $gdb_name have a canonical translation which is consistent with the core database";
+    my $desc_5 = "All genes in $gdb_name have a canonical sequence which is consistent with the core database";
     is(scalar(@mismatching_canonical_stable_ids), 0, $desc_5)
       || diag explain [map { $json->utf8->encode($_) } sort { $a->[0] cmp $b->[0] } @mismatching_canonical_stable_ids];
 
-    my $desc_6 = "All canonical translations in $gdb_name have stable ID versions consistent with the core database";
+    my $desc_6 = "All canonical sequences in $gdb_name have stable ID versions consistent with the core database";
     is(scalar(@mismatching_canonical_versions), 0, $desc_6)
       || diag explain [map { $json->utf8->encode($_) } sort { $a->[0] cmp $b->[0] } @mismatching_canonical_versions];
 
