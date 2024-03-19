@@ -170,6 +170,9 @@ sub check_chosen_name {
 
   my @wrong_short_brc;
   my @wrong_ebi;
+  my %unique_brc;
+  my @duplicate_brc;
+  my @missing_brc;
   for my $seqr (@{$sa->fetch_all('toplevel')}) {
     my $brc_name = $self->_get_single_attribute_value($seqr, 'BRC4_seq_region_name');
     my $ebi_name = $self->_get_single_attribute_value($seqr, 'EBI_seq_region_name');
@@ -182,6 +185,14 @@ sub check_chosen_name {
     if ($ebi_name and $seqr->seq_region_name ne $ebi_name) {
       push @wrong_ebi, $ebi_name;
     }
+    
+    if (not $brc_name) {
+      push @missing_brc, $seqr->seq_region_name();
+    } elsif (exists $unique_brc{$brc_name}) {
+      push @duplicate_brc, $brc_name;
+    } else {
+      $unique_brc{$brc_name} = 1;
+    }
   }
 
   my $example1 = "";
@@ -193,6 +204,12 @@ sub check_chosen_name {
   $ebi_example = " (wrong example: '$wrong_ebi[0]')" if @wrong_ebi;
   my $desc_2 = "EBI name is defined and the same as the seq_region$ebi_example";
   is(scalar(@wrong_ebi), 0, $desc_2);
+
+  my $desc_3 = "There are no BRC name duplicates";
+  is(scalar(@duplicate_brc), 0, $desc_3);
+
+  my $desc_4 = "All top level seq_regions have a BRC name";
+  is(scalar(@missing_brc), 0, $desc_4);
 }
 
 sub _get_single_attribute_value {
