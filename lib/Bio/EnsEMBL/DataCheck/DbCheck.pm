@@ -57,6 +57,15 @@ subtype 'Registry', as 'Str', where {
 
 =head1 METHODS
 
+=head2 target_site
+  Description: Fetch mandatory meta keys based on target site 
+              current values are main/new
+=cut
+has 'target_site' => (
+  is  => 'ro',
+  isa => 'Str | Undef',
+);
+
 =head2 db_types
   Description: Database types for which this datacheck is appropriate.
 =cut
