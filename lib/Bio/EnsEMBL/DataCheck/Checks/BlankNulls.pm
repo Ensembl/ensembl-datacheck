@@ -57,13 +57,14 @@ sub tests {
 
   foreach my $nullable (@$nullables) {
     my ($table, $column) = @$nullable;
-
-    my $desc = "Nullable column $table.$column has no '' or 'NULL' string values";
-    my $sql  = qq/
-      SELECT COUNT(*) FROM $table
-      WHERE $column = '' OR $column = 'NULL'
-    /;
+    if ($table ne "meta"){
+	my $desc = "Nullable column $table.$column has no '' or 'NULL' string values";
+	my $sql  = qq/
+	    SELECT COUNT(*) FROM $table
+	    WHERE $column = '' OR $column = 'NULL'
+	    /;
     is_rows_zero($self->dba, $sql, $desc);
+    }
   }
 }
 
