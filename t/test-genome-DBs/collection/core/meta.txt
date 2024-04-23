@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	112
+2	\N	schema_version	113
 3	\N	patch	patch_88_89_a.sql|schema_version
 4	1	schema.load_started	2017-05-08 19:14:41
 5	1	schema.load_started	2017-05-08 19:14:45
@@ -202,3 +202,6 @@
 574	\N	patch	patch_110_111_a.sql|schema_version
 575	\N	patch	patch_111_112_a.sql|schema_version
 576	\N	patch	patch_111_112_b.sql|Allow meta_value to be null
+577	\N	patch	patch_111_112_c.sql|Extend meta_key length to 64
+578	\N	patch	patch_112_113_a.sql|schema_version
+579	\N	patch	patch_112_113_b.sql|Ensure meta_value is not null
