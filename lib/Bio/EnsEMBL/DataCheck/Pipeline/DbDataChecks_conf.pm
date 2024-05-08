@@ -424,7 +424,7 @@ sub resource_classes {
         while ((my $memory_key, my $memory_value) = each(%memory)) {
             if ($time_key eq 'H') {
                 $output{$memory_key} = { 'LSF' => '-q ' . $self->o('production_queue') . ' -M ' . $memory_value . ' -R "rusage[mem=' . $memory_value . ']"',
-                    'SLURM'                    => $pq . $time_value . '  --mem=' . $memory_value . 'm' }
+                    'SLURM'                    => $pq . $time_value . '  --mem=' . $memory_value . 'm' };
             }
             else {
                 $output{$memory_key . '_' . $time_key} = { 'LSF' => '-q ' . $self->o('production_queue') . ' -M ' . $memory_value . ' -R "rusage[mem=' . $memory_value . ']"',
