@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::SeqRegionBRC4;
+package Bio::EnsEMBL::DataCheck::Checks::SeqRegionVPDB;
 
 use warnings;
 use strict;
@@ -28,9 +28,9 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'SeqRegionBRC4',
-  DESCRIPTION    => 'Seq_region for BRC4 have correct attributes',
-  GROUPS         => ['brc4_core'],
+  NAME           => 'SeqRegionVPDB',
+  DESCRIPTION    => 'Seq_region for VEuPathDB have correct attributes',
+  GROUPS         => ['vpdb_core'],
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'external_db', 'seq_region', 'seq_region_attrib', 'seq_region_synonym']
 };

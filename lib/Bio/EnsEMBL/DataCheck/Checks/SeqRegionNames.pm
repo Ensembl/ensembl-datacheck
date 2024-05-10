@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'SeqRegionNames',
   DESCRIPTION => 'Seq_region names are unique (top-level) or consistent (non-top-level)',
-  GROUPS      => ['ancestral', 'assembly', 'brc4_core', 'core'],
+  GROUPS      => ['ancestral', 'assembly', 'vpdb_core', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'AlignFeatureExternalDB',
   DESCRIPTION    => 'All alignment features are linked to an external DB',
-  GROUPS         => ['annotation', 'core', 'brc4_core', 'corelike'],
+  GROUPS         => ['annotation', 'core', 'vpdb_core', 'corelike'],
   DATACHECK_TYPE => 'advisory',
   DB_TYPES       => ['cdna', 'core', 'otherfeatures', 'rnaseq'],
   TABLES         => ['coord_system', 'dna_align_feature', 'protein_align_feature', 'seq_region']

@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AltAlleleGroup',
   DESCRIPTION => 'No alt_allele_group has more than one gene from the primary assembly',
-  GROUPS      => ['core', 'brc4_core', 'geneset'],
+  GROUPS      => ['core', 'vpdb_core', 'geneset'],
   DB_TYPES    => ['core']
 };
 

@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'ExonRank',
   DESCRIPTION => 'Exon ranks are unique and sequential',
-  GROUPS      => ['core', 'brc4_core', 'corelike', 'geneset'],
+  GROUPS      => ['core', 'vpdb_core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   PER_DB      => 1
 };

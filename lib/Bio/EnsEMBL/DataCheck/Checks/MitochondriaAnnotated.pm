@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'MitochondriaAnnotated',
   DESCRIPTION    => 'Mitochondrial seq_regions have appropriate attribute',
-  GROUPS         => ['assembly', 'core', 'brc4_core'],
+  GROUPS         => ['assembly', 'core', 'vpdb_core'],
   DB_TYPES       => ['core'],
   TABLES         => ['attrib_type', 'coord_system', 'seq_region', 'seq_region_attrib']
 };

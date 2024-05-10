@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'GeneBiotypes',
   DESCRIPTION => 'Genes and transcripts have valid biotypes',
-  GROUPS      => ['controlled_tables', 'core', 'brc4_core', 'corelike', 'geneset'],
+  GROUPS      => ['controlled_tables', 'core', 'vpdb_core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['biotype', 'coord_system', 'gene', 'seq_region', 'transcript']
 };

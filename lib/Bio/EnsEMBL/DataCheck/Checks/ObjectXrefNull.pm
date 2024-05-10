@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'ObjectXrefNull',
   DESCRIPTION    => 'Object_xrefs should be linked to an analysis',
-  GROUPS         => ['brc4_core', 'core', 'xref', 'xref_gene_symbol_transformer'],
+  GROUPS         => ['vpdb_core', 'core', 'xref', 'xref_gene_symbol_transformer'],
   DATACHECK_TYPE => 'advisory',
   TABLES         => ['object_xref']
 };

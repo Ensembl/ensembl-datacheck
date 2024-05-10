@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'GeneStableID',
   DESCRIPTION => 'Genes, transcripts, exons and translations have non-NULL, unique stable IDs',
-  GROUPS      => ['core', 'brc4_core', 'geneset'],
+  GROUPS      => ['core', 'vpdb_core', 'geneset'],
   DB_TYPES    => ['core'],
   TABLES      => ['coord_system', 'exon', 'gene', 'seq_region', 'transcript', 'translation']
 };

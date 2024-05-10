@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'CanonicalTranscripts',
   DESCRIPTION => 'Canonical transcripts and translation are correctly configured',
-  GROUPS      => ['core', 'brc4_core', 'geneset'],
+  GROUPS      => ['core', 'vpdb_core', 'geneset'],
   DB_TYPES    => ['core'],
   TABLES      => ['attrib_type', 'coord_system', 'exon', 'exon_transcript', 'gene', 'seq_region', 'transcript', 'transcript_attrib', 'translation']
 };

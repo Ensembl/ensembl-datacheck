@@ -31,7 +31,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AssemblyExceptions',
   DESCRIPTION => 'Assembly exceptions are correctly configured',
-  GROUPS      => ['ancestral', 'assembly', 'brc4_core', 'core'],
+  GROUPS      => ['ancestral', 'assembly', 'vpdb_core', 'core'],
   DB_TYPES    => ['core'],
   TABLES      => ['analysis', 'assembly_exception', 'dna_align_feature',
                   'external_db', 'seq_region',],

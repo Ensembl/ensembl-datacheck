@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::VersionedGenesBRC4;
+package Bio::EnsEMBL::DataCheck::Checks::VersionedGenesVPDB;
 
 use warnings;
 use strict;
@@ -28,9 +28,9 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'VersionedGenesBRC4',
-  DESCRIPTION => 'Genes are unversioned in BRC4 databases',
-  GROUPS      => ['brc4_core'],
+  NAME        => 'VersionedGenesVPDB',
+  DESCRIPTION => 'Genes are unversioned in VEuPathDB databases',
+  GROUPS      => ['vpdb_core'],
   DB_TYPES    => ['core'],
   TABLES      => ['coord_system', 'gene', 'seq_region', 'transcript', 'translation']
 };

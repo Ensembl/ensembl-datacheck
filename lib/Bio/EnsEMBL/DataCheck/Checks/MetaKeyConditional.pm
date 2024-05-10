@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaKeyConditional',
   DESCRIPTION => 'Conditional meta keys exist if the data requires them',
-  GROUPS      => ['core', 'brc4_core', 'meta', 'variation'],
+  GROUPS      => ['core', 'vpdb_core', 'meta', 'variation'],
   DB_TYPES    => ['core', 'variation'],
   TABLES      => ['meta']
 };

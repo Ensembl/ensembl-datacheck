@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'MetaCoord',
   DESCRIPTION => 'The meta_coord table is correctly populated',
-  GROUPS      => ['annotation', 'brc4_core', 'core', 'core_sync', 'corelike', 'funcgen', 'geneset', 'protein_features', 'variation'],
+  GROUPS      => ['annotation', 'vpdb_core', 'core', 'core_sync', 'corelike', 'funcgen', 'geneset', 'protein_features', 'variation'],
   DB_TYPES    => ['cdna', 'core', 'funcgen', 'otherfeatures', 'rnaseq', 'variation'],
   FORCE       => 1
 };

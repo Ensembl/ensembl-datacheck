@@ -32,7 +32,7 @@
       "groups" : [
          "annotation",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike"
       ],
       "name" : "AlignFeatureExternalDB",
@@ -53,7 +53,7 @@
       "description" : "Alt allele group members map back to the same chromosome",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "geneset"
       ],
       "name" : "AltAllele",
@@ -64,7 +64,7 @@
       "description" : "No alt_allele_group has more than one gene from the primary assembly",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "geneset"
       ],
       "name" : "AltAlleleGroup",
@@ -76,7 +76,7 @@
       "groups" : [
          "analysis_description",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -88,7 +88,7 @@
       "description" : "Analysis logic name and date are formatted correctly",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "core",
          "corelike"
       ],
@@ -129,7 +129,7 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "brc4_core",
+         "vpdb_core",
          "core"
       ],
       "name" : "AssemblyExceptions",
@@ -141,7 +141,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "AssemblyExceptionsMapping",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AssemblyExceptionsMapping"
@@ -152,7 +152,7 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "brc4_core",
+         "vpdb_core",
          "core"
       ],
       "name" : "AssemblySeqregion",
@@ -163,7 +163,7 @@
       "description" : "Enum columns do not have empty string values",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "compara",
          "compara_blastocyst",
          "compara_gene_trees",
@@ -186,7 +186,7 @@
       "description" : "Nullable columns do not have empty string values",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "compara",
          "compara_blastocyst",
          "compara_gene_trees",
@@ -242,7 +242,7 @@
       "description" : "Canonical transcripts and translation are correctly configured",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "geneset"
       ],
       "name" : "CanonicalTranscripts",
@@ -716,7 +716,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "ChromosomesAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::ChromosomesAnnotated"
@@ -976,7 +976,7 @@
          "compara_homology_annotation",
          "compara_references",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "funcgen",
          "schema",
@@ -1125,7 +1125,7 @@
       "groups" : [
          "analysis_description",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike"
       ],
       "name" : "ControlledAnalysis",
@@ -1172,7 +1172,7 @@
       "groups" : [
          "controlled_tables",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike"
       ],
       "name" : "ControlledTablesCore",
@@ -1245,7 +1245,7 @@
       "description" : "All tables have the same collation (latin1_swedish_ci)",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "compara",
          "compara_blastocyst",
          "compara_gene_trees",
@@ -1345,7 +1345,7 @@
       "groups" : [
          "analysis_description",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -1358,7 +1358,7 @@
       "groups" : [
          "analysis_description",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "geneset",
          "meta_sample"
       ],
@@ -1410,7 +1410,7 @@
       "description" : "Exon regions are non-overlapping, and are consistent with their transcripts",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -1422,7 +1422,7 @@
       "description" : "Exon ranks are unique and sequential",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -1445,7 +1445,7 @@
       "groups" : [
          "annotation",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike"
       ],
       "name" : "FeatureBounds",
@@ -1488,7 +1488,7 @@
       "description" : "Foreign key relationships are not violated",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "core",
          "corelike",
          "funcgen",
@@ -1571,7 +1571,7 @@
       "groups" : [
          "controlled_tables",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -1583,7 +1583,7 @@
       "description" : "Genes are within the bounds of their seq_region",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -1627,7 +1627,7 @@
       "description" : "Genes, transcripts, exons and translations have non-NULL, unique stable IDs",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "geneset"
       ],
       "name" : "GeneStableID",
@@ -1638,7 +1638,7 @@
       "description" : "Genes have valid strand values",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -1753,7 +1753,7 @@
       "datacheck_type" : "critical",
       "description" : "LRG features and seq_regions are correctly configured",
       "groups" : [
-         "brc4_core",
+         "vpdb_core",
          "core"
       ],
       "name" : "LRG",
@@ -1836,7 +1836,7 @@
       "description" : "MT seq region has codon table attribute",
       "groups" : [
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "MTCodonTable",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MTCodonTable"
@@ -1876,7 +1876,7 @@
       "description" : "The meta_coord table is correctly populated",
       "groups" : [
          "annotation",
-         "brc4_core",
+         "vpdb_core",
          "core",
          "core_sync",
          "corelike",
@@ -1894,27 +1894,27 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "meta"
       ],
       "name" : "MetaKeyAssembly",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyAssembly"
    },
-   "MetaKeyBRC4" : {
+   "MetaKeyVPDB" : {
       "datacheck_type" : "critical",
-      "description" : "Expected meta keys for BRC4 cores",
+      "description" : "Expected meta keys for VEuPathDB cores",
       "groups" : [
-         "brc4_core"
+         "vpdb_core"
       ],
-      "name" : "MetaKeyBRC4",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyBRC4"
+      "name" : "MetaKeyVPDB",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyVPDB"
    },
    "MetaKeyCardinality" : {
       "datacheck_type" : "critical",
       "description" : "A subset of meta keys must only have a single value",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "core",
          "meta",
          "meta_sample"
@@ -1927,7 +1927,7 @@
       "description" : "Conditional meta keys exist if the data requires them",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "meta",
          "variation"
       ],
@@ -1950,7 +1950,7 @@
       "description" : "Meta values are correctly formatted and linked",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "core",
          "meta",
          "meta_sample",
@@ -1964,7 +1964,7 @@
       "description" : "Meta keys are correctly assigned at species or database level",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
@@ -1995,7 +1995,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "MitochondriaAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MitochondriaAnnotated"
@@ -2035,7 +2035,7 @@
          "compara",
          "compara_homology_annotation",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "funcgen",
          "schema",
@@ -2074,7 +2074,7 @@
       "datacheck_type" : "advisory",
       "description" : "Object_xrefs should be linked to an analysis",
       "groups" : [
-         "brc4_core",
+         "vpdb_core",
          "core",
          "xref",
          "xref_gene_symbol_transformer"
@@ -2134,7 +2134,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "PlastidsAnnotated",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PlastidsAnnotated"
@@ -2145,7 +2145,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "PolyploidAttribs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::PolyploidAttribs"
@@ -2221,7 +2221,7 @@
       "description" : "All protein-coding genes have a valid translation",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "geneset"
       ],
       "name" : "ProteinTranslation",
@@ -2280,7 +2280,7 @@
       "groups" : [
          "annotation",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "RepeatFeatures",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RepeatFeatures"
@@ -2309,7 +2309,7 @@
       "datacheck_type" : "critical",
       "description" : "Schema patches are up-to-date",
       "groups" : [
-         "brc4_core",
+         "vpdb_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
@@ -2328,7 +2328,7 @@
       "datacheck_type" : "critical",
       "description" : "The schema type meta key matches the DB name",
       "groups" : [
-         "brc4_core",
+         "vpdb_core",
          "compara",
          "compara_gene_trees",
          "compara_genome_alignments",
@@ -2350,7 +2350,7 @@
       "description" : "The schema version meta key matches the DB name",
       "groups" : [
          "ancestral",
-         "brc4_core",
+         "vpdb_core",
          "compara",
          "compara_homology_annotation",
          "core",
@@ -2362,14 +2362,14 @@
       "name" : "SchemaVersion",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SchemaVersion"
    },
-   "SeqRegionBRC4" : {
+   "SeqRegionVPDB" : {
       "datacheck_type" : "critical",
-      "description" : "Seq_region for BRC4 have correct attributes",
+      "description" : "Seq_region for VEuPathDB have correct attributes",
       "groups" : [
-         "brc4_core"
+         "vpdb_core"
       ],
-      "name" : "SeqRegionBRC4",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionBRC4"
+      "name" : "SeqRegionVPDB",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionVPDB"
    },
    "SeqRegionNames" : {
       "datacheck_type" : "critical",
@@ -2377,7 +2377,7 @@
       "groups" : [
          "ancestral",
          "assembly",
-         "brc4_core",
+         "vpdb_core",
          "core"
       ],
       "name" : "SeqRegionNames",
@@ -2419,7 +2419,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "SeqRegionRank",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SeqRegionRank"
@@ -2429,7 +2429,7 @@
       "description" : "Seq_region synonyms do not clash with seq region names",
       "groups" : [
          "assembly",
-         "brc4_core",
+         "vpdb_core",
          "core"
       ],
       "name" : "SeqRegionSynonyms",
@@ -2441,7 +2441,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -2463,7 +2463,7 @@
       "groups" : [
          "assembly",
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "SequenceLevel",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SequenceLevel"
@@ -2484,7 +2484,7 @@
       "description" : "Simple features are not from analysis type gene, mrna and cds",
       "groups" : [
          "core",
-         "brc4_core"
+         "vpdb_core"
       ],
       "name" : "SimpleFeatureAnalysisTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SimpleFeatureAnalysisTypes"
@@ -2521,7 +2521,7 @@
       "description" : "Species production_name and alias are unique across all databases in the registry",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "meta"
       ],
       "name" : "SpeciesNameUnique",
@@ -2541,7 +2541,7 @@
       "description" : "Taxonomic meta keys are consistent with taxonomy database",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "meta"
       ],
       "name" : "SpeciesTaxonomy",
@@ -2620,7 +2620,7 @@
       "description" : "Gene and transcript bounds are consistent",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -2688,7 +2688,7 @@
       "description" : "Transcripts are linked to sequences",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -2712,7 +2712,7 @@
       "description" : "Transcripts have translations, if appropriate",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -2724,7 +2724,7 @@
       "description" : "Translations have appropriate properties",
       "groups" : [
          "core",
-         "brc4_core",
+         "vpdb_core",
          "corelike",
          "geneset"
       ],
@@ -2831,14 +2831,14 @@
       "name" : "VersionedGenes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenes"
    },
-   "VersionedGenesBRC4" : {
+   "VersionedGenesVPDB" : {
       "datacheck_type" : "critical",
-      "description" : "Genes are unversioned in BRC4 databases",
+      "description" : "Genes are unversioned in VEuPathDB databases",
       "groups" : [
-         "brc4_core"
+         "vpdb_core"
       ],
-      "name" : "VersionedGenesBRC4",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenesBRC4"
+      "name" : "VersionedGenesVPDB",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::VersionedGenesVPDB"
    },
    "WhitespaceAdvisory" : {
       "datacheck_type" : "advisory",

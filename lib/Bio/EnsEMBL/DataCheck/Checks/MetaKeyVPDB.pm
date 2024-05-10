@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::MetaKeyBRC4;
+package Bio::EnsEMBL::DataCheck::Checks::MetaKeyVPDB;
 
 use warnings;
 use strict;
@@ -27,9 +27,9 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'MetaKeyBRC4',
-  DESCRIPTION    => 'Expected meta keys for BRC4 cores',
-  GROUPS         => ['brc4_core'],
+  NAME           => 'MetaKeyVPDB',
+  DESCRIPTION    => 'Expected meta keys for VEuPathDB cores',
+  GROUPS         => ['vpdb_core'],
   DB_TYPES       => ['core'],
   TABLES         => ['meta']
 };
@@ -42,8 +42,9 @@ sub tests {
   my @expected = qw/
   assembly.accession
   species.taxonomy_id
-  BRC4.component
-  BRC4.organism_abbrev
+  veupathdb.build_version
+  veupathdb.component_db
+  veupathdb.organism_abbrev
   /;
   foreach my $meta_key (@expected) {
     my $values = $mca->list_value_by_key($meta_key);
@@ -52,7 +53,7 @@ sub tests {
     ok(scalar(@$values) == 1, $desc);
   }
   
-  my $desc = "BRC4 component is valid";
+  my $desc = "VEuPathDB Component DB is valid";
   my %ok_components = map { $_ => 1 } qw(
     AmoebaDB
     CryptoDB
@@ -67,7 +68,7 @@ sub tests {
     TriTrypDB
     VectorBase
   );
-  my ($component) = @{ $mca->list_value_by_key("BRC4.component") };
+  my ($component) = @{ $mca->list_value_by_key("veupathdb.component_db") };
   if ($component) {
     ok(exists $ok_components{$component}, $desc);
   }

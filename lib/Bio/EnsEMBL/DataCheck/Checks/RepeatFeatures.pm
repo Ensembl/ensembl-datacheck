@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'RepeatFeatures',
   DESCRIPTION => 'Repeat feature coordinates are present and correct',
-  GROUPS      => ['annotation', 'core', 'brc4_core'],
+  GROUPS      => ['annotation', 'core', 'vpdb_core'],
   DB_TYPES    => ['core'],
   TABLES      => ['analysis', 'coord_system', 'repeat_feature', 'seq_region'],
 };

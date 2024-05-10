@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'AnalysisDescription',
   DESCRIPTION => 'Gene analyses have descriptions',
-  GROUPS      => ['analysis_description', 'core', 'brc4_core', 'corelike', 'geneset'],
+  GROUPS      => ['analysis_description', 'core', 'vpdb_core', 'corelike', 'geneset'],
   DB_TYPES    => ['core', 'otherfeatures'],
   TABLES      => ['analysis', 'analysis_description', 'gene', 'prediction_transcript', 'transcript']
 };
