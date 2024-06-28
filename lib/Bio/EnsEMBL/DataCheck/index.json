@@ -2254,16 +2254,6 @@
       "name" : "RNASeqDNAAlignFeatureAnalyses",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RNASeqDNAAlignFeatureAnalyses"
    },
-   "RegulatoryFeatureIsActive" : {
-      "datacheck_type" : "critical",
-      "description" : "All regulatory features have a valid activity value in at least one epigenome",
-      "groups" : [
-         "funcgen",
-         "regulatory_build"
-      ],
-      "name" : "RegulatoryFeatureIsActive",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::RegulatoryFeatureIsActive"
-   },
    "RegulatoryFeatureStableID" : {
       "datacheck_type" : "critical",
       "description" : "Regulatory feature stable IDs are unique within a regulatory build",
