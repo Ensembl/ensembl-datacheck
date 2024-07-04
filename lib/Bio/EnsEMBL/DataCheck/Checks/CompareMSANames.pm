@@ -43,7 +43,7 @@ sub tests {
   my $prev_db_name = $prev_dba->dbc->dbname;
   my $curr_mlss_adap = $curr_dba->get_MethodLinkSpeciesSetAdaptor;
   my $prev_mlss_adap = $prev_dba->get_MethodLinkSpeciesSetAdaptor;
-  my @mlss_types = qw ( PECAN EPO EPO_EXTENDED CACTUS_HAL );
+  my @mlss_types = qw ( PECAN EPO EPO_EXTENDED CACTUS_HAL CACTUS_DB );
   my @curr_mlsses;
   my @prev_mlsses;
   
