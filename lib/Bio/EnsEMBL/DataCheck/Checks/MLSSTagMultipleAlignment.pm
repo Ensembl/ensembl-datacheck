@@ -39,7 +39,7 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
-  my @methods = qw( EPO EPO_EXTENDED PECAN );
+  my @methods = qw( CACTUS_DB EPO EPO_EXTENDED PECAN );
   my $db_name = $self->dba->dbc->dbname;
   
   my @mlsses;
@@ -63,6 +63,7 @@ sub tests {
 
   has_tags($self->dba, 'EPO', $tags);
   has_tags($self->dba, 'PECAN', $tags);
+  has_tags($self->dba, 'CACTUS_DB', $tags);
 
   push @$tags, 'base_mlss_id';
   has_tags($self->dba, 'EPO_EXTENDED', $tags);
