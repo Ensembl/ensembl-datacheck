@@ -41,7 +41,7 @@ sub tests {
 
   # We can assume every translation has a NumResidues attribute,
   # because that is tested by the PepstatsAttributes datacheck.
-  # exclude Alfa-fold entries fro mthis datacheck
+  # exclude Alpha-fold entries fro mthis datacheck
   my $desc = 'Protein features do not extend beyond the translation';
   my $diag = 'Hit name, translation_id';
   my $sql  = qq/
