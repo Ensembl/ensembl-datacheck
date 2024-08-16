@@ -104,9 +104,10 @@ sub tests {
     }
   }
 
-  while (my ($gdb_name, $species_set_names) = each %gdb_to_species_set_names) {
+  foreach my $gdb_name (sort keys %gdb_to_species_set_names) {
+    my @species_sets_with_gdb = @{$gdb_to_species_set_names{$gdb_name}};
     my $desc_3 = "Genome $gdb_name is in one strain gene-tree species set";
-    is(scalar(@{$species_set_names}), 1, $desc_3);
+    is(scalar(@species_sets_with_gdb), 1, $desc_3);
   }
 }
 
