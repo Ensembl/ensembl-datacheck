@@ -85,6 +85,7 @@ sub tests {
   my @known_strain_types = ('strain', 'breed', 'cultivar');
   my $known_strain_type_patt = join('|', @known_strain_types);
 
+  my %gdb_to_species_set_names;
   while (my ($species_set_id, $gene_tree_species_set) = each %strain_species_sets_by_id) {
 
     my $species_set_name = $gene_tree_species_set->name =~ s/^collection-//r;
@@ -97,6 +98,15 @@ sub tests {
       my $strain_type = $gene_tree_species_set->get_value_for_tag('strain_type');
       ok($strain_type =~ /^${known_strain_type_patt}$/, $desc_2);
     }
+
+    foreach my $gdb (@{$gene_tree_species_set->genome_dbs}) {
+      push(@{$gdb_to_species_set_names{$gdb->name}}, $gene_tree_species_set->name);
+    }
+  }
+
+  while (my ($gdb_name, $species_set_names) = each %gdb_to_species_set_names) {
+    my $desc_3 = "Genome $gdb_name is in one strain gene-tree species set";
+    is(scalar(@{$species_set_names}), 1, $desc_3);
   }
 }
 
