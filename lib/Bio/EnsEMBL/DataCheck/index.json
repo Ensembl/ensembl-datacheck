@@ -2586,6 +2586,17 @@
       "name" : "StructuralVariationSomatic",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StructuralVariationSomatic"
    },
+   "SupertreeTopology" : {
+      "datacheck_type" : "critical",
+      "description" : "Check that the topology of each supertree is as expected",
+      "groups" : [
+         "compara",
+         "compara_gene_tree_pipelines",
+         "compara_gene_trees"
+      ],
+      "name" : "SupertreeTopology",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SupertreeTopology"
+   },
    "TSLCoverage" : {
       "datacheck_type" : "advisory",
       "description" : "TSL covers 95% of protein-coding gene on each chromosome",
