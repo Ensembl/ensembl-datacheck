@@ -58,7 +58,7 @@ sub tests {
       homology_member hm2 USING (homology_id)
     WHERE
       hm1.gene_member_id < hm2.gene_member_id
-    GROUP BY h1.gene_tree_root_id, hm1.gene_member_id, hm2.gene_member_id
+    GROUP BY hm1.gene_member_id, hm2.gene_member_id
     HAVING COUNT(*) > 1
   /;
 
