@@ -1862,6 +1862,16 @@
       "name" : "MemberProductionCounts",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberProductionCounts"
    },
+   "MemberStableIDClash" : {
+      "datacheck_type" : "advisory",
+      "description" : "Members should not have stable ID clashes",
+      "groups" : [
+         "compara",
+         "compara_gene_trees"
+      ],
+      "name" : "MemberStableIDClash",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MemberStableIDClash"
+   },
    "MemberXrefAccessTime" : {
       "datacheck_type" : "critical",
       "description" : "Compara member xref data can be accessed in a timely manner",
