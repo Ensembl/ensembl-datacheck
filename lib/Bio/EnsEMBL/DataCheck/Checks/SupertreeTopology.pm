@@ -62,7 +62,7 @@ sub tests {
   my $supertree_root_ids = $helper->execute_simple( -SQL => $supertree_sql );
 
   SKIP: {
-    skip sprintf("There are no supertrees in %s", $dbc->dbname) unless scalar(@{$supertree_root_ids}) > 0;
+skip sprintf("There are no supertrees in %s", $dbc->dbname) if scalar(@{$supertree_root_ids}) == 0;
 
     my $supertree_node_sql = q/
       SELECT
