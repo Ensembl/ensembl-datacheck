@@ -44,7 +44,11 @@ sub tests {
   my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
   my $gdb_adap = $self->dba->get_GenomeDBAdaptor;
 
-  my $cactus_mlsses = $mlss_adap->fetch_all_by_method_link_type('CACTUS_HAL');
+  my $cactus_mlsses = [];
+  foreach my $method_type ('CACTUS_DB', 'CACTUS_HAL') {
+    my $cactus_mlsses_of_type = $mlss_adap->fetch_all_by_method_link_type($method_type);
+    push(@{$cactus_mlsses}, @{$cactus_mlsses_of_type});
+  }
 
   unless (scalar(@{$cactus_mlsses})) {
     plan skip_all => "No Cactus MLSSes in this database";

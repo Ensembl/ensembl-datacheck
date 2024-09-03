@@ -42,7 +42,7 @@ sub tests {
   my ($self) = @_;
   my $dba    = $self->dba;
   my $helper = $dba->dbc->sql_helper;
-  my @method_links = qw(CACTUS_HAL EPO EPO_EXTENDED PECAN PROTEIN_TREES NC_TREES SPECIES_TREE);
+  my @method_links = qw(CACTUS_DB CACTUS_HAL EPO EPO_EXTENDED PECAN PROTEIN_TREES NC_TREES SPECIES_TREE);
 
   my $expected_tree_count;
 
