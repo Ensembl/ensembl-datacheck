@@ -73,18 +73,19 @@ sub default_options {
         report_per_db                  => 0,
         report_all                     => 0,
 
-        tap_to_json                    => 1,
-        json_passed                    => 0,
-        json_by_species                => 1,
-        shout_db_not_found_in_registry => 1,
-        store_to_es                    => 0,
-        es_host                        => 'es.production.ensembl.org',
-        es_port                        => undef,
-        es_index                       => 'datacheck_results',
-        es_log_dir                     => '/hps/scratch/flicek/ensembl/' . $self->o('ENV', 'USER') . '/datacheck_results_' . $self->o('ENV', 'ENS_VERSION'),
-        production_queue  => 'production',
-        datamover_queue   => 'datamover',
-    };
+    tap_to_json     => 1,
+    json_passed     => 0,
+    json_by_species => 1,
+    shout_db_not_found_in_registry => 1,
+    store_to_es     => 0,
+    es_host         => 'es.ensembl-production.ebi.ac.uk',
+    es_port         => undef,
+    es_index        => 'datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    es_log_dir     => '/hps/scratch/flicek/ensembl/'.$self->o('ENV', 'USER').'/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    target_site    => 'main',
+    production_queue  => 'production',
+    datamover_queue   => 'datamover',
+  };
 }
 
 # Implicit parameter propagation throughout the pipeline.
@@ -382,59 +383,15 @@ sub pipeline_analyses {
 }
 
 sub resource_classes {
-    my $self = shift;
+    my ($self) = @_;
 
-
-    ## Sting it together
-    my %time = (H => ' --time=1:00:00',
-        D         => ' --time=1-00:00:00',
-        W         => ' --time=7-00:00:00',);
-
-    my %memory = ('100M' => '100',
-        '200M'           => '200',
-        '500M'           => '500',
-        '1GB'            => '1000',
-        '2GB'            => '2000',
-        '3GB'            => '3000',
-        '4GB'            => '4000',
-        '8GB'            => '8000',
-        '16GB'           => '16000',
-        '32GB'           => '32000',);
-
-    my $pq = ' --partition=standard';
-    my $dq = ' --partition=datamover';
-
-    my %output = (
-        #Default is a duplicate of 100M
-        'default'   => { 'LSF' => '-q ' . $self->o('production_queue'), 'SLURM' => $pq . $time{'H'} . ' --mem=' . $memory{'100M'} . 'm' },
-        'default_D' => { 'LSF' => '-q ' . $self->o('production_queue'), 'SLURM' => $pq . $time{'D'} . ' --mem=' . $memory{'100M'} . 'm' },
-        'default_W' => { 'LSF' => '-q ' . $self->o('production_queue'), 'SLURM' => $pq . $time{'W'} . ' --mem=' . $memory{'100M'} . 'm' },
-        #Data mover nodes
-        'dm'        => { 'LSF' => '-q ' . $self->o('datamover_queue'), 'SLURM' => $dq . $time{'H'} . ' --mem=' . $memory{'100M'} . 'm' },
-        'dm_D'      => { 'LSF' => '-q ' . $self->o('datamover_queue'), 'SLURM' => $dq . $time{'D'} . ' --mem=' . $memory{'100M'} . 'm' },
-        'dm_W'      => { 'LSF' => '-q ' . $self->o('datamover_queue'), 'SLURM' => $dq . $time{'W'} . ' --mem=' . $memory{'100M'} . 'm' },
-    );
-    #Create a dictionary of all possible time and memory combinations. Format would be:
-    #2G={
-    #   'SLURM' => ' --partition=standard --time=1:00:00  --mem=2000m',
-    #   'LSF' => '-q $self->o(production_queue) -M 2000 -R "rusage[mem=2000]"'
-    # };
-
-    while ((my $time_key, my $time_value) = each(%time)) {
-        while ((my $memory_key, my $memory_value) = each(%memory)) {
-            if ($time_key eq 'H') {
-                $output{$memory_key} = { 'LSF' => '-q ' . $self->o('production_queue') . ' -M ' . $memory_value . ' -R "rusage[mem=' . $memory_value . ']"',
-                    'SLURM'                    => $pq . $time_value . '  --mem=' . $memory_value . 'm' };
-            }
-            else {
-                $output{$memory_key . '_' . $time_key} = { 'LSF' => '-q ' . $self->o('production_queue') . ' -M ' . $memory_value . ' -R "rusage[mem=' . $memory_value . ']"',
-                    'SLURM'                                      => $pq . $time_value . '  --mem=' . $memory_value . 'm' };
-            }
-        }
+    return {
+        'default' => { LSF => '-q production -M 500 -R "rusage[mem=500]"' },
+        '2GB'     => { LSF => '-q production -M 2000 -R "rusage[mem=2000]"' },
+        '4GB'     => { LSF => '-q production -M 4000 -R "rusage[mem=4000]"' },
+        '8GB'     => { LSF => '-q production -M 8000 -R "rusage[mem=8000]"' },
+        '16GB'    => { LSF => '-q production -M 16000 -R "rusage[mem=16000]"' },
     }
-
-    return \%output;
-
 }
 
 1;
