@@ -41,6 +41,7 @@ sub tests {
 
   # We can assume every translation has a NumResidues attribute,
   # because that is tested by the PepstatsAttributes datacheck.
+  # exclude Alpha-fold entries from this datacheck "hit_name NOT LIKE 'AF-%'"
   my $desc = 'Protein features do not extend beyond the translation';
   my $diag = 'Hit name, translation_id';
   my $sql  = qq/
@@ -52,7 +53,8 @@ sub tests {
       attrib_type USING (attrib_type_id)
     WHERE
       code = 'NumResidues' AND
-      value < seq_end
+      value < seq_end  AND 
+      hit_name NOT LIKE 'AF-%';
   /;
   is_rows_zero($self->dba, $sql, $desc, $diag);
 }
