@@ -2567,6 +2567,7 @@
          "compara_gene_tree_pipelines",
          "compara_gene_trees",
          "compara_master",
+      
       ],
       "name" : "StrainGeneTreeSpeciesSets",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::StrainGeneTreeSpeciesSets"
