@@ -2929,5 +2929,14 @@
       ],
       "name" : "XrefTypes",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::XrefTypes"
+   },
+   "CompareGeneNames" : {
+      "datacheck_type" : "advisory",
+      "description" : "Compare Gene Name counts between two databases, categorised by external_db.",
+      "groups" : [
+         "xref_mapping"
+      ],
+      "name" : "CompareGeneNames",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CompareGeneNames"
    }
 }
