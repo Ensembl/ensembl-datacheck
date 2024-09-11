@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::CompareGeneNames;
+package Bio::EnsEMBL::DataCheck::Checks::CompareProteinCodingGeneNames;
 
 use warnings;
 use strict;
@@ -29,12 +29,12 @@ use Bio::EnsEMBL::DataCheck::Utils qw(same_assembly same_geneset);
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'CompareGeneNames',
-  DESCRIPTION    => 'Compare Gene Name counts between two databases, categorised by external_db.',
+  NAME           => 'CompareProteinCodingGeneNames',
+  DESCRIPTION    => 'Compare Protein Coding Gene Name counts between two databases.',
   GROUPS         => ['xref_mapping'],
-  DATACHECK_TYPE => 'advisory',
+  DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['core'],
-  TABLES         => ['xref', 'gene', 'object_xref', 'seq_region', 'coord_system', 'external_db']
+  TABLES         => ['gene', 'coord_system', 'seq_region']
 };
 
 sub tests {
@@ -52,33 +52,24 @@ sub tests {
 sub gene_name_counts {
   my ($self, $old_dba) = @_;
 
-  my $threshold = 0.33;
+  my $threshold = 0.1;
 
-  my $desc = "Consistent gene name counts between ".
+  my $desc = "Consistent protein coding gene name counts between ".
              $self->dba->dbc->dbname.
              ' (species_id '.$self->dba->species_id.') and '.
              $old_dba->dbc->dbname.
              ' (species_id '.$old_dba->species_id.')';
   my $sql  = qq/
-    SELECT db_name, COUNT(*) FROM
+    SELECT count(g.gene_id) FROM 
       gene g INNER JOIN 
-      xref x ON g.display_xref_id = x.xref_id INNER JOIN 
-      external_db USING (external_db_id) INNER JOIN 
       seq_region USING (seq_region_id) INNER JOIN 
-      coord_system USING (coord_system_id) INNER JOIN
-      object_xref USING (xref_id)
+      coord_system USING (coord_system_id)
     WHERE
-      db_name <> 'GO' AND
-      info_type <> 'PROJECTION' AND
-      ensembl_object_type = 'Gene' AND
-      ensembl_id = gene_id AND
-      species_id = %d
-    GROUP BY db_name
+      g.display_xref_id IS NOT NULL AND 
+      g.biotype='protein_coding'
   /;
 
-  my $sql1 = sprintf($sql, $self->dba->species_id);
-  my $sql2 = sprintf($sql, $old_dba->species_id);
-  row_subtotals($self->dba, $old_dba, $sql1, $sql2, $threshold, $desc);
+  row_totals($self->dba, $old_dba, $sql, undef, $threshold, $desc);
 }
 
 1;
