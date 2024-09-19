@@ -57,6 +57,7 @@ sub tests {
   }
 
   my %strain_species_sets_by_id;
+  my %non_strain_species_sets_by_id;
   while (my ($species_set_id, $gene_tree_species_set) = each %species_sets_by_id) {
     my @gdbs = @{$gene_tree_species_set->genome_dbs};
     my %gdb_name_set = map { $_->name => 1 } @gdbs;
@@ -81,6 +82,10 @@ sub tests {
         $strain_species_sets_by_id{$gene_tree_species_set->dbID} = $gene_tree_species_set;
       }
     }
+
+    if (!exists $strain_species_sets_by_id{$gene_tree_species_set->dbID}) {
+      $non_strain_species_sets_by_id{$gene_tree_species_set->dbID} = $gene_tree_species_set;
+    }
   }
 
   my @known_strain_types = ('strain', 'breed', 'cultivar');
@@ -90,12 +95,12 @@ sub tests {
   while (my ($species_set_id, $gene_tree_species_set) = each %strain_species_sets_by_id) {
 
     my $species_set_name = $gene_tree_species_set->name =~ s/^collection-//r;
-    my $desc_1 = "Gene-tree species set $species_set_name has a strain_type tag";
+    my $desc_1 = "Strain gene-tree species set '$species_set_name' has a strain_type tag";
     my $has_strain_type_tag = $gene_tree_species_set->has_tag('strain_type');
     ok($has_strain_type_tag, $desc_1);
 
     if ($has_strain_type_tag) {
-      my $desc_2 = "Gene-tree species set $species_set_name has a known strain type";
+      my $desc_2 = "Strain gene-tree species set '$species_set_name' has a known strain type";
       my $strain_type = $gene_tree_species_set->get_value_for_tag('strain_type');
       ok($strain_type =~ /^${known_strain_type_patt}$/, $desc_2);
     }
@@ -107,8 +112,15 @@ sub tests {
 
   foreach my $gdb_name (sort keys %gdb_to_collection_name_set) {
     my @species_sets_with_gdb = keys %{$gdb_to_collection_name_set{$gdb_name}};
-    my $desc_3 = "Genome $gdb_name is in one strain gene-tree species set";
+    my $desc_3 = "Genome '$gdb_name' is in one strain gene-tree species set";
     is(scalar(@species_sets_with_gdb), 1, $desc_3);
+  }
+
+  while (my ($species_set_id, $gene_tree_species_set) = each %non_strain_species_sets_by_id) {
+    my $species_set_name = $gene_tree_species_set->name =~ s/^collection-//r;
+    my $desc_4 = "Non-strain gene-tree species set '$species_set_name' is free of strain_type tags";
+    my $lacks_strain_type_tag = !$gene_tree_species_set->has_tag('strain_type');
+    ok($lacks_strain_type_tag, $desc_4);
   }
 }
 
