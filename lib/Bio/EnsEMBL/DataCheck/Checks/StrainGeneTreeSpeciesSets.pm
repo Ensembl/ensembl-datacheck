@@ -36,6 +36,24 @@ use constant {
 };
 
 
+sub skip_tests {
+  my ($self) = @_;
+  my $compara_dba = $self->dba;
+  my $mlss_dba = $compara_dba->get_MethodLinkSpeciesSetAdaptor();
+
+  my @gene_tree_mlsses;
+  foreach my $method_type ('PROTEIN_TREES', 'NC_TREES') {
+    my $mlsses_of_type = $mlss_dba->fetch_all_by_method_link_type($method_type);
+    my @curr_mlsses_of_type = grep { $_->is_current } @{$mlsses_of_type};
+    push(@gene_tree_mlsses, @curr_mlsses_of_type);
+  }
+
+  if (scalar(@gene_tree_mlsses) == 0) {
+    return( 1, sprintf("There are no current gene-tree MLSSes in %s", $compara_dba->dbc->dbname) );
+  }
+}
+
+
 sub tests {
   my ($self) = @_;
 
