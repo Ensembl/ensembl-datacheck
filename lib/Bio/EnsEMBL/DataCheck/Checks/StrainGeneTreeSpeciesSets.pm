@@ -46,7 +46,8 @@ sub tests {
   my @gene_tree_mlsses;
   foreach my $method_type ('PROTEIN_TREES', 'NC_TREES') {
     my $mlsses_of_type = $mlss_dba->fetch_all_by_method_link_type($method_type);
-    push(@gene_tree_mlsses, @{$mlsses_of_type});
+    my @curr_mlsses_of_type = grep { $_->is_current } @{$mlsses_of_type};
+    push(@gene_tree_mlsses, @curr_mlsses_of_type);
   }
 
   my %species_sets_by_id;
