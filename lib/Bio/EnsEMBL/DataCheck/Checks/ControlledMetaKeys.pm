@@ -46,18 +46,24 @@ sub tests {
 
   my $helper = $self->dba->dbc->sql_helper;
   my %meta_keys = %{ $helper->execute_into_hash(-SQL => $sql) };
-
-  #check target site is main / new and select mandatory metakeys 
-  my $filter_metakeys = '';
-  if (defined $self->target_site){
-    $filter_metakeys = " AND target_site like '\%".$self->target_site."\%' ";
-  }
-
+  
+  #fetch metakeys for main site 
   my $prod_sql = qq/
     SELECT name, is_optional
     FROM meta_key
-    WHERE FIND_IN_SET('$group', db_type) AND is_current = 1 $filter_metakeys
+    WHERE FIND_IN_SET('$group', db_type) AND is_current = 1 
   /;
+
+   #fetch metakeys by is_current_ensmebl and  target site is new
+  if (defined $self->target_site &&  lc($self->target_site) eq 'new' ){
+     my $prod_sql = qq/
+    SELECT name, is_optional_ensembl
+    FROM meta_key
+    WHERE FIND_IN_SET('$group', db_type) AND is_current_ensembl = 1 AND target_site like '\%new\%'
+    /;
+  }
+
+ 
   my $prod_dba    = $self->get_dba('multi', 'production');
   my $prod_helper = $prod_dba->dbc->sql_helper;
   my %prod_keys   = %{ $prod_helper->execute_into_hash(-SQL => $prod_sql) };
