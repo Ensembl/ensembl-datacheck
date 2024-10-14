@@ -29,7 +29,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME           => 'StrainGeneTreeSpeciesSets',
   DESCRIPTION    => 'Strain-level gene-tree species sets are as expected',
-  GROUPS         => ['compara', 'compara_gene_tree_pipelines', 'compara_gene_trees', 'compara_master'],
+  GROUPS         => ['compara', 'compara_gene_trees', 'compara_master'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['genome_db', 'method_link', 'method_link_species_set', 'species_set', 'species_set_header', 'species_set_tag']
