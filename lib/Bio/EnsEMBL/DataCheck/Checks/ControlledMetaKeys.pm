@@ -54,9 +54,9 @@ sub tests {
   }
 
   my $prod_sql = qq/
-    SELECT name, is_optional
+    SELECT name, is_optional_ensembl
     FROM meta_key
-    WHERE FIND_IN_SET('$group', db_type) AND is_current = 1 $filter_metakeys
+    WHERE FIND_IN_SET('$group', db_type) AND is_current_ensembl = 1 $filter_metakeys
   /;
   my $prod_dba    = $self->get_dba('multi', 'production');
   my $prod_helper = $prod_dba->dbc->sql_helper;
