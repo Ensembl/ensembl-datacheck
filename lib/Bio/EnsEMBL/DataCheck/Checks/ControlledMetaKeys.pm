@@ -49,7 +49,7 @@ sub tests {
 
   #check target site is main / new and select mandatory metakeys 
   my $metakey_tablename = 'meta_key';
-  if (defined $self->target_site){
+  if (defined $self->target_site && $self->target_site ne 'main'){
     $metakey_tablename = "meta_key_mvp";
   }
 
