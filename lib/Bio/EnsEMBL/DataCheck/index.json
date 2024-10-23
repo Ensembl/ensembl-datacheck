@@ -2564,7 +2564,6 @@
       "description" : "Strain-level gene-tree species sets are as expected",
       "groups" : [
          "compara",
-         "compara_gene_tree_pipelines",
          "compara_gene_trees",
          "compara_master"
       ],
