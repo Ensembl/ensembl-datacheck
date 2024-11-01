@@ -62,10 +62,13 @@ sub tests {
   my $prod_helper = $prod_dba->dbc->sql_helper;
   my %prod_keys   = %{ $prod_helper->execute_into_hash(-SQL => $prod_sql) };
 
-  foreach my $meta_key (keys %meta_keys) {
-    my $desc = "Meta key '$meta_key' in production database";
-    ok(exists $prod_keys{$meta_key}, $desc);
-  }
+  #The data teams would like to remove the standard meta_keys DC and be able to include any keys 
+  #they want without them in the Production_db. They want to use it internally for
+  #tracking and don't want to be beholden to production or register them every time
+  # foreach my $meta_key (keys %meta_keys) {
+  #   my $desc = "Meta key '$meta_key' in production database";
+  #   ok(exists $prod_keys{$meta_key}, $desc);
+  # }
 
   foreach my $meta_key (keys %prod_keys) {
     if (!$prod_keys{$meta_key}) {
