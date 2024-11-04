@@ -1327,18 +1327,6 @@
       "name" : "DisplayXrefExists",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExists"
    },
-   "DisplayXrefFormat" : {
-      "datacheck_type" : "critical",
-      "description" : "Gene names are correctly formatted",
-      "groups" : [
-         "core",
-         "xref",
-         "xref_gene_symbol_transformer",
-         "xref_mapping"
-      ],
-      "name" : "DisplayXrefFormat",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefFormat"
-   },
    "DisplayableGenes" : {
       "datacheck_type" : "advisory",
       "description" : "Genes are displayable and have web_data attached to their analysis",
