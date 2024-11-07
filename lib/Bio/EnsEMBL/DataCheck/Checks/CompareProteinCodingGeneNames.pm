@@ -62,11 +62,13 @@ sub gene_name_counts {
   my $sql  = qq/
     SELECT count(g.gene_id) FROM 
       gene g INNER JOIN 
+      xref x ON g.display_xref_id = x.xref_id INNER JOIN
       seq_region USING (seq_region_id) INNER JOIN 
       coord_system USING (coord_system_id)
     WHERE
       g.display_xref_id IS NOT NULL AND 
-      g.biotype='protein_coding'
+      g.biotype='protein_coding' AND 
+      x.info_type!='PROJECTION'
   /;
 
   row_totals($self->dba, $old_dba, $sql, undef, $threshold, $desc);
