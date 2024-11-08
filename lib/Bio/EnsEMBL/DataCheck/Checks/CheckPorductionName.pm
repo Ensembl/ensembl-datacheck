@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::ControlledMetaKeys;
+package Bio::EnsEMBL::DataCheck::Checks::CheckProductionName;
 
 use warnings;
 use strict;
@@ -27,7 +27,7 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'ControlledMetaKeys',
+  NAME        => 'CheckProductionName',
   DESCRIPTION => 'Check Metakey species.production_name is same as organism.production_name',
   GROUPS      => ['core'],
   DB_TYPES    => ['core'],
