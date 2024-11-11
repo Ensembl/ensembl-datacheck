@@ -52,7 +52,8 @@ sub tests {
 sub gene_name_counts {
   my ($self, $old_dba) = @_;
 
-  my $threshold = 0.1;
+  my $threshold = 0.9;
+  my $min_count = 5;
 
   my $desc = "Consistent protein coding gene name counts between ".
              $self->dba->dbc->dbname.
@@ -71,7 +72,7 @@ sub gene_name_counts {
       x.info_type!='PROJECTION'
   /;
 
-  row_totals($self->dba, $old_dba, $sql, undef, $threshold, $desc);
+  row_totals($self->dba, $old_dba, $sql, undef, $threshold, $desc, $min_count);
 }
 
 1;
