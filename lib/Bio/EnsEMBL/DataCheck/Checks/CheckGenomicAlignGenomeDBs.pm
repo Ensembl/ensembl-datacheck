@@ -75,8 +75,24 @@ sub tests {
     my $species_set_name = $species_set->name;
     # Collect genome_db_ids in species_sets associated with gab_mlss
     my $ss_genome_dbs = $species_set->genome_dbs;
+
+    my $mlss_component;
+    if ($mlss->has_tag('genome_component')) {
+      $mlss_component = $mlss->get_value_for_tag('genome_component');
+    }
+
     my @ss_gdb_ids;
     foreach my $genomedb ( @$ss_genome_dbs ) {
+      # We can omit a component GenomeDB from the species-set GenomeDBs if there is
+      # a 'genome_component' MLSS tag and the component of this GenomeDB matches it.
+      # In such MLSSes, component GenomeDBs are used to ensure that per-component
+      # MLSSes involving the same genomes can be distinguished from each other.
+      # The NoDataOnGenomeComponents datacheck in any case ensures that the
+      # genomic_align table has no data assigned to component GenomeDBs.
+      next if (defined $mlss_component
+                 && defined $genomedb->genome_component
+                 && $genomedb->genome_component eq $mlss_component);
+
       my $gdb_id = $genomedb->dbID;
       push @ss_gdb_ids, $gdb_id;
     }
