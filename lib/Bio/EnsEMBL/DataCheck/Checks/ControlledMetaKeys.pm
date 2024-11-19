@@ -48,24 +48,27 @@ sub tests {
   my %meta_keys = %{ $helper->execute_into_hash(-SQL => $sql) };
 
   #check target site is main / new and select mandatory metakeys 
-  my $filter_metakeys = '';
-  if (defined $self->target_site){
-    $filter_metakeys = " AND target_site like '\%".$self->target_site."\%' ";
+  my $metakey_tablename = 'meta_key';
+  if (defined $self->target_site && $self->target_site ne 'main'){
+    $metakey_tablename = "meta_key_mvp";
   }
 
   my $prod_sql = qq/
     SELECT name, is_optional
-    FROM meta_key
-    WHERE FIND_IN_SET('$group', db_type) AND is_current = 1 $filter_metakeys
+    FROM $metakey_tablename
+    WHERE FIND_IN_SET('$group', db_type) AND is_current = 1 
   /;
   my $prod_dba    = $self->get_dba('multi', 'production');
   my $prod_helper = $prod_dba->dbc->sql_helper;
   my %prod_keys   = %{ $prod_helper->execute_into_hash(-SQL => $prod_sql) };
 
-  foreach my $meta_key (keys %meta_keys) {
-    my $desc = "Meta key '$meta_key' in production database";
-    ok(exists $prod_keys{$meta_key}, $desc);
-  }
+  #The data teams would like to remove the standard meta_keys DC and be able to include any keys 
+  #they want without them in the Production_db. They want to use it internally for
+  #tracking and don't want to be beholden to production or register them every time
+  # foreach my $meta_key (keys %meta_keys) {
+  #   my $desc = "Meta key '$meta_key' in production database";
+  #   ok(exists $prod_keys{$meta_key}, $desc);
+  # }
 
   foreach my $meta_key (keys %prod_keys) {
     if (!$prod_keys{$meta_key}) {

@@ -580,6 +580,15 @@
       "name" : "CheckPairAlignerUniqueMethod",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckPairAlignerUniqueMethod"
    },
+   "CheckProductionName" : {
+      "datacheck_type" : "critical",
+      "description" : "Check Metakey species.production_name is same as organism.production_name",
+      "groups" : [
+         "core"
+      ],
+      "name" : "CheckProductionName",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::CheckProductionName"
+   },
    "CheckReleaseConsistency" : {
       "datacheck_type" : "critical",
       "description" : "Check for consistency between retired genomes and species_sets",
@@ -1305,15 +1314,6 @@
       ],
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
-   },
-   "DisplayNameFormat" : {
-      "datacheck_type" : "critical",
-      "description" : "For Rapid Release, the display name must be a specific format",
-      "groups" : [
-         "rapid_release"
-      ],
-      "name" : "DisplayNameFormat",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayNameFormat"
    },
    "DisplayXrefExists" : {
       "datacheck_type" : "advisory",

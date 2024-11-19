@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::DisplayNameFormat;
+package Bio::EnsEMBL::DataCheck::Checks::CheckProductionName;
 
 use warnings;
 use strict;
@@ -27,24 +27,27 @@ use Test::More;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME        => 'DisplayNameFormat',
-  DESCRIPTION => 'For Rapid Release, the display name must be a specific format',
-  GROUPS      => ['rapid_release'],
+  NAME        => 'CheckProductionName',
+  DESCRIPTION => 'Check Metakey species.production_name is same as organism.production_name',
+  GROUPS      => ['core'],
   DB_TYPES    => ['core'],
   TABLES      => ['meta']
 };
 
 sub tests {
   my ($self) = @_;
+  my $species_id = $self->dba->species_id;
+  my $group = $self->dba->group;
+  my $sql = qq/
+    SELECT meta_key, meta_value FROM meta
+    WHERE species_id = $species_id AND 
+    meta_key in ('species.production_name', 'organism.production_name')
+    /;
 
-  my $mca = $self->dba->get_adaptor("MetaContainer");
-
-  # Check that the format of the display name conforms to expectations.
-  my $format = '[A-Za-z0-9\ ]+ \([A-Za-z0-9\(\)\/\-\_,\#\. ]+\) \- GC[AF]_\d+\.\d+(?:\s\[[\w ]+\])?';
-
-  my $desc = "Display name has correct format";
-  my $display_name = $mca->single_value_by_key('species.display_name');
-  like($display_name, qr/^$format$/, $desc);
+  my $helper = $self->dba->dbc->sql_helper;
+  my %meta_keys = %{ $helper->execute_into_hash(-SQL => $sql)};
+  my $desc = 'Metakeys species.production_name should be same as organism.production_name';
+  cmp_ok($meta_keys{'species.production_name'}, '==', $meta_keys{'organism.production_name'}, $desc);
 }
 
 1;
