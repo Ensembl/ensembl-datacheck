@@ -386,11 +386,11 @@ sub resource_classes {
     my ($self) = @_;
 
     return {
-        'default' => { LSF => '-q production -M 500 -R "rusage[mem=500]"' },
-        '2GB'     => { LSF => '-q production -M 2000 -R "rusage[mem=2000]"' },
-        '4GB'     => { LSF => '-q production -M 4000 -R "rusage[mem=4000]"' },
-        '8GB'     => { LSF => '-q production -M 8000 -R "rusage[mem=8000]"' },
-        '16GB'    => { LSF => '-q production -M 16000 -R "rusage[mem=16000]"' },
+        'default' => { SLURM => '--time=1-00:00:00  --mem=1G' },
+        '2GB'     => { SLURM => '--time=1-00:00:00  --mem=2G' },
+        '4GB'     => { SLURM => '--time=1-00:00:00  --mem=4G' },
+        '8GB'     => { SLURM => '--time=1-00:00:00  --mem=8G' },
+        '16GB'    => { SLURM => '--time=1-00:00:00  --mem=16G' },
     }
 }
 
