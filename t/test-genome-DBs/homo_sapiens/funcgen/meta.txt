@@ -1,5 +1,5 @@
 1	1	schema_type	funcgen
-2	\N	schema_version	109
+2	\N	schema_version	115
 3	\N	patch	patch_87_88_a.sql|schema_version
 4	\N	patch	patch_87_88_b.sql|seq_region_name_255
 5	\N	patch	patch_87_88_c.sql|sample_regulatory_feature_id field for regulatory build
@@ -143,3 +143,12 @@
 143	\N	patch	patch_107_108_a.sql|schema_version
 144	\N	patch	patch_107_108_b.sql|New epigenome_track table
 145	\N	patch	patch_108_109_a.sql|schema_version
+146	\N	patch	patch_109_110_a.sql|schema_version
+147	\N	patch	patch_110_111_a.sql|schema_version
+148	\N	patch	patch_111_112_a.sql|schema_version
+149	\N	patch	patch_111_112_b.sql|fix data_file_id length
+150	\N	patch	patch_111_112_c.sql|set data_file_id to not null auto increment
+151	\N	patch	patch_112_113_a.sql|schema_version
+152	\N	patch	patch_112_113_b.sql|fix_compatibility_issues
+153	\N	patch	patch_113_114_a.sql|schema_version
+154	\N	patch	patch_114_115_a.sql|schema_version
