@@ -1,5 +1,5 @@
 1	\N	schema_type	variation
-2	\N	schema_version	114
+2	\N	schema_version	115
 3	1	species.production_name	homo_sapiens
 4	\N	patch	patch_94_95_a.sql|schema version
 5	\N	patch	patch_94_95_b.sql|create table to store allele synonyms
@@ -43,3 +43,5 @@
 60	\N	patch	patch_112_113_a.sql|schema version
 61	\N	patch	patch_112_113_b.sql|Update meta_key length
 62	\N	patch	patch_113_114_a.sql|schema version
+63	\N	patch	patch_114_115_a.sql|schema version
+64	\N	patch	patch_114_115_b.sql|Add column DNA_type to phenotype_feature
