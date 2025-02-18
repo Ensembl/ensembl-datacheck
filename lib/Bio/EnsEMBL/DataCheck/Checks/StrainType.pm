@@ -36,7 +36,7 @@ sub tests {
   my $mca = $self->dba->get_adaptor("MetaContainer");
  SKIP: {
      # Check that the strain.type conforms to expectations
-     my $types = 'strain|cultivar|breed|haplotype|ecotype';
+     my $types = 'isolate|strain|cultivar|breed|haplotype|ecotype';
      
      my $desc = "Strain type is allowed";
      my $strain_type = $mca->single_value_by_key('strain.type');
