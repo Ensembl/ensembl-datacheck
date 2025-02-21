@@ -116,7 +116,17 @@ sub tests {
     }
   }
 
-  my @known_strain_types = ('strain', 'breed', 'cultivar');
+  # This list of known strain types should be kept in
+  # sync with strain types in the StrainType datacheck.
+  my @known_strain_types = (
+      'strain',
+      'breed',
+      'cultivar',
+      'ecotype',
+      'haplotype',
+      'isolate',
+  );
+
   my $known_strain_type_patt = join('|', @known_strain_types);
 
   my %gdb_to_collection_name_set;
