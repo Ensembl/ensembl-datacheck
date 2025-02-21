@@ -32,7 +32,15 @@ use constant {
   GROUPS         => ['compara', 'compara_gene_trees', 'compara_master'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['genome_db', 'method_link', 'method_link_species_set', 'species_set', 'species_set_header', 'species_set_tag']
+  TABLES         => [
+    'genome_db',
+    'method_link',
+    'method_link_species_set',
+    'method_link_species_set_tag',
+    'species_set',
+    'species_set_header',
+    'species_set_tag',
+  ]
 };
 
 
@@ -69,9 +77,11 @@ sub tests {
   }
 
   my %species_sets_by_id;
+  my %prefer_for_genome_map;
   foreach my $gene_tree_mlss (@gene_tree_mlsses) {
     my $gene_tree_species_set = $species_set_dba->fetch_by_dbID($gene_tree_mlss->species_set->dbID);
     $species_sets_by_id{$gene_tree_species_set->dbID} = $gene_tree_species_set;
+    $prefer_for_genome_map{$gene_tree_species_set->dbID}{$gene_tree_mlss->dbID} = $gene_tree_mlss->get_value_for_tag('prefer_for_genomes', '');
   }
 
   my %strain_species_sets_by_id;
@@ -110,6 +120,7 @@ sub tests {
   my $known_strain_type_patt = join('|', @known_strain_types);
 
   my %gdb_to_collection_name_set;
+  my %gdb_to_preferred_collections;
   while (my ($species_set_id, $gene_tree_species_set) = each %strain_species_sets_by_id) {
 
     my $species_set_name = $gene_tree_species_set->name =~ s/^collection-//r;
@@ -124,14 +135,37 @@ sub tests {
     }
 
     foreach my $gdb (@{$gene_tree_species_set->genome_dbs}) {
-      $gdb_to_collection_name_set{$gdb->name}{$gene_tree_species_set->name} = 1;
+      $gdb_to_collection_name_set{$gdb->name}{$species_set_name} = 1;
+    }
+
+    my $desc_5 = "Species set '$species_set_name' has consistent 'prefer_for_genome' MLSS tags";
+    my %prefer_for_genome_tag_set = map { $_ => 1 } values %{$prefer_for_genome_map{$species_set_id}};
+    my @prefer_for_genome_tags = keys %prefer_for_genome_tag_set;
+    is(scalar(@prefer_for_genome_tags), 1, $desc_5)
+      || diag explain [sort @prefer_for_genome_tags];
+
+    my @preferred_for_genomes = split(/ /, $prefer_for_genome_tags[0]);
+    foreach my $gdb_name (@preferred_for_genomes) {
+      my $gdb_in_collection = exists $gdb_to_collection_name_set{$gdb_name}{$species_set_name};
+
+      if ($gdb_in_collection) {
+        $gdb_to_preferred_collections{$gdb_name}{$species_set_name} = 1;
+      }
+
+      my $desc_6 = "Genome '$gdb_name' is in preferred collection '$species_set_name'";
+      ok($gdb_in_collection, $desc_6);
     }
   }
 
   foreach my $gdb_name (sort keys %gdb_to_collection_name_set) {
-    my @species_sets_with_gdb = keys %{$gdb_to_collection_name_set{$gdb_name}};
-    my $desc_3 = "Genome '$gdb_name' is in one strain gene-tree species set";
-    is(scalar(@species_sets_with_gdb), 1, $desc_3);
+    my @species_sets_with_gdb = exists $gdb_to_preferred_collections{$gdb_name}
+                              ? keys %{$gdb_to_preferred_collections{$gdb_name}}
+                              : keys %{$gdb_to_collection_name_set{$gdb_name}}
+                              ;
+
+    my $desc_3 = "Genome '$gdb_name' can be assigned to one strain gene-tree species set";
+    is(scalar(@species_sets_with_gdb), 1, $desc_3)
+      || diag explain [sort @species_sets_with_gdb];
   }
 
   while (my ($species_set_id, $gene_tree_species_set) = each %non_strain_species_sets_by_id) {
@@ -139,6 +173,13 @@ sub tests {
     my $desc_4 = "Non-strain gene-tree species set '$species_set_name' is free of strain_type tags";
     my $lacks_strain_type_tag = !$gene_tree_species_set->has_tag('strain_type');
     ok($lacks_strain_type_tag, $desc_4);
+
+    my $desc_7 = "Non-strain gene-tree species set '$species_set_name' has no associated 'prefer_for_genomes' MLSS tags";
+    my %prefer_for_genome_tag_set = map { $_ => 1 } values %{$prefer_for_genome_map{$species_set_id}};
+    my @prefer_for_genome_tags = keys %prefer_for_genome_tag_set;
+    my $lacks_prefer_for_genome_tag = scalar(@prefer_for_genome_tags) == 1 && $prefer_for_genome_tags[0] eq '';
+    ok($lacks_prefer_for_genome_tag, $desc_7)
+      || diag explain [sort @prefer_for_genome_tags];
   }
 }
 
