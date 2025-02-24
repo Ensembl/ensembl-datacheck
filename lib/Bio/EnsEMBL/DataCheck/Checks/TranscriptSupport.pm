@@ -54,13 +54,22 @@ sub tests {
     WHERE biotype NOT IN ('LRG_gene')
   /;
   my $sql_1b = q/
-      SELECT COUNT(distinct gene_id), attrib_type.code
+      SELECT COUNT(DISTINCT gene_id) AS `COUNT(distinct gene_id)`, 'gencode_basic' AS code
       FROM attrib_type
-        LEFT JOIN transcript_attrib ta USING (attrib_type_id)
-        LEFT JOIN transcript t on t.transcript_id = ta.transcript_id AND biotype NOT IN ('LRG_gene')
-      WHERE
-        attrib_type.code in ('gencode_basic', 'is_canonical')
-      GROUP BY attrib_type.code;
+      LEFT JOIN transcript_attrib ta USING (attrib_type_id)
+      LEFT JOIN transcript t ON t.transcript_id = ta.transcript_id
+      WHERE attrib_type.code IN ('gencode_basic', 'gencode_primary')
+      AND (biotype NOT IN ('LRG_gene') OR biotype IS NULL)
+      
+      UNION ALL
+      
+      SELECT COUNT(DISTINCT gene_id) AS `COUNT(distinct gene_id)`, 'is_canonical' AS code
+      FROM attrib_type
+      LEFT JOIN transcript_attrib ta USING (attrib_type_id)
+      LEFT JOIN transcript t ON t.transcript_id = ta.transcript_id
+      WHERE attrib_type.code = 'is_canonical'
+      AND (biotype NOT IN ('LRG_gene') OR biotype IS NULL);
+
   /;
 
   my $desc_1c = "Transcript attrib all match gene canonical_transcript_id";
