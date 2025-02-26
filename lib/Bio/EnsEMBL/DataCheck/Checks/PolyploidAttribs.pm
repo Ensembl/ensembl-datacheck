@@ -26,6 +26,7 @@ use Test::More;
 use Bio::EnsEMBL::DataCheck::Utils qw/sql_count/;
 
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
+use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 
 use constant {
   NAME        => 'PolyploidAttribs',
@@ -41,7 +42,17 @@ sub skip_tests {
   my $mca   = $self->dba->get_adaptor('MetaContainer');
   my $value = $mca->single_value_by_key('ploidy');
 
-  if (! defined $value || $value <= 2) {
+  my $sql  = qq/
+    SELECT COUNT(*) FROM
+      seq_region_attrib INNER JOIN
+      attrib_type USING (attrib_type_id)
+    WHERE
+      attrib_type.code = 'genome_component'
+      LIMIT 1
+  /;
+  my $subgenomes_present = sql_count($self->dba, $sql);
+
+  if ((! defined $value || $value <= 2) && (! $subgenomes_present)) {
     return (1, 'Not a polyploid genome.');
   }
 }
@@ -51,31 +62,54 @@ sub tests {
 
   my $species_id = $self->dba->species_id;
 
-  my $desc_1 = 'Top-level regions have genome components';
-
-  my $sa = $self->dba->get_adaptor('Slice');
-  my $slices = $sa->fetch_all('toplevel');
-
-  my @missing = ();
-  foreach my $slice (@$slices) {
-    my $atts = $slice->get_all_Attributes('genome_component');
-    push @missing, $slice->seq_region_name if scalar(@$atts) == 0;
-  }
-  is(scalar(@missing), 0, $desc_1) || diag explain \@missing;
+  my $desc_1 = 'Top-level chromosome regions have genome components';
+  my $diag_1 = 'Missing genome component';
+  my $sql_1 = qq/
+    SELECT sr.name FROM
+      coord_system cs INNER JOIN
+      seq_region sr USING (coord_system_id) INNER JOIN
+      seq_region_attrib sra1 USING (seq_region_id) INNER JOIN
+      attrib_type at1 ON at1.attrib_type_id = sra1.attrib_type_id AND at1.code = 'karyotype_rank' LEFT JOIN
+      seq_region_attrib sra2 USING (seq_region_id) INNER JOIN
+      attrib_type at2 ON at2.attrib_type_id = sra2.attrib_type_id AND at2.code = 'genome_component'
+    WHERE
+      sra2.value IS NULL AND
+      cs.species_id = $species_id
+  /;
+  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
 
   my $desc_2 = 'Only top-level regions have genome components';
-  my $sql  = qq/
-    SELECT COUNT(*) FROM
-      coord_system INNER JOIN
-      seq_region USING (coord_system_id) INNER JOIN
-      seq_region_attrib USING (seq_region_id) INNER JOIN
-      attrib_type USING (attrib_type_id)
+  my $diag_2 = 'Non top-level region assigned to a genome component';
+  my $sql_2 = qq/
+    SELECT sr.name, sra1.value FROM
+      coord_system cs INNER JOIN
+      seq_region sr USING (coord_system_id) INNER JOIN
+      seq_region_attrib sra1 USING (seq_region_id) INNER JOIN
+      attrib_type at1 ON at1.attrib_type_id = sra1.attrib_type_id AND at1.code = 'genome_component' LEFT JOIN
+      seq_region_attrib sra2 USING (seq_region_id) INNER JOIN
+      attrib_type at2 ON at2.attrib_type_id = sra2.attrib_type_id AND at2.code = 'toplevel'
     WHERE
-      attrib_type.code = 'genome_component' AND
-      coord_system.attrib RLIKE 'default_version' AND
-      coord_system.species_id = $species_id
+      sra2.value IS NULL AND
+      cs.species_id = $species_id
   /;
-  is(sql_count($self->dba, $sql), scalar(@$slices), $desc_2);
+  is_rows_zero($self->dba, $sql_2, $desc_2, $diag_2);
+
+  my $desc_3 = 'Ploidy meta key matches the number of genome components';
+  my $mca   = $self->dba->get_adaptor('MetaContainer');
+  my $value = $mca->single_value_by_key('ploidy');
+  my $sql_3 = qq/
+    SELECT DISTINCT sra2.value FROM
+      coord_system cs INNER JOIN
+      seq_region sr USING (coord_system_id) INNER JOIN
+      seq_region_attrib sra1 USING (seq_region_id) INNER JOIN
+      attrib_type at1 ON at1.attrib_type_id = sra1.attrib_type_id AND at1.code = 'karyotype_rank' INNER JOIN
+      seq_region_attrib sra2 USING (seq_region_id) INNER JOIN
+      attrib_type at2 ON at2.attrib_type_id = sra2.attrib_type_id AND at2.code = 'genome_component'
+    WHERE
+      cs.species_id = $species_id
+  /;
+  my $num_subgenomes = sql_count($self->dba, $sql_3);
+  is($value, $num_subgenomes * 2, $desc_3);
 }
 
 1;
