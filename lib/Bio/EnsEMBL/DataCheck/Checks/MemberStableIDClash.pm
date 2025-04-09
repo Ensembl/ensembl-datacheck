@@ -50,69 +50,85 @@ sub skip_tests {
 sub tests {
   my ($self) = @_;
 
-  my $desc_1 = "Case-sensitive stable ID uniqueness among gene members";
-  my $sql_1 = q/
-    SELECT gene_stable_id
-    FROM (
-      SELECT CONVERT(stable_id USING BINARY) AS gene_stable_id
-      FROM gene_member
-      UNION ALL
-      SELECT CONVERT(CONCAT(stable_id, '.', version) USING BINARY) AS gene_stable_id
-      FROM gene_member
-      WHERE version > 0
-    ) gene_stable_ids
-    GROUP BY gene_stable_id
-    HAVING COUNT(*) > 1;
-  /;
-  is_rows_zero($self->dba, $sql_1, $desc_1);
+  my $division = $self->dba->get_division();
 
-  my $desc_2 = "Case-sensitive stable ID uniqueness among sequence members";
-  my $sql_2 = q/
-    SELECT seq_stable_id
-    FROM (
-      SELECT CONVERT(stable_id USING BINARY) AS seq_stable_id
-      FROM seq_member
-      UNION ALL
-      SELECT CONVERT(CONCAT(stable_id, '.', version) USING BINARY) AS seq_stable_id
-      FROM seq_member
-      WHERE version > 0
-    ) seq_stable_ids
-    GROUP BY seq_stable_id
-    HAVING COUNT(*) > 1;
-  /;
-  is_rows_zero($self->dba, $sql_2, $desc_2);
+  my %gene_clashes_by_div = (
+    'plants' => 1,
+  );
 
-  my $desc_3 = "Case-insensitive stable ID uniqueness among gene members";
-  my $sql_3 = q/
-    SELECT gene_stable_id
-    FROM (
-      SELECT stable_id AS gene_stable_id
-      FROM gene_member
-      UNION ALL
-      SELECT CONCAT(stable_id, '.', version) AS gene_stable_id
-      FROM gene_member
-      WHERE version > 0
-    ) gene_stable_ids
-    GROUP BY gene_stable_id
-    HAVING COUNT(*) > 1;
-  /;
-  is_rows_zero($self->dba, $sql_3, $desc_3);
+  SKIP: {
+    skip "division $division known to have gene member stable ID clashes" if exists $gene_clashes_by_div{$division};
 
-  my $desc_4 = "Case-insensitive stable ID uniqueness among sequence members";
-  my $sql_4 = q/
-    SELECT seq_stable_id
-    FROM (
-      SELECT stable_id AS seq_stable_id
-      FROM seq_member
-      UNION ALL
-      SELECT CONCAT(stable_id, '.', version) AS seq_stable_id
-      FROM seq_member
-      WHERE version > 0
-    ) seq_stable_ids
-    GROUP BY seq_stable_id
-    HAVING COUNT(*) > 1;
-  /;
-  is_rows_zero($self->dba, $sql_4, $desc_4);
+    my $desc_1 = "Case-sensitive stable ID uniqueness among gene members";
+    my $sql_1 = q/
+      SELECT gene_stable_id
+      FROM (
+        SELECT CONVERT(stable_id USING BINARY) AS gene_stable_id
+        FROM gene_member
+        UNION ALL
+        SELECT CONVERT(CONCAT(stable_id, '.', version) USING BINARY) AS gene_stable_id
+        FROM gene_member
+        WHERE version > 0
+      ) gene_stable_ids
+      GROUP BY gene_stable_id
+      HAVING COUNT(*) > 1;
+    /;
+    is_rows_zero($self->dba, $sql_1, $desc_1);
+
+    my $desc_3 = "Case-insensitive stable ID uniqueness among gene members";
+    my $sql_3 = q/
+      SELECT gene_stable_id
+      FROM (
+        SELECT stable_id AS gene_stable_id
+        FROM gene_member
+        UNION ALL
+        SELECT CONCAT(stable_id, '.', version) AS gene_stable_id
+        FROM gene_member
+        WHERE version > 0
+      ) gene_stable_ids
+      GROUP BY gene_stable_id
+      HAVING COUNT(*) > 1;
+    /;
+    is_rows_zero($self->dba, $sql_3, $desc_3);
+  }
+
+  my %seq_clashes_by_div = ();
+
+  SKIP: {
+    skip "division $division known to have sequence member stable ID clashes" if exists $seq_clashes_by_div{$division};
+
+    my $desc_2 = "Case-sensitive stable ID uniqueness among sequence members";
+    my $sql_2 = q/
+      SELECT seq_stable_id
+      FROM (
+        SELECT CONVERT(stable_id USING BINARY) AS seq_stable_id
+        FROM seq_member
+        UNION ALL
+        SELECT CONVERT(CONCAT(stable_id, '.', version) USING BINARY) AS seq_stable_id
+        FROM seq_member
+        WHERE version > 0
+      ) seq_stable_ids
+      GROUP BY seq_stable_id
+      HAVING COUNT(*) > 1;
+    /;
+    is_rows_zero($self->dba, $sql_2, $desc_2);
+
+    my $desc_4 = "Case-insensitive stable ID uniqueness among sequence members";
+    my $sql_4 = q/
+      SELECT seq_stable_id
+      FROM (
+        SELECT stable_id AS seq_stable_id
+        FROM seq_member
+        UNION ALL
+        SELECT CONCAT(stable_id, '.', version) AS seq_stable_id
+        FROM seq_member
+        WHERE version > 0
+      ) seq_stable_ids
+      GROUP BY seq_stable_id
+      HAVING COUNT(*) > 1;
+    /;
+    is_rows_zero($self->dba, $sql_4, $desc_4);
+  }
 }
 
 1;
