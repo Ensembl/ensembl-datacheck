@@ -50,7 +50,7 @@ sub skip_tests {
     }
 
     if ( scalar(@mlsses) == 0 ) {
-      return( 1, "There are no multiple alignments in $db_name" );
+      return( 1, "There are no gene trees in $db_name" );
     }
 }
 
@@ -79,6 +79,19 @@ sub tests {
   
   my %clusterset_to_ss_id = map { $_->{'clusterset_id'} => $_->{'species_set_id'} } @{$helper->execute(-SQL => $clusterset_query, -USE_HASHREFS => 1)};
   my $collections = [keys %clusterset_to_ss_id];
+
+  my $clusterset_mlss_query = q/
+    SELECT DISTINCT clusterset_id, member_type, method_link_species_set_id AS mlss_id
+      FROM gene_tree_root
+        JOIN method_link_species_set USING(method_link_species_set_id)
+    WHERE tree_type = 'tree'
+      AND ref_root_id IS NULL;
+  /;
+
+  my %clusterset_to_mlss_info;
+  foreach my $row (@{$helper->execute(-SQL => $clusterset_mlss_query, -USE_HASHREFS => 1)}) {
+    $clusterset_to_mlss_info{$row->{'clusterset_id'}}{$row->{'mlss_id'}} = $row->{'member_type'};
+  }
 
   my $sqlFamilies = q/
     SELECT COUNT(*) 
@@ -145,14 +158,33 @@ sub tests {
       is( $sums->[0]->{$col_name} > 0, $counts[$i] > 0, $desc_7 );
     }
 
-    my $desc_9 = "All homologs have gene_trees in the $collection collection";
-    my $sqlBrokenHomologyCounts  = qq/
-      SELECT COUNT(*) 
-        FROM gene_member_hom_stats 
-      WHERE gene_trees = 0 AND (orthologues > 0 OR paralogues > 0 OR homoeologues > 0) 
-        AND collection = "$collection"
-    /;
-    is_rows_zero( $dbc, $sqlBrokenHomologyCounts, $desc_9 );
+    my $mlss_adap = $dba->get_MethodLinkSpeciesSetAdaptor;
+    foreach my $mlss_id (keys %{$clusterset_to_mlss_info{$collection}}) {
+      my $member_type = $clusterset_to_mlss_info{$collection}{$mlss_id};
+      my $mlss = $mlss_adap->fetch_by_dbID($mlss_id);
+
+      my $biotype_groups = $mlss->_get_gene_tree_member_biotype_groups();
+      my $biotype_group_list_str = "('" . join("','", @{$biotype_groups}) . "')";
+
+      my $sqlBrokenHomologyCounts  = qq/
+        SELECT COUNT(*)
+          FROM gene_member_hom_stats
+          JOIN gene_member USING (gene_member_id)
+        WHERE gene_trees = 0 AND (orthologues > 0 OR paralogues > 0 OR homoeologues > 0)
+          AND collection = '$collection'
+          AND biotype_group IN $biotype_group_list_str
+      /;
+
+      my $mlss_info = $mlss->_find_homology_mlss_sets();
+      my @overlap_gdb_ids = @{$mlss_info->{'overlap_gdb_ids'}};
+      if (@overlap_gdb_ids) {
+        my $overlap_gdb_id_list_str = "(" . join(",", @overlap_gdb_ids) . ")";
+        $sqlBrokenHomologyCounts .= qq/AND genome_db_id NOT IN $overlap_gdb_id_list_str/;
+      }
+
+      my $desc_9 = "Homologs have gene_trees as expected in the $collection $member_type collection";
+      is_rows_zero( $dbc, $sqlBrokenHomologyCounts, $desc_9 );
+    }
 
     my $desc_10 = "All gene_gain_loss_trees have gene_trees in the $collection collection";
     my $sqlBrokenGainLossCounts = qq/
