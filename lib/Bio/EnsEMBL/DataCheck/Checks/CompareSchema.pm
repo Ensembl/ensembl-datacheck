@@ -110,7 +110,7 @@ sub normalise_table_def {
   $table =~ s/ IF NOT EXISTS//gm;
 
   # Normalise case: everything after column name is upper-cased.
-  $table =~ s/^([a-zA-Z]\w+\s)(.+)/$1\U$2/gm;
+  $table =~ s/^([a-z]\w+\s)(.+)/$1\U$2/gm;
 
   # Use KEY rather than INDEX.
   $table =~ s/^INDEX /KEY /gm;
