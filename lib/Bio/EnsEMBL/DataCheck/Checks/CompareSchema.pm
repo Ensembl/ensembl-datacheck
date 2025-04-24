@@ -86,6 +86,10 @@ sub tests {
 sub normalise_table_def {
   my ($self, $table) = @_;
 
+  # Pre-normalise case for column related keywords (see "Normalise case" below)
+  # before removing name quoting
+  $table =~ s/^(\s*`[^`]+`\s+)(.+)/$1\U$2/gm;
+
   # Remove column/table name quoting.
   $table =~ s/`//gm;
 
