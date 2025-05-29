@@ -115,6 +115,15 @@
       "name" : "AnalysisWebDataFormat",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnalysisWebDataFormat"
    },
+   "AnnotationSource" : {
+      "datacheck_type" : "critical",
+      "description" : "If present, the annotation_source meta key must be from an approved list",
+      "groups" : [
+         "rapid_release"
+      ],
+      "name" : "AnnotationSource",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::AnnotationSource"
+   },
    "Archive" : {
       "datacheck_type" : "critical",
       "description" : "Gene archive table is up to date",
