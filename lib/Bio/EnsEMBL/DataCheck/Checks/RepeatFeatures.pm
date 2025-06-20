@@ -45,8 +45,13 @@ sub tests {
     }
 
     my $mca = $self->dba->get_adaptor('MetaContainer');
-    if ($mca->get_division eq 'EnsemblViruses') {
-      skip "Repeat features not mandatory for viruses", 1;
+    my $div = $mca->get_division;
+
+    if ( $div eq 'EnsemblViruses'
+	 || $div eq 'EnsemblProtists'
+	 || $div eq 'EnsemblFungi'
+	)  {
+	skip "Repeat features not mandatory for viruses/ protists/ fungi", 1;
     }
 
     if($mca->single_value_by_key('genebuild.method') eq 'projection_build') {
