@@ -86,6 +86,10 @@ sub tests {
 sub normalise_table_def {
   my ($self, $table) = @_;
 
+  # Pre-normalise case for column related keywords (see "Normalise case" below)
+  # before removing name quoting
+  $table =~ s/^(\s*`[^`]+`\s+)(.+)/$1\U$2/gm;
+
   # Remove column/table name quoting.
   $table =~ s/`//gm;
 
@@ -110,7 +114,7 @@ sub normalise_table_def {
   $table =~ s/ IF NOT EXISTS//gm;
 
   # Normalise case: everything after column name is upper-cased.
-  $table =~ s/^([a-z]\w+\s)(.+)/$1\U$2/gm;
+  $table =~ s/^([a-z]\w*\s)(.+)/$1\U$2/gm;
 
   # Use KEY rather than INDEX.
   $table =~ s/^INDEX /KEY /gm;

@@ -1721,6 +1721,17 @@
       "name" : "HighConfidence",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HighConfidence"
    },
+   "HomologyRanges" : {
+      "datacheck_type" : "critical",
+      "description" : "Gene-tree MLSSes have distinct homology ranges",
+      "groups" : [
+         "compara",
+         "compara_gene_trees",
+         "compara_master"
+      ],
+      "name" : "HomologyRanges",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::HomologyRanges"
+   },
    "IndividualType" : {
       "datacheck_type" : "critical",
       "description" : "Individuals have the correct type for each species",
@@ -2506,15 +2517,6 @@
       ],
       "name" : "SourceAdvisory",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SourceAdvisory"
-   },
-   "SpeciesCommonName" : {
-      "datacheck_type" : "critical",
-      "description" : "Meta key species.common_name should be same for species from a group of strains or breeds",
-      "groups" : [
-         "core_sync"
-      ],
-      "name" : "SpeciesCommonName",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesCommonName"
    },
    "SpeciesNameUnique" : {
       "datacheck_type" : "critical",

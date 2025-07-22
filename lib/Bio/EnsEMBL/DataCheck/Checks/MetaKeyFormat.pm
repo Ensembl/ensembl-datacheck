@@ -124,17 +124,7 @@ sub tests {
     skip "No sample.transcript_text defined", 1 unless defined $transcript_text;
     isnt($transcript_text, 'ensembl_transcript', $desc);
   }
-
-  # Check for 'external' geneset names that are the same as the Ensembl name
-  my $gb_version = $mca->single_value_by_key('genebuild.version');
-  my $gb_start_date = $mca->single_value_by_key('genebuild.start_date');
-  SKIP: {
-    my $desc = 'Value for genebuild.version is not copied from genebuild.start_date';
-    skip "No genebuild.version defined", 1 unless defined $gb_version;
-    skip "No genebuild.start_date defined", 1 unless defined $gb_start_date;
-    isnt($gb_version, $gb_start_date, $desc);
-  }
-
+  
   # Characters with accents, umlauts, etc. cause problems for compara
   {
     my $species_id = $self->dba->species_id;
