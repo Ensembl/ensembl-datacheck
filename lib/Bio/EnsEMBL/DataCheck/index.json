@@ -2009,6 +2009,16 @@
       "name" : "MetaKeyOptional",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional"
    },
+    "MetaKeyRequired" : {
+      "datacheck_type" : "critical",
+      "description" : "Required meta keys exist",
+      "groups" : [
+         "core",
+         "meta"
+      ],
+      "name" : "MetaKeyRequired",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::MetaKeyRequired"
+   }, 
    "MitochondriaAnnotated" : {
       "datacheck_type" : "critical",
       "description" : "Mitochondrial seq_regions have appropriate attribute",
