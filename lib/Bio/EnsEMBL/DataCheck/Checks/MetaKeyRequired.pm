@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::MetaKeyOptional;
+package Bio::EnsEMBL::DataCheck::Checks::MetaKeyRequired;
 
 use warnings;
 use strict;
