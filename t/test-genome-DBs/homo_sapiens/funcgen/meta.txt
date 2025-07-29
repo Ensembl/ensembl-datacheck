@@ -1,5 +1,5 @@
 1	1	schema_type	funcgen
-2	\N	schema_version	115
+2	\N	schema_version	116
 3	\N	patch	patch_87_88_a.sql|schema_version
 4	\N	patch	patch_87_88_b.sql|seq_region_name_255
 5	\N	patch	patch_87_88_c.sql|sample_regulatory_feature_id field for regulatory build
@@ -152,3 +152,4 @@
 152	\N	patch	patch_112_113_b.sql|fix_compatibility_issues
 153	\N	patch	patch_113_114_a.sql|schema_version
 154	\N	patch	patch_114_115_a.sql|schema_version
+155	\N	patch	patch_115_116_a.sql|schema_version
