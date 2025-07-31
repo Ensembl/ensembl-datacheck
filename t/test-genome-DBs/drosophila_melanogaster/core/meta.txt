@@ -1,5 +1,5 @@
 1	\N	schema_type	core
-2	\N	schema_version	115
+2	\N	schema_version	116
 3	\N	patch	patch_76_77_a.sql|schema_version
 4	1	assembly.mapping	chromosome:BDGP6|contig:BDGP6
 5	1	assembly.mapping	contig:BDGP6|chunk:BDGP6
@@ -161,3 +161,4 @@
 251	\N	patch	patch_112_113_b.sql|Ensure meta_value is not null
 252	\N	patch	patch_113_114_a.sql|schema_version
 253	\N	patch	patch_114_115_a.sql|schema_version
+254	\N	patch	patch_115_116_a.sql|schema_version
