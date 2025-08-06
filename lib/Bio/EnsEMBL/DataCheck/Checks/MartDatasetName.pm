@@ -102,6 +102,7 @@ sub tests {
 
   my @name_clashes;
   foreach (@divisions) {
+    ### existing method $gia->fetch_all_by_division($_)  fetch all the genomes based on division with out considering the release version  replaced with $gia->fetch_division_databases($_)
     foreach my $genome_dbname (@{$gia->fetch_division_databases($_)}){
       next if ($dbname eq $genome_dbname);
        my $genome_mart_dataset = generate_dataset_name_from_db_name($genome_dbname);
@@ -111,22 +112,6 @@ sub tests {
        }
     }
   }
-
-  ####below code fetch all the genomes based on division with out considering the release version 
-  #foreach (@divisions) {
-  #  my $genomes = $gia->fetch_all_by_division($_);
-  #  foreach my $genome (@$genomes){
-  #    next if ($genome->name eq $production_name);
-  #
-  #    my $genome_mart_dataset = generate_dataset_name_from_db_name($genome->dbname);
-  #
-  #    if ($mart_dataset eq $genome_mart_dataset) {
-  #      push @name_clashes,
-  #        "\"$mart_dataset\" is used for ".$genome->name." (".$genome->dbname.")";
-  #    }
-  #  }
-  #}
-  ####################################################################################################
 
   is(scalar(@name_clashes), 0, $desc_2) || diag explain \@name_clashes;
 }
