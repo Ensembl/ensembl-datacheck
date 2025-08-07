@@ -106,6 +106,7 @@ sub tests {
       seq_region_attrib sra2 USING (seq_region_id) INNER JOIN
       attrib_type at2 ON at2.attrib_type_id = sra2.attrib_type_id AND at2.code = 'genome_component'
     WHERE
+      sr.name <> 'Un' AND
       cs.species_id = $species_id
   /;
   my $num_subgenomes = sql_count($self->dba, $sql_3);
