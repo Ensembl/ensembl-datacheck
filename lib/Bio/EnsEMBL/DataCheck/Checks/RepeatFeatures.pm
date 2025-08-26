@@ -54,6 +54,10 @@ sub tests {
 	skip "Repeat features not mandatory for viruses/ protists/ fungi", 1;
     }
 
+    if ( $div eq 'EnsemblVertebrates' && $mca->single_value_by_key('genebuild.method') eq 'import' ){
+	skip "Repeat features not mandatory for imported vertebrate annotations", 1;
+    }
+    
     if($mca->single_value_by_key('genebuild.method') eq 'projection_build') {
       skip "Repeat features not mandatory for projection builds", 1;
     }
