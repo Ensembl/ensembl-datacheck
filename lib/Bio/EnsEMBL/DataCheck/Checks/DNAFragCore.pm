@@ -35,7 +35,8 @@ use constant {
   GROUPS      => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_master', 'compara_syntenies', 'core_sync'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES    => ['compara'],
-  TABLES      => ['dnafrag', 'genome_db']
+  TABLES      => ['dnafrag', 'genome_db'],
+  FORCE       => 1,
 };
 
 sub tests {
