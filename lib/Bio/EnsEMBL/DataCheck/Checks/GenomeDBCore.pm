@@ -33,6 +33,7 @@ use constant {
   DATACHECK_TYPE => 'critical',
   DB_TYPES    => ['compara'],
   TABLES      => ['genome_db'],
+  FORCE       => 1,
 };
 
 sub tests {

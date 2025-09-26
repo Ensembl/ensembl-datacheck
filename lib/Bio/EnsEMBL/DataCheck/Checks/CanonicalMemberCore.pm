@@ -34,7 +34,8 @@ use constant {
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
   TABLES         => ['gene_member', 'seq_member'],
-  PER_DB         => 1
+  PER_DB         => 1,
+  FORCE          => 1,
 };
 
 sub skip_tests {
