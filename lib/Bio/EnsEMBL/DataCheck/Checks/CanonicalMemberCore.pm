@@ -62,7 +62,7 @@ sub tests {
       sm.version AS seq_version
     FROM
       gene_member gm
-    JOIN
+    LEFT JOIN
       seq_member sm
     ON
       sm.seq_member_id = gm.canonical_member_id
@@ -162,11 +162,17 @@ sub tests {
     );
     my %core_canonicals = map { $_->{'gene_stable_id'} => $_ } @$core_results;
 
+    my @members_without_canonicals;
     my @unknown_gene_stable_ids;
     my @mismatching_gene_versions;
     my @mismatching_canonical_stable_ids;
     my @mismatching_canonical_versions;
     while (my ($gene_stable_id, $compara_gene) = each %compara_canonicals) {
+
+      if (!defined $compara_gene->{'seq_stable_id'}) {
+        push(@members_without_canonicals, $gene_stable_id);
+        next;
+      }
 
       if (!exists $core_canonicals{$gene_stable_id}) {
         push(@unknown_gene_stable_ids, $gene_stable_id);
@@ -224,7 +230,7 @@ sub tests {
     my $json = JSON->new();
     $json->space_after(1);
 
-    my $desc_3 = "For all genes in $gdb_name, there is a corresponding gene in the core database";
+    my $desc_3 = "For all genes in $gdb_name, a corresponding gene was found in the core database";
     is(scalar(@unknown_gene_stable_ids), 0, $desc_3)
       || diag explain [sort @unknown_gene_stable_ids];
 
@@ -239,6 +245,10 @@ sub tests {
     my $desc_6 = "All canonical sequences in $gdb_name have stable ID versions consistent with the core database";
     is(scalar(@mismatching_canonical_versions), 0, $desc_6)
       || diag explain [map { $json->utf8->encode($_) } sort { $a->[0] cmp $b->[0] } @mismatching_canonical_versions];
+
+    my $desc_7 = "All genes in $gdb_name have a canonical member";
+    is(scalar(@members_without_canonicals), 0, $desc_7)
+      || diag explain [sort @members_without_canonicals];
 
     $core_dba->dbc->disconnect_if_idle;
   }
