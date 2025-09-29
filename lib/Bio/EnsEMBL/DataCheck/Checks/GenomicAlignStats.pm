@@ -103,7 +103,7 @@ sub tests {
     my $obs_block_count = $results->[0];
     my $exp_block_count = $exp_block_counts{$mlss_id};
     my $mlss_name = $mlsses_by_id{$mlss_id}->name;
-    is($obs_block_count, $exp_block_count, "$mlss_name block count consistency");
+    is($obs_block_count, $exp_block_count, "$mlss_name (mlss_id:$mlss_id) block count consistency");
   }
 
 }
