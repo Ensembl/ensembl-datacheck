@@ -80,6 +80,44 @@ sub tests {
   cmp_tag($self->dba, 'BLASTZ_NET', 'non_ref_coding_exon_length', '>', 0);
   cmp_tag($self->dba, 'LASTZ_NET', 'non_ref_coding_exon_length', '>', 0);
   cmp_tag($self->dba, 'TRANSLATED_BLAT_NET', 'non_ref_coding_exon_length', '>', 0);
+
+
+  my @mlsses;
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
+  foreach my $method_type ('LASTZ_NET', 'BLASTZ_NET', 'TRANSLATED_BLAT_NET') {
+    my $mlsses_of_type = $mlss_adap->fetch_all_by_method_link_type($method_type);
+    push @mlsses, @{$mlsses_of_type};
+  }
+
+  foreach my $mlss (@mlsses) {
+
+    if ($mlss->has_tag('reference_species') && $mlss->has_tag('non_reference_species')) {
+      my $non_ref_sp_name = $mlss->get_value_for_tag('non_reference_species');
+      my $ref_sp_name = $mlss->get_value_for_tag('reference_species');
+
+      if ($mlss->species_set->size > 1) {
+
+        my $desc_1 = sprintf(
+          "alignment MLSS '%s' (mlss_id:%d) reference-species tag distinctness",
+          $mlss->name,
+          $mlss->dbID,
+        );
+
+        isnt($non_ref_sp_name, $ref_sp_name, $desc_1);
+
+      } else {
+
+        my $desc_2 = sprintf(
+          "self-alignment MLSS '%s' (mlss_id:%d) reference-species tag identity",
+          $mlss->name,
+          $mlss->dbID,
+        );
+
+        is($non_ref_sp_name, $ref_sp_name, $desc_2);
+
+      }
+    }
+  }
 }
 
 1;

@@ -69,6 +69,38 @@ sub tests {
   has_tags($self->dba, 'SYNTENY', $tags);
 
   cmp_tag($self->dba, 'SYNTENY', 'non_ref_coding_exon_length', '>', 0);
+
+
+  my $mlsses = $self->dba->get_MethodLinkSpeciesSetAdaptor->fetch_all_by_method_link_type('SYNTENY');
+  foreach my $mlss (@{$mlsses}) {
+
+    if ($mlss->has_tag('reference_species') && $mlss->has_tag('non_reference_species')) {
+      my $non_ref_sp_name = $mlss->get_value_for_tag('non_reference_species');
+      my $ref_sp_name = $mlss->get_value_for_tag('reference_species');
+
+      if ($mlss->species_set->size > 1) {
+
+        my $desc_1 = sprintf(
+          "synteny MLSS '%s' (mlss_id:%d) reference-species tag distinctness",
+          $mlss->name,
+          $mlss->dbID,
+        );
+
+        isnt($non_ref_sp_name, $ref_sp_name, $desc_1);
+
+      } else {
+
+        my $desc_2 = sprintf(
+          "synteny MLSS '%s' (mlss_id:%d) reference-species tag identity",
+          $mlss->name,
+          $mlss->dbID,
+        );
+
+        is($non_ref_sp_name, $ref_sp_name, $desc_2);
+
+      }
+    }
+  }
 }
 
 1;
