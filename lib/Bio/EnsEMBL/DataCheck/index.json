@@ -1688,6 +1688,16 @@
       "name" : "GenomeStatistics",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomeStatistics"
    },
+   "GenomicAlignStats" : {
+      "datacheck_type" : "critical",
+      "description" : "Check consistency of genomic alignment stats",
+      "groups" : [
+         "compara",
+         "compara_genome_alignments"
+       ],
+      "name" : "GenomicAlignStats",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::GenomicAlignStats"
+   },
    "HGNCNumeric" : {
       "datacheck_type" : "critical",
       "description" : "HGNC xrefs do not have the accession as the display_label",
