@@ -47,7 +47,7 @@ sub tests {
   my $helper = $self->dba->dbc->sql_helper;
   my %meta_keys = %{ $helper->execute_into_hash(-SQL => $sql)};
   my $desc = 'Metakeys species.production_name should be same as organism.production_name';
-  cmp_ok($meta_keys{'species.production_name'}, '==', $meta_keys{'organism.production_name'}, $desc);
+  cmp_ok($meta_keys{'species.production_name'}, 'eq', $meta_keys{'organism.production_name'}, $desc);
 }
 
 1;
