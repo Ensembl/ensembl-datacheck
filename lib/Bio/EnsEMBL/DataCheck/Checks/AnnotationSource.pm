@@ -31,22 +31,17 @@ use constant {
 };
 sub tests{
   my ($self) = @_;
-  
+
   my $mca = $self->dba->get_adaptor('MetaContainer');
-  
+
+  my $desc = "'genebuild.annotation_source' meta_key exists";
+  my $annotation_source = $mca->single_value_by_key('genebuild.annotation_source');
+  ok($annotation_source, $desc);
+
+  my $sources = 'braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc|helixer';
+  my $source_desc = "Source is allowed";
+
  SKIP: {
-     my $method = $mca->single_value_by_key('genebuild.method');
-     if($method ne 'braker' && $method ne 'import' && $method ne 'external_annotation_import') {
-         skip "Annotation source key not needed for Ensembl builds", 1;
-     }
-
-     my $desc = "'genebuild.annotation_source' meta_key exists";
-     my $annotation_source = lc($mca->single_value_by_key('genebuild.annotation_source'));
-     ok($annotation_source, $desc);
-
-     my $sources = 'braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc';
-     my $source_desc = "Source is allowed";
-
      skip 'genebuild.annotation_source meta key does not exist', 1 unless defined $annotation_source;
 
      like($annotation_source, qr/^$sources$/, $source_desc);
