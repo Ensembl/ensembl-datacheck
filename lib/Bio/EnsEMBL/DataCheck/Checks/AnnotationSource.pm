@@ -44,7 +44,7 @@ sub tests{
      my $annotation_source = lc($mca->single_value_by_key('genebuild.annotation_source'));
      ok($annotation_source, $desc);
 
-     my $sources = 'braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc';
+     my $sources = 'braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc|helixer';
      my $source_desc = "Source is allowed";
 
      skip 'genebuild.annotation_source meta key does not exist', 1 unless defined $annotation_source;
