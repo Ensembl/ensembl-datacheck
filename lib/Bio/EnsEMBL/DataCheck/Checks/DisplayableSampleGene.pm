@@ -43,13 +43,13 @@ sub tests {
   my $desc_1 = 'Sample gene has displayable analysis';
   my $diag_1 = 'Undisplayed analysis';
   my $sql_1  = qq/
-      SELECT gene_id 
+      SELECT gene_id
         FROM gene g
-  INNER JOIN meta m 
-          ON g.stable_id = m.meta_value 
-         AND m.meta_key = 'sample.gene_param'
+  INNER JOIN meta m
+          ON g.stable_id = m.meta_value
+         AND m.meta_key = 'genebuild.sample_gene'
   INNER JOIN analysis a ON g.analysis_id = a.analysis_id
-  INNER JOIN analysis_description ad 
+  INNER JOIN analysis_description ad
           ON g.analysis_id = ad.analysis_id AND ad.displayable = 0
     /;
 
@@ -58,13 +58,13 @@ sub tests {
   my $desc_2 = 'Sample gene has associated web_data';
   my $diag_2 = 'web_data is not set';
   my $sql_2  = qq/
-      SELECT gene_id 
+      SELECT gene_id
         FROM gene g
-  INNER JOIN meta m 
-          ON g.stable_id = m.meta_value 
-         AND m.meta_key = 'sample.gene_param'
+  INNER JOIN meta m
+          ON g.stable_id = m.meta_value
+         AND m.meta_key = 'genebuild.sample_gene'
   INNER JOIN analysis a ON g.analysis_id = a.analysis_id
-  INNER JOIN analysis_description ad 
+  INNER JOIN analysis_description ad
           ON g.analysis_id = ad.analysis_id AND ad.web_data IS NULL
     /;
 
