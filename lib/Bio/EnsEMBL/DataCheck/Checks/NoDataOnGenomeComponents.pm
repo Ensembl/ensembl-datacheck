@@ -33,7 +33,7 @@ use constant {
   GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_syntenies', 'compara_homology_annotation', 'compara_blastocyst', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['constrained_element', 'dnafrag', 'dnafrag_region', 'gene_member', 'genome_db', 'genomic_align', 'seq_member']
+  TABLES         => ['constrained_element', 'dnafrag', 'dnafrag_region', 'gene_member', 'genome_db', 'genomic_align', 'method_link_species_set', 'seq_member', 'species_set']
 };
 
 sub tests {
@@ -46,9 +46,9 @@ sub tests {
       JOIN method_link_species_set 
         USING (species_set_id) 
     WHERE genome_component IS NOT NULL 
-      AND method_link_id NOT IN (26, 401, 600);
+      AND method_link_id NOT IN (26, 301, 401, 600);
   /;
-  my $desc_1 = "The only MLSSs that are allowed to have component GenomeDBs are cactus-db (26), protein-trees (401) and species-tree (600)";
+  my $desc_1 = "The only MLSSs that are allowed to have component GenomeDBs are cactus-db (26), families (301), protein-trees (401) and species-tree (600)";
   is_rows_zero($self->dba, $sql_1, $desc_1);
   #The following tables have no exceptions when it comes to component_genome_dbs
   my @tables = qw(genomic_align dnafrag_region constrained_element gene_member seq_member);
