@@ -33,7 +33,7 @@ use constant {
   GROUPS         => ['compara', 'compara_gene_trees', 'compara_genome_alignments', 'compara_syntenies', 'compara_homology_annotation', 'compara_blastocyst', 'compara_gene_tree_pipelines'],
   DATACHECK_TYPE => 'critical',
   DB_TYPES       => ['compara'],
-  TABLES         => ['constrained_element', 'dnafrag', 'dnafrag_region', 'gene_member', 'genome_db', 'genomic_align', 'seq_member']
+  TABLES         => ['constrained_element', 'dnafrag', 'dnafrag_region', 'gene_member', 'genome_db', 'genomic_align', 'method_link_species_set', 'seq_member', 'species_set']
 };
 
 sub tests {
