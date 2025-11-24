@@ -30,7 +30,7 @@ extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 use constant {
   NAME        => 'DisplayableSampleLocation',
   DESCRIPTION => 'Sample location is displayable and has web_data attached to its analysis',
-  GROUPS      => ['analysis_description', 'core', 'brc4_core', 'geneset', 'meta_sample'],
+  GROUPS      => ['analysis_description', 'core', 'geneset', 'meta_sample'],
   DB_TYPES    => ['core'],
   TABLES      => ['gene', 'meta', 'seq_region']
 };
