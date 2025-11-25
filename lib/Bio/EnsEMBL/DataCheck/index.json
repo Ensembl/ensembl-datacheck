@@ -2555,17 +2555,6 @@
       "name" : "SpeciesCommonName",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesCommonName"
    },
-   "SpeciesNameUnique" : {
-      "datacheck_type" : "critical",
-      "description" : "Species production_name and alias are unique across all databases in the registry",
-      "groups" : [
-         "core",
-         "brc4_core",
-         "meta"
-      ],
-      "name" : "SpeciesNameUnique",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesNameUnique"
-   },
    "SpeciesTaxonomy" : {
       "datacheck_type" : "critical",
       "description" : "Taxonomic meta keys are consistent with taxonomy database",
