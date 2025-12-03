@@ -1374,6 +1374,18 @@
       "name" : "DisplayableSampleGene",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSampleGene"
    },
+      "DisplayableSampleLocation" : {
+      "datacheck_type" : "critical",
+      "description" : "Sample location is displayable",
+      "groups" : [
+         "analysis_description",
+         "core",
+         "geneset",
+         "meta_sample"
+      ],
+      "name" : "DisplayableSampleLocation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSampleLocation"
+   },
    "DuplicateComparaMemberXref" : {
       "datacheck_type" : "critical",
       "description" : "Check that the compara member_xref table contains only unique rows",
