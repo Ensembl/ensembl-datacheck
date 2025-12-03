@@ -32,20 +32,43 @@ use constant {
     DESCRIPTION => 'Genes, transcripts, exons and translations have non-NULL, unique stable IDs and consistent ID base prefixes',
     GROUPS      => ['core', 'brc4_core', 'geneset'],
     DB_TYPES    => ['core'],
-    TABLES      => ['coord_system', 'exon', 'gene', 'seq_region', 'transcript', 'translation']
+    TABLES => ['coord_system','exon','gene','seq_region','transcript','translation','meta']
 };
 
 sub tests {
-    my ($self) = @_;
-    my $species_id = $self->dba->species_id;
+  my ($self) = @_;
+  my $species_id = $self->dba->species_id;
 
-    $self->stable_id_check('gene',       $species_id);
-    $self->stable_id_check('transcript', $species_id);
-    $self->stable_id_check('exon',       $species_id);
-    $self->translation_stable_id_check($species_id);
+  $self->stable_id_check('gene',       $species_id);
+  $self->stable_id_check('transcript', $species_id);
+  $self->stable_id_check('exon',       $species_id);
+  $self->translation_stable_id_check($species_id);
 
-    # NEW: check base prefix consistency across feature types
+  # Run the prefix check only for the allowed genebuild.method values
+  SKIP: {
+    unless ($self->prefix_check_is_applicable) {
+      skip 'Skipping prefix consistency check: genebuild.method not in {anno, full_genebuild, braker, helixer}', 1;
+    }
     $self->stable_id_prefix_consistency_check($species_id);
+  }
+}
+
+sub genebuild_method {
+  my ($self) = @_;
+  my $mc = $self->dba->get_MetaContainer();
+  my $method;
+  if ($mc->can('single_value_by_key')) {
+    $method = $mc->single_value_by_key('genebuild.method');
+  } else {
+    ($method) = @{ $mc->list_value_by_key('genebuild.method') || [] };
+  }
+  return $method;
+}
+
+sub prefix_check_is_applicable {
+  my ($self) = @_;
+  my $method = lc( $self->genebuild_method // '' );
+  return $method =~ /^(anno|full_genebuild|braker|helixer)$/;
 }
 
 sub stable_id_check {
