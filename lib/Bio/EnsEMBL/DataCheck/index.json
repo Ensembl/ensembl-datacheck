@@ -1384,7 +1384,7 @@
          "meta_sample"
       ],
       "name" : "DisplayableSampleLocation",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSamDisplayableSampleLocationleGene"
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayableSampleLocation"
    },
    "DuplicateComparaMemberXref" : {
       "datacheck_type" : "critical",
