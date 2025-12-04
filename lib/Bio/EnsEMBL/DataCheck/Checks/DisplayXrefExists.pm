@@ -53,11 +53,12 @@ sub tests {
   foreach my $type ("gene", "transcript") {
     my $desc = "${type}s have names set via display_xref_id";
     my $sql  = qq/
-      SELECT COUNT(*) FROM $type t
+      SELECT * FROM $type t
         INNER JOIN seq_region sr USING (seq_region_id) 
         INNER JOIN coord_system cs USING (coord_system_id)   
       WHERE cs.species_id = $species_id
-        AND t.display_xref_id IS NOT NULL 
+        AND t.display_xref_id IS NOT NULL
+      LIMIT 1 
     /;
 
     is_rows_nonzero($self->dba, $sql, $desc);
