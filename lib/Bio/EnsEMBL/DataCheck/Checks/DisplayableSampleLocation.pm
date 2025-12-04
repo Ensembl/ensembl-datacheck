@@ -43,14 +43,13 @@ sub tests {
   my $desc_1 = 'Sample location metadata exists exactly once';
   my $diag_1 = 'genebuild.sample_location meta key should exist exactly once per species';
   my $sql_1  = qq/
-      SELECT COUNT(*) AS count
+      SELECT meta_key
         FROM meta
        WHERE meta_key = 'genebuild.sample_location'
          AND species_id = $species_id
-      HAVING count != 1
     /;
 
-  is_rows_zero($self->dba, $sql_1, $desc_1, $diag_1);
+  is_rows($self->dba, $sql_1, 1, $desc_1, $diag_1);
 
   my $desc_2 = 'Sample location metadata is valid format';
   my $diag_2 = 'genebuild.sample_location format is invalid';
