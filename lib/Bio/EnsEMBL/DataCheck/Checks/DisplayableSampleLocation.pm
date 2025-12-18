@@ -99,15 +99,16 @@ sub tests {
         FROM meta m
         JOIN seq_region sr
           ON SUBSTRING_INDEX(m.meta_value, ':', 1) = sr.name
+        JOIN coord_system cs USING (coord_system_id)
         LEFT JOIN gene g
           ON g.seq_region_id = sr.seq_region_id
-         AND g.seq_region_start <= CAST(SUBSTRING_INDEX(m.meta_value, '-', -1) AS UNSIGNED)
-         AND g.seq_region_end >= CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(m.meta_value, ':', -1), '-', 1) AS UNSIGNED)
-       WHERE m.meta_key = 'genebuild.sample_location'
-         AND m.species_id = $species_id
-         AND g.gene_id IS NULL
+        AND g.seq_region_start <= CAST(SUBSTRING_INDEX(m.meta_value, '-', -1) AS UNSIGNED)
+        AND g.seq_region_end >= CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(m.meta_value, ':', -1), '-', 1) AS UNSIGNED)
+      WHERE m.meta_key = 'genebuild.sample_location'
+        AND m.species_id = $species_id
+        AND cs.rank = 1
+        AND g.gene_id IS NULL
     /;
-
   is_rows_zero($self->dba, $sql_5, $desc_5, $diag_5);
 
 }
