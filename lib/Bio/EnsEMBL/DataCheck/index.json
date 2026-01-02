@@ -1325,7 +1325,7 @@
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
    "DisplayXrefExists" : {
-      "datacheck_type" : "critical",
+      "datacheck_type" : "advisory",
       "description" : "At least one gene name exists",
       "groups" : [
          "core",
