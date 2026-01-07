@@ -28,11 +28,11 @@ use Bio::EnsEMBL::DataCheck::Test::DataCheck;
 extends 'Bio::EnsEMBL::DataCheck::DbCheck';
 
 use constant {
-  NAME           => 'DisplayXrefExists',
+  NAME           => 'DisplayXrefExistsGene',
   DESCRIPTION    => 'At least one gene name exists',
   GROUPS         => ['core', 'xref', 'xref_gene_symbol_transformer', 'xref_name_projection'],
-  DATACHECK_TYPE => 'advisory',
-  TABLES         => ['coord_system', 'gene', 'seq_region', 'transcript', 'xref'],
+  DATACHECK_TYPE => 'critical',
+  TABLES         => ['coord_system', 'gene', 'seq_region', 'xref'],
 };
 
 sub skip_tests {
@@ -50,18 +50,16 @@ sub tests {
 
   my $species_id = $self->dba->species_id;
 
-  foreach my $type ("gene", "transcript") {
-    my $desc = "${type}s have names set via display_xref_id";
-    my $sql  = qq/
-      SELECT COUNT(*) FROM $type t
-        INNER JOIN seq_region sr USING (seq_region_id) 
-        INNER JOIN coord_system cs USING (coord_system_id)   
-      WHERE cs.species_id = $species_id
-        AND t.display_xref_id IS NOT NULL 
-    /;
+  my $desc = "Genes have names set via display_xref_id";
+  my $sql  = qq/
+    SELECT COUNT(*) FROM gene t
+      INNER JOIN seq_region sr USING (seq_region_id) 
+      INNER JOIN coord_system cs USING (coord_system_id)   
+    WHERE cs.species_id = $species_id
+      AND t.display_xref_id IS NOT NULL 
+  /;
 
-    is_rows_nonzero($self->dba, $sql, $desc);
-  }
+  is_rows_nonzero($self->dba, $sql, $desc);
 }
 
 1;
