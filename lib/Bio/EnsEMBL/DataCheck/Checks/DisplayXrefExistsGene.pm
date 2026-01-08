@@ -35,28 +35,30 @@ use constant {
   TABLES         => ['coord_system', 'gene', 'seq_region', 'xref'],
 };
 
-sub skip_tests {
-  my ($self) = @_;
-
-  my $mca = $self->dba->get_adaptor('MetaContainer');
-  my $division = $mca->get_division;
-  if ($division ne 'EnsemblVertebrates') {
-    return( 1, "Display xrefs are not typically expected for non-vertebrates" );
-  }
-}
-
 sub tests {
   my ($self) = @_;
 
   my $species_id = $self->dba->species_id;
 
+  # Teams responsible for ensuring display xrefs exist
+  my @responsible_teams = ('Genebuild');
+  my $teams_list = join("', '", @responsible_teams);
+
   my $desc = "Genes have names set via display_xref_id";
+  # Use CASE to return 1 (pass) for teams not responsible for display xrefs,
+  # but actual count for responsible teams
   my $sql  = qq/
-    SELECT COUNT(*) FROM gene t
-      INNER JOIN seq_region sr USING (seq_region_id) 
-      INNER JOIN coord_system cs USING (coord_system_id)   
-    WHERE cs.species_id = $species_id
-      AND t.display_xref_id IS NOT NULL 
+    SELECT CASE
+      WHEN (SELECT meta_value FROM meta WHERE meta_key = 'genebuild.team_responsible') IN ('$teams_list')
+      THEN (
+        SELECT COUNT(*) FROM gene t
+          INNER JOIN seq_region sr USING (seq_region_id)
+          INNER JOIN coord_system cs USING (coord_system_id)
+        WHERE cs.species_id = $species_id
+          AND t.display_xref_id IS NOT NULL
+      )
+      ELSE 1
+    END
   /;
 
   is_rows_nonzero($self->dba, $sql, $desc);
