@@ -1324,7 +1324,7 @@
       "name" : "DensitySNPs",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DensitySNPs"
    },
-   "DisplayXrefExists" : {
+   "DisplayXrefExistsGene" : {
       "datacheck_type" : "critical",
       "description" : "At least one gene name exists",
       "groups" : [
@@ -1333,8 +1333,20 @@
          "xref_gene_symbol_transformer",
          "xref_name_projection"
       ],
-      "name" : "DisplayXrefExists",
-      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExists"
+      "name" : "DisplayXrefExistsGene",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExistsGene"
+   },
+      "DisplayXrefExistsTranscript" : {
+      "datacheck_type" : "advisory",
+      "description" : "At least one transcript name exists",
+      "groups" : [
+         "core",
+         "xref",
+         "xref_gene_symbol_transformer",
+         "xref_name_projection"
+      ],
+      "name" : "DisplayXrefExistsTranscript",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExistsTranscript"
    },
    "DisplayXrefFormat" : {
       "datacheck_type" : "critical",
