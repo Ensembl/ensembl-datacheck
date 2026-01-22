@@ -48,17 +48,15 @@ sub tests {
   # Use CASE to return 1 (pass) for teams not responsible for display xrefs,
   # but actual count for responsible teams
   my $sql  = qq/
-    SELECT CASE
-      WHEN (SELECT meta_value FROM meta WHERE meta_key = 'genebuild.team_responsible') IN ('$teams_list')
-      THEN (
-        SELECT COUNT(*) FROM gene t
-          INNER JOIN seq_region sr USING (seq_region_id)
-          INNER JOIN coord_system cs USING (coord_system_id)
-        WHERE cs.species_id = $species_id
-          AND t.display_xref_id IS NOT NULL
-      )
-      ELSE 1
-    END
+  SELECT COUNT(*) 
+    FROM gene t
+    JOIN seq_region sr USING (seq_region_id)
+    JOIN coord_system cs USING (coord_system_id)
+    JOIN meta m 
+      ON m.meta_key = 'genebuild.team_responsible'
+    WHERE cs.species_id = $species_id
+      AND t.display_xref_id IS NOT NULL
+      AND m.meta_value IN ('$teams_list')
   /;
 
   is_rows_nonzero($self->dba, $sql, $desc);
