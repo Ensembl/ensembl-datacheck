@@ -35,38 +35,39 @@ use constant {
   TABLES         => ['coord_system', 'seq_region', 'transcript', 'xref'],
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  # Teams responsible for ensuring display xrefs exist
+  my @responsible_teams = ('Genebuild');
+
+  my $mca = $self->dba->get_adaptor("MetaContainer");
+  my $teams = $mca->list_value_by_key('genebuild.team_responsible');
+
+  if (!defined $teams) {
+    return (1, 'genebuild.team_responsible not defined, skipping the test');
+  }
+
+  my %lookup = map { $_ => 1 } @$teams;
+  if (!grep { exists $lookup{$_} } @responsible_teams) {
+    return (1, "genebuild.team_responsible does not match responsible teams (" . join(', ', @responsible_teams) . "), skipping the test");
+  }
+
+  return 0;
+}
+
 sub tests {
   my ($self) = @_;
 
   my $species_id = $self->dba->species_id;
 
-  # Teams responsible for ensuring display xrefs exist
-  my @responsible_teams = ('Genebuild');
-  my $teams_list = join("', '", @responsible_teams);
-
   my $desc = "Transcripts have names set via display_xref_id";
-  # Use CASE to return 1 (pass) for teams not responsible for display xrefs,
-  # but actual count for responsible teams
   my $sql  = qq/
-    SELECT COUNT(*) FROM (
-      SELECT CASE
-        WHEN EXISTS (
-          SELECT 1 FROM meta
-          WHERE meta_key = 'genebuild.team_responsible'
-            AND meta_value IN ('$teams_list')
-            AND (species_id IS NULL OR species_id = $species_id)
-        )
-        THEN (
-          SELECT COUNT(*) FROM transcript t
-            JOIN seq_region sr USING (seq_region_id)
-            JOIN coord_system cs USING (coord_system_id)
-          WHERE cs.species_id = $species_id
-            AND t.display_xref_id IS NOT NULL
-        )
-        ELSE 1
-      END AS count_result
-    ) AS subquery
-    WHERE count_result > 0
+    SELECT COUNT(*) FROM transcript t
+      INNER JOIN seq_region sr USING (seq_region_id)
+      INNER JOIN coord_system cs USING (coord_system_id)
+    WHERE cs.species_id = $species_id
+      AND t.display_xref_id IS NOT NULL
   /;
 
   is_rows_nonzero($self->dba, $sql, $desc);
