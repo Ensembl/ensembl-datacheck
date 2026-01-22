@@ -16,7 +16,7 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExists;
+package Bio::EnsEMBL::DataCheck::Checks::DisplayXrefExistsTranscript;
 
 use warnings;
 use strict;
