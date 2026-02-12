@@ -70,34 +70,63 @@ sub tests {
 
   cmp_tag($self->dba, 'SYNTENY', 'non_ref_coding_exon_length', '>', 0);
 
+  my $mlss_adap = $self->dba->get_MethodLinkSpeciesSetAdaptor;
 
-  my $mlsses = $self->dba->get_MethodLinkSpeciesSetAdaptor->fetch_all_by_method_link_type('SYNTENY');
+  my $mlsses = $mlss_adap->fetch_all_by_method_link_type('SYNTENY');
   foreach my $mlss (@{$mlsses}) {
 
-    if ($mlss->has_tag('reference_species') && $mlss->has_tag('non_reference_species')) {
-      my $non_ref_sp_name = $mlss->get_value_for_tag('non_reference_species');
-      my $ref_sp_name = $mlss->get_value_for_tag('reference_species');
+    if ($mlss->has_tag('reference_species') || $mlss->has_tag('non_reference_species')) {
 
-      if ($mlss->species_set->size > 1) {
+      if ($mlss->has_tag('pairwise_mlss_id')) {
+        my $pairwise_mlss_id = $mlss->get_value_for_tag('pairwise_mlss_id');
 
-        my $desc_1 = sprintf(
-          "synteny MLSS '%s' (mlss_id:%d) reference-species tag distinctness",
-          $mlss->name,
-          $mlss->dbID,
-        );
+        my $pairwise_mlss = $mlss_adap->fetch_by_dbID($pairwise_mlss_id);
 
-        isnt($non_ref_sp_name, $ref_sp_name, $desc_1);
+        my $desc_3 = sprintf("synteny MLSS '%s' (mlss_id:%d) pairwise_mlss_id referential integrity", $mlss->name, $mlss->dbID);
+        isa_ok($pairwise_mlss, 'Bio::EnsEMBL::Compara::MethodLinkSpeciesSet', $desc_3);
 
-      } else {
+        foreach my $tag ('reference_species', 'non_reference_species') {
+          my $synteny_tag_value = $mlss->get_value_for_tag($tag);
+          my $pairwise_tag_value = $pairwise_mlss->get_value_for_tag($tag);
+          if (defined $synteny_tag_value && $pairwise_tag_value) {
+            my $desc_4 = sprintf(
+              "'%s' tag consistency between synteny MLSS '%s' (mlss_id:%d) and pairwise MLSS '%s' (mlss_id:%d)",
+              $tag,
+              $mlss->name,
+              $mlss->dbID,
+              $pairwise_mlss->name,
+              $pairwise_mlss->dbID,
+            );
 
-        my $desc_2 = sprintf(
-          "synteny MLSS '%s' (mlss_id:%d) reference-species tag identity",
-          $mlss->name,
-          $mlss->dbID,
-        );
+            is($synteny_tag_value, $pairwise_tag_value, $desc_4);
+          }
+        }
+      }
 
-        is($non_ref_sp_name, $ref_sp_name, $desc_2);
+      if ($mlss->has_tag('reference_species') && $mlss->has_tag('non_reference_species')) {
+        my $non_ref_sp_name = $mlss->get_value_for_tag('non_reference_species');
+        my $ref_sp_name = $mlss->get_value_for_tag('reference_species');
 
+        if ($mlss->species_set->size > 1) {
+
+          my $desc_1 = sprintf(
+            "synteny MLSS '%s' (mlss_id:%d) reference-species tag distinctness",
+            $mlss->name,
+            $mlss->dbID,
+          );
+
+          isnt($non_ref_sp_name, $ref_sp_name, $desc_1);
+
+        } else {
+
+          my $desc_2 = sprintf(
+            "synteny MLSS '%s' (mlss_id:%d) reference-species tag identity",
+            $mlss->name,
+            $mlss->dbID,
+          );
+
+          is($non_ref_sp_name, $ref_sp_name, $desc_2);
+        }
       }
     }
   }
