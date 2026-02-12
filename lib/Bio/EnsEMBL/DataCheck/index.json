@@ -2548,6 +2548,15 @@
       "name" : "SpeciesStrainGroup",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesStrainGroup"
    },
+   "SpeciesTagConsistency" : {
+      "datacheck_type" : "advisory",
+      "description" : "Consistency of reference and non-reference species tags across releases",
+      "groups" : [
+         "compara"
+      ],
+      "name" : "SpeciesTagConsistency",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SpeciesTagConsistency"
+   },
    "SpeciesTaxonomy" : {
       "datacheck_type" : "critical",
       "description" : "Taxonomic meta keys are consistent with taxonomy database",
