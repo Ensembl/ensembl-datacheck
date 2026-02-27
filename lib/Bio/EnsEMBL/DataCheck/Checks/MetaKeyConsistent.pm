@@ -43,68 +43,75 @@ sub tests {
   my $dna_dba = $self->get_dna_dba();
   my $pass = ok(defined $dna_dba, $desc_dna_dba);
 
-  if ($pass) {
-    my $identical_corelike = $self->identical_meta_keys($self->dba);
-    my $identical_core = $self->identical_meta_keys($dna_dba);
+  return unless $pass;
 
-    my $desc_1 = 'Identical assembly.* meta keys in core and core-like databases';
-    is_deeply($identical_corelike, $identical_core, $desc_1) ||
-      diag explain hash_diff($identical_corelike, $identical_core, 'core-like db', 'core db');
+  # Assembly keys: keep existing behaviour (hash compare), but make SQL deterministic.
+  my $identical_corelike = $self->identical_meta_keys($self->dba);
+  my $identical_core     = $self->identical_meta_keys($dna_dba);
 
-    my $consistent_corelike = $self->consistent_meta_keys($self->dba);
-    my $consistent_core = $self->consistent_meta_keys($dna_dba);
+  my $desc_1 = 'Identical assembly.* meta keys in core and core-like databases';
+  is_deeply($identical_corelike, $identical_core, $desc_1) ||
+    diag explain hash_diff($identical_corelike, $identical_core, 'core-like db', 'core db');
 
-    my $desc_2 = 'Consistent species.* meta keys in core and core-like databases';
-    is_deeply($consistent_corelike, $consistent_core, $desc_2) ||
-      diag explain array_diff($consistent_corelike, $consistent_core, 'core-like db', 'core db');
-  }
+  # Species keys: fetch structured rows and sort explicitly.
+  my $consistent_corelike = $self->consistent_species_meta_rows($self->dba);
+  my $consistent_core     = $self->consistent_species_meta_rows($dna_dba);
+
+  my $desc_2 = 'Consistent species.* meta keys in core and core-like databases';
+  is_deeply($consistent_corelike, $consistent_core, $desc_2) ||
+    diag explain array_diff(
+      [ map { $_->{meta_key} . ':' . $_->{meta_value} } @$consistent_corelike ],
+      [ map { $_->{meta_key} . ':' . $_->{meta_value} } @$consistent_core ],
+      'core-like db', 'core db'
+    );
 }
 
 sub identical_meta_keys {
   my ($self, $dba) = @_;
 
   my $helper = $dba->dbc->sql_helper;
-
   my $species_id = $dba->species_id;
 
-  my $sql = qq/
-    SELECT
-      CONCAT(meta_key, ': ', meta_value) AS meta_key_value_pair
-    FROM
-      meta
-    WHERE
-      meta_key RLIKE 'assembly|liftover|lrg' AND
-      meta_key NOT LIKE 'assembly.web_accession%' AND
-      meta_key NOT LIKE 'assembly.provider%' AND
-      species_id = $species_id
+  my $sql = q/
+    SELECT CONCAT(meta_key, ': ', meta_value) AS meta_key_value_pair
+    FROM meta
+    WHERE meta_key RLIKE 'assembly|liftover|lrg'
+      AND meta_key NOT LIKE 'assembly.web_accession%'
+      AND meta_key NOT LIKE 'assembly.provider%'
+      AND species_id = ?
+    ORDER BY meta_key, meta_value
   /;
-  my $identical_meta_keys = $helper->execute_into_hash(-SQL => $sql);
+
+  # execute_into_hash expects key/value-ish output; it will hash the single column as keys with undef values.
+  my $identical_meta_keys = $helper->execute_into_hash(-SQL => $sql, -PARAMS => [$species_id]);
 
   return $identical_meta_keys;
 }
 
-sub consistent_meta_keys {
+# Returns an arrayref of hashrefs: [{ meta_key => '...', meta_value => '...' }, ...]
+# Sorted deterministically on meta_key then meta_value.
+sub consistent_species_meta_rows {
   my ($self, $dba) = @_;
 
   my $helper = $dba->dbc->sql_helper;
-
   my $species_id = $dba->species_id;
 
-  my $sql = qq/
-    SELECT
-      CONCAT(meta_key, ':', meta_value) AS meta_key_value_pair
-    FROM
-      meta
-    WHERE
-      meta_key LIKE 'species.%' AND
-      meta_key <> 'species.biomart_dataset' AND
-      species_id = $species_id
-    ORDER BY
-      meta_key_value_pair
+  my $sql = q/
+    SELECT meta_key, meta_value
+    FROM meta
+    WHERE meta_key LIKE 'species.%'
+      AND meta_key <> 'species.biomart_dataset'
+      AND species_id = ?
+    ORDER BY meta_key, meta_value
   /;
-  my $consistent_meta_keys = $helper->execute_simple(-SQL => $sql);
 
-  return $consistent_meta_keys;
+  my $rows = $helper->execute(
+    -SQL      => $sql,
+    -PARAMS   => [$species_id],
+    -USE_HASHREFS => 1,
+  );
+
+  return $rows;
 }
 
 1;
