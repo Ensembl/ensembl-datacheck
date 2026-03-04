@@ -83,10 +83,14 @@ sub tests {
         FROM meta m
         LEFT JOIN seq_region sr
           ON SUBSTRING_INDEX(m.meta_value, ':', 1) = sr.name
+        LEFT JOIN coord_system cs
+          ON cs.coord_system_id = sr.coord_system_id
          AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(m.meta_value, ':', -1), '-', 1) AS UNSIGNED) >= 1
          AND CAST(SUBSTRING_INDEX(m.meta_value, '-', -1) AS UNSIGNED) <= sr.length
        WHERE m.meta_key = 'genebuild.sample_location'
          AND m.species_id = $species_id
+         AND cs.species_id = m.species_id
+         AND cs.rank = 1
          AND sr.seq_region_id IS NULL
     /;
 
@@ -94,21 +98,22 @@ sub tests {
 
   my $desc_5 = 'Sample location contains at least one gene';
   my $diag_5 = 'genebuild.sample_location region has no genes';
-  my $sql_5  = qq/
-      SELECT m.meta_id
-        FROM meta m
-        JOIN seq_region sr
-          ON SUBSTRING_INDEX(m.meta_value, ':', 1) = sr.name
-        JOIN coord_system cs USING (coord_system_id)
-        LEFT JOIN gene g
-          ON g.seq_region_id = sr.seq_region_id
-        AND g.seq_region_start <= CAST(SUBSTRING_INDEX(m.meta_value, '-', -1) AS UNSIGNED)
-        AND g.seq_region_end >= CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(m.meta_value, ':', -1), '-', 1) AS UNSIGNED)
-      WHERE m.meta_key = 'genebuild.sample_location'
-        AND m.species_id = $species_id
-        AND cs.rank = 1
-        AND g.gene_id IS NULL
-    /;
+ my $sql_5  = qq/
+       SELECT m.meta_id
+         FROM meta m
+         JOIN seq_region sr
+           ON SUBSTRING_INDEX(m.meta_value, ':', 1) = sr.name
+         JOIN coord_system cs USING (coord_system_id)
+         LEFT JOIN gene g
+           ON g.seq_region_id = sr.seq_region_id
+         AND g.seq_region_start <= CAST(SUBSTRING_INDEX(m.meta_value, '-', -1) AS UNSIGNED)
+         AND g.seq_region_end >= CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(m.meta_value, ':', -1), '-', 1) AS UNSIGNED)
+       WHERE m.meta_key = 'genebuild.sample_location'
+         AND m.species_id = $species_id
+         AND cs.species_id = m.species_id
+         AND cs.rank = 1
+         AND g.gene_id IS NULL
+     /;
   is_rows_zero($self->dba, $sql_5, $desc_5, $diag_5);
 
 }
