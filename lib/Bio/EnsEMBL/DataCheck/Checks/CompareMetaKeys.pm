@@ -35,6 +35,16 @@ use constant {
   TABLES      => ['assembly', 'attrib_type', 'biotype', 'coord_system', 'exon', 'exon_transcript', 'gene', 'meta', 'seq_region', 'seq_region_attrib', 'transcript', 'translation']
 };
 
+
+sub skip_tests {
+  my ($self) = @_;
+
+  return (1, 'This test has been retired because we now use only schema version 114 and nothing to compare for previous versions');
+
+}
+
+
+
 sub tests {
   my ($self) = @_;
 
