@@ -84,7 +84,54 @@ sub master_tables {
       if ($populated) {
         # Check that the table is a subset of the master database, and record the dbIDs
         my $id_column = $table eq 'species_set_header' ? 'species_set_id' : "${table}_id";
-        $ids{$table} = $self->consistent_data($helper, $master_helper, $table, [$id_column])
+
+        my $ipr_fam_gdb_query;
+        if ($table eq 'genome_db') {
+
+          $ipr_fam_gdb_query = qq/
+            SELECT
+              $id_column
+            FROM
+              method_link_species_set
+            JOIN
+              method_link USING (method_link_id)
+            JOIN
+              species_set USING (species_set_id)
+            JOIN
+              genome_db USING (genome_db_id)
+            GROUP BY
+              genome_db_id
+            HAVING
+              GROUP_CONCAT(method_link.type) = 'FAMILY';
+          /;
+
+        } elsif ($table eq 'method_link'
+                 || $table eq 'method_link_species_set'
+                 || $table eq 'species_set_header') {
+
+          $ipr_fam_gdb_query = qq/
+            SELECT
+              $id_column
+            FROM
+              method_link_species_set
+            JOIN
+              method_link USING (method_link_id)
+            JOIN
+              species_set_header USING (species_set_id)
+            WHERE
+              method_link.type = 'FAMILY';
+          /;
+        }
+
+        my $table_sql_filter;
+        if ($ipr_fam_gdb_query) {
+          my $ipr_fam_gdb_ids = $helper->execute_simple($ipr_fam_gdb_query);
+          if (scalar(@$ipr_fam_gdb_ids) > 0) {
+            $table_sql_filter = sprintf("WHERE $id_column NOT IN (%s)", join(',', @$ipr_fam_gdb_ids));
+          }
+        }
+
+        $ids{$table} = $self->consistent_data($helper, $master_helper, $table, [$id_column], $table_sql_filter);
       }
     }
 
