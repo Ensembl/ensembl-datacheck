@@ -50,6 +50,27 @@ sub tests {
   my $desc = "Current genome_dbs exist";
   ok(scalar(@$genome_dbs), $desc);
 
+  my $ipr_fam_gdb_query = q/
+    SELECT
+      genome_db_id
+    FROM
+      method_link_species_set
+    JOIN
+      method_link USING (method_link_id)
+    JOIN
+      species_set USING (species_set_id)
+    JOIN
+      genome_db USING (genome_db_id)
+    GROUP BY
+      genome_db_id
+    HAVING
+      GROUP_CONCAT(method_link.type) = 'FAMILY';
+  /;
+
+  my $ipr_fam_gdb_ids = $self->dba->dbc->sql_helper->execute_simple($ipr_fam_gdb_query);
+  my %ipr_fam_gdb_id_set = map { $_ => 1 } @{$ipr_fam_gdb_ids};
+  @$genome_dbs = grep { !exists($ipr_fam_gdb_id_set{$_->dbID}) } @$genome_dbs;
+
   foreach my $genome_db (sort { $a->name cmp $b->name } @$genome_dbs) {
     my $gdb_name = $genome_db->name;
 
