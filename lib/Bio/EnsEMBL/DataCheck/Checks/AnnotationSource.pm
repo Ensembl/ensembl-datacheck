@@ -38,7 +38,7 @@ sub tests{
   my $annotation_source = $mca->single_value_by_key('genebuild.annotation_source');
   ok($annotation_source, $desc);
 
-  my $sources = 'ensembl|braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc|helixer';
+  my $sources = 'ensembl|braker|genbank|refseq|community|flybase|wormbase|veupathdb|noninsdc|helixer|prokka';
   my $source_desc = "Source is allowed";
 
  SKIP: {
