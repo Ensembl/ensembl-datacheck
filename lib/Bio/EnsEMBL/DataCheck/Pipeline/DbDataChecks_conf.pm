@@ -81,7 +81,7 @@ sub default_options {
     es_host         => 'es.ensembl-production.ebi.ac.uk',
     es_port         => undef,
     es_index        => 'datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
-    es_log_dir     => '/hps/scratch/flicek/ensembl/'.$self->o('ENV', 'USER').'/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
+    es_log_dir     => '/hps/nobackup/flicek/ensembl/'.$self->o('ENV', 'TEAM_NAME').'/scratch/datacheck_results_'.$self->o('ENV', 'ENS_VERSION'),
     target_site    => 'main',
     production_queue  => 'production',
     datamover_queue   => 'datamover',
