@@ -44,6 +44,7 @@ sub tests {
         organism.scientific_name
         assembly.accession
         assembly.name
+        assembly.stats.contig_n50
         genebuild.version
         genebuild.method
         genebuild.method_display
@@ -54,6 +55,7 @@ sub tests {
         genebuild.sample_gene
         genebuild.sample_location
         genebuild.last_geneset_update
+        genebuild.stats.coding_genes
         organism.biosample_id
   /;
 
