@@ -57,7 +57,6 @@ sub tests {
         genebuild.last_geneset_update
         genebuild.stats.coding_genes
         organism.biosample_id
-
   /;
 
   my $mca = $self->dba->get_adaptor("MetaContainer");
