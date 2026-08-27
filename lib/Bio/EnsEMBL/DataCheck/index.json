@@ -2368,6 +2368,17 @@
       "name" : "SampleRegulatoryFeatureExists",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleRegulatoryFeatureExists"
    },
+   "SampleGeneInAnnotation" : {
+      "datacheck_type" : "critical",
+      "description" : "The genebuild.sample_gene metadata identifies exactly one gene in the annotation",
+      "groups" : [
+         "core",
+         "geneset",
+         "meta_sample"
+      ],
+      "name" : "SampleGeneInAnnotation",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::SampleGeneInAnnotation"
+   },
    "SchemaPatchesApplied" : {
       "datacheck_type" : "critical",
       "description" : "Schema patches are up-to-date",
