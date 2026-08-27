@@ -75,6 +75,7 @@
 95	1	sample.variation_text	ENSVDME00048193
 96	1	sample.variation_param	ENSVDME00048193
 97	1	genebuild.initial_release_date	2014-09
+253	1	genebuild.sample_gene	FBgn0263441
 201	\N	patch	patch_90_91_a.sql|schema_version
 99	1	assembly.date	2014-07
 100	\N	patch	patch_78_79_a.sql|schema_version

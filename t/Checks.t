@@ -61,12 +61,13 @@ foreach my $species (keys %db_types) {
         ForeignKeys
         GeneBounds
         MetaKeyAssembly
+        SampleGeneInAnnotation
         SchemaVersion
       /;
       $manager->names(\@names);
 
       my ($datachecks) = $manager->run_checks(dba => $dba);
-      is(scalar(@$datachecks), 5, "Datachecks run for $species $db_type database");
+      is(scalar(@$datachecks), 6, "Datachecks run for $species $db_type database");
     };
   }
 }
