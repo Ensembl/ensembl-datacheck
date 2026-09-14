@@ -72,7 +72,7 @@ sub core_fk {
   fk($self->dba, 'transcript',            'transcript_id',            'exon_transcript');
   fk($self->dba, 'gene',                  'gene_id',                  'transcript');
   fk($self->dba, 'prediction_transcript', 'prediction_transcript_id', 'prediction_exon');
-  fk($self->dba, 'mapping_session',       'mapping_session_id',       'stable_id_event');
+  # [mapping_events are recorded idfferently, so we are retiring this specific check] fk($self->dba, 'mapping_session',       'mapping_session_id',       'stable_id_event');
   
   # I think this one should be enforced, but need to investigate
   # downsides, and give people some warning, since a lot of dbs would fail...
