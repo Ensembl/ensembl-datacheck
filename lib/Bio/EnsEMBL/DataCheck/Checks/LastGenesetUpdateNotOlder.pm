@@ -41,6 +41,10 @@ use constant {
 sub skip_tests {
   my ($self) = @_;
 
+  if ($self->dba->dbc->dbname =~ /collection/) {
+    return (1, "Collection databases are not checked");
+  }
+
   unless (defined $self->server_uri && scalar(@{$self->server_uri})) {
     return (1, "No target server given with 'server_uri'");
   }

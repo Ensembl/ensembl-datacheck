@@ -35,6 +35,14 @@ use constant {
   TABLES         => ['meta']
 };
 
+sub skip_tests {
+  my ($self) = @_;
+
+  if ($self->dbname =~ /collection/) {
+    return (1, "Collection databases are not checked");
+  }
+}
+
 sub tests {
   my ($self) = @_;
 
