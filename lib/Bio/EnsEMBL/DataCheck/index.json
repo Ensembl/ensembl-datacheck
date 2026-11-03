@@ -1803,6 +1803,26 @@
       "name" : "LRG",
       "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LRG"
    },
+   "LastGenesetUpdateDbName" : {
+      "datacheck_type" : "critical",
+      "description" : "genebuild.last_geneset_update matches the database name suffix",
+      "groups" : [
+         "core",
+         "meta"
+      ],
+      "name" : "LastGenesetUpdateDbName",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LastGenesetUpdateDbName"
+   },
+   "LastGenesetUpdateNotOlder" : {
+      "datacheck_type" : "critical",
+      "description" : "genebuild.last_geneset_update is not older than one already on the target server",
+      "groups" : [
+         "core",
+         "meta"
+      ],
+      "name" : "LastGenesetUpdateNotOlder",
+      "package_name" : "Bio::EnsEMBL::DataCheck::Checks::LastGenesetUpdateNotOlder"
+   },
    "MLSSTagGERP" : {
       "datacheck_type" : "critical",
       "description" : "GERP analyses have appropriate tags",
