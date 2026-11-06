@@ -62,6 +62,11 @@ sub tests {
       skip "Repeat features not mandatory for projection builds", 1;
     }
 
+	if ( $mca->single_value_by_key('genebuild.team_responsible') eq 'Genebuild'
+  		&& $mca->single_value_by_key('genebuild.method') eq 'import' ) {
+  		skip "Repeat features not mandatory for Genebuild imported annotations", 1;
+	}
+
     
     # Don't need to worry about species_id, because we don't do this
     # query for collection dbs...
